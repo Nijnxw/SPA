@@ -32,3 +32,4 @@ Name | Mobile | Email | Development OS / Toolchain
 Bu Wen Jin | 93399830 | buwenjin@gmail.com | MacOS Monterey / CLion 2021
 Fabian Chia Hup Peng | 98161639 | e0310146@u.nus.edu | Windows 10 / Microsoft Visual Studio Community 2022 (64-bit) Version 17.0.4
 Lew Kai Ming | 92770045 | e0325386@u.nus.edu | MacOS Monterey / CLion 2021
+Yap Jing Kang | 84318504 | yap_jing_kang@u.nus.edu | Windows 10 / Microsoft Visual Studio Community 2022 (64-bit) Version 17.0.4

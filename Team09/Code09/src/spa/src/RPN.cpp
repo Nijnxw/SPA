@@ -3,16 +3,23 @@
 //constructor
 RPN::RPN(std::string equation) {
 	eqn = equation;
-	rpn = convertToRpn(eqn);
+	try {
+		rpn = convertToRpn(eqn);
+	}
+	catch (std::string message) {
+		throw message;
+	}
 }
 
 //getters
 std::string RPN::getRpnNotation() const {
 	std::string output = "";
-	for (int i = 0; i < rpn.size() - 1; i++) {
-		output.append(rpn[i] + ",");
+	if (rpn.size() > 0) {
+		for (int i = 0; i < rpn.size() - 1; i++) {
+			output.append(rpn[i] + ",");
+		}
+		output.append(rpn[rpn.size() - 1]);
 	}
-	output.append(rpn[rpn.size() - 1]);
 	return output;
 }
 
@@ -77,10 +84,11 @@ std::vector<std::string> RPN::convertToRpn(std::string infix) {
 	std::vector<std::string> tokens = tokenize(infix);
 	for (int i = 0; i < tokens.size(); i++) {
 		std::string token = tokens[i];
-		
+
 		if (isNumber(token)) {
 			out.push_back(token);
-		} else if (isOperator(token)) {
+		}
+		else if (isOperator(token)) {
 			// stack not empty - pop elements
 			if (!stack.empty()) {
 				// order of operations: (*, /, %) > (+, -)
@@ -96,8 +104,9 @@ std::vector<std::string> RPN::convertToRpn(std::string infix) {
 				}
 			}
 			stack.push(token);
-		} else {
-			//throw error
+		}
+		else {
+			throw "Unknown token found";
 		}
 	}
 

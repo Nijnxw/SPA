@@ -6,8 +6,8 @@ class RPN {
 
 private:
 	std::string eqn;
-	std::string rpn;
-	std::string convertToRpn(std::string);
+	std::vector<std::string> rpn;
+	std::vector<std::string> convertToRpn(std::string);
 
 public:
 	RPN(std::string);

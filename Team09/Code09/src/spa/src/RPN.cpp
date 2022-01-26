@@ -8,7 +8,12 @@ RPN::RPN(std::string equation) {
 
 //getters
 std::string RPN::getRpnNotation() const {
-	return rpn;
+	std::string output = "";
+	for (int i = 0; i < rpn.size() - 1; i++) {
+		output.append(rpn[i] + ",");
+	}
+	output.append(rpn[rpn.size() - 1]);
+	return output;
 }
 
 std::string RPN::getInfixNotation() const {
@@ -21,13 +26,84 @@ bool RPN::contains(RPN other) {
 	return true;
 }
 
+bool isOperator(std::string token) {
+	return (token == "+" || token == "-" || token == "*" || token == "/");
+}
+
+bool isNumber(std::string token) {
+	for (int i = 0; i < token.length(); i++) {
+		if (!isdigit(token[i])) return false;
+	}
+	return true;
+}
+
+//might be abstracted to a generic tokenizer
 std::vector<std::string> tokenize(std::string exp) {
 	std::vector<std::string> tokens;
-	
+	std::string numBuffer;
+
+	for (int i = 0; i < exp.length(); i++) {
+		std::string token(1, exp[i]);
+
+		//TODO: account for more types of whitespace
+		
+		//operator: flush number buffer then add both to output
+		if (isOperator(token)) {
+			if (numBuffer.size() > 0) {
+				tokens.push_back(numBuffer);
+			}
+			numBuffer = "";
+			tokens.push_back(token);
+		//number: add to number buffer
+		} else if (isNumber(token)) {
+			numBuffer.append(token);
+		//whitespace: flush number buffer
+		} else {
+			if (numBuffer.size() > 0) {
+				tokens.push_back(numBuffer);
+				numBuffer = "";
+			}
+		}	
+	}
+	if (numBuffer.length() > 0) tokens.push_back(numBuffer);
 	return tokens;
 }
 
 //takes in equation in infix notation and returns RPN notation
-std::string RPN::convertToRpn(std::string infix) {
-	return "test";
+std::vector<std::string> RPN::convertToRpn(std::string infix) {
+	std::vector<std::string> out;
+	std::stack<std::string> stack;
+	std::string output;
+	std::vector<std::string> tokens = tokenize(infix);
+	for (int i = 0; i < tokens.size(); i++) {
+		std::string token = tokens[i];
+		
+		if (isNumber(token)) {
+			out.push_back(token);
+		} else if (isOperator(token)) {
+			// stack not empty - pop elements
+			if (!stack.empty()) {
+				// order of operations: (*, /, %) > (+, -)
+				//implementing +,- first
+				std::string top = stack.top();
+				while (!stack.empty() && isOperator(top)) {
+					stack.pop();
+					out.push_back(top);
+
+					if (!stack.empty()) {
+						top = stack.top();
+					}
+				}
+			}
+			stack.push(token);
+		} else {
+			//throw error
+		}
+	}
+
+	while (!stack.empty()) {
+		out.push_back(stack.top());
+		stack.pop();
+	}
+	return out;
 }

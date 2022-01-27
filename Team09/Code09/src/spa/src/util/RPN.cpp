@@ -1,4 +1,5 @@
-#include "RPN.h"
+#include "util/RPN.h"
+#include "util/RPNToken.h"
 
 //constructor
 RPN::RPN(std::string equation) {
@@ -8,7 +9,11 @@ RPN::RPN(std::string equation) {
 
 //getters
 std::vector<std::string> RPN::getRpnNotation() const {
-	return rpn;
+	std::vector<std::string> output;
+	for (int i = 0; i < rpn.size(); i++) {
+		output.push_back(rpn.at(i).getContents());
+	}
+	return output;
 }
 
 std::string RPN::getInfixNotation() const {
@@ -21,6 +26,7 @@ bool RPN::contains(RPN other) {
 	return true;
 }
 
+// HELPER IDENTIFIER FUNCTIONS
 bool isOperator(std::string token) {
 	return (token == "+" || token == "-" || token == "*" || token == "/");
 }
@@ -39,59 +45,87 @@ bool isWhitespace(std::string token) {
 	return true;
 }
 
-bool isHigherPrecendence(std::string t1, std::string t2) {
+bool isVariable(std::string token) {
+	if (token.length() == 0) return false;
+	if (!isalpha(token[0])) return false;
+	for (int i = 1; i < token.length(); i++) {
+		if (!isalpha(token[i]) || !isdigit(token[i])) return false;
+	}
 	return true;
 }
 
-std::vector<std::string> tokenize(std::string exp) {
-	std::vector<std::string> tokens;
-	std::string numBuffer;
+bool isLeftParenthesis(std::string token) {
+	return token == "(";
+}
+
+bool isRightParenthesis(std::string token) {
+	return token == ")";
+}
+
+std::vector<RPNToken> tokenize(std::string exp) {
+	std::vector<RPNToken> tokens;
+	std::string buffer;
 
 	for (int i = 0; i < exp.length(); i++) {
-		std::string token(1, exp[i]);
-		//operator: flush number buffer then add both to output
-		if (isOperator(token)) {
-			if (numBuffer.size() > 0) {
-				tokens.push_back(numBuffer);
-			}
-			numBuffer = "";
-			tokens.push_back(token);
-		//number: add to number buffer
-		} else if (isNumber(token)) {
-			numBuffer.append(token);
-		//whitespace: flush number buffer
-		} else if (isWhitespace(token)) {
-			if (numBuffer.size() > 0) {
-				tokens.push_back(numBuffer);
-				numBuffer = "";
-			}
+		std::string character(1, exp[i]);
+
+		//number or letter: add to number buffer
+		if (!isOperator(character) && !isWhitespace(character) &&
+			!isLeftParenthesis(character) && !isRightParenthesis(character)) {
+			buffer.append(character);
+		//other characters detected - flush buffer before adding the new character
 		} else {
-			throw std::runtime_error("Invalid Token Detected in Statement.\n");
+			if (buffer.size() > 0) {
+				if (isVariable(buffer)) {
+					tokens.push_back(RPNToken(TokenType::Variable, buffer));
+				} else if (isNumber(buffer)) {
+					tokens.push_back(RPNToken(TokenType::Integer, buffer));
+				} else {
+					throw std::runtime_error("Invalid Token Detected in Statement.\n");
+				}
+			}
+			buffer = "";
+			if (isOperator(character)) {
+				tokens.push_back(RPNToken(TokenType::Operator, character));
+			} else if (isLeftParenthesis(character)) {
+				tokens.push_back(RPNToken(TokenType::LeftParenthesis, character));
+			} else if (isRightParenthesis(character)) {
+				tokens.push_back(RPNToken(TokenType::RightParenthesis, character));
+			}
 		}
 	}
-	if (numBuffer.length() > 0) tokens.push_back(numBuffer);
+
+	//final flush
+	if (buffer.size() > 0) {
+		if (isVariable(buffer)) {
+			tokens.push_back(RPNToken(TokenType::Variable, buffer));
+		} else {
+			tokens.push_back(RPNToken(TokenType::Integer, buffer));
+		}
+	}
 	if (tokens.size() <= 0) throw std::runtime_error("No tokens Detected.\n");
 	return tokens;
 }
 
 //takes in equation in infix notation and returns RPN notation
-std::vector<std::string> RPN::convertToRpn(std::string infix) {
-	std::vector<std::string> out;
-	std::stack<std::string> stack;
+std::vector<RPNToken> RPN::convertToRpn(std::string infix) {
+	std::vector<RPNToken> out;
+	std::stack<RPNToken> stack;
 	std::string output;
-	std::vector<std::string> tokens = tokenize(infix);
-	for (int i = 0; i < tokens.size(); i++) {
-		std::string token = tokens[i];
+	std::vector<RPNToken> tokens = tokenize(infix);
 
-		if (isNumber(token)) {
+	for (int i = 0; i < tokens.size(); i++) {
+		RPNToken token = tokens[i];
+
+		if (token.isInteger()) {
 			out.push_back(token);
 		} else {
 			// stack not empty - pop elements
 			if (!stack.empty()) {
 				// order of operations: (*, /, %) > (+, -)
 				//implementing +,- first
-				std::string top = stack.top();
-				while (!stack.empty() && isOperator(top)) {
+				RPNToken top = stack.top();
+				while (!stack.empty() && top.isOperator()) {
 					stack.pop();
 					out.push_back(top);
 

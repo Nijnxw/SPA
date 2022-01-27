@@ -1,3 +1,5 @@
+#include "util/RPNToken.h"
+
 #include <string>
 #include <vector>
 #include <stack>
@@ -8,8 +10,8 @@ class RPN {
 
 private:
 	std::string eqn;
-	std::vector<std::string> rpn;
-	std::vector<std::string> convertToRpn(std::string);
+	std::vector<RPNToken> rpn;
+	std::vector<RPNToken> convertToRpn(std::string);
 
 public:
 	RPN(std::string);

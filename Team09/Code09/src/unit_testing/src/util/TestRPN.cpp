@@ -34,5 +34,5 @@ TEST_CASE("Correct Handling of Whitespace") {
 }
 
 TEST_CASE("Invalid Token Throws Exception") {
-	REQUIRE_THROWS_WITH(RPN("a"), "Invalid Token Detected in Statement.\n");
+	REQUIRE_THROWS_WITH(RPN("^% + #$"), "Invalid Token Detected in Statement.\n");
 }

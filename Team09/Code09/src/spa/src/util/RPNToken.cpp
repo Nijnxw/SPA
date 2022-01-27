@@ -1,4 +1,4 @@
-#include "RPNToken.h";
+#include "RPNToken.h"
 
 RPNToken::RPNToken(TokenType t, std::string c) {
 	type = t;
@@ -15,10 +15,10 @@ RPNToken::RPNToken(TokenType t, std::string c) {
 	}
 }
 
-std::string RPNToken::getContents() {
+std::string RPNToken::getContents() const {
 	return contents;
 }
-int RPNToken::getPrecedence() {
+int RPNToken::getPrecedence() const {
 	return precedence;
 }
 

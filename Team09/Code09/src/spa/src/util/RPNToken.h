@@ -1,3 +1,5 @@
+#pragma once
+
 #include <string>
 #include <stdexcept>
 
@@ -18,8 +20,8 @@ private:
 public:
 	RPNToken(TokenType type, std::string contents);
 
-	std::string getContents();
-	int getPrecedence();
+	std::string getContents() const;
+	int getPrecedence() const;
 	int comparePrecedence(RPNToken other);
 
 	bool isVariable();

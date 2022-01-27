@@ -3,12 +3,7 @@
 //constructor
 RPN::RPN(std::string equation) {
 	eqn = equation;
-	try {
-		rpn = convertToRpn(eqn);
-	}
-	catch (std::string message) {
-		throw message;
-	}
+	rpn = convertToRpn(eqn);
 }
 
 //getters
@@ -44,7 +39,13 @@ bool isNumber(std::string token) {
 	return true;
 }
 
-//might be abstracted to a generic tokenizer
+bool isWhitespace(std::string token) {
+	for (int i = 0; i < token.length(); i++) {
+		if (!isspace(token[i])) return false;
+	}
+	return true;
+}
+
 std::vector<std::string> tokenize(std::string exp) {
 	std::vector<std::string> tokens;
 	std::string numBuffer;
@@ -65,12 +66,14 @@ std::vector<std::string> tokenize(std::string exp) {
 		} else if (isNumber(token)) {
 			numBuffer.append(token);
 		//whitespace: flush number buffer
-		} else {
+		} else if (isWhitespace(token)) {
 			if (numBuffer.size() > 0) {
 				tokens.push_back(numBuffer);
 				numBuffer = "";
 			}
-		}	
+		} else {
+			throw std::runtime_error("Invalid Token Detected in Statement.\n");
+		}
 	}
 	if (numBuffer.length() > 0) tokens.push_back(numBuffer);
 	return tokens;
@@ -87,8 +90,7 @@ std::vector<std::string> RPN::convertToRpn(std::string infix) {
 
 		if (isNumber(token)) {
 			out.push_back(token);
-		}
-		else if (isOperator(token)) {
+		} else {
 			// stack not empty - pop elements
 			if (!stack.empty()) {
 				// order of operations: (*, /, %) > (+, -)
@@ -104,10 +106,7 @@ std::vector<std::string> RPN::convertToRpn(std::string infix) {
 				}
 			}
 			stack.push(token);
-		}
-		else {
-			throw "Unknown token found";
-		}
+		} 
 	}
 
 	while (!stack.empty()) {

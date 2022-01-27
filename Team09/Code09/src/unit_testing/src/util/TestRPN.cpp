@@ -1,5 +1,5 @@
 #include "catch.hpp"
-#include "../src/RPN.h"
+#include "../src/util/RPN.h"
 
 TEST_CASE("Correct Handling of Single Numbers") {
 	REQUIRE_NOTHROW(RPN("1"));
@@ -27,6 +27,6 @@ TEST_CASE("Correct Handling of Whitespace") {
 	REQUIRE(rpn3.getRpnNotation() == "1,1,+");
 }
 
-//TEST_CASE("Invalid Token Throws Exception") {
-//	REQUIRE_THROWS_WITH(RPN("a"), "Unknown token found");
-//}
+TEST_CASE("Invalid Token Throws Exception") {
+	REQUIRE_THROWS(RPN("a"));
+}

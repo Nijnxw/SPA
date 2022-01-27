@@ -1,6 +1,8 @@
 #include <string>
 #include <vector>
 #include <stack>
+#include <stdexcept>
+#include <cctype>
 
 class RPN {
 

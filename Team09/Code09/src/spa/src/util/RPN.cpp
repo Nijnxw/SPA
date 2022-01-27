@@ -117,15 +117,14 @@ std::vector<RPNToken> RPN::convertToRpn(std::string infix) {
 	for (int i = 0; i < tokens.size(); i++) {
 		RPNToken token = tokens[i];
 
-		if (token.isInteger()) {
+		if (token.isInteger() || token.isVariable()) {
 			out.push_back(token);
 		} else {
 			// stack not empty - pop elements
 			if (!stack.empty()) {
 				// order of operations: (*, /, %) > (+, -)
-				//implementing +,- first
 				RPNToken top = stack.top();
-				while (!stack.empty() && top.isOperator()) {
+				while (!stack.empty() && top.comparePrecedence(token) >= 0) {
 					stack.pop();
 					out.push_back(top);
 

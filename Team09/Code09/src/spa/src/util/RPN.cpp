@@ -28,7 +28,7 @@ bool RPN::contains(RPN other) {
 
 // HELPER IDENTIFIER FUNCTIONS
 bool isOperator(std::string token) {
-	return (token == "+" || token == "-" || token == "*" || token == "/");
+	return (token == "+" || token == "-" || token == "*" || token == "/" || token == "%");
 }
 
 bool isNumber(std::string token) {
@@ -49,7 +49,7 @@ bool isVariable(std::string token) {
 	if (token.length() == 0) return false;
 	if (!isalpha(token[0])) return false;
 	for (int i = 1; i < token.length(); i++) {
-		if (!isalpha(token[i]) || !isdigit(token[i])) return false;
+		if (!isalpha(token[i]) && !isdigit(token[i])) return false;
 	}
 	return true;
 }
@@ -119,10 +119,8 @@ std::vector<RPNToken> RPN::convertToRpn(std::string infix) {
 
 		if (token.isInteger() || token.isVariable()) {
 			out.push_back(token);
-		} else {
-			// stack not empty - pop elements
+		} else if (token.isOperator()) {
 			if (!stack.empty()) {
-				// order of operations: (*, /, %) > (+, -)
 				RPNToken top = stack.top();
 				while (!stack.empty() && top.comparePrecedence(token) >= 0) {
 					stack.pop();
@@ -134,10 +132,26 @@ std::vector<RPNToken> RPN::convertToRpn(std::string infix) {
 				}
 			}
 			stack.push(token);
-		} 
+		} else if (token.isLeftParenthesis()) {
+			stack.push(token);
+		} else {
+			bool matched = false;
+			while (!stack.empty() && !matched) {
+				out.push_back(stack.top());
+				stack.pop();
+
+				if (!stack.empty() && stack.top().isLeftParenthesis()) {
+					matched = true;
+					stack.pop();
+				}
+			}
+
+			if (stack.empty() && !matched) throw std::runtime_error("Non Matching Parentheses Detected.\n");
+		}
 	}
 
 	while (!stack.empty()) {
+		if (stack.top().isLeftParenthesis()) throw std::runtime_error("Non Matching Parentheses Detected.\n");
 		out.push_back(stack.top());
 		stack.pop();
 	}

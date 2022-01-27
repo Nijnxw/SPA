@@ -1,10 +1,9 @@
 #include "util/RPNToken.h"
 
+#include <cctype>
+#include <stack>
 #include <string>
 #include <vector>
-#include <stack>
-#include <stdexcept>
-#include <cctype>
 
 class RPN {
 
@@ -15,6 +14,7 @@ private:
 
 public:
 	RPN(std::string);
+
 	std::vector<std::string> getRpnNotation() const;
 	std::string getInfixNotation() const;
 	bool contains(RPN other);

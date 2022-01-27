@@ -46,4 +46,3 @@ bool RPNToken::isLeftParenthesis() {
 bool RPNToken::isRightParenthesis() {
 	return type == TokenType::RightParenthesis;
 }
-

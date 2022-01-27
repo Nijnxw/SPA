@@ -120,7 +120,6 @@ std::vector<RPNToken> tokenize(std::string exp) {
 std::vector<RPNToken> RPN::convertToRpn(std::string infix) {
 	std::vector<RPNToken> out;
 	std::stack<RPNToken> stack;
-	std::string output;
 	std::vector<RPNToken> tokens = tokenize(infix);
 
 	for (int i = 0; i < tokens.size(); i++) {

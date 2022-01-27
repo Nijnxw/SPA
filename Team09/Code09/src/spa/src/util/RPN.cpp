@@ -7,15 +7,8 @@ RPN::RPN(std::string equation) {
 }
 
 //getters
-std::string RPN::getRpnNotation() const {
-	std::string output = "";
-	if (rpn.size() > 0) {
-		for (int i = 0; i < rpn.size() - 1; i++) {
-			output.append(rpn[i] + ",");
-		}
-		output.append(rpn[rpn.size() - 1]);
-	}
-	return output;
+std::vector<std::string> RPN::getRpnNotation() const {
+	return rpn;
 }
 
 std::string RPN::getInfixNotation() const {
@@ -46,15 +39,16 @@ bool isWhitespace(std::string token) {
 	return true;
 }
 
+bool isHigherPrecendence(std::string t1, std::string t2) {
+	return true;
+}
+
 std::vector<std::string> tokenize(std::string exp) {
 	std::vector<std::string> tokens;
 	std::string numBuffer;
 
 	for (int i = 0; i < exp.length(); i++) {
 		std::string token(1, exp[i]);
-
-		//TODO: account for more types of whitespace
-		
 		//operator: flush number buffer then add both to output
 		if (isOperator(token)) {
 			if (numBuffer.size() > 0) {
@@ -76,6 +70,7 @@ std::vector<std::string> tokenize(std::string exp) {
 		}
 	}
 	if (numBuffer.length() > 0) tokens.push_back(numBuffer);
+	if (tokens.size() <= 0) throw std::runtime_error("No tokens Detected.\n");
 	return tokens;
 }
 

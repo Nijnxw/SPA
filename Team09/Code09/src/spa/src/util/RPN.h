@@ -13,7 +13,7 @@ private:
 
 public:
 	RPN(std::string);
-	std::string getRpnNotation() const;
+	std::vector<std::string> getRpnNotation() const;
 	std::string getInfixNotation() const;
 	bool contains(RPN other);
 };

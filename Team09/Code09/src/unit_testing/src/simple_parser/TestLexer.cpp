@@ -29,7 +29,7 @@ TEST_CASE("Test end of file token") {
     REQUIRE(compareVectors(output, expected));
 }
 
-TEST_CASE("Test name tokens") {
+TEST_CASE("Test NAME tokens") {
     std::string program = "procedure     ProCedure if read x1 X1 x1x x1X x";
     std::istringstream input(program);
 
@@ -46,7 +46,7 @@ TEST_CASE("Test name tokens") {
     REQUIRE(compareVectors(output, expected));
 }
 
-TEST_CASE("Test integer tokens") {
+TEST_CASE("Test INTEGER tokens") {
     std::string program = "1 13  093";
     std::istringstream input(program);
 
@@ -60,40 +60,54 @@ TEST_CASE("Test integer tokens") {
     REQUIRE(compareVectors(output, expected));
 }
 
-TEST_CASE("Test symbol tokens") {
-    std::string program = "{ ) + && = ! != < >=";
+TEST_CASE("Test OPERATOR tokens") {
+    std::string program = "+ && = ! != < >=";
     std::istringstream input(program);
 
     auto lexer = Lexer(&input);
     std::vector<Token*> output = lexer.tokenize();
     std::vector<Token*> expected = {
-            new SymbolToken("{"),   new SymbolToken(")"),
-            new SymbolToken("+"),   new SymbolToken("&&"),
-            new SymbolToken("="),   new SymbolToken("!"),
-            new SymbolToken("!="),  new SymbolToken("<"),
-            new SymbolToken(">="),  new EndOfFileToken(),
+            new OperatorToken("+"), new OperatorToken("&&"),
+            new OperatorToken("="), new OperatorToken("!"),
+            new OperatorToken("!="), new OperatorToken("<"),
+            new OperatorToken(">="), new EndOfFileToken(),
+    };
+
+    REQUIRE(compareVectors(output, expected));
+}
+
+TEST_CASE("Test PUNCTUATOR tokens") {
+    std::string program = "{ } ( ) ;";
+    std::istringstream input(program);
+
+    auto lexer = Lexer(&input);
+    std::vector<Token*> output = lexer.tokenize();
+    std::vector<Token*> expected = {
+            new PunctuatorToken("{"), new PunctuatorToken("}"),
+            new PunctuatorToken("("), new PunctuatorToken(")"),
+            new PunctuatorToken(";"), new EndOfFileToken(),
     };
 
     REQUIRE(compareVectors(output, expected));
 }
 
 TEST_CASE("Test all lexical tokens") {
-    std::string program = "if while procedure ( ) { } && variAble ball8 89 2 < <= = != print V1 v1e";
+    std::string program = "if while procedure ( ) { } && variAble ball8 89 2 < <= = != print V1 ;";
     std::istringstream input(program);
 
     auto lexer = Lexer(&input);
     std::vector<Token*> output = lexer.tokenize();
     std::vector<Token*> expected = {
-            new NameToken("if"),        new NameToken("while"),
-            new NameToken("procedure"), new SymbolToken("("),
-            new SymbolToken(")"),       new SymbolToken("{"),
-            new SymbolToken("}"),       new SymbolToken("&&"),
-            new NameToken("variAble"),  new NameToken("ball8"),
-            new IntegerToken("89"),     new IntegerToken("2"),
-            new SymbolToken("<"),       new SymbolToken("<="),
-            new SymbolToken("="),       new SymbolToken("!="),
-            new NameToken("print"),     new NameToken("V1"),
-            new NameToken("v1e"),       new EndOfFileToken(),
+            new NameToken("if"), new NameToken("while"),
+            new NameToken("procedure"), new PunctuatorToken("("),
+            new PunctuatorToken(")"), new PunctuatorToken("{"),
+            new PunctuatorToken("}"), new OperatorToken("&&"),
+            new NameToken("variAble"), new NameToken("ball8"),
+            new IntegerToken("89"), new IntegerToken("2"),
+            new OperatorToken("<"), new OperatorToken("<="),
+            new OperatorToken("="), new OperatorToken("!="),
+            new NameToken("print"), new NameToken("V1"),
+            new PunctuatorToken(";"), new EndOfFileToken(),
     };
 
     REQUIRE(compareVectors(output, expected));
@@ -119,20 +133,20 @@ TEST_CASE("Test SIMPLE program") {
     auto lexer = Lexer(&input);
     std::vector<Token*> output = lexer.tokenize();
     std::vector<Token*> expected = {
-            new NameToken("procedure"),     new NameToken("sumDigits"),     new SymbolToken("{"),
-            new NameToken("read"),          new NameToken("number"),        new SymbolToken(";"),
-            new NameToken("sum"),           new SymbolToken("="),           new IntegerToken("0"),
-            new SymbolToken(";"),           new NameToken("while"),         new SymbolToken("("),
-            new NameToken("number"),        new SymbolToken(">"),           new IntegerToken("0"),
-            new SymbolToken(")"),           new SymbolToken("{"),           new NameToken("digit"),
-            new SymbolToken("="),           new NameToken("number"),        new SymbolToken("%"),
-            new IntegerToken("10"),         new SymbolToken(";"),           new NameToken("sum"),
-            new SymbolToken("="),           new NameToken("sum"),           new SymbolToken("+"),
-            new NameToken("digit"),         new SymbolToken(";"),           new NameToken("number"),
-            new SymbolToken("="),           new NameToken("number"),        new SymbolToken("/"),
-            new IntegerToken("10"),         new SymbolToken(";"),           new SymbolToken("}"),
-            new NameToken("print"),         new NameToken("sum"),           new SymbolToken(";"),
-            new SymbolToken("}"),           new EndOfFileToken(),
+            new NameToken("procedure"), new NameToken("sumDigits"), new PunctuatorToken("{"),
+            new NameToken("read"), new NameToken("number"), new PunctuatorToken(";"),
+            new NameToken("sum"), new OperatorToken("="), new IntegerToken("0"),
+            new PunctuatorToken(";"), new NameToken("while"), new PunctuatorToken("("),
+            new NameToken("number"), new OperatorToken(">"), new IntegerToken("0"),
+            new PunctuatorToken(")"), new PunctuatorToken("{"), new NameToken("digit"),
+            new OperatorToken("="), new NameToken("number"), new OperatorToken("%"),
+            new IntegerToken("10"), new PunctuatorToken(";"), new NameToken("sum"),
+            new OperatorToken("="), new NameToken("sum"), new OperatorToken("+"),
+            new NameToken("digit"), new PunctuatorToken(";"), new NameToken("number"),
+            new OperatorToken("="), new NameToken("number"), new OperatorToken("/"),
+            new IntegerToken("10"), new PunctuatorToken(";"), new PunctuatorToken("}"),
+            new NameToken("print"), new NameToken("sum"), new PunctuatorToken(";"),
+            new PunctuatorToken("}"), new EndOfFileToken(),
     };
 
     REQUIRE(compareVectors(output, expected));

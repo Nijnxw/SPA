@@ -37,34 +37,41 @@ std::vector<Token*> Lexer::tokenize() {
         }
 
         nextStr += nextChar;
+        // Ignore whitespaces
         if (isspace(nextChar) != 0) {
             nextStr = "";
             continue;
-        } else if (isalpha(nextChar) != 0) {
+        }
+        // NAME
+        else if (isalpha(nextChar) != 0) {
             readName();
             lexical_tokens.push_back(new NameToken(nextStr));
-        } else if (isdigit((nextChar)) != 0) {
+        }
+        // INTEGER
+        else if (isdigit((nextChar)) != 0) {
             readInteger();
             lexical_tokens.push_back(new IntegerToken(nextStr));
         }
-        // symbols that appear on its own
-        else if (nextChar == '+' || nextChar == '-' || nextChar == '*' || nextChar == '/' ||
-                 nextChar == '%' || nextChar == ';' || nextChar == '(' || nextChar == ')' ||
-                 nextChar == '{' || nextChar == '}') {
-            lexical_tokens.push_back(new SymbolToken(nextStr));
+        // PUNCTUATOR : '{' | '}' | '(' | ')' | ';'
+        else if (nextChar == '{' || nextChar == '}' || nextChar == '(' || nextChar == ')' || nextChar == ';') {
+            lexical_tokens.push_back(new PunctuatorToken(nextStr));
         }
-        // symbols that may combine with other symbols
+        // OPERATOR that appears on its own
+        else if (nextChar == '+' || nextChar == '-' || nextChar == '*' || nextChar == '/' || nextChar == '%') {
+            lexical_tokens.push_back(new OperatorToken(nextStr));
+        }
+        // OPERATOR that may combine with other OPERATOR
         else if (nextChar == '=' || nextChar == '!' || nextChar == '>' || nextChar == '<') {
              if (peek() == '=') {
                  nextStr += next();
              }
-             lexical_tokens.push_back(new SymbolToken(nextStr));
+             lexical_tokens.push_back(new OperatorToken(nextStr));
         }
-        // validate || and && symbols
+        // validate '||' and '&&' operators
         else if (nextChar == '|' || nextChar == '&') {
             if (peek() == nextChar) {
                 nextStr += next();
-                lexical_tokens.push_back(new SymbolToken(nextStr));
+                lexical_tokens.push_back(new OperatorToken(nextStr));
             } else { // invalid SIMPLE syntax
                 throw std::runtime_error("Invalid Syntax: Expected '" + std::to_string(nextChar) + "' but got '" + peek() + "' instead\n.");
             }

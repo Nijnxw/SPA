@@ -2,7 +2,7 @@
 
 #include <string>
 
-enum class TokenType { NAME, INTEGER, SYMBOL, END_OF_FILE };
+enum class TokenType { NAME, INTEGER, OPERATOR, PUNCTUATOR, END_OF_FILE };
 
 // Base class for SIMPLE language lexical tokens
 class Token {
@@ -24,11 +24,17 @@ class IntegerToken : public Token {
         explicit IntegerToken(std::string v);
 };
 
-// SYMBOL : '(' | ')' | '{' | '}' | '+' | '-' | '*' | '/' | '%' | ';' |
-//          '&&' | '||' | '<' | '<=' | '>' | '>=' | '=' | '==' | '!' | '!='
-class SymbolToken : public Token {
+// OPERATOR : '+' | '-' | '*' | '/' | '%' | '&&' | '||' |
+//            '<' | '<=' | '>' | '>=' | '=' | '==' | '!' | '!='
+class OperatorToken : public Token {
     public:
-        explicit SymbolToken(std::string v);
+        explicit OperatorToken(std::string v);
+};
+
+// PUNCTUATOR : '(' | ')' | '{' | '}' | ';'
+class PunctuatorToken : public Token {
+public:
+    explicit PunctuatorToken(std::string v);
 };
 
 // reached the end of the file

@@ -86,6 +86,28 @@ TEST_CASE("Correct Handling of Parentheses") {
 	REQUIRE(rpn3.getRpnNotation() == expected);
 }
 
+TEST_CASE("Correct Handling of Contains") {
+	std::vector<std::string> expected;
+
+	//contains itself
+	RPN rpn1("3+4*2/(1-5)+1*22");
+	REQUIRE(rpn1.contains(rpn1) == true);
+
+	RPN rpn2("1*2*3*4*5");
+	RPN rpn3("1*2");
+	RPN rpn4("4*5");
+	REQUIRE(rpn2.contains(rpn3) == true);
+	REQUIRE(rpn2.contains(rpn4) == false);
+	REQUIRE(rpn3.contains(rpn4) == false);
+
+	RPN rpn5("1+2/3");
+	RPN rpn6("2/3");
+	RPN rpn7("1+2");
+	REQUIRE(rpn5.contains(rpn6) == true);
+	REQUIRE(rpn5.contains(rpn7) == false);
+	REQUIRE(rpn6.contains(rpn7) == false);
+}
+
 TEST_CASE("Invalid Token Name") {
 	REQUIRE_THROWS_WITH(RPN("^% + #$"), "Invalid Token Detected in Statement.\n");
 }
@@ -93,4 +115,11 @@ TEST_CASE("Invalid Token Name") {
 TEST_CASE("Mismatch Parentheses") {
 	REQUIRE_THROWS_WITH(RPN("1+)"), "Non Matching Parentheses Detected.\n");
 	REQUIRE_THROWS_WITH(RPN("(abc+123"), "Non Matching Parentheses Detected.\n");
+}
+
+TEST_CASE("RPN mismatch size") {
+	RPN rpn1("1*2*3*4*5");
+	RPN rpn2("1*2");
+	REQUIRE_NOTHROW(rpn1.contains(rpn2));
+	REQUIRE_THROWS_WITH(rpn2.contains(rpn1), "RPN elements length mismatch.\n");
 }

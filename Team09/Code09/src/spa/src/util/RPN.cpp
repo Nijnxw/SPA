@@ -22,8 +22,17 @@ std::string RPN::getInfixNotation() const {
 
 //check if this rpn contains the other rpn
 bool RPN::contains(RPN other) {
-	//TO DO
-	return true;
+	std::vector<std::string> thisRpn = this->getRpnNotation();
+	std::vector<std::string> otherRpn = other.getRpnNotation();
+	if (thisRpn.size() < otherRpn.size()) throw std::runtime_error("RPN elements length mismatch.\n");
+	for (int i = 0; i < thisRpn.size() - otherRpn.size() + 1; i++) {
+		bool match = true;
+		for (int j = 0; j < otherRpn.size(); j++) {
+			if (thisRpn[i + j] != otherRpn[j]) match = false;
+		}
+		if (match) return match;
+	}
+	return false;
 }
 
 // HELPER IDENTIFIER FUNCTIONS

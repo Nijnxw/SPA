@@ -22,6 +22,8 @@ add_library(spa ${srcs} ${headers}
         src/simple_parser/Lexer.h
         src/simple_parser/Token.cpp
         src/simple_parser/Token.h
+        src/query_evaluator/QueryEvaluator.cpp
+        src/query_evaluator/QueryEvaluator.h
         )
 # this makes the headers accessible for other projects which uses spa lib
 target_include_directories(spa PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/src)

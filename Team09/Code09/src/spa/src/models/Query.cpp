@@ -6,14 +6,14 @@ Query::Query(std::vector<QueryArgument>& resultSynonyms, std::vector<QuerySuchTh
                                                                 suchThatClauses(suchThatClauses),
                                                                 patternClauses(patternClauses) {}
 
-const std::vector<QueryArgument>& Query::GetResultSynonyms() const {
+const std::vector<QueryArgument>& Query::getResultSynonyms() const {
     return resultSynonyms;
 }
 
-const std::vector<QuerySuchThatClause>& Query::GetSuchThatClauses() const {
+const std::vector<QuerySuchThatClause>& Query::getSuchThatClauses() const {
     return suchThatClauses;
 }
 
-const std::vector<QueryPatternClause>& Query::GetPatternClauses() const {
+const std::vector<QueryPatternClause>& Query::getPatternClauses() const {
     return patternClauses;
 }

@@ -6,10 +6,10 @@ class QueryPatternClause : public QueryClause {
 public:
     QueryPatternClause(QueryArgument& patternSynonym, std::vector<QueryArgument>& arguments, bool IsMatchExact);
 
-    bool IsMatchExact() const;
-    const QueryArgument& GetPatternSynonym() const;
+    bool isMatchExact() const; // isMatchExact is true if no wild card is provided in the pattern
+    const QueryArgument& getPatternSynonym() const;
 
 private:
     QueryArgument patternSynonym;
-    bool isMatchExact;  // isMatchExact is true if no wild card is provided in the pattern
+    bool hasWildCard;
 };

@@ -2,14 +2,14 @@
 
 #include <string>
 
-enum class RPNTokenType { NAME, INTEGER, OPERATOR, PUNCTUATOR, END_OF_FILE };
+enum class TokenType { NAME, INTEGER, OPERATOR, PUNCTUATOR, END_OF_FILE };
 
 // Base class for SIMPLE language lexical tokens
 class Token {
     public:
-        RPNTokenType type;
+        TokenType type;
         std::string value;
-        Token(RPNTokenType t, std::string v);
+        Token(TokenType t, std::string v);
 };
 
 // NAME : LETTER (LETTER | DIGIT)*

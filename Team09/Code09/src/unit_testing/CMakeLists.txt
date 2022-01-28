@@ -1,6 +1,10 @@
 file(GLOB srcs "${CMAKE_CURRENT_SOURCE_DIR}/src/*.cpp")
 file(GLOB headers "${CMAKE_CURRENT_SOURCE_DIR}/src/*.h" "${CMAKE_CURRENT_SOURCE_DIR}/src/*.hpp")
-add_executable(unit_testing ${srcs} src/simple_parser/TestLexer.cpp)
+add_executable(unit_testing ${srcs}
+src/util/TestRPN.cpp
+src/util/TestRPNToken.cpp
+src/simple_parser/TestLexer.cpp
+)
 
 target_link_libraries(unit_testing spa)
 

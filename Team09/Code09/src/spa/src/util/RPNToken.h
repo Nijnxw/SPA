@@ -3,7 +3,7 @@
 #include <string>
 #include <stdexcept>
 
-enum class TokenType {
+enum class RPNTokenType {
     Variable,
     Integer,
     Operator,
@@ -13,12 +13,12 @@ enum class TokenType {
 
 class RPNToken {
 private:
-    TokenType type;
+    RPNTokenType type;
     std::string contents;
     int precedence;
 
 public:
-    RPNToken(TokenType type, std::string contents);
+    RPNToken(RPNTokenType type, std::string contents);
 
     std::string getContents() const;
     int getPrecedence() const;

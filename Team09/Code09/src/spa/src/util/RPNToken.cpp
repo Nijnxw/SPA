@@ -1,10 +1,10 @@
 #include "RPNToken.h"
 
-RPNToken::RPNToken(TokenType t, std::string c) {
+RPNToken::RPNToken(RPNTokenType t, std::string c) {
     type = t;
     contents = c;
 
-    if (t != TokenType::Operator) {
+    if (t != RPNTokenType::Operator) {
         precedence = -1;
     } else if (c == "*" || c == "/" || c == "%") {
         precedence = 3;
@@ -28,21 +28,21 @@ int RPNToken::comparePrecedence(RPNToken other) {
 }
 
 bool RPNToken::isVariable() {
-    return type == TokenType::Variable;
+    return type == RPNTokenType::Variable;
 }
 
 bool RPNToken::isInteger() {
-    return type == TokenType::Integer;
+    return type == RPNTokenType::Integer;
 }
 
 bool RPNToken::isOperator() {
-    return type == TokenType::Operator;
+    return type == RPNTokenType::Operator;
 }
 
 bool RPNToken::isLeftParenthesis() {
-    return type == TokenType::LeftParenthesis;
+    return type == RPNTokenType::LeftParenthesis;
 }
 
 bool RPNToken::isRightParenthesis() {
-    return type == TokenType::RightParenthesis;
+    return type == RPNTokenType::RightParenthesis;
 }

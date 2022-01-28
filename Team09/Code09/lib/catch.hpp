@@ -8843,7 +8843,7 @@ namespace detail {
         }
     };
 
-    // Wraps a token coming from a token stream. These may not directly correspond to strings as a single string
+    // Wraps a Token coming from a Token stream. These may not directly correspond to strings as a single string
     // may encode an option + its argument if the : or = form is used
     enum class TokenType {
         Option, Argument
@@ -9637,7 +9637,7 @@ namespace detail {
                 if( result.value().type() == ParseResultType::ShortCircuitAll )
                     return result;
                 if( !tokenParsed )
-                    return InternalParseResult::runtimeError( "Unrecognised token: " + result.value().remainingTokens()->token );
+                    return InternalParseResult::runtimeError( "Unrecognised Token: " + result.value().remainingTokens()->token );
             }
             // !TBD Check missing required options
             return result;

@@ -4,9 +4,7 @@
 
 class QueryPatternClause : public QueryClause {
 public:
-    QueryPatternClause(QueryArgumentType& clauseType, std::vector<QueryArgument>& arguments,
-                       QueryArgument& patternSynonym,
-                       bool isMatchExact);
+    QueryPatternClause(QueryArgument& patternSynonym, std::vector<QueryArgument>& arguments, bool IsMatchExact);
 
     bool IsMatchExact() const;
     const QueryArgument& GetPatternSynonym() const;

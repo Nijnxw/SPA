@@ -11,6 +11,6 @@ public:
     QueryArgumentType getType();
 
 private:
-    std::string value;
+    std::string value;  // can either be a literal or variable name (depending on type)
     QueryArgumentType type;
 };

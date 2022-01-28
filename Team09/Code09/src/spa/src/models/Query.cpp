@@ -1,7 +1,7 @@
 #include <vector>
 #include "Query.h"
 
-Query::Query(std::vector<QueryArgument>& resultSynonyms, std::vector<QueryClause>& suchThatClauses,
+Query::Query(std::vector<QueryArgument>& resultSynonyms, std::vector<QuerySuchThatClause>& suchThatClauses,
              std::vector<QueryPatternClause>& patternClauses) : resultSynonyms(resultSynonyms),
                                                                 suchThatClauses(suchThatClauses),
                                                                 patternClauses(patternClauses) {}
@@ -10,7 +10,7 @@ const std::vector<QueryArgument>& Query::GetResultSynonyms() const {
     return resultSynonyms;
 }
 
-const std::vector<QueryClause>& Query::GetSuchThatClauses() const {
+const std::vector<QuerySuchThatClause>& Query::GetSuchThatClauses() const {
     return suchThatClauses;
 }
 

@@ -6,12 +6,10 @@
 
 class QueryClause {
 public:
-    QueryClause(QueryArgumentType& clauseType, std::vector<QueryArgument>& arguments);
+    QueryClause(std::vector<QueryArgument>& arguments);
 
-    QueryArgumentType GetClauseType() const;
     const std::vector<QueryArgument>& GetArguments() const;
 
 protected:
-    QueryArgumentType clauseType;
     std::vector<QueryArgument> arguments;
 };

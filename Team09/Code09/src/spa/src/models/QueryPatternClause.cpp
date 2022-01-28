@@ -1,8 +1,8 @@
 #include "QueryPatternClause.h"
 
-QueryPatternClause::QueryPatternClause(QueryArgumentType& clauseType, std::vector<QueryArgument>& arguments,
-                                       QueryArgument& patternSynonym, bool isMatchExact)
-        : QueryClause(clauseType, arguments), patternSynonym(patternSynonym), isMatchExact(isMatchExact) {}
+QueryPatternClause::QueryPatternClause(QueryArgument& patternSynonym, std::vector<QueryArgument>& arguments,
+                                       bool isMatchExact)
+        : QueryClause(arguments), patternSynonym(patternSynonym), isMatchExact(isMatchExact) {}
 
 bool QueryPatternClause::IsMatchExact() const {
     return isMatchExact;

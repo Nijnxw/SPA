@@ -1,16 +1,16 @@
-#include <EntityStore.h>
+#include "EntityStore.h"
 
-static std::unordered_set<std::string> EntityStore::procedures;
-static std::unordered_set<std::string> EntityStore::variables;
-static std::unordered_set<std::string> EntityStore::constants;
-static std::unordered_set<int> EntityStore::statements;
+std::unordered_set<std::string> EntityStore::procedures;
+std::unordered_set<std::string> EntityStore::variables;
+std::unordered_set<std::string> EntityStore::constants;
+std::unordered_set<int> EntityStore::statements;
 
-static std::unordered_map<int, AssignStatement> EntityStore::assignStatements;
-static std::unordered_set<int> EntityStore::ifStatements;
-static std::unordered_set<int> EntityStore::whileStatements;
-static std::unordered_set<int> EntityStore::callStatements;
-static std::unordered_set<int> EntityStore::printStatements;
-static std::unordered_set<int> EntityStore::readStatements;
+std::unordered_map<int, AssignStatement> EntityStore::assignStatements;
+std::unordered_set<int> EntityStore::ifStatements;
+std::unordered_set<int> EntityStore::whileStatements;
+std::unordered_set<int> EntityStore::callStatements;
+std::unordered_set<int> EntityStore::printStatements;
+std::unordered_set<int> EntityStore::readStatements;
 
 EntityStore::EntityStore() {}
 

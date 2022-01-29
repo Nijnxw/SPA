@@ -16,11 +16,11 @@ private:
 	static std::unordered_map<int, std::unordered_set<int>> followerToFolloweesT;
 	static std::unordered_map<int, std::unordered_set<int>> followeeToFollowersT;
 
-public: 
+public:
 	FollowsStore();
 
 	static void clear();
 
 	static bool addFollows(int follower, int followee);
 	static bool addFollowsT(int follower, int followee);
-}
+};

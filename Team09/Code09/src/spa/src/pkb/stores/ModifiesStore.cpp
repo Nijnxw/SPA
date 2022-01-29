@@ -1,11 +1,11 @@
-#include <ModifiesStore.h>
+#include "ModifiesStore.h"
 
-static std::unordered_set<int> modifiesStatements;
-static std::unordered_set<std::string> modifiedVariables;
-static std::unordered_map<int, unordered_set<std::string>> statementNumberToVariablesModified;
-static std::unordered_map<std::string, unordered_set<int>> variableToStatementNumbersModifiedBy;
-static std::unordered_map<std::string, unordered_set<std::string>> procedureToVariablesModified;
-static std::unordered_map<std::string, unordered_set<std::string>> variableToProceduresModifiedBy;
+std::unordered_set<int> modifiesStatements;
+std::unordered_set<std::string> modifiedVariables;
+std::unordered_map<int, std::unordered_set<std::string>> statementNumberToVariablesModified;
+std::unordered_map<std::string, std::unordered_set<int>> variableToStatementNumbersModifiedBy;
+std::unordered_map<std::string, std::unordered_set<std::string>> procedureToVariablesModified;
+std::unordered_map<std::string, std::unordered_set<std::string>> variableToProceduresModifiedBy;
 
 ModifiesStore::ModifiesStore() {}
 

@@ -24,6 +24,8 @@ add_library(spa ${srcs} ${headers}
         src/simple_parser/Token.h
         src/pkb/models/AssignStatement.cpp
         src/pkb/models/AssignStatement.h
+        src/pkb/models/QueryResultTable.h
+        src/pkb/models/QueryResultTable.h
         src/pkb/stores/EntityStore.cpp
         src/pkb/stores/EntityStore.h
         src/pkb/stores/FollowsStore.cpp

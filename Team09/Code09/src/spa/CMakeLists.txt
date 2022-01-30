@@ -2,7 +2,7 @@ file(GLOB srcs "${CMAKE_CURRENT_SOURCE_DIR}/src/*.cpp")
 file(GLOB headers "${CMAKE_CURRENT_SOURCE_DIR}/src/*.h" "${CMAKE_CURRENT_SOURCE_DIR}/src/*.hpp")
 
 add_library(spa ${srcs} ${headers} 
-        src/models/QueryArgumentType.h
+        "src/models/EntityType.h"
         src/models/Query.h
         src/models/QueryClause.h
         src/models/QueryArgument.h
@@ -22,8 +22,8 @@ add_library(spa ${srcs} ${headers}
         src/simple_parser/Lexer.h
         src/simple_parser/Token.cpp
         src/simple_parser/Token.h
-        src/pkb/models/AssignStatement.cpp
-        src/pkb/models/AssignStatement.h
+        "src/models/AssignStatement.cpp"
+        "src/models/AssignStatement.h"
         src/pkb/stores/EntityStore.cpp
         src/pkb/stores/EntityStore.h
         src/pkb/stores/FollowsStore.cpp

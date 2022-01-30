@@ -7,6 +7,8 @@
 #include <unordered_map>
 #include <unordered_set>
 
+#include "models/EntityType.h"
+
 class ModifiesStore {
 private:
 	static std::unordered_set<int> modifiesStatements;
@@ -21,6 +23,6 @@ public:
 
 	static void clear();
 
-	static bool addModifiesStatement(int statementNumber, StatementType statementType, std::unordered_set<std::string> variables);
-	static bool addModifiesProcedure(std::string procedure, StatementType statementType, std::unordered_set<std::string> variables);
+	static bool addModifiesStatement(int statementNumber, EntityType statementType, std::unordered_set<std::string> variables);
+	static bool addModifiesProcedure(std::string procedure, EntityType statementType, std::unordered_set<std::string> variables);
 };

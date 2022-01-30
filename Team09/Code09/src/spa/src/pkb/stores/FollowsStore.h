@@ -9,8 +9,6 @@
 
 class FollowsStore {
 private:
-	static std::unordered_set<int> followerStatements;
-	static std::unordered_set<int> followeeStatements;
 	static std::unordered_map<int, int> followerToFollowee;
 	static std::unordered_map<int, int> followeeToFollower;
 	static std::unordered_map<int, std::unordered_set<int>> followerToFolloweesT;

@@ -7,7 +7,8 @@
 #include <unordered_map>
 #include <unordered_set>
 
-#include "../models/AssignStatement.h"
+#include "models/AssignStatement.h"
+#include "models/EntityType.h"
 
 class EntityStore {
 private:
@@ -34,5 +35,5 @@ public:
 	static bool addStatementNumber(int statementNumber);
 
 	static bool addAssignStatement(int statementNumber, std::string leftHandSide, std::string rightHandSide);
-	static bool addStatement(StatementType statementType, int statementNumber);
+	static bool addStatement(EntityType statementType, int statementNumber);
 };

@@ -7,6 +7,8 @@
 #include <unordered_map>
 #include <unordered_set>
 
+#include "models/EntityType.h"
+
 class UsesStore {
 private:
 	static std::unordered_set<int> usesStatements;
@@ -21,6 +23,6 @@ public:
 
 	static void clear();
 
-	static bool addUsesStatement(int statementNumber, StatementType statementType, std::unordered_set<std::string> variables);
-	static bool addUsesProcedure(std::string procedure, StatementType statementType, std::unordered_set<std::string> variables);
+	static bool addUsesStatement(int statementNumber, EntityType statementType, std::unordered_set<std::string> variables);
+	static bool addUsesProcedure(std::string procedure, EntityType statementType, std::unordered_set<std::string> variables);
 };

@@ -18,10 +18,10 @@ void ModifiesStore::clear() {
 	variableToProceduresModifiedBy.clear();
 }
 
-bool ModifiesStore::addModifiesStatement(int statementNumber, StatementType statementType, std::unordered_set<std::string> variables) {
+bool ModifiesStore::addModifiesStatement(int statementNumber, EntityType statementType, std::unordered_set<std::string> variables) {
 	return true; // TODO: Implement functionality.
 }
 
-bool ModifiesStore::addModifiesProcedure(std::string procedure, StatementType statementType, std::unordered_set<std::string> variables) {
+bool ModifiesStore::addModifiesProcedure(std::string procedure, EntityType statementType, std::unordered_set<std::string> variables) {
 	return true; // TODO: Implement functionality.
 }

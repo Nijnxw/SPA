@@ -36,4 +36,16 @@ public:
 
 	static bool addAssignStatement(int statementNumber, std::string leftHandSide, std::string rightHandSide);
 	static bool addStatement(EntityType statementType, int statementNumber);
+
+	static std::unordered_set<std::string> getProcedures();
+	static std::unordered_set<std::string> getVariables();
+	static std::unordered_set<std::string> getConstants();
+	static std::unordered_set<int> getStatements();
+
+	static std::unordered_map<int, AssignStatement> getAssignStatements();
+	static std::unordered_set<int> getIfStatements();
+	static std::unordered_set<int> getWhileStatements();
+	static std::unordered_set<int> getCallStatements();
+	static std::unordered_set<int> getPrintStatements();
+	static std::unordered_set<int> getReadStatements();
 };

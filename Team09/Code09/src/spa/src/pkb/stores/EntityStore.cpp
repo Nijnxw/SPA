@@ -71,3 +71,44 @@ bool EntityStore::addStatement(EntityType statementType, int statementNumber) {
 
 	return resultValue;
 }
+
+std::unordered_set<std::string> EntityStore::getProcedures() {
+	return procedures;
+}
+
+std::unordered_set<std::string> EntityStore::getVariables() {
+	return variables;
+}
+
+std::unordered_set<std::string> EntityStore::getConstants() {
+	return constants;
+}
+
+std::unordered_set<int> EntityStore::getStatements() {
+	return statements;
+}
+
+std::unordered_map<int, AssignStatement> EntityStore::getAssignStatements() {
+	return assignStatements;
+}
+
+std::unordered_set<int> EntityStore::getIfStatements() {
+	return ifStatements;
+}
+
+std::unordered_set<int> EntityStore::getWhileStatements() {
+	return whileStatements;
+}
+
+std::unordered_set<int> EntityStore::getCallStatements() {
+	return callStatements;
+}
+
+std::unordered_set<int> EntityStore::getPrintStatements() {
+	return printStatements;
+}
+
+std::unordered_set<int> EntityStore::getReadStatements() {
+	return readStatements;
+}
+

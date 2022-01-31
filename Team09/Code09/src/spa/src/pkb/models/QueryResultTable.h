@@ -7,7 +7,7 @@
 
 class QueryResultTable {
 private:
-	std::unordered_map<std::string, std::vector<std::string>>table;
+	std::unordered_map<std::string, std::vector<std::string>> table;
 
 public:
 	std::unordered_map<std::string, std::vector<std::string>> getTable();

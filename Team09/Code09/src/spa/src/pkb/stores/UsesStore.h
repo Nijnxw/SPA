@@ -27,12 +27,6 @@ enum UsesRHSTypeEnum {
 	// UNDERSCORE,
 };
 
-enum SelectEnum {
-	SELECT_LEFT,
-	SELECT_RIGHT,
-	SELECT_BOTH
-};
-
 class UsesStore {
 private:
 	static std::unordered_set<int> usesStatements;
@@ -47,13 +41,13 @@ public:
 
 	static void clear();
 	
-	static bool getUsesBoolean(std::string LHS, std::string RHS);
-	static QueryResultTable getUses(std::string LHS, std::string RHS, UsesLHSTypeEnum LHSType, UsesRHSTypeEnum RHSType, SelectEnum select);
+	static QueryResultTable getUses(std::string LHS, std::string RHS, UsesLHSTypeEnum LHSType, UsesRHSTypeEnum RHSType, bool isBooleanResult);
+
 	static bool addUsesStatement(int statementNumber, StatementType statementType, std::unordered_set<std::string> variables);
 	static bool addUsesProcedure(std::string procedure, StatementType statementType, std::unordered_set<std::string> variables);
 	
 	static QueryResultTable UsesStore::getUsesByVariable(std::string LHS, std::string RHS, UsesLHSTypeEnum LHSType);
-	static QueryResultTable UsesStore::getUsesBySynonym(std::string LHS, std::string RHS, UsesLHSTypeEnum LHSType, SelectEnum select);
+	static QueryResultTable UsesStore::getUsesBySynonym(std::string LHS, std::string RHS, UsesLHSTypeEnum LHSType);
 
 	static std::unordered_set<std::string> getVariablesUsedByStatement(int stmtNo);
 	static std::unordered_set<std::string> getVariablesUsedByProcedure(std::string procName);

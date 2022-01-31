@@ -41,7 +41,7 @@ bool UsesStore::getUsesBoolean(std::string LHS, std::string RHS) {
 	}
 }
 
-QueryResultTable UsesStore::getUses(std::string LHS, std::string RHS, UsesLHSTypeEnum LHSType, UsesRHSTypeEnum RHSType, SelectEnum select) {
+QueryResultTable UsesStore::getUses(std::string LHS, std::string RHS, UsesLHSTypeEnum LHSType, UsesRHSTypeEnum RHSType, bool isBooleanResult) {
 	// Different evaluation for different input types. Possible design consideration point, instead of leaving the generation of the result set 
 	// to the evaluator, by putting the logic to the PKB, we decrease the coupling, changes to the PKB data structure for example will not require
 	// a change to the evaluator. Also, this moving the logic to the PKB would decrease the complexity of the QE to focus on more important aspects
@@ -52,38 +52,48 @@ QueryResultTable UsesStore::getUses(std::string LHS, std::string RHS, UsesLHSTyp
 		return getUsesByVariable(LHS, RHS, LHSType);
 	}
 	else if (RHSType == SYNONYM_VARIABLE) {
-		return getUsesBySynonym(LHS, RHS, LHSType, select);
+		return getUsesBySynonym(LHS, RHS, LHSType);
 	}
 }
 // ============ HELPER METHODS ==============
 QueryResultTable UsesStore::getUsesByVariable(std::string LHS, std::string RHS, UsesLHSTypeEnum LHSType) {
 	QueryResultTable queryResult;
 	
+	std::unordered_set<int> stmtUsingVar = getStatementsUsingVariable(RHS);
+	
 	// Uses(_, "x")
 	switch(LHSType) {
-	case SYNONYM_STMT: {
+		case SYNONYM_STMT: {
 			// stmt s; Uses(s, "x")
 			queryResult.addColumn(LHS, getStatementsUsingVariable(RHS));
 			break;
 		}
 		case SYNONYM_ASSIGN: {
-			std::unordered_set<std::string> resultSet;
+			// assign a; Uses(a, "x")
 			/*
-			std::unordered_set<std::string> assignStmts(getAssignStatements());
-			std::unordered_set<int> stmtUsingVar(getStatementsUsingVariable(RHS));
-			
-			for (auto i = a.begin(); i != a.end(); i++) {
-				if (b.find(*i) != b.end()) c.insert(*i);
-			}
+			std::unordered_set<std::string> resultSet;
+			std::unordered_set<std::string> assignStmts = getAssignStatements();
+			std::unordered_set<int> stmtUsingVar = getStatementsUsingVariable(RHS);
 
-			for (const auto& elem : s) {
-				if ()
+			for (auto i = assignStmts.begin(); i != assignStmts.end(); i++) {
+				if (stmtUsingVar.find(*i) != b.end()) c.insert(*i);
 			}
-			*/
 			queryResult.addColumn(LHS, resultSet);
+			*/
 			break;
 		}
 		case SYNONYM_PRINT:
+			// print p; Uses(p, "x")
+			/*
+			std::unordered_set<std::string> resultSet;
+			std::unordered_set<std::string> assignStmts = getAssignStatements();
+
+			for (auto i = assignStmts.begin(); i != assignStmts.end(); i++) {
+				if (stmtUsingVar.find(*i) != b.end()) c.insert(*i);
+			}
+			queryResult.addColumn(LHS, resultSet);
+			*/
+
 			break;
 
 		case SYNONYM_CALL:
@@ -98,7 +108,7 @@ QueryResultTable UsesStore::getUsesByVariable(std::string LHS, std::string RHS, 
 		return result;
 }
 
-QueryResultTable UsesStore::getUsesBySynonym(std::string LHS, std::string RHS, UsesLHSTypeEnum LHSType, SelectEnum select) {
+QueryResultTable UsesStore::getUsesBySynonym(std::string LHS, std::string RHS, UsesLHSTypeEnum LHSType) {
 
 }
 
@@ -118,3 +128,4 @@ std::unordered_set<int> getStatementsUsingVariable(std::string variable) {
 //TODO: update h file with methods, helper methods should be private
 //TODO: add error handling
 //TODO: Consider passing references to avoid creating strings
+//TODO: Change UsesLHSTypeEnum/UsesRHSTypeEnum

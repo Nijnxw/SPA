@@ -27,6 +27,8 @@ enum UsesRHSTypeEnum {
 	// UNDERSCORE,
 };
 
+#include "models/EntityType.h"
+
 class UsesStore {
 private:
 	static std::unordered_set<int> usesStatements;
@@ -43,10 +45,10 @@ public:
 	
 	static QueryResultTable getUses(std::string LHS, std::string RHS, UsesLHSTypeEnum LHSType, UsesRHSTypeEnum RHSType, bool isBooleanResult);
 
-	static bool addUsesStatement(int statementNumber, StatementType statementType, std::unordered_set<std::string> variables);
-	static bool addUsesProcedure(std::string procedure, StatementType statementType, std::unordered_set<std::string> variables);
-	
-	static QueryResultTable UsesStore::getUsesByVariable(std::string LHS, std::string RHS, UsesLHSTypeEnum LHSType);
+	static bool addUsesStatement(int statementNumber, EntityType statementType, std::unordered_set<std::string> variables);
+	static bool addUsesProcedure(std::string procedure, EntityType statementType, std::unordered_set<std::string> variables);
+  
+  static QueryResultTable UsesStore::getUsesByVariable(std::string LHS, std::string RHS, UsesLHSTypeEnum LHSType);
 	static QueryResultTable UsesStore::getUsesBySynonym(std::string LHS, std::string RHS, UsesLHSTypeEnum LHSType);
 
 	static std::unordered_set<std::string> getVariablesUsedByStatement(int stmtNo);

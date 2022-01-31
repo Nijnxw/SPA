@@ -1,12 +1,12 @@
 #include <string>
 #include "QueryArgument.h"
 
-QueryArgument::QueryArgument(std::string& value, QueryArgumentType type) : value(value), type(type) {}
+QueryArgument::QueryArgument(std::string& value, EntityType type) : value(value), type(type) {}
 
 const std::string& QueryArgument::getValue() const {
     return value;
 }
 
-QueryArgumentType QueryArgument::getType() {
+EntityType QueryArgument::getType() {
     return type;
 }

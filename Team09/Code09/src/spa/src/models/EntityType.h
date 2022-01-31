@@ -1,12 +1,13 @@
 #pragma once
 
-enum class QueryArgumentType {
+enum class EntityType {
     ASSIGN,
     WHILE,
     IF,
     STMT,
     VAR,
     PROC,
+    CALL,
     READ,
     PRINT,
     INT,

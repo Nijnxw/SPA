@@ -24,7 +24,7 @@ bool UsesStore::addUsesStatement(int statementNumber, StatementType statementTyp
 	return true; // TODO: Implement functionality.
 }
 
-bool UsesStore::addUsesProcedure(std::string procedure, StatementType statementType, std::unordered_set<std::string> variables) {
+bool UsesStore::addUsesProcedure(std::string procedure, EntityType statementType, std::unordered_set<std::string> variables) {
 	return true; // TODO: Implement functionality.
 }
 

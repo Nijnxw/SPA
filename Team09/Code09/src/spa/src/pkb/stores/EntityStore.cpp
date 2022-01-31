@@ -48,23 +48,23 @@ bool EntityStore::addAssignStatement(int statementNumber, std::string leftHandSi
 	return assignStatements.emplace(statementNumber, assignStatement).second;
 }
 
-bool EntityStore::addStatement(StatementType statementType, int statementNumber) {
+bool EntityStore::addStatement(EntityType statementType, int statementNumber) {
 	bool resultValue = true;
 
 	switch (statementType) {
-	case IF:
+	case EntityType::IF:
 		resultValue = ifStatements.emplace(statementNumber).second;
 		break;
-	case WHILE:
+	case EntityType::WHILE:
 		resultValue = whileStatements.emplace(statementNumber).second;
 		break;
-	case CALL:
+	case EntityType::CALL:
 		resultValue = callStatements.emplace(statementNumber).second;
 		break;
-	case PRINT:
+	case EntityType::PRINT:
 		resultValue = printStatements.emplace(statementNumber).second;
 		break;
-	case READ:
+	case EntityType::READ:
 		resultValue = readStatements.emplace(statementNumber).second;
 		break;
 	}

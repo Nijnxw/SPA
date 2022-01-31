@@ -12,6 +12,10 @@ public:
 
 private:
 	std::string rawQuery;
+	
+	std::vector<std::string> delimit();
+
+	std::vector<std::string> split();
 
 };
 

@@ -1,4 +1,3 @@
-//TODO: Move UsesLHSTypeEnum/UsesRHSTypeEnum to general store and rename
 //TODO: Possible optimisation by early termination given isBooleanResult argument, currently boolean is not used
 #include "UsesStore.h"
 
@@ -59,15 +58,15 @@ bool UsesStore::addUsesProcedure(std::string procedure, std::unordered_set<std::
 // ============ GETTER METHOD ==============
 
 /* Get Uses relationship information from PKB, note that LHS and RHS types have to be specified */
-QueryResultTable UsesStore::getUses(std::string LHS, std::string RHS, UsesLHSTypeEnum LHSType, UsesRHSTypeEnum RHSType, bool isBooleanResult) {
+QueryResultTable UsesStore::getUses(std::string LHS, std::string RHS, EntityType LHSType, EntityType RHSType, bool isBooleanResult) {
 
-	if (RHSType == VARIABLE_NAME) {
+	if (RHSType == EntityType::STRING) {
 		return getUsesByVariable(LHS, RHS, LHSType);
 	}
-	else if (RHSType == SYNONYM_VARIABLE) {
+	else if (RHSType == EntityType::VAR) {
 		return getUsesBySynonym(LHS, RHS, LHSType);
 	}
-	else if (RHSType == UNDERSCORE) {
+	else if (RHSType == EntityType::WILD) {
 		return getUsesByUnderscore(LHS, RHS, LHSType);
 	}
 	else {
@@ -79,11 +78,11 @@ QueryResultTable UsesStore::getUses(std::string LHS, std::string RHS, UsesLHSTyp
 // ============ HELPER METHODS ==============
 
 /* Get Uses relationship information for Uses(_, _) cases */
-QueryResultTable UsesStore::getUsesByUnderscore(std::string LHS, std::string RHS, UsesLHSTypeEnum LHSType) {
+QueryResultTable UsesStore::getUsesByUnderscore(std::string LHS, std::string RHS, EntityType LHSType) {
 	QueryResultTable queryResult;
 
 	switch (LHSType) {
-	case STMT_NO:
+	case EntityType::INT:
 		// e.g. Uses("9", _)
 		if (!getVariablesUsedByStatement(std::stoi(LHS)).empty())
 			queryResult.setBooleanResult(true);
@@ -95,11 +94,11 @@ QueryResultTable UsesStore::getUsesByUnderscore(std::string LHS, std::string RHS
 				queryResult.setBooleanResult(true);
 			break;
 		*/
-	case SYNONYM_STMT:
+	case EntityType::STMT:
 		// e.g. stmt s; Uses(s, _)
 		queryResult.addColumn(LHS, usesStatements);
 		break;
-	case SYNONYM_ASSIGN: {
+	case EntityType::ASSIGN: {
 		// e.g. assign a; Uses(a, _)
 		std::unordered_set<int> assignStmts;
 		for (auto kv : EntityStore::getAssignStatements()) {
@@ -108,17 +107,17 @@ QueryResultTable UsesStore::getUsesByUnderscore(std::string LHS, std::string RHS
 		queryResult.addColumn(LHS, PKBUtil::unorderedSetIntersection(usesStatements, assignStmts));
 		break;
 	}
-	case SYNONYM_PRINT:
+	case EntityType::PRINT:
 		// e.g. print p; Uses(p, _)
 		queryResult.addColumn(LHS, PKBUtil::unorderedSetIntersection(usesStatements, EntityStore::getPrintStatements()));
 		break;
 
-	case SYNONYM_IF:
+	case EntityType::IF:
 		// e.g. if ifs; Uses(ifs, _)
 		queryResult.addColumn(LHS, PKBUtil::unorderedSetIntersection(usesStatements, EntityStore::getIfStatements()));
 		break;
 
-	case SYNONYM_WHILE:
+	case EntityType::WHILE:
 		// e.g. while w; Uses(w, _)
 		queryResult.addColumn(LHS, PKBUtil::unorderedSetIntersection(usesStatements, EntityStore::getWhileStatements()));
 		break;
@@ -127,12 +126,12 @@ QueryResultTable UsesStore::getUsesByUnderscore(std::string LHS, std::string RHS
 }
 
 /* Get Uses relationship information for Uses(_, "x") cases */
-QueryResultTable UsesStore::getUsesByVariable(std::string LHS, std::string RHS, UsesLHSTypeEnum LHSType) {
+QueryResultTable UsesStore::getUsesByVariable(std::string LHS, std::string RHS, EntityType LHSType) {
 	QueryResultTable queryResult;
 	
 	std::unordered_set<int> stmtsUsingVar = getStatementsUsingVariable(RHS);
 	switch(LHSType) {
-		case STMT_NO:
+		case EntityType::INT:
 			// e.g. Uses("9", "x")
 			if (getVariablesUsedByStatement(std::stoi(LHS)).count(RHS))
 				queryResult.setBooleanResult(true);
@@ -144,11 +143,11 @@ QueryResultTable UsesStore::getUsesByVariable(std::string LHS, std::string RHS, 
 				queryResult.setBooleanResult(true);
 			break;
 		*/
-		case SYNONYM_STMT:
+		case EntityType::STMT:
 			// e.g. stmt s; Uses(s, "x")
 			queryResult.addColumn(LHS, getStatementsUsingVariable(RHS));
 			break;
-		case SYNONYM_ASSIGN: {
+		case EntityType::ASSIGN: {
 			// e.g. assign a; Uses(a, "x")
 			std::unordered_set<int> assignStmts;
 			for (auto kv : EntityStore::getAssignStatements()) {
@@ -157,17 +156,17 @@ QueryResultTable UsesStore::getUsesByVariable(std::string LHS, std::string RHS, 
 			queryResult.addColumn(LHS, PKBUtil::unorderedSetIntersection(stmtsUsingVar, assignStmts));
 			break;
 		}
-		case SYNONYM_PRINT:
+		case EntityType::PRINT:
 			// e.g. print p; Uses(p, "x")
 			queryResult.addColumn(LHS, PKBUtil::unorderedSetIntersection(stmtsUsingVar, EntityStore::getPrintStatements()));
 			break;
 
-		case SYNONYM_IF:
+		case EntityType::IF:
 			// e.g. if ifs; Uses(ifs, "x")
 			queryResult.addColumn(LHS, PKBUtil::unorderedSetIntersection(stmtsUsingVar, EntityStore::getIfStatements()));
 			break;
 
-		case SYNONYM_WHILE:
+		case EntityType::WHILE:
 			// e.g. while w; Uses(w, "x")
 			queryResult.addColumn(LHS, PKBUtil::unorderedSetIntersection(stmtsUsingVar, EntityStore::getWhileStatements()));
 			break;
@@ -176,26 +175,28 @@ QueryResultTable UsesStore::getUsesByVariable(std::string LHS, std::string RHS, 
 }
 
 /* Get Uses relationship information for Uses(_, v) cases */
-QueryResultTable UsesStore::getUsesBySynonym(std::string LHS, std::string RHS, UsesLHSTypeEnum LHSType) {
+QueryResultTable UsesStore::getUsesBySynonym(std::string LHS, std::string RHS, EntityType LHSType) {
 	QueryResultTable queryResult;
 
 	switch (LHSType) {
-	case STMT_NO:
+	case EntityType::INT:
 		// e.g. Uses("9", v)
 		queryResult.addColumn(RHS, getVariablesUsedByStatement(std::stoi(LHS)));
 		break;
-	case PROC_NAME:
+		/* Not used in iteration 1
+	case EntityType::STRING:
 		// e.g. Uses("cs3203", v)
 		queryResult.addColumn(RHS, getVariablesUsedByProcedure(LHS));
 		break;
-	case SYNONYM_STMT: {
+		*/
+	case EntityType::STMT: {
 		// e.g. stmt s; Uses(s, v)
 		auto [stmts, vars] = getStmtsToUsedVariable(usesStatements);
 		queryResult.addColumn(LHS, stmts);
 		queryResult.addColumn(RHS, vars);
 		break;
 	}
-	case SYNONYM_ASSIGN: {
+	case EntityType::ASSIGN: {
 		// e.g. assign a; Uses(a, v)
 		std::unordered_set<int> assignStmts;
 		for (auto kv : EntityStore::getAssignStatements()) {
@@ -206,21 +207,21 @@ QueryResultTable UsesStore::getUsesBySynonym(std::string LHS, std::string RHS, U
 		queryResult.addColumn(RHS, vars);
 		break;
 	}
-	case SYNONYM_PRINT: {
+	case EntityType::PRINT: {
 		// e.g. print p; Uses(p, v)
 		auto [stmts, vars] = getStmtsToUsedVariable(EntityStore::getPrintStatements());
 		queryResult.addColumn(LHS, stmts);
 		queryResult.addColumn(RHS, vars);
 		break;
 	}
-	case SYNONYM_IF: {
+	case EntityType::IF: {
 		// e.g. if ifs; Uses(ifs, v)
 		auto [stmts, vars] = getStmtsToUsedVariable(EntityStore::getIfStatements());
 		queryResult.addColumn(LHS, stmts);
 		queryResult.addColumn(RHS, vars);
 		break;
 	}
-	case SYNONYM_WHILE: {
+	case EntityType::WHILE: {
 		// e.g. while w; Uses(w, v)
 		auto [stmts, vars] = getStmtsToUsedVariable(EntityStore::getWhileStatements());
 		queryResult.addColumn(LHS, stmts);

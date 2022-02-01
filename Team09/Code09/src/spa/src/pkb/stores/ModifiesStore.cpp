@@ -56,15 +56,15 @@ bool ModifiesStore::addModifiesProcedure(std::string procedure, std::unordered_s
 // ============ GETTER METHOD ==============
 
 /* Get Modifies relationship information from PKB, note that LHS and RHS types have to be specified */
-QueryResultTable ModifiesStore::getModifies(std::string LHS, std::string RHS, ModifiesLHSTypeEnum LHSType, ModifiesRHSTypeEnum RHSType, bool isBooleanResult) {
+QueryResultTable ModifiesStore::getModifies(std::string LHS, std::string RHS, EntityType LHSType, EntityType RHSType, bool isBooleanResult) {
 
-	if (RHSType == VARIABLE_NAME) {
+	if (RHSType == EntityType::STRING) {
 		return getModifiesByVariable(LHS, RHS, LHSType);
 	}
-	else if (RHSType == SYNONYM_VARIABLE) {
+	else if (RHSType == EntityType::VAR) {
 		return getModifiesBySynonym(LHS, RHS, LHSType);
 	}
-	else if (RHSType == UNDERSCORE) {
+	else if (RHSType == EntityType::WILD) {
 		return getModifiesByUnderscore(LHS, RHS, LHSType);
 	}
 	else {
@@ -76,27 +76,27 @@ QueryResultTable ModifiesStore::getModifies(std::string LHS, std::string RHS, Mo
 // ============ HELPER METHODS ==============
 
 /* Get Uses relationship information for Uses(_, _) cases */
-QueryResultTable ModifiesStore::getModifiesByUnderscore(std::string LHS, std::string RHS, ModifiesLHSTypeEnum LHSType) {
+QueryResultTable ModifiesStore::getModifiesByUnderscore(std::string LHS, std::string RHS, EntityType LHSType) {
 	QueryResultTable queryResult;
 
 	switch (LHSType) {
-	case STMT_NO:
+	case EntityType::INT:
 		// e.g. Modifies("9", _)
 		if (!getVariablesModifiedByStatement(std::stoi(LHS)).empty())
 			queryResult.setBooleanResult(true);
 		break;
 		/* Not used in iteration 1
-			case PROC_NAME:
+			case EntityType::STRING:
 			// e.g. Modifies("cs3203", _)
 			if (!getVariablesModifiedByProcedure(LHS).empty())
 				queryResult.setBooleanResult(true);
 			break;
 		*/
-	case SYNONYM_STMT:
+	case EntityType::STMT:
 		// e.g. stmt s; Modifies(s, _)
 		queryResult.addColumn(LHS, modifiesStatements);
 		break;
-	case SYNONYM_ASSIGN: {
+	case EntityType::ASSIGN: {
 		// e.g. assign a; Modifies(a, _)
 		std::unordered_set<int> assignStmts;
 		for (auto kv : EntityStore::getAssignStatements()) {
@@ -105,17 +105,17 @@ QueryResultTable ModifiesStore::getModifiesByUnderscore(std::string LHS, std::st
 		queryResult.addColumn(LHS, PKBUtil::unorderedSetIntersection(modifiesStatements, assignStmts));
 		break;
 	}
-	case SYNONYM_READ:
+	case EntityType::READ:
 		// e.g. print p; Modifies(p, _)
 		queryResult.addColumn(LHS, PKBUtil::unorderedSetIntersection(modifiesStatements, EntityStore::getReadStatements()));
 		break;
 
-	case SYNONYM_IF:
+	case EntityType::IF:
 		// e.g. if ifs; Modifies(ifs, _)
 		queryResult.addColumn(LHS, PKBUtil::unorderedSetIntersection(modifiesStatements, EntityStore::getIfStatements()));
 		break;
 
-	case SYNONYM_WHILE:
+	case EntityType::WHILE:
 		// e.g. while w; Modifies(w, _)
 		queryResult.addColumn(LHS, PKBUtil::unorderedSetIntersection(modifiesStatements, EntityStore::getWhileStatements()));
 		break;
@@ -124,26 +124,28 @@ QueryResultTable ModifiesStore::getModifiesByUnderscore(std::string LHS, std::st
 }
 
 /* Get Modifies relationship information for Modifies(_, "x") cases */
-QueryResultTable ModifiesStore::getModifiesByVariable(std::string LHS, std::string RHS, ModifiesLHSTypeEnum LHSType) {
+QueryResultTable ModifiesStore::getModifiesByVariable(std::string LHS, std::string RHS, EntityType LHSType) {
 	QueryResultTable queryResult;
 
 	std::unordered_set<int> stmtsUsingVar = getStatementsModifyingVariable(RHS);
 	switch (LHSType) {
-	case STMT_NO:
+	case EntityType::INT:
 		// e.g. Modifies("9", "x")
 		if (getVariablesModifiedByStatement(std::stoi(LHS)).count(RHS))
 			queryResult.setBooleanResult(true);
 		break;
-	case PROC_NAME:
+		/* Not used in iteration 1
+	case EntityType::STRING:
 		// e.g. Modifies("cs3203", "x")
 		if (getVariablesModifiedByProcedure(LHS).count(RHS))
 			queryResult.setBooleanResult(true);
 		break;
-	case SYNONYM_STMT:
+		*/
+	case EntityType::STMT:
 		// e.g. stmt s; Modifies(s, "x")
 		queryResult.addColumn(LHS, getStatementsModifyingVariable(RHS));
 		break;
-	case SYNONYM_ASSIGN: {
+	case EntityType::ASSIGN: {
 		// e.g. assign a; Modifies(a, "x")
 		std::unordered_set<int> assignStmts;
 		for (auto kv : EntityStore::getAssignStatements()) {
@@ -152,17 +154,17 @@ QueryResultTable ModifiesStore::getModifiesByVariable(std::string LHS, std::stri
 		queryResult.addColumn(LHS, PKBUtil::unorderedSetIntersection(stmtsUsingVar, assignStmts));
 		break;
 	}
-	case SYNONYM_READ:
+	case EntityType::READ:
 		// e.g. read p; Modifies(p, "x")
 		queryResult.addColumn(LHS, PKBUtil::unorderedSetIntersection(stmtsUsingVar, EntityStore::getPrintStatements()));
 		break;
 
-	case SYNONYM_IF:
+	case EntityType::IF:
 		// e.g. if ifs; Modifies(ifs, "x")
 		queryResult.addColumn(LHS, PKBUtil::unorderedSetIntersection(stmtsUsingVar, EntityStore::getIfStatements()));
 		break;
 
-	case SYNONYM_WHILE:
+	case EntityType::WHILE:
 		// e.g. while w; Modifies(w, "x")
 		queryResult.addColumn(LHS, PKBUtil::unorderedSetIntersection(stmtsUsingVar, EntityStore::getWhileStatements()));
 		break;
@@ -171,26 +173,28 @@ QueryResultTable ModifiesStore::getModifiesByVariable(std::string LHS, std::stri
 }
 
 /* Get Modifies relationship information for Modifies(_, v) cases */
-QueryResultTable ModifiesStore::getModifiesBySynonym(std::string LHS, std::string RHS, ModifiesLHSTypeEnum LHSType) {
+QueryResultTable ModifiesStore::getModifiesBySynonym(std::string LHS, std::string RHS, EntityType LHSType) {
 	QueryResultTable queryResult;
 
 	switch (LHSType) {
-	case STMT_NO:
+	case EntityType::INT:
 		// e.g. Modifies("9", v)
 		queryResult.addColumn(RHS, getVariablesModifiedByStatement(std::stoi(LHS)));
 		break;
-	case PROC_NAME:
+		/* Not used in iteration 1
+	case EntityType::STRING:
 		// e.g. Modifies("cs3203", v)
 		queryResult.addColumn(RHS, getVariablesModifiedByProcedure(LHS));
 		break;
-	case SYNONYM_STMT: {
+		*/
+	case EntityType::STMT: {
 		// e.g. stmt s; Modifies(s, v)
 		auto [stmts, vars] = getStmtsToModifiedVariable(modifiesStatements);
 		queryResult.addColumn(LHS, stmts);
 		queryResult.addColumn(RHS, vars);
 		break;
 	}
-	case SYNONYM_ASSIGN: {
+	case EntityType::ASSIGN: {
 		// e.g. assign a; Modifies(a, v)
 		std::unordered_set<int> assignStmts;
 		for (auto kv : EntityStore::getAssignStatements()) {
@@ -201,21 +205,21 @@ QueryResultTable ModifiesStore::getModifiesBySynonym(std::string LHS, std::strin
 		queryResult.addColumn(RHS, vars);
 		break;
 	}
-	case SYNONYM_READ: {
+	case EntityType::READ: {
 		// e.g. read p; Modifies(p, v)
 		auto [stmts, vars] = getStmtsToModifiedVariable(EntityStore::getPrintStatements());
 		queryResult.addColumn(LHS, stmts);
 		queryResult.addColumn(RHS, vars);
 		break;
 	}
-	case SYNONYM_IF: {
+	case EntityType::IF: {
 		// e.g. if ifs; Modifies(ifs, v)
 		auto [stmts, vars] = getStmtsToModifiedVariable(EntityStore::getIfStatements());
 		queryResult.addColumn(LHS, stmts);
 		queryResult.addColumn(RHS, vars);
 		break;
 	}
-	case SYNONYM_WHILE: {
+	case EntityType::WHILE: {
 		// e.g. while w; Modifies(w, v)
 		auto [stmts, vars] = getStmtsToModifiedVariable(EntityStore::getWhileStatements());
 		queryResult.addColumn(LHS, stmts);

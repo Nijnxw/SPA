@@ -26,6 +26,7 @@ enum class TokenType {
 	PROC,
 
 	//Such that clause tokens
+	SELECT,
 	SUCH,
 	THAT,
 
@@ -61,6 +62,8 @@ static std::unordered_map<std::string, TokenType> stringTokenMap = {
 	{"constant", TokenType::CONST},
 	{"procedure", TokenType::PROC},
 
+	{"Select", TokenType::SELECT},
+	
 	//such that clauses token mapping
 	{"such", TokenType::SUCH},
 	{"that", TokenType::THAT},
@@ -70,8 +73,8 @@ static std::unordered_map<std::string, TokenType> stringTokenMap = {
 	{"Uses", TokenType::USES},
 	{"Parent", TokenType::PARENT},
 	{"Parent*", TokenType::PARENT_T},
-	{"Follow", TokenType::FOLLOWS},
-	{"Follow*", TokenType::PARENT_T},
+	{"Follows", TokenType::FOLLOWS},
+	{"Follows*", TokenType::FOLLOWS_T},
 
 	//Pattern clause token mapping 
 	{"pattern", TokenType::PATTERN},

@@ -3,6 +3,10 @@
 #include <string>
 #include "TokenType.h"
 
+/**
+ * @brief represent a PQL token
+ */
+
 class PQLToken {
 public:
 	PQLToken();

@@ -40,7 +40,9 @@ bool isIdent(std::string str) {
 
 bool isValidString(std::string str) {
 	const std::string content = str.substr(1, str.size() - 2);
-	return str.size() >= 2 && str[0] == '"' && str[str.size() - 1] && isIdent(content);
+	bool isInStringLiterals = str.size() >= 2 && str[0] == '"' && str[str.size() - 1] == '"';
+	bool isEitherIdentOrIntButNotBoth = (isIdent(content) && !isInt(content)) || (!isIdent(content) && isInt(content));
+	return isInStringLiterals && isEitherIdentOrIntButNotBoth;
 }
 
 Tokeniser::Tokeniser(std::string rawQueryString) { this->rawQuery = rawQueryString; }
@@ -89,7 +91,7 @@ std::vector<PQLToken> Tokeniser::tokenise() {
 			PQLTokens.push_back(PQLToken( "", stringTokenMap[token] )); 
 		} else if (isValidString(token)) {
 			const std::string ident = token.substr(1, token.size() - 2);
-			PQLTokens.push_back(PQLToken( ident, TokenType::STRING ));
+			PQLTokens.push_back(PQLToken( ident, TokenType::STRING));
 		} else if (isIdent(token)) {
 			PQLTokens.push_back(PQLToken(token, TokenType::SYNONYM));
 		} else if (isInt(token)) {

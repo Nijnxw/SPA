@@ -1,7 +1,7 @@
 #include "QueryResultTable.h"
 
 QueryResultTable::QueryResultTable() {}
-QueryResultTable::QueryResultTable(std::unordered_map<std::string, std::vector<std::string>>& table) : table(table), booleanResult(true) {}
+QueryResultTable::QueryResultTable(Table& table) : table(table), booleanResult(true) {}
 
 template<typename T>
 std::string toString(const T& value)
@@ -23,7 +23,7 @@ bool QueryResultTable::addColumn(std::string header, const It& rows) {
 	return true;
 }
 
-std::unordered_map<std::string, std::vector<std::string>> QueryResultTable::getTable() {
+Table QueryResultTable::getTable() {
 	return table;
 }
 

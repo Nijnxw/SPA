@@ -8,15 +8,17 @@
 #include <iterator>
 #include <algorithm>
 
+typedef std::unordered_map<std::string, std::vector<std::string>> Table;
+
 class QueryResultTable {
 private:
-	std::unordered_map<std::string, std::vector<std::string>> table;
+	Table table;
 	bool booleanResult = false;
 
 public:
 	QueryResultTable();
-	QueryResultTable(std::unordered_map<std::string, std::vector<std::string>>& table);
-	std::unordered_map<std::string, std::vector<std::string>> getTable();
+	QueryResultTable(Table& table);
+	Table getTable();
 	bool getBooleanResult();
 	void setBooleanResult(bool inputBool);
 

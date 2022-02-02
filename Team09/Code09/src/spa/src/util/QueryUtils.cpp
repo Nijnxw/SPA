@@ -7,35 +7,35 @@
  * headers.
  */
 Table QueryUtils::hashJoin(const Table& firstTable, const Table& secondTable) {
-    const std::vector<std::string> commonTableHeaders = getCommonHeaders(firstTable, secondTable);
+	const std::vector<std::string> commonTableHeaders = getCommonHeaders(firstTable, secondTable);
 
-    // can't hash join (natural join) if no common headers
-    if (commonTableHeaders.empty()) {
-        Table joinedTable;
-        return joinedTable;
-    }
+	// can't hash join (natural join) if no common headers
+	if (commonTableHeaders.empty()) {
+		Table joinedTable;
+		return joinedTable;
+	}
 
-    Table shorterTable;
-    Table longerTable;
-    auto firstTableNumRows = firstTable.at(commonTableHeaders.front()).size();
-    auto secondTableNumRows = secondTable.at(commonTableHeaders.front()).size();
+	Table shorterTable;
+	Table longerTable;
+	auto firstTableNumRows = firstTable.at(commonTableHeaders.front()).size();
+	auto secondTableNumRows = secondTable.at(commonTableHeaders.front()).size();
 
-    if (firstTableNumRows < secondTableNumRows) {
-        shorterTable = firstTable;
-        longerTable = secondTable;
-    } else {
-        shorterTable = secondTable;
-        longerTable = firstTable;
-    }
+	if (firstTableNumRows < secondTableNumRows) {
+		shorterTable = firstTable;
+		longerTable = secondTable;
+	} else {
+		shorterTable = secondTable;
+		longerTable = firstTable;
+	}
 
-    auto groupedCommonTuples = extractCommonTuples(commonTableHeaders, shorterTable, longerTable);
-    std::unordered_set<std::pair<int, int>, pair_hash> pairedTuples;
-    for (const auto& keyVal: groupedCommonTuples) {
-        const auto& group = keyVal.second;
-        crossProduct(group.first, group.second, pairedTuples);
-    }
+	auto groupedCommonTuples = extractCommonTuples(commonTableHeaders, shorterTable, longerTable);
+	std::unordered_set<std::pair<int, int>, pair_hash> pairedTuples;
+	for (const auto& keyVal: groupedCommonTuples) {
+		const auto& group = keyVal.second;
+		crossProduct(group.first, group.second, pairedTuples);
+	}
 
-    return {joinRows(pairedTuples, shorterTable, longerTable, commonTableHeaders)};
+	return {joinRows(pairedTuples, shorterTable, longerTable, commonTableHeaders)};
 }
 
 /*
@@ -43,41 +43,41 @@ Table QueryUtils::hashJoin(const Table& firstTable, const Table& secondTable) {
  */
 std::vector<std::string>
 QueryUtils::getCommonHeaders(const Table& firstTable, const Table& secondTable) {
-    std::vector<std::string> commonHeaders;
+	std::vector<std::string> commonHeaders;
 
-    if (firstTable.size() < secondTable.size()) {
-        for (auto& col: firstTable) {
-            if (secondTable.count(col.first) != 0) {
-                commonHeaders.push_back(col.first);
-            }
-        }
-    } else {
-        for (auto& col: secondTable) {
-            if (firstTable.count(col.first) != 0) {
-                commonHeaders.push_back(col.first);
-            }
-        }
-    }
+	if (firstTable.size() < secondTable.size()) {
+		for (auto& col: firstTable) {
+			if (secondTable.count(col.first) != 0) {
+				commonHeaders.push_back(col.first);
+			}
+		}
+	} else {
+		for (auto& col: secondTable) {
+			if (firstTable.count(col.first) != 0) {
+				commonHeaders.push_back(col.first);
+			}
+		}
+	}
 
-    return commonHeaders;
+	return commonHeaders;
 }
 
 std::vector<std::string>
 QueryUtils::getUniqueHeaders(const Table& firstTable, const Table& secondTable) {
-    std::vector<std::string> uniqueHeaders;
-    for (const auto& col: firstTable) {
-        if (secondTable.count(col.first) == 0) {
-            uniqueHeaders.push_back(col.first);
-        }
-    }
+	std::vector<std::string> uniqueHeaders;
+	for (const auto& col: firstTable) {
+		if (secondTable.count(col.first) == 0) {
+			uniqueHeaders.push_back(col.first);
+		}
+	}
 
-    for (const auto& col: secondTable) {
-        if (firstTable.count(col.first) == 0) {
-            uniqueHeaders.push_back(col.first);
-        }
-    }
+	for (const auto& col: secondTable) {
+		if (firstTable.count(col.first) == 0) {
+			uniqueHeaders.push_back(col.first);
+		}
+	}
 
-    return uniqueHeaders;
+	return uniqueHeaders;
 }
 
 /*
@@ -86,32 +86,32 @@ QueryUtils::getUniqueHeaders(const Table& firstTable, const Table& secondTable) 
  * grouping.
  */
 QueryUtils::GroupedTable QueryUtils::extractCommonTuples(const std::vector<std::string>& commonHeaders,
-                                                         const Table& firstTable,
-                                                         const Table& secondTable) {
-    // grouped tables is pre cross-product (int represent row number)
-    QueryUtils::GroupedTable groupedTables;
+														 const Table& firstTable,
+														 const Table& secondTable) {
+	// grouped tables is pre cross-product (int represent row number)
+	QueryUtils::GroupedTable groupedTables;
 
-    auto firstTableNumRows = firstTable.at(commonHeaders.front()).size();
-    for (auto i = 0; i < firstTableNumRows; i++) {
-        std::string commonTupleVal = selectTupleToString(commonHeaders, i, firstTable);
+	auto firstTableNumRows = firstTable.at(commonHeaders.front()).size();
+	for (auto i = 0; i < firstTableNumRows; i++) {
+		std::string commonTupleVal = selectTupleToString(commonHeaders, i, firstTable);
 
-        if (groupedTables.count(commonTupleVal) != 0) {
-            groupedTables[commonTupleVal].first.emplace(i);
-        } else {
-            std::pair<std::unordered_set<int>, std::unordered_set<int>> newGroup({i}, {});
-            groupedTables.emplace(commonTupleVal, newGroup);
-        }
-    }
+		if (groupedTables.count(commonTupleVal) != 0) {
+			groupedTables[commonTupleVal].first.emplace(i);
+		} else {
+			std::pair<std::unordered_set<int>, std::unordered_set<int>> newGroup({i}, {});
+			groupedTables.emplace(commonTupleVal, newGroup);
+		}
+	}
 
-    auto secondTableNumRows = secondTable.at(commonHeaders.front()).size();
-    for (auto i = 0; i < secondTableNumRows; i++) {
-        std::string commonTupleVal = selectTupleToString(commonHeaders, i, secondTable);
-        if (groupedTables.count(commonTupleVal) != 0) {
-            groupedTables[commonTupleVal].second.emplace(i);
-        }
-    }
+	auto secondTableNumRows = secondTable.at(commonHeaders.front()).size();
+	for (auto i = 0; i < secondTableNumRows; i++) {
+		std::string commonTupleVal = selectTupleToString(commonHeaders, i, secondTable);
+		if (groupedTables.count(commonTupleVal) != 0) {
+			groupedTables[commonTupleVal].second.emplace(i);
+		}
+	}
 
-    return groupedTables;
+	return groupedTables;
 }
 
 /*
@@ -119,57 +119,57 @@ QueryUtils::GroupedTable QueryUtils::extractCommonTuples(const std::vector<std::
  */
 std::string
 QueryUtils::selectTupleToString(const std::vector<std::string>& headers, size_t rowNum, const Table& table) {
-    std::string stringRep;
-    for (auto& col: headers) {
-        stringRep += table.at(col).at(rowNum);
-        if (col != headers.back()) {
-            stringRep += " ";
-        }
-    }
+	std::string stringRep;
+	for (auto& col: headers) {
+		stringRep += table.at(col).at(rowNum);
+		if (col != headers.back()) {
+			stringRep += " ";
+		}
+	}
 
-    return stringRep;
+	return stringRep;
 }
 
 void
 QueryUtils::crossProduct(const std::unordered_set<int>& firstTupleSet, const std::unordered_set<int>& secondTupleSet,
-                         std::unordered_set<std::pair<int, int>, pair_hash>& tuplePairings) {
-    for (auto firstRowNum: firstTupleSet) {
-        for (auto secondRowNum: secondTupleSet) {
-            tuplePairings.emplace(firstRowNum, secondRowNum);
-        }
-    }
+						 std::unordered_set<std::pair<int, int>, pair_hash>& tuplePairings) {
+	for (auto firstRowNum: firstTupleSet) {
+		for (auto secondRowNum: secondTupleSet) {
+			tuplePairings.emplace(firstRowNum, secondRowNum);
+		}
+	}
 }
 
 Table QueryUtils::joinRows(const std::unordered_set<std::pair<int, int>, pair_hash>& tuplePairings,
-                           const Table& firstTable, const Table& secondTable,
-                           const std::vector<std::string>& commonHeaders) {
-    Table joinedTable;
-    std::vector<std::string> uniqueHeaders = getUniqueHeaders(firstTable, secondTable);
+						   const Table& firstTable, const Table& secondTable,
+						   const std::vector<std::string>& commonHeaders) {
+	Table joinedTable;
+	std::vector<std::string> uniqueHeaders = getUniqueHeaders(firstTable, secondTable);
 
-    for (const auto& uniqueHeader: uniqueHeaders) {
-        std::vector<std::string> newCol;
-        joinedTable.emplace(uniqueHeader, newCol);
-    }
+	for (const auto& uniqueHeader: uniqueHeaders) {
+		std::vector<std::string> newCol;
+		joinedTable.emplace(uniqueHeader, newCol);
+	}
 
-    for (const auto& commonHeader: commonHeaders) {
-        std::vector<std::string> newCol;
-        joinedTable.emplace(commonHeader, newCol);
-    }
+	for (const auto& commonHeader: commonHeaders) {
+		std::vector<std::string> newCol;
+		joinedTable.emplace(commonHeader, newCol);
+	}
 
-    for (const auto& pair: tuplePairings) {
-        for (const auto& uniqueHeader: uniqueHeaders) {
-            if (firstTable.count(uniqueHeader) != 0) {
-                joinedTable[uniqueHeader].push_back(firstTable.at(uniqueHeader).at(pair.first));
-            } else {
-                joinedTable[uniqueHeader].push_back(secondTable.at(uniqueHeader).at(pair.second));
-            }
-        }
+	for (const auto& pair: tuplePairings) {
+		for (const auto& uniqueHeader: uniqueHeaders) {
+			if (firstTable.count(uniqueHeader) != 0) {
+				joinedTable[uniqueHeader].push_back(firstTable.at(uniqueHeader).at(pair.first));
+			} else {
+				joinedTable[uniqueHeader].push_back(secondTable.at(uniqueHeader).at(pair.second));
+			}
+		}
 
-        for (const auto& commonHeader: commonHeaders) {
-            // doesn't matter which table because values are common
-            joinedTable[commonHeader].push_back(firstTable.at(commonHeader).at(pair.first));
-        }
-    }
+		for (const auto& commonHeader: commonHeaders) {
+			// doesn't matter which table because values are common
+			joinedTable[commonHeader].push_back(firstTable.at(commonHeader).at(pair.first));
+		}
+	}
 
-    return joinedTable;
+	return joinedTable;
 }

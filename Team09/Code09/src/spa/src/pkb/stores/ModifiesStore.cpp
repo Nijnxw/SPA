@@ -117,6 +117,9 @@ ModifiesStore::getModifiesByUnderscore(const std::string& LHS, const std::string
 			queryResult.addColumn(LHS, PKBUtil::unorderedSetIntersection(modifiesStatements,
 																		 EntityStore::getWhileStatements()));
 			break;
+
+		default:
+			return queryResult;
 	}
 	return queryResult;
 }
@@ -170,6 +173,9 @@ ModifiesStore::getModifiesByVariable(const std::string& LHS, const std::string& 
 			queryResult.addColumn(LHS,
 								  PKBUtil::unorderedSetIntersection(stmtsUsingVar, EntityStore::getWhileStatements()));
 			break;
+
+		default:
+			return queryResult;
 	}
 	return queryResult;
 }
@@ -222,6 +228,8 @@ ModifiesStore::getModifiesBySynonym(const std::string& LHS, const std::string& R
 			std::tie(stmts, vars) = getStmtsToModifiedVariable(EntityStore::getWhileStatements());
 			break;
 		}
+		default:
+			return queryResult;
 	}
 	queryResult.addColumn(LHS, stmts);
 	queryResult.addColumn(RHS, vars);

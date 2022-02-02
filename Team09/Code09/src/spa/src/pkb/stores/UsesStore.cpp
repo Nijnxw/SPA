@@ -117,7 +117,10 @@ QueryClauseTable UsesStore::getUsesByUnderscore(const std::string& LHS, const st
 			queryResult.addColumn(LHS,
 								  PKBUtil::unorderedSetIntersection(usesStatements, EntityStore::getWhileStatements()));
 			break;
+		default:
+			return queryResult;
 	}
+
 	return queryResult;
 }
 
@@ -169,6 +172,8 @@ QueryClauseTable UsesStore::getUsesByVariable(const std::string& LHS, const std:
 			queryResult.addColumn(LHS,
 								  PKBUtil::unorderedSetIntersection(stmtsUsingVar, EntityStore::getWhileStatements()));
 			break;
+		default:
+			return queryResult;
 	}
 	return queryResult;
 }
@@ -219,6 +224,8 @@ QueryClauseTable UsesStore::getUsesBySynonym(const std::string& LHS, const std::
 			// e.g. while w; Uses(w, v)
 			std::tie(stmts, vars) = getStmtsToUsedVariable(EntityStore::getWhileStatements());
 			break;
+			default:
+				return queryResult;
 		}
 	}
 	queryResult.addColumn(LHS, stmts);

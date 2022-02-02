@@ -110,6 +110,9 @@ QueryResultTable ModifiesStore::getModifiesByUnderscore(const std::string& LHS, 
 		// e.g. while w; Modifies(w, _)
 		queryResult.addColumn(LHS, PKBUtil::unorderedSetIntersection(modifiesStatements, EntityStore::getWhileStatements()));
 		break;
+
+	default:
+		return queryResult;
 	}
 	return queryResult;
 }
@@ -159,6 +162,9 @@ QueryResultTable ModifiesStore::getModifiesByVariable(const std::string& LHS, co
 		// e.g. while w; Modifies(w, "x")
 		queryResult.addColumn(LHS, PKBUtil::unorderedSetIntersection(stmtsUsingVar, EntityStore::getWhileStatements()));
 		break;
+
+	default:
+		return queryResult;
 	}
 	return queryResult;
 }
@@ -209,6 +215,8 @@ QueryResultTable ModifiesStore::getModifiesBySynonym(const std::string& LHS, con
 		std::tie(stmts, vars) = getStmtsToModifiedVariable(EntityStore::getWhileStatements());
 		break;
 	}
+	default:
+		return queryResult;
 	}
 	queryResult.addColumn(LHS, stmts);
 	queryResult.addColumn(RHS, vars);

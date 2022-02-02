@@ -6,7 +6,7 @@
 class PQLToken {
 public:
 	PQLToken();
-	PQLToken(std::string& value, TokenType type);
+	PQLToken(std::string value, TokenType type);
 
 	const std::string& getValue() const;
 	TokenType getType();

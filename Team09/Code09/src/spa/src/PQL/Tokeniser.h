@@ -8,7 +8,7 @@ class Tokeniser
 public:
 	Tokeniser(std::string);
 	
-	std::vector<PQLToken*> tokenise();
+	std::vector<PQLToken> tokenise();
 
 private:
 	std::string rawQuery;

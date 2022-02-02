@@ -34,12 +34,13 @@ bool isInt(std::string str) {
 	return true;
 }
 
-bool isValidString(std::string str) {
-	return str.size() >= 2 && str[0] == '"' && str[str.size() - 1];
-}
-
 bool isIdent(std::string str) {
 	return startsWithAlpha(str) && isAlphaNum(str);
+}
+
+bool isValidString(std::string str) {
+	const std::string content = str.substr(1, str.size() - 2);
+	return str.size() >= 2 && str[0] == '"' && str[str.size() - 1] && isIdent(content);
 }
 
 Tokeniser::Tokeniser(std::string rawQueryString) { this->rawQuery = rawQueryString; }
@@ -80,6 +81,22 @@ void Tokeniser::split() {
 	Tokeniser::pushRawToken();
 }
 
-std::vector<PQLToken*> Tokeniser::tokenise() {
-	
+std::vector<PQLToken> Tokeniser::tokenise() {
+	Tokeniser::split();
+	std::vector<PQLToken> PQLTokens;
+	for (const auto token : rawTokens) {
+		if (stringTokenMap.find(token) != stringTokenMap.end()) {
+			PQLTokens.push_back(PQLToken( "", stringTokenMap[token] )); 
+		} else if (isValidString(token)) {
+			const std::string ident = token.substr(1, token.size() - 2);
+			PQLTokens.push_back(PQLToken( ident, TokenType::STRING ));
+		} else if (isIdent(token)) {
+			PQLTokens.push_back(PQLToken(token, TokenType::SYNONYM));
+		} else if (isInt(token)) {
+			PQLTokens.push_back(PQLToken(token, TokenType::INTEGER));
+		} else {
+			throw std::runtime_error("Unknown syntax : " + token + "\n");
+		}
+	}
+	return PQLTokens;
 }

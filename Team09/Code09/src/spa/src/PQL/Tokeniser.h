@@ -1,10 +1,10 @@
 #pragma once 
+
 #include <string>
 #include <vector>
 #include <PQL/PQLToken.h>
 
-class Tokeniser
-{
+class Tokeniser {
 public:
 	Tokeniser(std::string);
 	

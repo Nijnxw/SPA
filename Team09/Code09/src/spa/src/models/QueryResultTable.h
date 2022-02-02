@@ -4,6 +4,9 @@
 #include <unordered_map>
 #include <unordered_set>
 #include <vector>
+#include <sstream>
+#include <iterator>
+#include <algorithm>
 
 class QueryResultTable {
 private:
@@ -11,13 +14,13 @@ private:
 	bool booleanResult = false;
 
 public:
+	QueryResultTable();
+	QueryResultTable(std::unordered_map<std::string, std::vector<std::string>>& table);
 	std::unordered_map<std::string, std::vector<std::string>> getTable();
 	bool getBooleanResult();
-	bool setBooleanResult(bool inputBool);
+	void setBooleanResult(bool inputBool);
 
 	// Overloaded add column to cater for different use cases
-	bool addColumn(std::string header, std::unordered_set<std::string> rows);
-	bool addColumn(std::string header, std::unordered_set<int> rows);
-	bool addColumn(std::string header, std::vector<std::string> rows);
-	bool addColumn(std::string header, std::vector<int> rows);
+	template <typename It>
+	bool addColumn(std::string header, const It& rows);
 };

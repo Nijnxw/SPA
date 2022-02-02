@@ -4,7 +4,7 @@ add_executable(unit_testing ${srcs}
 src/util/TestRPN.cpp
 src/util/TestRPNToken.cpp
 src/simple_parser/TestLexer.cpp
-)
+src/util/TestQueryResultTable.cpp)
 
 target_link_libraries(unit_testing spa)
 

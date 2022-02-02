@@ -11,6 +11,8 @@ add_library(spa ${srcs} ${headers}
         src/models/QueryArgument.cpp
         src/models/QueryClause.cpp
         src/models/QueryPatternClause.cpp
+        src/models/QueryResultTable.cpp
+        src/models/QueryResultTable.h
         src/models/QueryRelationType.h
         src/models/QuerySuchThatClause.cpp
         src/models/QuerySuchThatClause.h

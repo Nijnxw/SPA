@@ -24,9 +24,9 @@ bool UsesStore::addUsesStatement(int statementNumber, const std::unordered_set<s
 
 	for (const std::string& v : variables) {
 		if (!variableToStatementNumbersUsedBy.emplace(v, std::unordered_set<int>{ statementNumber }).second) {
-			variableToStatementNumbersUsedBy.at(v).emplace(statementNumber);
+			variableToStatementNumbersUsedBy.at(v).insert(statementNumber);
 		}
-		usedVariables.emplace(v);
+		usedVariables.insert(v);
 	}
 
 	return true;
@@ -53,16 +53,14 @@ bool UsesStore::addUsesProcedure(const std::string& procedure, const std::unorde
 /* Get Uses relationship information from PKB, note that LHS and RHS types have to be specified */
 QueryResultTable UsesStore::getUses(const std::string& LHS, const std::string& RHS, EntityType LHSType, EntityType RHSType, bool isBooleanResult) {
 
-	if (RHSType == EntityType::STRING) {
+	switch (RHSType) {
+	case EntityType::STRING:
 		return getUsesByVariable(LHS, RHS, LHSType);
-	}
-	else if (RHSType == EntityType::VAR) {
+	case EntityType::VAR:
 		return getUsesBySynonym(LHS, RHS, LHSType);
-	}
-	else if (RHSType == EntityType::WILD) {
+	case EntityType::WILD:
 		return getUsesByUnderscore(LHS, RHS, LHSType);
-	}
-	else {
+	default:
 		QueryResultTable emptyQueryResult;
 		return emptyQueryResult;
 	}
@@ -170,12 +168,14 @@ QueryResultTable UsesStore::getUsesByVariable(const std::string& LHS, const std:
 /* Get Uses relationship information for Uses(_, v) cases */
 QueryResultTable UsesStore::getUsesBySynonym(const std::string& LHS, const std::string& RHS, EntityType LHSType) {
 	QueryResultTable queryResult;
+	std::vector<std::string> stmts;
+	std::vector<std::string> vars;
 
 	switch (LHSType) {
 	case EntityType::INT:
 		// e.g. Uses("9", v)
 		queryResult.addColumn(RHS, getVariablesUsedByStatement(std::stoi(LHS)));
-		break;
+		return queryResult;
 		/* Not used in iteration 1
 	case EntityType::STRING:
 		// e.g. Uses("cs3203", v)
@@ -184,9 +184,7 @@ QueryResultTable UsesStore::getUsesBySynonym(const std::string& LHS, const std::
 		*/
 	case EntityType::STMT: {
 		// e.g. stmt s; Uses(s, v)
-		auto [stmts, vars] = getStmtsToUsedVariable(usesStatements);
-		queryResult.addColumn(LHS, stmts);
-		queryResult.addColumn(RHS, vars);
+		std::tie(stmts, vars) = getStmtsToUsedVariable(usesStatements);
 		break;
 	}
 	case EntityType::ASSIGN: {
@@ -195,32 +193,26 @@ QueryResultTable UsesStore::getUsesBySynonym(const std::string& LHS, const std::
 		for (auto kv : EntityStore::getAssignStatements()) {
 			assignStmts.insert(kv.first);
 		}
-		auto [stmts, vars] = getStmtsToUsedVariable(PKBUtil::unorderedSetIntersection(usesStatements, assignStmts));
-		queryResult.addColumn(LHS, stmts);
-		queryResult.addColumn(RHS, vars);
+		std::tie(stmts, vars) = getStmtsToUsedVariable(PKBUtil::unorderedSetIntersection(usesStatements, assignStmts));
 		break;
 	}
 	case EntityType::PRINT: {
 		// e.g. print p; Uses(p, v)
-		auto [stmts, vars] = getStmtsToUsedVariable(EntityStore::getPrintStatements());
-		queryResult.addColumn(LHS, stmts);
-		queryResult.addColumn(RHS, vars);
+		std::tie(stmts, vars) = getStmtsToUsedVariable(EntityStore::getPrintStatements());
 		break;
 	}
 	case EntityType::IF: {
 		// e.g. if ifs; Uses(ifs, v)
-		auto [stmts, vars] = getStmtsToUsedVariable(EntityStore::getIfStatements());
-		queryResult.addColumn(LHS, stmts);
-		queryResult.addColumn(RHS, vars);
+		std::tie(stmts, vars) = getStmtsToUsedVariable(EntityStore::getIfStatements());
 		break;
 	}
 	case EntityType::WHILE: {
 		// e.g. while w; Uses(w, v)
-		auto [stmts, vars] = getStmtsToUsedVariable(EntityStore::getWhileStatements());
-		queryResult.addColumn(LHS, stmts);
-		queryResult.addColumn(RHS, vars);
+		std::tie(stmts, vars) = getStmtsToUsedVariable(EntityStore::getWhileStatements());
 		break;
 	}}
+	queryResult.addColumn(LHS, stmts);
+	queryResult.addColumn(RHS, vars);
 	return queryResult;
 }
 

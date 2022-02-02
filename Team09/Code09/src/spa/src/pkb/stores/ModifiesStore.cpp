@@ -1,12 +1,5 @@
 #include "ModifiesStore.h"
 
-std::unordered_set<int> modifiesStatements;
-std::unordered_set<std::string> modifiedVariables;
-std::unordered_map<int, std::unordered_set<std::string>> statementNumberToVariablesModified;
-std::unordered_map<std::string, std::unordered_set<int>> variableToStatementNumbersModifiedBy;
-std::unordered_map<std::string, std::unordered_set<std::string>> procedureToVariablesModified;
-std::unordered_map<std::string, std::unordered_set<std::string>> variableToProceduresModifiedBy;
-
 ModifiesStore::ModifiesStore() {}
 
 void ModifiesStore::clear() {
@@ -20,7 +13,7 @@ void ModifiesStore::clear() {
 // ============ STORE METHODS ==============
 
 /* Add Modifies(stmt, var) relationship to PKB */
-bool ModifiesStore::addModifiesStatement(int statementNumber, std::unordered_set<std::string> variables) {
+bool ModifiesStore::addModifiesStatement(int statementNumber, const std::unordered_set<std::string>& variables) {
 	modifiesStatements.insert(statementNumber);
 
 	if (!statementNumberToVariablesModified.emplace(statementNumber, variables).second) {
@@ -38,7 +31,7 @@ bool ModifiesStore::addModifiesStatement(int statementNumber, std::unordered_set
 }
 
 /* Add Modifies(proc, var) relationship to PKB */
-bool ModifiesStore::addModifiesProcedure(std::string procedure, std::unordered_set<std::string> variables) {
+bool ModifiesStore::addModifiesProcedure(const std::string& procedure, const std::unordered_set<std::string>& variables) {
 
 	if (!procedureToVariablesModified.emplace(procedure, variables).second) {
 		procedureToVariablesModified.at(procedure).insert(variables.begin(), variables.end());
@@ -56,7 +49,7 @@ bool ModifiesStore::addModifiesProcedure(std::string procedure, std::unordered_s
 // ============ GETTER METHOD ==============
 
 /* Get Modifies relationship information from PKB, note that LHS and RHS types have to be specified */
-QueryResultTable ModifiesStore::getModifies(std::string LHS, std::string RHS, EntityType LHSType, EntityType RHSType, bool isBooleanResult) {
+QueryResultTable ModifiesStore::getModifies(const std::string& LHS, const std::string& RHS, EntityType LHSType, EntityType RHSType, bool isBooleanResult) {
 
 	if (RHSType == EntityType::STRING) {
 		return getModifiesByVariable(LHS, RHS, LHSType);
@@ -76,7 +69,7 @@ QueryResultTable ModifiesStore::getModifies(std::string LHS, std::string RHS, En
 // ============ HELPER METHODS ==============
 
 /* Get Uses relationship information for Uses(_, _) cases */
-QueryResultTable ModifiesStore::getModifiesByUnderscore(std::string LHS, std::string RHS, EntityType LHSType) {
+QueryResultTable ModifiesStore::getModifiesByUnderscore(const std::string& LHS, const std::string& RHS, EntityType LHSType) {
 	QueryResultTable queryResult;
 
 	switch (LHSType) {
@@ -106,7 +99,7 @@ QueryResultTable ModifiesStore::getModifiesByUnderscore(std::string LHS, std::st
 		break;
 	}
 	case EntityType::READ:
-		// e.g. print p; Modifies(p, _)
+		// e.g. read r; Modifies(r, _)
 		queryResult.addColumn(LHS, PKBUtil::unorderedSetIntersection(modifiesStatements, EntityStore::getReadStatements()));
 		break;
 
@@ -124,7 +117,7 @@ QueryResultTable ModifiesStore::getModifiesByUnderscore(std::string LHS, std::st
 }
 
 /* Get Modifies relationship information for Modifies(_, "x") cases */
-QueryResultTable ModifiesStore::getModifiesByVariable(std::string LHS, std::string RHS, EntityType LHSType) {
+QueryResultTable ModifiesStore::getModifiesByVariable(const std::string& LHS, const std::string& RHS, EntityType LHSType) {
 	QueryResultTable queryResult;
 
 	std::unordered_set<int> stmtsUsingVar = getStatementsModifyingVariable(RHS);
@@ -155,8 +148,8 @@ QueryResultTable ModifiesStore::getModifiesByVariable(std::string LHS, std::stri
 		break;
 	}
 	case EntityType::READ:
-		// e.g. read p; Modifies(p, "x")
-		queryResult.addColumn(LHS, PKBUtil::unorderedSetIntersection(stmtsUsingVar, EntityStore::getPrintStatements()));
+		// e.g. read r; Modifies(r, "x")
+		queryResult.addColumn(LHS, PKBUtil::unorderedSetIntersection(stmtsUsingVar, EntityStore::getReadStatements()));
 		break;
 
 	case EntityType::IF:
@@ -173,7 +166,7 @@ QueryResultTable ModifiesStore::getModifiesByVariable(std::string LHS, std::stri
 }
 
 /* Get Modifies relationship information for Modifies(_, v) cases */
-QueryResultTable ModifiesStore::getModifiesBySynonym(std::string LHS, std::string RHS, EntityType LHSType) {
+QueryResultTable ModifiesStore::getModifiesBySynonym(const std::string& LHS, const std::string& RHS, EntityType LHSType) {
 	QueryResultTable queryResult;
 
 	switch (LHSType) {
@@ -206,8 +199,8 @@ QueryResultTable ModifiesStore::getModifiesBySynonym(std::string LHS, std::strin
 		break;
 	}
 	case EntityType::READ: {
-		// e.g. read p; Modifies(p, v)
-		auto [stmts, vars] = getStmtsToModifiedVariable(EntityStore::getPrintStatements());
+		// e.g. read r; Modifies(r, v)
+		auto [stmts, vars] = getStmtsToModifiedVariable(EntityStore::getReadStatements());
 		queryResult.addColumn(LHS, stmts);
 		queryResult.addColumn(RHS, vars);
 		break;
@@ -238,14 +231,14 @@ std::unordered_set<std::string> ModifiesStore::getVariablesModifiedByStatement(i
 }
 
 /* Get variables Modfies by procedure */
-std::unordered_set<std::string> ModifiesStore::getVariablesModifiedByProcedure(std::string procName) {
+std::unordered_set<std::string> ModifiesStore::getVariablesModifiedByProcedure(const std::string& procName) {
 	if (!procedureToVariablesModified.count(procName))
 		return {};
 	return procedureToVariablesModified.at(procName);
 }
 
 /* Get statements using a particular variable */
-std::unordered_set<int> ModifiesStore::getStatementsModifyingVariable(std::string variable) {
+std::unordered_set<int> ModifiesStore::getStatementsModifyingVariable(const std::string& variable) {
 	if (!variableToStatementNumbersModifiedBy.count(variable))
 		return {};
 	return variableToStatementNumbersModifiedBy.at(variable);
@@ -253,7 +246,7 @@ std::unordered_set<int> ModifiesStore::getStatementsModifyingVariable(std::strin
 
 /* Returns a mapping of each statement in the input statement set to the variables its using.
 	Mapping is represented as a tuple of vectors to preserve ordering */
-std::tuple<std::vector<std::string>, std::vector<std::string>> ModifiesStore::getStmtsToModifiedVariable(std::unordered_set<int> stmts) {
+std::tuple<std::vector<std::string>, std::vector<std::string>> ModifiesStore::getStmtsToModifiedVariable(const std::unordered_set<int>& stmts) {
 	std::vector<std::string> resultStmts;
 	std::vector<std::string> resultVars;
 	for (int stmt : stmts) {

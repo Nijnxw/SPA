@@ -1,7 +1,37 @@
 #include "QueryResultTable.h"
 
 QueryResultTable::QueryResultTable() {}
-QueryResultTable::QueryResultTable(Table& table) : table(table), booleanResult(true) {}
+QueryResultTable::QueryResultTable(Table& table) : table(table), booleanResult(table.size() != 0) {}
+
+bool QueryResultTable::operator==(const QueryResultTable& other) const {
+    bool diffNumHeaders = table.size() != other.table.size();
+    bool bothZero = table.size() == 0 && other.table.size() == 0;
+    if (bothZero) {
+        return true;
+    }
+    if (diffNumHeaders || booleanResult != other.booleanResult) {
+        return false;
+    }
+
+    std::vector<std::string> thisHeaders;
+    for (const auto& col : table) {
+        thisHeaders.push_back(col.first);
+        if (other.table.count(col.first) == 0) {
+            return false;
+        }
+    }
+
+    auto thisNumRows = table.at(thisHeaders.front()).size();
+    auto otherNumRows = other.table.at(thisHeaders.front()).size();
+
+    if (thisNumRows != otherNumRows) {
+        return false;
+    }
+
+    std::unordered_set<std::string> thisRowStrings = stringifyRows();
+    std::unordered_set<std::string> otherRowStrings = other.stringifyRows();
+    return thisRowStrings == otherRowStrings;
+}
 
 template<typename T>
 std::string toString(const T& value)
@@ -12,7 +42,7 @@ std::string toString(const T& value)
 }
 
 template <typename It>
-bool QueryResultTable::addColumn(std::string header, const It& rows) {
+bool QueryResultTable::addColumn(const std::string& header, const It& rows) {
 	if (rows.size() == 0) return false;
 	setBooleanResult(true);
 	std::vector<std::string> v;
@@ -35,7 +65,30 @@ void QueryResultTable::setBooleanResult(bool inputBool) {
 	booleanResult = inputBool;
 }
 
-template bool QueryResultTable::addColumn<std::unordered_set<std::string>>(std::string header, const std::unordered_set<std::string>& rows);
-template bool QueryResultTable::addColumn<std::unordered_set<int>>(std::string header, const std::unordered_set<int>& rows);
-template bool QueryResultTable::addColumn<std::vector<std::string>>(std::string header, const std::vector<std::string>& rows);
-template bool QueryResultTable::addColumn<std::vector<int>>(std::string header, const std::vector<int>& rows);
+std::unordered_set<std::string> QueryResultTable::stringifyRows() const {
+    std::vector<std::string> headers;
+    std::unordered_set<std::string> rows;
+
+    for (const auto& col : table) {
+        headers.push_back(col.first);
+    }
+    std::sort(headers.begin(), headers.end());
+
+    auto numRows = table.at(headers.front()).size();
+    for (auto i = 0; i < numRows; i++) {
+        std::string row;
+        for (const auto& header : headers) {
+            row += table.at(header).at(i);
+            if (header != headers.back()) {
+                row += " ";
+            }
+        }
+        rows.emplace(row);
+    }
+    return rows;
+}
+
+template bool QueryResultTable::addColumn<std::unordered_set<std::string>>(const std::string& header, const std::unordered_set<std::string>& rows);
+template bool QueryResultTable::addColumn<std::unordered_set<int>>(const std::string& header, const std::unordered_set<int>& rows);
+template bool QueryResultTable::addColumn<std::vector<std::string>>(const std::string& header, const std::vector<std::string>& rows);
+template bool QueryResultTable::addColumn<std::vector<int>>(const std::string& header, const std::vector<int>& rows);

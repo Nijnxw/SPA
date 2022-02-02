@@ -1,13 +1,6 @@
 //TODO: Possible optimisation by early termination given isBooleanResult argument, currently boolean is not used
 #include "UsesStore.h"
 
-std::unordered_set<int> usesStatements;
-std::unordered_set<std::string> usedVariables;
-std::unordered_map<int, std::unordered_set<std::string>> statementNumberToVariablesUsed;
-std::unordered_map<std::string, std::unordered_set<int>> variableToStatementNumbersUsedBy;
-std::unordered_map<std::string, std::unordered_set<std::string>> procedureToVariablesUsed;
-std::unordered_map<std::string, std::unordered_set<std::string>> variableToProceduresUsedBy;
-
 UsesStore::UsesStore() {}
 
 void UsesStore::clear() {
@@ -22,7 +15,7 @@ void UsesStore::clear() {
 // ============ STORE METHODS ==============
 
 /* Add Uses(stmt, var) relationship to PKB */
-bool UsesStore::addUsesStatement(int statementNumber, std::unordered_set<std::string> variables) {
+bool UsesStore::addUsesStatement(int statementNumber, const std::unordered_set<std::string>& variables) {
 	usesStatements.insert(statementNumber);
 
 	if (!statementNumberToVariablesUsed.emplace(statementNumber, variables).second) {
@@ -40,7 +33,7 @@ bool UsesStore::addUsesStatement(int statementNumber, std::unordered_set<std::st
 }
 
 /* Add Uses(proc, var) relationship to PKB */
-bool UsesStore::addUsesProcedure(std::string procedure, std::unordered_set<std::string> variables) {
+bool UsesStore::addUsesProcedure(const std::string& procedure, const std::unordered_set<std::string>& variables) {
 
 	if (!procedureToVariablesUsed.emplace(procedure, variables).second) {
 		procedureToVariablesUsed.at(procedure).insert(variables.begin(), variables.end());
@@ -58,7 +51,7 @@ bool UsesStore::addUsesProcedure(std::string procedure, std::unordered_set<std::
 // ============ GETTER METHOD ==============
 
 /* Get Uses relationship information from PKB, note that LHS and RHS types have to be specified */
-QueryResultTable UsesStore::getUses(std::string LHS, std::string RHS, EntityType LHSType, EntityType RHSType, bool isBooleanResult) {
+QueryResultTable UsesStore::getUses(const std::string& LHS, const std::string& RHS, EntityType LHSType, EntityType RHSType, bool isBooleanResult) {
 
 	if (RHSType == EntityType::STRING) {
 		return getUsesByVariable(LHS, RHS, LHSType);
@@ -78,7 +71,7 @@ QueryResultTable UsesStore::getUses(std::string LHS, std::string RHS, EntityType
 // ============ HELPER METHODS ==============
 
 /* Get Uses relationship information for Uses(_, _) cases */
-QueryResultTable UsesStore::getUsesByUnderscore(std::string LHS, std::string RHS, EntityType LHSType) {
+QueryResultTable UsesStore::getUsesByUnderscore(const std::string& LHS, const std::string& RHS, EntityType LHSType) {
 	QueryResultTable queryResult;
 
 	switch (LHSType) {
@@ -126,7 +119,7 @@ QueryResultTable UsesStore::getUsesByUnderscore(std::string LHS, std::string RHS
 }
 
 /* Get Uses relationship information for Uses(_, "x") cases */
-QueryResultTable UsesStore::getUsesByVariable(std::string LHS, std::string RHS, EntityType LHSType) {
+QueryResultTable UsesStore::getUsesByVariable(const std::string& LHS, const std::string& RHS, EntityType LHSType) {
 	QueryResultTable queryResult;
 	
 	std::unordered_set<int> stmtsUsingVar = getStatementsUsingVariable(RHS);
@@ -175,7 +168,7 @@ QueryResultTable UsesStore::getUsesByVariable(std::string LHS, std::string RHS, 
 }
 
 /* Get Uses relationship information for Uses(_, v) cases */
-QueryResultTable UsesStore::getUsesBySynonym(std::string LHS, std::string RHS, EntityType LHSType) {
+QueryResultTable UsesStore::getUsesBySynonym(const std::string& LHS, const std::string& RHS, EntityType LHSType) {
 	QueryResultTable queryResult;
 
 	switch (LHSType) {
@@ -239,14 +232,14 @@ std::unordered_set<std::string> UsesStore::getVariablesUsedByStatement(int stmtN
 }
 
 /* Get variables used by procedure */
-std::unordered_set<std::string> UsesStore::getVariablesUsedByProcedure(std::string procName) {
+std::unordered_set<std::string> UsesStore::getVariablesUsedByProcedure(const std::string& procName) {
 	if (!procedureToVariablesUsed.count(procName))
 		return {};
 	return procedureToVariablesUsed.at(procName);
 }
 
 /* Get statements using a particular variable */
-std::unordered_set<int> UsesStore::getStatementsUsingVariable(std::string variable) {
+std::unordered_set<int> UsesStore::getStatementsUsingVariable(const std::string& variable) {
 	if (!variableToStatementNumbersUsedBy.count(variable))
 		return {};
 	return variableToStatementNumbersUsedBy.at(variable);
@@ -254,7 +247,7 @@ std::unordered_set<int> UsesStore::getStatementsUsingVariable(std::string variab
 
 /* Returns a mapping of each statement in the input statement set to the variables its using.
 	Mapping is represented as a tuple of vectors to preserve ordering */
-std::tuple<std::vector<std::string>, std::vector<std::string>> UsesStore::getStmtsToUsedVariable(std::unordered_set<int> stmts) {
+std::tuple<std::vector<std::string>, std::vector<std::string>> UsesStore::getStmtsToUsedVariable(const std::unordered_set<int>& stmts) {
 	std::vector<std::string> resultStmts;
 	std::vector<std::string> resultVars;
 	for (int stmt : stmts) {

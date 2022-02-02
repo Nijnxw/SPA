@@ -14,21 +14,21 @@
 class ModifiesStore {
 private:
 	// Data
-	static std::unordered_set<int> modifiesStatements;
-	static std::unordered_set<std::string> modifiedVariables;
-	static std::unordered_map<int, std::unordered_set<std::string>> statementNumberToVariablesModified;
-	static std::unordered_map<std::string, std::unordered_set<int>> variableToStatementNumbersModifiedBy;
-	static std::unordered_map<std::string, std::unordered_set<std::string>> procedureToVariablesModified;
-	static std::unordered_map<std::string, std::unordered_set<std::string>> variableToProceduresModifiedBy;
+	static inline std::unordered_set<int> modifiesStatements;
+	static inline std::unordered_set<std::string> modifiedVariables;
+	static inline std::unordered_map<int, std::unordered_set<std::string>> statementNumberToVariablesModified;
+	static inline std::unordered_map<std::string, std::unordered_set<int>> variableToStatementNumbersModifiedBy;
+	static inline std::unordered_map<std::string, std::unordered_set<std::string>> procedureToVariablesModified;
+	static inline std::unordered_map<std::string, std::unordered_set<std::string>> variableToProceduresModifiedBy;
 
 	// Internal helper methods
-	static QueryResultTable getModifiesByVariable(std::string LHS, std::string RHS, EntityType LHSType);
-	static QueryResultTable getModifiesBySynonym(std::string LHS, std::string RHS, EntityType LHSType);
-	static QueryResultTable getModifiesByUnderscore(std::string LHS, std::string RHS, EntityType  LHSType);
+	static QueryResultTable getModifiesByVariable(const std::string& LHS, const std::string& RHS, EntityType LHSType);
+	static QueryResultTable getModifiesBySynonym(const std::string& LHS, const std::string& RHS, EntityType LHSType);
+	static QueryResultTable getModifiesByUnderscore(const std::string& LHS, const std::string& RHS, EntityType LHSType);
 	static std::unordered_set<std::string> getVariablesModifiedByStatement(int stmtNo);
-	static std::unordered_set<std::string> getVariablesModifiedByProcedure(std::string procName);
-	static std::unordered_set<int> getStatementsModifyingVariable(std::string variable);
-	static std::tuple<std::vector<std::string>, std::vector<std::string>> getStmtsToModifiedVariable(std::unordered_set<int> stmts);
+	static std::unordered_set<std::string> getVariablesModifiedByProcedure(const std::string& procName);
+	static std::unordered_set<int> getStatementsModifyingVariable(const std::string& variable);
+	static std::tuple<std::vector<std::string>, std::vector<std::string>> getStmtsToModifiedVariable(const std::unordered_set<int>& stmts);
 
 public:
 	ModifiesStore();
@@ -36,9 +36,9 @@ public:
 	static void clear();
 
 	// Called by QE
-	static QueryResultTable getModifies(std::string LHS, std::string RHS, EntityType LHSType, EntityType RHSType, bool isBooleanResult);
+	static QueryResultTable getModifies(const std::string& LHS, const std::string& RHS, EntityType LHSType, EntityType RHSType, bool isBooleanResult);
 
 	// Called by SP and DE
-	static bool addModifiesStatement(int statementNumber, std::unordered_set<std::string> variables);
-	static bool addModifiesProcedure(std::string procedure, std::unordered_set<std::string> variables);
+	static bool addModifiesStatement(int statementNumber, const std::unordered_set<std::string>& variables);
+	static bool addModifiesProcedure(const std::string& procedure, const std::unordered_set<std::string>& variables);
 };

@@ -42,7 +42,7 @@ enum class TokenType {
 };
 
 //unordered map to map raw string tokens to the appropriate token type
-std::unordered_map<std::string, TokenType> stringTokenMap = {
+static std::unordered_map<std::string, TokenType> stringTokenMap = {
 	//puncuation token mapping
 	{";", TokenType::SEMICOLON},
 	{"(", TokenType::OPEN_PARAN},

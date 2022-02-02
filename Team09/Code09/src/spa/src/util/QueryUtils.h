@@ -1,6 +1,9 @@
+#pragma once
+
 #include <unordered_map>
 #include <unordered_set>
 #include <vector>
+#include "models/QueryResultTable.h"
 
 struct pair_hash {
     template<class T1, class T2>
@@ -10,11 +13,10 @@ struct pair_hash {
 };
 
 class QueryUtils {
-    typedef std::unordered_map<std::string, std::vector<std::string>> Table;
     typedef std::unordered_map<std::string, std::pair<std::unordered_set<int>, std::unordered_set<int>>> GroupedTable;
 
 public:
-    static Table hashJoin(const Table& firstTable, const Table& secondTable);
+    static Table hashJoin(const Table& firstResult, const Table& secondResult);
 
 private:
     static std::vector<std::string> getCommonHeaders(const Table& firstTable, const Table& secondTable);

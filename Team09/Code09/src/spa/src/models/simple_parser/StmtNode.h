@@ -13,5 +13,6 @@ protected:
 	StmtNode(NodeType t, int sn);
 
 public:
-	int getStmtNumber();
+	int getStmtNumber() const;
+	bool operator==(const Node& other) const override;
 };

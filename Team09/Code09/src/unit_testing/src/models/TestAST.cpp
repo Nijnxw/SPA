@@ -10,6 +10,78 @@
 
 #include <memory>
 
+TEST_CASE("Test Equality Comparisons") {
+	VariableNode var1("abcd");
+	VariableNode var2("abcd");
+	VariableNode var3("abcde");
+	REQUIRE(var1 == var2);
+	REQUIRE(var1 != var3);
+
+	ConstantNode con1("12345");
+	ConstantNode con2("12345");
+	ConstantNode con3("123456");
+	REQUIRE(con1 == con2);
+	REQUIRE(con1 != con3);
+
+	REQUIRE(var1 != con1);
+
+	std::shared_ptr<VariableNode> var4 = std::make_shared<VariableNode>("x");
+	std::shared_ptr<VariableNode> var5 = std::make_shared<VariableNode>("y");
+
+	std::shared_ptr<PrintNode> print1 = std::make_shared<PrintNode>(45, var4);
+	std::shared_ptr<PrintNode> print2 = std::make_shared<PrintNode>(45, var4);
+	std::shared_ptr<PrintNode> print3 = std::make_shared<PrintNode>(46, var4);
+	std::shared_ptr<PrintNode> print4 = std::make_shared<PrintNode>(45, var5);
+	REQUIRE(*print1 == *print2);
+	REQUIRE(*print1 != *print3);
+	REQUIRE(*print2 != *print4);
+
+	std::shared_ptr<ReadNode> read1 = std::make_shared<ReadNode>(45, var4);
+	std::shared_ptr<ReadNode> read2 = std::make_shared<ReadNode>(45, var4);
+	std::shared_ptr<ReadNode> read3 = std::make_shared<ReadNode>(46, var4);
+	std::shared_ptr<ReadNode> read4 = std::make_shared<ReadNode>(45, var5);
+	REQUIRE(*read1 == *read2);
+	REQUIRE(*read1 != *read3);
+	REQUIRE(*read2 != *read4);
+
+	std::vector<std::shared_ptr<StmtNode>> stmtLst1;
+	stmtLst1.push_back(print1);
+	stmtLst1.push_back(read1);
+
+	std::vector<std::shared_ptr<StmtNode>> stmtLst2;
+	stmtLst2.push_back(print2);
+	stmtLst2.push_back(read2);
+
+	std::vector<std::shared_ptr<StmtNode>> stmtLst3;
+	stmtLst3.push_back(print3);
+	stmtLst3.push_back(read4);
+
+	std::shared_ptr<ProcedureNode> p1 = std::make_shared<ProcedureNode>(stmtLst1, "test");
+	std::shared_ptr<ProcedureNode> p2 = std::make_shared<ProcedureNode>(stmtLst2, "test");
+	std::shared_ptr<ProcedureNode> p3 = std::make_shared<ProcedureNode>(stmtLst1, "test123");
+	std::shared_ptr<ProcedureNode> p4 = std::make_shared<ProcedureNode>(stmtLst3, "test");
+
+	REQUIRE(*p1 == *p2);
+	REQUIRE(*p1 != *p3);
+	REQUIRE(*p1 != *p4);
+
+	std::vector<std::shared_ptr<ProcedureNode>> procList1;
+	procList1.push_back(p1);
+
+	std::vector<std::shared_ptr<ProcedureNode>> procList2;
+	procList2.push_back(p2);
+
+	std::vector<std::shared_ptr<ProcedureNode>> procList3;
+	procList3.push_back(p3);
+
+	RootNode r1(procList1);
+	RootNode r2(procList2);
+	RootNode r3(procList3);
+
+	REQUIRE(r1 == r2);
+	REQUIRE(r1 != r3);
+}
+
 TEST_CASE("Test Expr nodes") {
 	VariableNode var("abcd");
 	REQUIRE(var.isVariableNode() == true);
@@ -60,7 +132,7 @@ TEST_CASE("Test Procedure nodes") {
 	REQUIRE(p1->getVariable()->isVariableNode() == true);
 	REQUIRE(p2->getVariable()->isVariableNode() == true);
 
-	std::shared_ptr<ProcedureNode> p = std::make_shared<ProcedureNode>(stmtLst);
+	std::shared_ptr<ProcedureNode> p = std::make_shared<ProcedureNode>(stmtLst, "testing");
 	REQUIRE(p->isProcedureNode() == true);
 	REQUIRE(p->getStmtList()[0]->isPrintNode() == true);
 	REQUIRE(p->getStmtList()[1]->isReadNode() == true);

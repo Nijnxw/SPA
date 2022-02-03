@@ -7,7 +7,7 @@ private:
 	NodeType type;
 
 protected:
-	Node(NodeType type);
+	Node(NodeType);
 	NodeType getNodeType() const;
 
 public:

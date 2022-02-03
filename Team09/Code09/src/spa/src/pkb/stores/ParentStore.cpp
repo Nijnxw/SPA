@@ -25,29 +25,23 @@ bool ParentStore::addParentT(int parent, int child) {
 	return parentTPairs.insert({ parent, child }).second && PKBUtil::addToMapWithSet(parentToChildrenT, parent, child) && PKBUtil::addToMapWithSet(childToParentsT, child, parent);
 }
 
-QueryResultTable ParentStore::getParent(std::string& LHS, std::string& RHS, EntityType LHSType, EntityType RHSType, bool isBooleanResult)
+QueryClauseTable ParentStore::getParent(std::string& LHS, std::string& RHS, EntityType LHSType, EntityType RHSType, bool isBooleanResult)
 {
-	QueryResultTable queryResult;
-
 	switch (LHSType) {
 	case EntityType::INT:
-		queryResult = getParentByStatementNumber(LHS, RHS, RHSType);
-		break;
+		return getParentByStatementNumber(LHS, RHS, RHSType);
 	case EntityType::STMT:
-		queryResult = getParentByStatementVariable(LHS, RHS, RHSType);
-		break;
+		return getParentByStatementVariable(LHS, RHS, RHSType);
 	case EntityType::WILD:
-		queryResult = getParentByUnderscore(RHS, RHSType);
-		break;
+		return getParentByUnderscore(RHS, RHSType);
 	default:
-		break;
+		QueryClauseTable emptyQueryResult;
+		return emptyQueryResult;
 	}
-
-	return queryResult;
 }
 
-QueryResultTable ParentStore::getParentByStatementNumber(std::string& LHS, std::string& RHS, EntityType RHSType) {
-	QueryResultTable queryResult;
+QueryClauseTable ParentStore::getParentByStatementNumber(std::string& LHS, std::string& RHS, EntityType RHSType) {
+	QueryClauseTable queryResult;
 
 	switch (RHSType) {
 	case EntityType::INT: // Parent(1, 2) 
@@ -72,8 +66,8 @@ QueryResultTable ParentStore::getParentByStatementNumber(std::string& LHS, std::
 	return queryResult;
 }
 
-QueryResultTable ParentStore::getParentByStatementVariable(std::string& LHS, std::string& RHS, EntityType RHSType) {
-	QueryResultTable queryResult;
+QueryClauseTable ParentStore::getParentByStatementVariable(std::string& LHS, std::string& RHS, EntityType RHSType) {
+	QueryClauseTable queryResult;
 
 	switch (RHSType) {
 	case EntityType::INT: // Parent(s, 2)
@@ -97,8 +91,8 @@ QueryResultTable ParentStore::getParentByStatementVariable(std::string& LHS, std
 
 	return queryResult;
 }
-QueryResultTable ParentStore::getParentByUnderscore(std::string& RHS, EntityType RHSType) {
-	QueryResultTable queryResult;
+QueryClauseTable ParentStore::getParentByUnderscore(std::string& RHS, EntityType RHSType) {
+	QueryClauseTable queryResult;
 
 	switch (RHSType) {
 	case EntityType::INT: // Parent(_, 2)
@@ -121,9 +115,9 @@ QueryResultTable ParentStore::getParentByUnderscore(std::string& RHS, EntityType
 	return queryResult;
 }
 
-QueryResultTable ParentStore::getParentT(std::string& LHS, std::string& RHS, EntityType LHSType, EntityType RHSType, bool isBooleanResult)
+QueryClauseTable ParentStore::getParentT(std::string& LHS, std::string& RHS, EntityType LHSType, EntityType RHSType, bool isBooleanResult)
 {
-	QueryResultTable queryResult;
+	QueryClauseTable queryResult;
 
 	switch (LHSType) {
 	case EntityType::INT:
@@ -142,8 +136,8 @@ QueryResultTable ParentStore::getParentT(std::string& LHS, std::string& RHS, Ent
 	return queryResult;
 }
 
-QueryResultTable ParentStore::getParentTByStatementNumber(std::string& LHS, std::string& RHS, EntityType RHSType) {
-	QueryResultTable queryResult;
+QueryClauseTable ParentStore::getParentTByStatementNumber(std::string& LHS, std::string& RHS, EntityType RHSType) {
+	QueryClauseTable queryResult;
 
 	switch (RHSType) {
 	case EntityType::INT: // Parent*(1, 2) 
@@ -168,8 +162,8 @@ QueryResultTable ParentStore::getParentTByStatementNumber(std::string& LHS, std:
 	return queryResult;
 }
 
-QueryResultTable ParentStore::getParentByStatementVariable(std::string& LHS, std::string& RHS, EntityType RHSType) {
-	QueryResultTable queryResult;
+QueryClauseTable ParentStore::getParentByStatementVariable(std::string& LHS, std::string& RHS, EntityType RHSType) {
+	QueryClauseTable queryResult;
 
 	switch (RHSType) {
 	case EntityType::INT: // Parent*(s, 2)
@@ -193,8 +187,8 @@ QueryResultTable ParentStore::getParentByStatementVariable(std::string& LHS, std
 
 	return queryResult;
 }
-QueryResultTable ParentStore::getParentTByUnderscore(std::string& RHS, EntityType RHSType) {
-	QueryResultTable queryResult;
+QueryClauseTable ParentStore::getParentTByUnderscore(std::string& RHS, EntityType RHSType) {
+	QueryClauseTable queryResult;
 
 	switch (RHSType) {
 	case EntityType::INT: // Parent*(_, 2)

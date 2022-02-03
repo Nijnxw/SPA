@@ -18,11 +18,11 @@ TEST_CASE("ModifiesStore storage functionality") {
 			}
 		*/
 		// Assumed calls from SP/DE
-		EntityStore::addStatement(EntityType::READ, 1);
+		EntityStore::addStatementWithType(EntityType::READ, 1);
 		EntityStore::addAssignStatement(2, "LHS", "RHS");
-		EntityStore::addStatement(EntityType::IF, 3);
+		EntityStore::addStatementWithType(EntityType::IF, 3);
 		EntityStore::addAssignStatement(4, "LHS", "RHS");
-		EntityStore::addStatement(EntityType::WHILE, 5);
+		EntityStore::addStatementWithType(EntityType::WHILE, 5);
 		EntityStore::addAssignStatement(6, "LHS", "RHS");
 		ModifiesStore::addModifiesStatement(1, std::unordered_set<std::string>({"p"}));
 		ModifiesStore::addModifiesStatement(2, std::unordered_set<std::string>({"a"}));

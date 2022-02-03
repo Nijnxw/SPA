@@ -27,23 +27,23 @@ void EntityStore::clear() {
 	readStatements.clear();
 }
 
-bool EntityStore::addProcedure(std::string procedure) {
-	return procedures.emplace(procedure).second;
+bool EntityStore::addProcedure(const std::string& procedure) {
+	return procedures.insert(procedure).second;
 }
 
-bool EntityStore::addVariable(std::string variable) {
-	return variables.emplace(variable).second;
+bool EntityStore::addVariable(const std::string& variable) {
+	return variables.insert(variable).second;
 }
 
-bool EntityStore::addConstant(std::string constant) {
-	return constants.emplace(constant).second;
+bool EntityStore::addConstant(const std::string& constant) {
+	return constants.insert(constant).second;
 }
 
 bool EntityStore::addStatementNumber(int statementNumber) {
-	return statements.emplace(statementNumber).second;
+	return statements.insert(statementNumber).second;
 }
 
-bool EntityStore::addAssignStatement(int statementNumber, std::string leftHandSide, std::string rightHandSide) {
+bool EntityStore::addAssignStatement(int statementNumber, const std::string& leftHandSide, const std::string& rightHandSide) {
 	AssignStatement assignStatement(statementNumber, leftHandSide, rightHandSide);
 	return assignStatements.emplace(statementNumber, assignStatement).second;
 }

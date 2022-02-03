@@ -29,12 +29,12 @@ public:
 
 	static void clear();
 
-	static bool addProcedure(std::string procedure);
-	static bool addVariable(std::string variable);
-	static bool addConstant(std::string constant);
+	static bool addProcedure(const std::string& procedure);
+	static bool addVariable(const std::string& variable);
+	static bool addConstant(const std::string& constant);
 	static bool addStatementNumber(int statementNumber);
 
-	static bool addAssignStatement(int statementNumber, std::string leftHandSide, std::string rightHandSide);
+	static bool addAssignStatement(int statementNumber, const std::string& leftHandSide, const std::string& rightHandSide);
 	static bool addStatement(EntityType statementType, int statementNumber);
 
 	static std::unordered_set<std::string> getProcedures();

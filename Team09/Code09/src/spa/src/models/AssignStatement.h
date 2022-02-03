@@ -10,7 +10,7 @@ private:
 	std::string rightHandSide;
 
 public:
-	AssignStatement(int statementNumber, std::string leftHandSide, std::string rightHandSide); 
+	AssignStatement(int statementNumber, const std::string& leftHandSide, const std::string& rightHandSide); 
 
 	int getStatementNumber();
 	std::string getLeftHandSide();

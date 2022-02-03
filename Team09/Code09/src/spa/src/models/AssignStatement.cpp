@@ -1,6 +1,6 @@
 #include "AssignStatement.h"
 
-AssignStatement::AssignStatement(int statementNumber, std::string leftHandSide, std::string rightHandSide) 
+AssignStatement::AssignStatement(int statementNumber, const std::string& leftHandSide, const std::string& rightHandSide) 
 				: statementNumber(statementNumber), leftHandSide(leftHandSide), rightHandSide(rightHandSide) {}
 
 int AssignStatement::getStatementNumber() {

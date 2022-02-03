@@ -1,7 +1,7 @@
 #pragma once
 
 #include <vector>
-#include "QueryArgumentType.h"
+#include "EntityType.h"
 #include "QueryArgument.h"
 
 class QueryClause {

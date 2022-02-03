@@ -1,56 +1,8 @@
 #pragma once 
+
 #include <vector>
 #include <models/Query.h>
-
-enum class TokenType {
-	//Lexical tokens
-	SYNONYM,
-	INTEGER,
-	STRING,
-	WILD, //underscore
-
-	//Puncuation tokens
-	SEMICOLON,
-	OPEN_PARAN,
-	CLOSE_PARAN,
-	COMMA,
-
-	//Design-entity tokens
-	STMT,
-	READ,
-	PRINT,
-	WHILE,
-	IF,
-	ASSIGN,
-	VARIABLE,
-	CONSTANT,
-	PROC,
-
-	//Such that clause tokens
-	SUCH_THAT,
-
-	//Relationship clause tokens
-	MODIFIES,
-	USES,
-	PARENT,
-	PARENT_T,
-	FOLLOWS,
-	FOLLOWS_T
-
-};
-
-struct PQLToken {
-	TokenType type;
-	std::string value;
-	//overloaded == operator to compare other PQLToken
-	bool operator==(const PQLToken& other) const {
-		return type == other.type && value == other.value;
-	}
-	//default constructor
-	PQLToken() { type = TokenType::STRING; value = ""; }
-	//parameterised constructor
-	PQLToken(TokenType tokenType, std::string tokenValue = "") { type = tokenType; value = tokenValue; }
-};
+#include <PQL/PQLToken.h>
 
 namespace PQL {
 	/**
@@ -66,7 +18,7 @@ namespace PQL {
 	 * @brief	Parses a vector of tokens into a Query object
 	 * @param	tokens Vector of tokens 
 	 * @return	Query object to be passed to the evaluator
-	*/
-	Query parse(std::vector<PQLToken>& tokens);
+	 */
+	//Query parse(std::vector<PQLToken>& tokens);
 
 }

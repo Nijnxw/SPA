@@ -42,7 +42,21 @@ src/pkb/stores/UsesStore.cpp
 src/pkb/stores/UsesStore.h
 src/pkb/PKB.cpp
 src/pkb/PKB.h
-src/pkb/util/PKBUtil.cpp)
+src/pkb/util/PKBUtil.cpp 
+src/models/simple_parser/NodeType.h
+src/models/simple_parser/BinaryOperator.h
+src/models/simple_parser/Node.h
+src/models/simple_parser/Node.cpp
+src/models/simple_parser/RootNode.h
+src/models/simple_parser/RootNode.cpp
+src/models/simple_parser/ProcedureNode.h
+src/models/simple_parser/ProcedureNode.cpp
+src/models/simple_parser/StmtNode.h
+src/models/simple_parser/StmtNode.cpp
+src/models/simple_parser/IoNodes.h
+src/models/simple_parser/IoNodes.cpp
+src/models/simple_parser/ExprNodes.h
+src/models/simple_parser/ExprNodes.cpp)
 # this makes the headers accessible for other projects which uses spa lib
 target_include_directories(spa PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/src)
 

@@ -10,7 +10,7 @@
 
 typedef std::unordered_map<std::string, std::vector<std::string>> Table;
 
-class QueryResultTable {
+class QueryClauseTable {
 private:
 	Table table;
 	bool booleanResult = false;
@@ -18,14 +18,14 @@ private:
 	std::unordered_set<std::string> stringifyRows() const;
 
 public:
-	QueryResultTable();
-	QueryResultTable(Table& table);
-	bool operator==(const QueryResultTable& other) const;
+	QueryClauseTable();
+	QueryClauseTable(Table& table);
+	bool operator==(const QueryClauseTable& other) const;
 	Table getTable();
 	bool getBooleanResult();
 	void setBooleanResult(bool inputBool);
 
 	// Overloaded add column to cater for different use cases
-	template <typename It>
+	template<typename It>
 	bool addColumn(const std::string& header, const It& rows);
 };

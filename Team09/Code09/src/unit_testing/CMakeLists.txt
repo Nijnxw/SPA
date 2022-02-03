@@ -4,9 +4,10 @@ add_executable(unit_testing ${srcs}
 src/util/TestRPN.cpp
 src/util/TestRPNToken.cpp
 src/simple_parser/TestLexer.cpp
-src/util/TestQueryResultTable.cpp
+src/util/TestQueryClauseTable.cpp
 src/pkb/TestUsesStore.cpp
-src/pkb/TestModifiesStore.cpp)
+src/pkb/TestModifiesStore.cpp
+src/util/TestQueryUtils.cpp)
 
 target_link_libraries(unit_testing spa)
 

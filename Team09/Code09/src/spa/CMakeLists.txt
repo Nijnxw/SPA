@@ -47,8 +47,8 @@ src/models/simple_parser/NodeType.h
 src/models/simple_parser/BinaryOperator.h
 src/models/simple_parser/Node.h
 src/models/simple_parser/Node.cpp
-src/models/simple_parser/RootNode.h
-src/models/simple_parser/RootNode.cpp
+src/models/simple_parser/AST.h
+src/models/simple_parser/AST.cpp
 src/models/simple_parser/ProcedureNode.h
 src/models/simple_parser/ProcedureNode.cpp
 src/models/simple_parser/StmtNode.h

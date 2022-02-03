@@ -65,4 +65,17 @@ namespace PKBUtil
         }
         return keySet;
     }
+
+    template <typename T, typename U, typename Hash, typename Pred, typename Alloc>
+    std::tuple<std::vector<T>, std::vector<U>> convertMapToVectorTuple(std::unordered_map<T, U, Hash, Pred, Alloc>& map) {
+        std::vector<T> firstColumn;
+        std::vector<U> secondColumn;
+
+        for (auto const& pair : map) {
+            firstColumn.push_back(pair.first);
+            secondColumn.push_back(pair.second);
+        }
+
+        return { firstColumn, secondColumn };
+    }
 }

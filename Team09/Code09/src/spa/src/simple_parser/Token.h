@@ -17,6 +17,7 @@ public:
 	bool isIntegerToken();
 	bool isOperatorToken();
 	bool isPunctuatorToken();
+	bool isEndOfFileToken();
 
 	TokenType getTokenType();
 	std::string getValue();

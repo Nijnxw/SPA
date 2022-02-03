@@ -25,6 +25,10 @@ bool Token::isPunctuatorToken() {
 	return type == TokenType::PUNCTUATOR;
 }
 
+bool Token::isEndOfFileToken() {
+	return type == TokenType::END_OF_FILE;
+}
+
 TokenType Token::getTokenType() {
 	return type;
 }

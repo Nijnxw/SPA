@@ -10,7 +10,8 @@ src/pkb/TestFollowsStore.cpp
 src/pkb/TestParentStore.cpp
 src/pkb/TestUsesStore.cpp
 src/pkb/TestModifiesStore.cpp
-src/util/TestQueryUtils.cpp)
+src/util/TestQueryUtils.cpp
+src/models/TestAST.cpp)
 
 target_link_libraries(unit_testing spa)
 

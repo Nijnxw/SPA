@@ -7,7 +7,7 @@ class QuerySuchThatClause : public QueryClause {
 public:
     QuerySuchThatClause(QueryRelationType& relationType, std::vector<QueryArgument>& arguments);
 
-    const QueryRelationType& GetRelationType() const;
+    const QueryRelationType& getRelationType() const;
 
 private:
     QueryRelationType relationType;

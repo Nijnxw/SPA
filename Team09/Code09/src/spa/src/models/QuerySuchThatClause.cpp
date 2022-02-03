@@ -7,6 +7,6 @@
 QuerySuchThatClause::QuerySuchThatClause(QueryRelationType& relationType, std::vector<QueryArgument>& arguments)
         : relationType(relationType), QueryClause(arguments) {}
 
-const QueryRelationType& QuerySuchThatClause::GetRelationType() const {
+const QueryRelationType& QuerySuchThatClause::getRelationType() const {
     return relationType;
 }

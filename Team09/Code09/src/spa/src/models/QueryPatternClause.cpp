@@ -1,13 +1,13 @@
 #include "QueryPatternClause.h"
 
 QueryPatternClause::QueryPatternClause(QueryArgument& patternSynonym, std::vector<QueryArgument>& arguments,
-                                       bool isMatchExact)
-        : QueryClause(arguments), patternSynonym(patternSynonym), isMatchExact(isMatchExact) {}
+                                       bool hasWildCard)
+        : QueryClause(arguments), patternSynonym(patternSynonym), hasWildCard(hasWildCard) {}
 
-bool QueryPatternClause::IsMatchExact() const {
-    return isMatchExact;
+bool QueryPatternClause::isMatchExact() const {
+    return !hasWildCard;
 }
 
-const QueryArgument& QueryPatternClause::GetPatternSynonym() const {
+const QueryArgument& QueryPatternClause::getPatternSynonym() const {
     return patternSynonym;
 }

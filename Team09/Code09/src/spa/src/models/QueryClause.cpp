@@ -2,6 +2,6 @@
 
 QueryClause::QueryClause(std::vector<QueryArgument>& arguments) : arguments(arguments) {}
 
-const std::vector<QueryArgument>& QueryClause::GetArguments() const {
+const std::vector<QueryArgument>& QueryClause::getArguments() const {
     return arguments;
 }

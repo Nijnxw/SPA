@@ -12,5 +12,6 @@ private:
 
 public:
 	RootNode(std::vector<std::shared_ptr<ProcedureNode>> procList);
-	std::vector<std::shared_ptr<ProcedureNode>> getProcedureList();
+	std::vector<std::shared_ptr<ProcedureNode>> getProcedureList() const;
+	bool operator==(const Node& other) const override;
 };

@@ -12,6 +12,12 @@ protected:
 
 public:
 	virtual ~Node() = default;
+
+	virtual bool operator== (const Node& other) const = 0;
+	virtual bool operator!= (const Node& other) const {
+		return !(operator==(other));
+	}
+
 	virtual bool isIfNode();
 	virtual bool isWhileNode();
 	virtual bool isAssignNode();

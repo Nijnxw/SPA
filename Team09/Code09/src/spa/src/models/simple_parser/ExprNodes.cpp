@@ -6,8 +6,14 @@ VariableNode::VariableNode(std::string s)
 	name = s;
 }
 
-std::string VariableNode::getName() {
+std::string VariableNode::getName() const {
 	return name;
+}
+
+bool VariableNode::operator==(const Node& other) const {
+	const VariableNode* cast = dynamic_cast<const VariableNode*>(&other);
+	return cast != nullptr &&
+		name == cast->getName();
 }
 
 // ConstantNode Implementation
@@ -16,6 +22,12 @@ ConstantNode::ConstantNode(std::string s)
 	value = s;
 }
 
-std::string ConstantNode::getValue() {
+std::string ConstantNode::getValue() const {
 	return value;
+}
+
+bool ConstantNode::operator==(const Node& other) const {
+	const ConstantNode* cast = dynamic_cast<const ConstantNode*>(&other);
+	return cast != nullptr &&
+		value == cast->getValue();
 }

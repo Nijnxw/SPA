@@ -15,6 +15,7 @@ private:
 
 public:
 	ProcedureNode(std::vector<std::shared_ptr<StmtNode>> stList, std::string procName);
-	std::vector<std::shared_ptr<StmtNode>> getStmtList();
-	std::string getProcName();
+	std::vector<std::shared_ptr<StmtNode>> getStmtList() const;
+	std::string getProcName() const;
+	bool operator==(const Node& other) const override;
 };

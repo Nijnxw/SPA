@@ -20,7 +20,8 @@ private:
 
 public:
 	VariableNode(std::string s);
-	std::string getName();
+	std::string getName() const;
+	bool operator==(const Node& other) const override;
 };
 
 class ConstantNode : public Node {
@@ -29,5 +30,6 @@ private:
 
 public:
 	ConstantNode(std::string s);
-	std::string getValue();
+	std::string getValue() const;
+	bool operator==(const Node& other) const override;
 };

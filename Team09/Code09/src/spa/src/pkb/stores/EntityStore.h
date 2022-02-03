@@ -7,8 +7,8 @@
 #include <unordered_map>
 #include <unordered_set>
 
-#include "models/AssignStatement.h"
-#include "models/EntityType.h"
+#include <models/AssignStatement.h>
+#include <models/EntityType.h>
 
 class EntityStore {
 private:
@@ -29,23 +29,19 @@ public:
 
 	static void clear();
 
+	/* Setters called by SP and DE */
 	static bool addProcedure(const std::string& procedure);
 	static bool addVariable(const std::string& variable);
 	static bool addConstant(const std::string& constant);
 	static bool addStatementNumber(int statementNumber);
-
 	static bool addAssignStatement(int statementNumber, const std::string& leftHandSide, const std::string& rightHandSide);
-	static bool addStatement(EntityType statementType, int statementNumber);
+	static bool addStatementWithType(EntityType statementType, int statementNumber);
 
+	/* Getters called by QE */
 	static std::unordered_set<std::string> getProcedures();
 	static std::unordered_set<std::string> getVariables();
 	static std::unordered_set<std::string> getConstants();
-	static std::unordered_set<int> getStatements();
-
+	static std::unordered_set<int> getStatementNumbers();
 	static std::unordered_map<int, AssignStatement> getAssignStatements();
-	static std::unordered_set<int> getIfStatements();
-	static std::unordered_set<int> getWhileStatements();
-	static std::unordered_set<int> getCallStatements();
-	static std::unordered_set<int> getPrintStatements();
-	static std::unordered_set<int> getReadStatements();
+	static std::unordered_set<int> getStatementsWithType(EntityType statementType);
 };

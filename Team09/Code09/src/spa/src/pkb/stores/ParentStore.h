@@ -6,8 +6,8 @@
 #include <vector>
 #include <unordered_map>
 #include <unordered_set>
-#include "pkb/util/PKBUtil.cpp"
-#include <models/QueryResultTable.h>
+#include <pkb/util/PKBUtil.cpp>
+#include <models/QueryClauseTable.h>
 #include <models/EntityType.h>
 
 class ParentStore {
@@ -41,24 +41,24 @@ private:
 	static std::tuple<std::vector<int>, std::vector<int>> getAllParentPairs();
 	static std::tuple<std::vector<int>, std::vector<int>> getAllParentTPairs();
 
-	static QueryResultTable getParentByStatementNumber(std::string& LHS, std::string& RHS, EntityType RHSType);
-	static QueryResultTable getParentByStatementVariable(std::string& LHS, std::string& RHS, EntityType RHSType);
-	static QueryResultTable getParentByUnderscore(std::string& RHS, EntityType RHSType);
+	static QueryClauseTable getParentByStatementNumber(std::string& LHS, std::string& RHS, EntityType RHSType);
+	static QueryClauseTable getParentByStatementVariable(std::string& LHS, std::string& RHS, EntityType RHSType);
+	static QueryClauseTable getParentByUnderscore(std::string& RHS, EntityType RHSType);
 
-	static QueryResultTable getParentTByStatementNumber(std::string& LHS, std::string& RHS, EntityType RHSType);
-	static QueryResultTable getParentTByStatementVariable(std::string& LHS, std::string& RHS, EntityType RHSType);
-	static QueryResultTable getParentTByUnderscore(std::string& RHS, EntityType RHSType);
+	static QueryClauseTable getParentTByStatementNumber(std::string& LHS, std::string& RHS, EntityType RHSType);
+	static QueryClauseTable getParentTByStatementVariable(std::string& LHS, std::string& RHS, EntityType RHSType);
+	static QueryClauseTable getParentTByUnderscore(std::string& RHS, EntityType RHSType);
 
 public:
 	ParentStore();
 
 	static void clear();
 
-	// Called by SP and DE
+	/* Setters called by SP and DE */
 	static bool addParent(int parent, int child);
 	static bool addParentT(int parent, int child);
 
-	// Called by QE
-	static QueryResultTable getParent(std::string& LHS, std::string& RHS, EntityType LHSType, EntityType RHSType, bool isBooleanResult);
-	static QueryResultTable getParentT(std::string& LHS, std::string& RHS, EntityType LHSType, EntityType RHSType, bool isBooleanResult);
+	/* Getters called by QE */
+	static QueryClauseTable getParent(std::string& LHS, std::string& RHS, EntityType LHSType, EntityType RHSType, bool isBooleanResult);
+	static QueryClauseTable getParentT(std::string& LHS, std::string& RHS, EntityType LHSType, EntityType RHSType, bool isBooleanResult);
 };

@@ -7,7 +7,7 @@
 #include <unordered_map>
 #include <unordered_set>
 #include "models/EntityType.h"
-#include "models/QueryResultTable.h"
+#include "models/QueryClauseTable.h"
 #include "pkb/stores/EntityStore.h"
 #include "pkb/util/PKBUtil.cpp"
 
@@ -22,13 +22,14 @@ private:
 	static inline std::unordered_map<std::string, std::unordered_set<std::string>> variableToProceduresModifiedBy;
 
 	// Internal helper methods
-	static QueryResultTable getModifiesByVariable(const std::string& LHS, const std::string& RHS, EntityType LHSType);
-	static QueryResultTable getModifiesBySynonym(const std::string& LHS, const std::string& RHS, EntityType LHSType);
-	static QueryResultTable getModifiesByUnderscore(const std::string& LHS, const std::string& RHS, EntityType LHSType);
+	static QueryClauseTable getModifiesByVariable(const std::string& LHS, const std::string& RHS, EntityType LHSType);
+	static QueryClauseTable getModifiesBySynonym(const std::string& LHS, const std::string& RHS, EntityType LHSType);
+	static QueryClauseTable getModifiesByUnderscore(const std::string& LHS, const std::string& RHS, EntityType LHSType);
 	static std::unordered_set<std::string> getVariablesModifiedByStatement(int stmtNo);
 	static std::unordered_set<std::string> getVariablesModifiedByProcedure(const std::string& procName);
 	static std::unordered_set<int> getStatementsModifyingVariable(const std::string& variable);
-	static std::tuple<std::vector<std::string>, std::vector<std::string>> getStmtsToModifiedVariable(const std::unordered_set<int>& stmts);
+	static std::tuple<std::vector<std::string>, std::vector<std::string>>
+	getStmtsToModifiedVariable(const std::unordered_set<int>& stmts);
 
 public:
 	ModifiesStore();
@@ -36,7 +37,9 @@ public:
 	static void clear();
 
 	// Called by QE
-	static QueryResultTable getModifies(const std::string& LHS, const std::string& RHS, EntityType LHSType, EntityType RHSType, bool isBooleanResult);
+	static QueryClauseTable
+	getModifies(const std::string& LHS, const std::string& RHS, EntityType LHSType, EntityType RHSType,
+				bool isBooleanResult);
 
 	// Called by SP and DE
 	static bool addModifiesStatement(int statementNumber, const std::unordered_set<std::string>& variables);

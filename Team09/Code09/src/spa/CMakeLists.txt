@@ -11,21 +11,13 @@ src/models/Query.cpp
 src/models/QueryArgument.cpp
 src/models/QueryClause.cpp
 src/models/QueryPatternClause.cpp
-src/models/QueryResultTable.cpp
-src/models/QueryResultTable.h
+src/models/QueryClauseTable.cpp
+src/models/QueryClauseTable.h
 src/models/QueryRelationType.h
 src/models/QuerySuchThatClause.cpp
 src/models/QuerySuchThatClause.h
-src/util/RPN.h
-src/util/RPN.cpp
-src/util/RPNToken.cpp
-src/util/RPNToken.h
-src/simple_parser/Lexer.cpp
-src/simple_parser/Lexer.h
-src/simple_parser/Token.cpp
-src/simple_parser/Token.h
-src/query_evaluator/QueryEvaluator.cpp
-src/query_evaluator/QueryEvaluator.h
+src/models/QueryClauseTable.h
+src/models/QueryClauseTable.h
 src/models/AssignStatement.cpp
 src/models/AssignStatement.h
 src/pkb/stores/EntityStore.cpp
@@ -40,7 +32,19 @@ src/pkb/stores/UsesStore.cpp
 src/pkb/stores/UsesStore.h
 src/pkb/PKB.cpp
 src/pkb/PKB.h
-src/pkb/util/PKBUtil.cpp)
+src/pkb/util/PKBUtil.cpp
+src/util/QueryUtils.cpp
+src/util/QueryUtils.h
+src/util/RPN.h
+src/util/RPN.cpp
+src/util/RPNToken.cpp
+src/util/RPNToken.h
+src/simple_parser/Lexer.cpp
+src/simple_parser/Lexer.h
+src/simple_parser/Token.cpp
+src/simple_parser/Token.h
+src/query_evaluator/QueryEvaluator.cpp
+src/query_evaluator/QueryEvaluator.h)
 # this makes the headers accessible for other projects which uses spa lib
 target_include_directories(spa PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/src)
 

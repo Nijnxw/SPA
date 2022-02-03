@@ -2,20 +2,20 @@
 #include "../src/util/RPNToken.h"
 
 TEST_CASE("Correct Initialization") {
-    REQUIRE_NOTHROW(RPNToken(RPNTokenType::Integer, "1"));
-    REQUIRE_NOTHROW(RPNToken(RPNTokenType::Variable, "Test"));
-    REQUIRE_NOTHROW(RPNToken(RPNTokenType::Operator, "+"));
-    REQUIRE_NOTHROW(RPNToken(RPNTokenType::Operator, "/"));
-    REQUIRE_NOTHROW(RPNToken(RPNTokenType::LeftParenthesis, "("));
-    REQUIRE_NOTHROW(RPNToken(RPNTokenType::RightParenthesis, ")"));
+    REQUIRE_NOTHROW(RPNToken(RPNTokenType::INTEGER, "1"));
+    REQUIRE_NOTHROW(RPNToken(RPNTokenType::VARIABLE, "Test"));
+    REQUIRE_NOTHROW(RPNToken(RPNTokenType::OPERATOR, "+"));
+    REQUIRE_NOTHROW(RPNToken(RPNTokenType::OPERATOR, "/"));
+    REQUIRE_NOTHROW(RPNToken(RPNTokenType::LEFT_PARENTHESIS, "("));
+    REQUIRE_NOTHROW(RPNToken(RPNTokenType::RIGHT_PARENTHESIS, ")"));
 }
 
 TEST_CASE("Test Getters") {
-    RPNToken integerToken(RPNTokenType::Integer, "1");
-    RPNToken variableToken(RPNTokenType::Variable, "Test");
-    RPNToken operatorToken(RPNTokenType::Operator, "+");
-    RPNToken LeftParenthesisToken(RPNTokenType::LeftParenthesis, "(");
-    RPNToken RightParenthesisToken(RPNTokenType::RightParenthesis, ")");
+    RPNToken integerToken(RPNTokenType::INTEGER, "1");
+    RPNToken variableToken(RPNTokenType::VARIABLE, "Test");
+    RPNToken operatorToken(RPNTokenType::OPERATOR, "+");
+    RPNToken LeftParenthesisToken(RPNTokenType::LEFT_PARENTHESIS, "(");
+    RPNToken RightParenthesisToken(RPNTokenType::RIGHT_PARENTHESIS, ")");
 
     REQUIRE(integerToken.getContents() == "1");
     REQUIRE(integerToken.getPrecedence() == -1);
@@ -59,10 +59,10 @@ TEST_CASE("Test Getters") {
 }
 
 TEST_CASE("Test Operator Comparison") {
-    RPNToken plusToken(RPNTokenType::Operator, "+");
-    RPNToken minusToken(RPNTokenType::Operator, "-");
-    RPNToken multiplyToken(RPNTokenType::Operator, "*");
-    RPNToken divideToken(RPNTokenType::Operator, "/");
+    RPNToken plusToken(RPNTokenType::OPERATOR, "+");
+    RPNToken minusToken(RPNTokenType::OPERATOR, "-");
+    RPNToken multiplyToken(RPNTokenType::OPERATOR, "*");
+    RPNToken divideToken(RPNTokenType::OPERATOR, "/");
 
     REQUIRE(plusToken.comparePrecedence(minusToken) == 0);
     REQUIRE(plusToken.comparePrecedence(multiplyToken) == -1);
@@ -71,5 +71,5 @@ TEST_CASE("Test Operator Comparison") {
 }
 
 TEST_CASE("Test Invalid Operator") {
-    REQUIRE_THROWS_WITH(RPNToken(RPNTokenType::Operator, "aa"), "Invalid Token Content.\n");
+    REQUIRE_THROWS_WITH(RPNToken(RPNTokenType::OPERATOR, "aa"), "Invalid Token Content.\n");
 }

@@ -95,19 +95,19 @@ std::unordered_set<int> PKB::getStatementsWithType(EntityType statementType) {
 	return EntityStore::getStatementsWithType(statementType);
 }
 
-QueryClauseTable PKB::getFollows(std::string& LHS, std::string& RHS, EntityType LHSType, EntityType RHSType, bool isBooleanResult) {
+QueryClauseTable PKB::getFollows(const std::string& LHS, const std::string& RHS, EntityType LHSType, EntityType RHSType, bool isBooleanResult) {
 	return FollowsStore::getFollows(LHS, RHS, LHSType, RHSType, isBooleanResult);
 }
 
-QueryClauseTable PKB::getFollowsT(std::string& LHS, std::string& RHS, EntityType LHSType, EntityType RHSType, bool isBooleanResult) {
+QueryClauseTable PKB::getFollowsT(const std::string& LHS, const std::string& RHS, EntityType LHSType, EntityType RHSType, bool isBooleanResult) {
 	return FollowsStore::getFollowsT(LHS, RHS, LHSType, RHSType, isBooleanResult);
 }
 
-QueryClauseTable PKB::getParent(std::string& LHS, std::string& RHS, EntityType LHSType, EntityType RHSType, bool isBooleanResult) {
+QueryClauseTable PKB::getParent(const std::string& LHS, const std::string& RHS, EntityType LHSType, EntityType RHSType, bool isBooleanResult) {
 	return ParentStore::getParent(LHS, RHS, LHSType, RHSType, isBooleanResult);
 }
 
-QueryClauseTable PKB::getParentT(std::string& LHS, std::string& RHS, EntityType LHSType, EntityType RHSType, bool isBooleanResult) {
+QueryClauseTable PKB::getParentT(const std::string& LHS, const std::string& RHS, EntityType LHSType, EntityType RHSType, bool isBooleanResult) {
 	return ParentStore::getParentT(LHS, RHS, LHSType, RHSType, isBooleanResult);
 }
 

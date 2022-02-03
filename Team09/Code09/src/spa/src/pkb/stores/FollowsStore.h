@@ -42,13 +42,13 @@ private:
 	static std::tuple<std::vector<int>, std::vector<int>> getAllFollowsPairs();
 	static std::tuple<std::vector<int>, std::vector<int>> getAllFollowsTPairs();
 
-	static QueryClauseTable getFollowsByStatementNumber(std::string& LHS, std::string& RHS, EntityType RHSType);
-	static QueryClauseTable getFollowsByStatementVariable(std::string& LHS, std::string& RHS, EntityType RHSType);
-	static QueryClauseTable getFollowsByUnderscore(std::string& RHS, EntityType RHSType);
+	static QueryClauseTable getFollowsByStatementNumber(const std::string& LHS, const std::string& RHS, EntityType RHSType);
+	static QueryClauseTable getFollowsByStatementVariable(const std::string& LHS, const std::string& RHS, EntityType RHSType);
+	static QueryClauseTable getFollowsByUnderscore(const std::string& RHS, EntityType RHSType);
 
-	static QueryClauseTable getFollowsTByStatementNumber(std::string& LHS, std::string& RHS, EntityType RHSType);
-	static QueryClauseTable getFollowsTByStatementVariable(std::string& LHS, std::string& RHS, EntityType RHSType);
-	static QueryClauseTable getFollowsTByUnderscore(std::string& RHS, EntityType RHSType);
+	static QueryClauseTable getFollowsTByStatementNumber(const std::string& LHS, const std::string& RHS, EntityType RHSType);
+	static QueryClauseTable getFollowsTByStatementVariable(const std::string& LHS, const std::string& RHS, EntityType RHSType);
+	static QueryClauseTable getFollowsTByUnderscore(const std::string& RHS, EntityType RHSType);
 
 public:
 	FollowsStore();
@@ -60,6 +60,6 @@ public:
 	static bool addFollowsT(int follower, int followee);
 
 	/* Getters called by QE */
-	static QueryClauseTable getFollows(std::string& LHS, std::string& RHS, EntityType LHSType, EntityType RHSType, bool isBooleanResult);
-	static QueryClauseTable getFollowsT(std::string& LHS, std::string& RHS, EntityType LHSType, EntityType RHSType, bool isBooleanResult);
+	static QueryClauseTable getFollows(const std::string& LHS, const std::string& RHS, EntityType LHSType, EntityType RHSType, bool isBooleanResult);
+	static QueryClauseTable getFollowsT(const std::string& LHS, const std::string& RHS, EntityType LHSType, EntityType RHSType, bool isBooleanResult);
 };

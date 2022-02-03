@@ -24,7 +24,7 @@ bool ParentStore::addParentT(int parent, int child) {
 	return parentTPairs.insert({ parent, child }).second && PKBUtil::addToMapWithSet(parentToChildrenT, parent, child) && PKBUtil::addToMapWithSet(childToParentsT, child, parent);
 }
 
-QueryClauseTable ParentStore::getParent(std::string& LHS, std::string& RHS, EntityType LHSType, EntityType RHSType, bool isBooleanResult)
+QueryClauseTable ParentStore::getParent(const std::string& LHS, const std::string& RHS, EntityType LHSType, EntityType RHSType, bool isBooleanResult)
 {
 	switch (LHSType) {
 	case EntityType::INT:
@@ -39,7 +39,7 @@ QueryClauseTable ParentStore::getParent(std::string& LHS, std::string& RHS, Enti
 	}
 }
 
-QueryClauseTable ParentStore::getParentByStatementNumber(std::string& LHS, std::string& RHS, EntityType RHSType) {
+QueryClauseTable ParentStore::getParentByStatementNumber(const std::string& LHS, const std::string& RHS, EntityType RHSType) {
 	QueryClauseTable queryResult;
 
 	switch (RHSType) {
@@ -65,7 +65,7 @@ QueryClauseTable ParentStore::getParentByStatementNumber(std::string& LHS, std::
 	return queryResult;
 }
 
-QueryClauseTable ParentStore::getParentByStatementVariable(std::string& LHS, std::string& RHS, EntityType RHSType) {
+QueryClauseTable ParentStore::getParentByStatementVariable(const std::string& LHS, const std::string& RHS, EntityType RHSType) {
 	QueryClauseTable queryResult;
 
 	switch (RHSType) {
@@ -92,7 +92,7 @@ QueryClauseTable ParentStore::getParentByStatementVariable(std::string& LHS, std
 
 	return queryResult;
 }
-QueryClauseTable ParentStore::getParentByUnderscore(std::string& RHS, EntityType RHSType) {
+QueryClauseTable ParentStore::getParentByUnderscore(const std::string& RHS, EntityType RHSType) {
 	QueryClauseTable queryResult;
 
 	switch (RHSType) {
@@ -116,7 +116,7 @@ QueryClauseTable ParentStore::getParentByUnderscore(std::string& RHS, EntityType
 	return queryResult;
 }
 
-QueryClauseTable ParentStore::getParentT(std::string& LHS, std::string& RHS, EntityType LHSType, EntityType RHSType, bool isBooleanResult)
+QueryClauseTable ParentStore::getParentT(const std::string& LHS, const std::string& RHS, EntityType LHSType, EntityType RHSType, bool isBooleanResult)
 {
 	QueryClauseTable queryResult;
 
@@ -137,7 +137,7 @@ QueryClauseTable ParentStore::getParentT(std::string& LHS, std::string& RHS, Ent
 	return queryResult;
 }
 
-QueryClauseTable ParentStore::getParentTByStatementNumber(std::string& LHS, std::string& RHS, EntityType RHSType) {
+QueryClauseTable ParentStore::getParentTByStatementNumber(const std::string& LHS, const std::string& RHS, EntityType RHSType) {
 	QueryClauseTable queryResult;
 
 	switch (RHSType) {
@@ -163,7 +163,7 @@ QueryClauseTable ParentStore::getParentTByStatementNumber(std::string& LHS, std:
 	return queryResult;
 }
 
-QueryClauseTable ParentStore::getParentTByStatementVariable(std::string& LHS, std::string& RHS, EntityType RHSType) {
+QueryClauseTable ParentStore::getParentTByStatementVariable(const std::string& LHS, const std::string& RHS, EntityType RHSType) {
 	QueryClauseTable queryResult;
 
 	switch (RHSType) {
@@ -188,7 +188,7 @@ QueryClauseTable ParentStore::getParentTByStatementVariable(std::string& LHS, st
 
 	return queryResult;
 }
-QueryClauseTable ParentStore::getParentTByUnderscore(std::string& RHS, EntityType RHSType) {
+QueryClauseTable ParentStore::getParentTByUnderscore(const std::string& RHS, EntityType RHSType) {
 	QueryClauseTable queryResult;
 
 	switch (RHSType) {

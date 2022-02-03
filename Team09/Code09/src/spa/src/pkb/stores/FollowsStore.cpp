@@ -23,7 +23,7 @@ bool FollowsStore::addFollowsT(int follower, int followee) {
 	return followsTPairs.insert({ follower, followee }).second && PKBUtil::addToMapWithSet(followerToFolloweesT, follower, followee) && PKBUtil::addToMapWithSet(followeeToFollowersT, followee, follower);
 }
 
-QueryClauseTable FollowsStore::getFollows(std::string& LHS, std::string& RHS, EntityType LHSType, EntityType RHSType, bool isBooleanResult)
+QueryClauseTable FollowsStore::getFollows(const std::string& LHS, const std::string& RHS, EntityType LHSType, EntityType RHSType, bool isBooleanResult)
 {
 	switch (LHSType) {
 	case EntityType::INT:
@@ -38,7 +38,7 @@ QueryClauseTable FollowsStore::getFollows(std::string& LHS, std::string& RHS, En
 	}
 }
 
-QueryClauseTable FollowsStore::getFollowsByStatementNumber(std::string& LHS, std::string& RHS, EntityType RHSType) {
+QueryClauseTable FollowsStore::getFollowsByStatementNumber(const std::string& LHS, const std::string& RHS, EntityType RHSType) {
 	QueryClauseTable queryResult;
 
 	switch (RHSType) {
@@ -66,7 +66,7 @@ QueryClauseTable FollowsStore::getFollowsByStatementNumber(std::string& LHS, std
 	return queryResult;
 }
 
-QueryClauseTable FollowsStore::getFollowsByStatementVariable(std::string& LHS, std::string& RHS, EntityType RHSType) {
+QueryClauseTable FollowsStore::getFollowsByStatementVariable(const std::string& LHS, const std::string& RHS, EntityType RHSType) {
 	QueryClauseTable queryResult;
 
 	switch (RHSType) {
@@ -93,7 +93,7 @@ QueryClauseTable FollowsStore::getFollowsByStatementVariable(std::string& LHS, s
 
 	return queryResult;
 }
-QueryClauseTable FollowsStore::getFollowsByUnderscore(std::string& RHS, EntityType RHSType) {
+QueryClauseTable FollowsStore::getFollowsByUnderscore(const std::string& RHS, EntityType RHSType) {
 	QueryClauseTable queryResult;
 
 	switch (RHSType) {
@@ -117,7 +117,7 @@ QueryClauseTable FollowsStore::getFollowsByUnderscore(std::string& RHS, EntityTy
 	return queryResult;
 }
 
-QueryClauseTable FollowsStore::getFollowsT(std::string& LHS, std::string& RHS, EntityType LHSType, EntityType RHSType, bool isBooleanResult)
+QueryClauseTable FollowsStore::getFollowsT(const std::string& LHS, const std::string& RHS, EntityType LHSType, EntityType RHSType, bool isBooleanResult)
 {
 	QueryClauseTable queryResult;
 
@@ -138,7 +138,7 @@ QueryClauseTable FollowsStore::getFollowsT(std::string& LHS, std::string& RHS, E
 	return queryResult;
 }
 
-QueryClauseTable FollowsStore::getFollowsTByStatementNumber(std::string& LHS, std::string& RHS, EntityType RHSType) {
+QueryClauseTable FollowsStore::getFollowsTByStatementNumber(const std::string& LHS, const std::string& RHS, EntityType RHSType) {
 	QueryClauseTable queryResult;
 
 	switch (RHSType) {
@@ -164,7 +164,7 @@ QueryClauseTable FollowsStore::getFollowsTByStatementNumber(std::string& LHS, st
 	return queryResult;
 }
 
-QueryClauseTable FollowsStore::getFollowsTByStatementVariable(std::string& LHS, std::string& RHS, EntityType RHSType) {
+QueryClauseTable FollowsStore::getFollowsTByStatementVariable(const std::string& LHS, const std::string& RHS, EntityType RHSType) {
 	QueryClauseTable queryResult;
 
 	switch (RHSType) {
@@ -189,7 +189,7 @@ QueryClauseTable FollowsStore::getFollowsTByStatementVariable(std::string& LHS, 
 
 	return queryResult;
 }
-QueryClauseTable FollowsStore::getFollowsTByUnderscore(std::string& RHS, EntityType RHSType) {
+QueryClauseTable FollowsStore::getFollowsTByUnderscore(const std::string& RHS, EntityType RHSType) {
 	QueryClauseTable queryResult;
 
 	switch (RHSType) {

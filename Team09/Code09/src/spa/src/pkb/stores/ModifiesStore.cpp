@@ -1,5 +1,12 @@
 #include "ModifiesStore.h"
 
+static std::unordered_set<int> modifiesStatements;
+static std::unordered_set<std::string> modifiedVariables;
+static std::unordered_map<int, std::unordered_set<std::string>> statementNumberToVariablesModified;
+static std::unordered_map<std::string, std::unordered_set<int>> variableToStatementNumbersModifiedBy;
+static std::unordered_map<std::string, std::unordered_set<std::string>> procedureToVariablesModified;
+static std::unordered_map<std::string, std::unordered_set<std::string>> variableToProceduresModifiedBy;
+
 ModifiesStore::ModifiesStore() {}
 
 void ModifiesStore::clear() {
@@ -103,19 +110,19 @@ ModifiesStore::getModifiesByUnderscore(const std::string& LHS, const std::string
 		case EntityType::READ:
 			// e.g. read r; Modifies(r, _)
 			queryResult.addColumn(LHS, PKBUtil::unorderedSetIntersection(modifiesStatements,
-																		 EntityStore::getReadStatements()));
+																		 EntityStore::getStatementsWithType(EntityType::READ)));
 			break;
 
 		case EntityType::IF:
 			// e.g. if ifs; Modifies(ifs, _)
 			queryResult.addColumn(LHS, PKBUtil::unorderedSetIntersection(modifiesStatements,
-																		 EntityStore::getIfStatements()));
+																		 EntityStore::getStatementsWithType(EntityType::IF)));
 			break;
 
 		case EntityType::WHILE:
 			// e.g. while w; Modifies(w, _)
 			queryResult.addColumn(LHS, PKBUtil::unorderedSetIntersection(modifiesStatements,
-																		 EntityStore::getWhileStatements()));
+																		 EntityStore::getStatementsWithType(EntityType::WHILE)));
 			break;
 
 		default:
@@ -159,19 +166,19 @@ ModifiesStore::getModifiesByVariable(const std::string& LHS, const std::string& 
 		case EntityType::READ:
 			// e.g. read r; Modifies(r, "x")
 			queryResult.addColumn(LHS,
-								  PKBUtil::unorderedSetIntersection(stmtsUsingVar, EntityStore::getReadStatements()));
+								  PKBUtil::unorderedSetIntersection(stmtsUsingVar, EntityStore::getStatementsWithType(EntityType::READ)));
 			break;
 
 		case EntityType::IF:
 			// e.g. if ifs; Modifies(ifs, "x")
 			queryResult.addColumn(LHS,
-								  PKBUtil::unorderedSetIntersection(stmtsUsingVar, EntityStore::getIfStatements()));
+								  PKBUtil::unorderedSetIntersection(stmtsUsingVar, EntityStore::getStatementsWithType(EntityType::IF)));
 			break;
 
 		case EntityType::WHILE:
 			// e.g. while w; Modifies(w, "x")
 			queryResult.addColumn(LHS,
-								  PKBUtil::unorderedSetIntersection(stmtsUsingVar, EntityStore::getWhileStatements()));
+								  PKBUtil::unorderedSetIntersection(stmtsUsingVar, EntityStore::getStatementsWithType(EntityType::WHILE)));
 			break;
 
 		default:
@@ -215,17 +222,17 @@ ModifiesStore::getModifiesBySynonym(const std::string& LHS, const std::string& R
 		}
 		case EntityType::READ: {
 			// e.g. read r; Modifies(r, v)
-			std::tie(stmts, vars) = getStmtsToModifiedVariable(EntityStore::getReadStatements());
+			std::tie(stmts, vars) = getStmtsToModifiedVariable(EntityStore::getStatementsWithType(EntityType::READ));
 			break;
 		}
 		case EntityType::IF: {
 			// e.g. if ifs; Modifies(ifs, v)
-			std::tie(stmts, vars) = getStmtsToModifiedVariable(EntityStore::getIfStatements());
+			std::tie(stmts, vars) = getStmtsToModifiedVariable(EntityStore::getStatementsWithType(EntityType::IF));
 			break;
 		}
 		case EntityType::WHILE: {
 			// e.g. while w; Modifies(w, v)
-			std::tie(stmts, vars) = getStmtsToModifiedVariable(EntityStore::getWhileStatements());
+			std::tie(stmts, vars) = getStmtsToModifiedVariable(EntityStore::getStatementsWithType(EntityType::WHILE));
 			break;
 		}
 		default:

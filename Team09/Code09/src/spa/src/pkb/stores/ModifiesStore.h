@@ -6,10 +6,11 @@
 #include <vector>
 #include <unordered_map>
 #include <unordered_set>
-#include "models/EntityType.h"
-#include "models/QueryClauseTable.h"
-#include "pkb/stores/EntityStore.h"
-#include "pkb/util/PKBUtil.cpp"
+
+#include "../../models/EntityType.h"
+#include "../../models/QueryClauseTable.h"
+#include "../stores/EntityStore.h"
+#include "../util/PKBUtil.cpp"
 
 class ModifiesStore {
 private:
@@ -36,12 +37,12 @@ public:
 
 	static void clear();
 
-	// Called by QE
+	/* Setters called by SP and DE */
+	static bool addModifiesStatement(int statementNumber, const std::unordered_set<std::string>& variables);
+	static bool addModifiesProcedure(const std::string& procedure, const std::unordered_set<std::string>& variables);
+
+	/* Getters called by QE */
 	static QueryClauseTable
 	getModifies(const std::string& LHS, const std::string& RHS, EntityType LHSType, EntityType RHSType,
 				bool isBooleanResult);
-
-	// Called by SP and DE
-	static bool addModifiesStatement(int statementNumber, const std::unordered_set<std::string>& variables);
-	static bool addModifiesProcedure(const std::string& procedure, const std::unordered_set<std::string>& variables);
 };

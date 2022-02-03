@@ -5,6 +5,9 @@ src/util/TestRPN.cpp
 src/util/TestRPNToken.cpp
 src/simple_parser/TestLexer.cpp
 src/util/TestQueryClauseTable.cpp
+src/pkb/TestEntityStore.cpp
+src/pkb/TestFollowsStore.cpp
+src/pkb/TestParentStore.cpp
 src/pkb/TestUsesStore.cpp
 src/pkb/TestModifiesStore.cpp
 src/util/TestQueryUtils.cpp

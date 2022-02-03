@@ -2,6 +2,7 @@
 
 std::unordered_map<int, int> FollowsStore::followerToFollowee; 
 std::unordered_map<int, int> FollowsStore::followeeToFollower; 
+std::unordered_map<int, int> FollowsStore::followsTPairs;
 std::unordered_map<int, std::unordered_set<int>> FollowsStore::followerToFolloweesT; 
 std::unordered_map<int, std::unordered_set<int>> FollowsStore::followeeToFollowersT;
 
@@ -19,7 +20,7 @@ bool FollowsStore::addFollows(int follower, int followee) {
 }
 
 bool FollowsStore::addFollowsT(int follower, int followee) {
-	return PKBUtil::addToMapWithSet(followerToFolloweesT, follower, followee) && PKBUtil::addToMapWithSet(followeeToFollowersT, followee, follower);
+	return followsTPairs.insert({ follower, followee }).second && PKBUtil::addToMapWithSet(followerToFolloweesT, follower, followee) && PKBUtil::addToMapWithSet(followeeToFollowersT, followee, follower);
 }
 
 QueryResultTable FollowsStore::getFollows(std::string& LHS, std::string& RHS, EntityType LHSType, EntityType RHSType, bool isBooleanResult)
@@ -48,13 +49,15 @@ QueryResultTable FollowsStore::getFollowsByStatementNumber(std::string& LHS, std
 
 	switch (RHSType) {
 	case EntityType::INT: // Follows(1, 2) 
-		if (isFollows(LHS, RHS)) {
+		if (isFollowsRelationship(LHS, RHS)) {
 			queryResult.setBooleanResult(true);
 		}
 		break;
 	case EntityType::STMT: // Follows(1, s)
 		if (isFollower(std::stoi(LHS))) {
-			queryResult.addColumn(RHS, getFollowee(LHS));
+			std::vector<int> followee;
+			followee.push_back(getFollowee(LHS));
+			queryResult.addColumn(RHS, followee);
 		}
 		break;
 	case EntityType::WILD: // Follows(1, _)
@@ -75,11 +78,13 @@ QueryResultTable FollowsStore::getFollowsByStatementVariable(std::string& LHS, s
 	switch (RHSType) {
 	case EntityType::INT: // Follows(s, 2)
 		if (isFollowee(std::stoi(RHS))) {
-			queryResult.addColumn(LHS, getFollower(RHS));
+			std::vector<int> follower;
+			follower.push_back(getFollower(RHS));
+			queryResult.addColumn(LHS, follower);
 		}
 		break;
 	case EntityType::STMT: // Follows(s1, s2)
-		auto [followers, followees] = getAllFollows();
+		auto [followers, followees] = getAllFollowsPairs();
 		queryResult.addColumn(LHS, followers);
 		queryResult.addColumn(RHS, followees);
 		break;
@@ -105,7 +110,7 @@ QueryResultTable FollowsStore::getFollowsByUnderscore(std::string& RHS, EntityTy
 		queryResult.addColumn(LHS, getAllFollowees());
 		break;
 	case EntityType::WILD: // Follows(_, _)
-		if (hasFollows()) {
+		if (hasFollowsRelationship()) {
 			queryResult.setBooleanResult(true);
 		}
 		break;
@@ -142,7 +147,7 @@ QueryResultTable FollowsStore::getFollowsTByStatementNumber(std::string& LHS, st
 
 	switch (RHSType) {
 	case EntityType::INT: // Follows*(1, 2) 
-		if (isFollowsT(LHS, RHS)) {
+		if (isFollowsTRelationship(LHS, RHS)) {
 			queryResult.setBooleanResult(true);
 		}
 		break;
@@ -173,7 +178,7 @@ QueryResultTable FollowsStore::getFollowsTByStatementVariable(std::string& LHS, 
 		}
 		break;
 	case EntityType::STMT: // Follows*(s1, s2)
-		auto [followers, followees] = getAllFollowsT();
+		auto [followers, followees] = getAllFollowsTPairs();
 		queryResult.addColumn(LHS, followers);
 		queryResult.addColumn(RHS, followees);
 		break;
@@ -199,7 +204,7 @@ QueryResultTable FollowsStore::getFollowsTByUnderscore(std::string& RHS, EntityT
 		queryResult.addColumn(LHS, getAllFolloweesT());
 		break;
 	case EntityType::WILD: // Follows*(_, _)
-		if (hasFollowsT()) {
+		if (hasFollowsTRelationship()) {
 			queryResult.setBooleanResult(true);
 		}
 		break;
@@ -210,27 +215,27 @@ QueryResultTable FollowsStore::getFollowsTByUnderscore(std::string& RHS, EntityT
 	return queryResult;
 }
 
-bool FollowsStore::isFollows(int follower, int followee) {
+bool FollowsStore::hasFollowsRelationship() {
+	return followerToFollowee.size() > 0;
+}
+
+bool FollowsStore::hasFollowsTRelationship() {
+	return followerToFolloweesT.size() > 0;
+}
+
+bool FollowsStore::isFollowsRelationship(int follower, int followee) {
 	if (followerToFollowee.count(follower) <= 0) {
 		return false;
 	}
 	return followerToFollowee.at(follower) == followee;
 }
 
-bool FollowsStore::isFollowsT(int follower, int followee) {
+bool FollowsStore::isFollowsTRelationship(int follower, int followee) {
 	if (followerToFolloweesT.count(follower) <= 0) {
 		return false;
 	}
 	std::unordered_set<int> followees = followerToFolloweesT[follower];
 	return followees.count(followee) > 0;
-}
-
-bool FollowsStore::hasFollows() {
-	return followerToFollowee.size() > 0;
-}
-
-bool FollowsStore::hasFollowsT() {
-	return followerToFolloweesT.size() > 0;
 }
 
 bool FollowsStore::isFollowee(int followee) {
@@ -239,10 +244,6 @@ bool FollowsStore::isFollowee(int followee) {
 
 bool FollowsStore::isFollower(int follower) {
 	return followerToFollowee.count(follower) > 0;
-}
-
-bool FollowsStore::isFollowee(int followee) {
-	return followeeToFollower.count(followee) > 0;
 }
 
 bool FollowsStore::isFollowerT(int follower) {
@@ -285,10 +286,10 @@ std::unordered_set<int> FollowsStore::getAllFollowersT() {
 	return PKBUtil::getKeySetFromMap(followerToFolloweesT);
 }
 
-std::tuple<std::vector<int>, std::vector<int>> FollowsStore::getAllFollows() {
+std::tuple<std::vector<int>, std::vector<int>> FollowsStore::getAllFollowsPairs() {
 	return PKBUtil::convertMapToVectorTuple(followerToFollowee);
 }
 
-std::tuple<std::vector<int>, std::vector<int>> FollowsStore::getAllFollowsT() {
-	return PKBUtil::convertMapToVectorTuple(followerToFolloweesT);
+std::tuple<std::vector<int>, std::vector<int>> FollowsStore::getAllFollowsTPairs() {
+	return PKBUtil::convertMapToVectorTuple(followsTPairs);
 }

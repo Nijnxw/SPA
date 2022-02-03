@@ -16,43 +16,105 @@ void PKB::clearAllStores() {
 }
 
 /* Getters called by Source Processor */
-bool addProcedure(std::string procedure) {
+bool PKB::addProcedure(std::string procedure) {
 	return EntityStore::addProcedure(procedure);
 }
 
-bool addVariable(std::string variable) {
+bool PKB::addVariable(std::string variable) {
 	return EntityStore::addVariable(variable);
 }
-bool addConstant(std::string constant) {
+bool PKB::addConstant(std::string constant) {
 	return EntityStore::addConstant(constant);
 }
 
-bool addStatementNumber(int statementNumber) {
+bool PKB::addStatementNumber(int statementNumber) {
 	return EntityStore::addStatementNumber(statementNumber);
 }
 
-bool addAssignStatement(int statementNumber, std::string leftHandSide, std::string rightHandSide) {
+bool PKB::addAssignStatement(int statementNumber, std::string leftHandSide, std::string rightHandSide) {
 	return EntityStore::addAssignStatement(statementNumber, leftHandSide, rightHandSide);
 }
 
-bool addStatement(EntityType statementType, int statementNumber) {
-	return EntityStore::addStatement(statementType, statementNumber);
+bool PKB::addStatementWithType(EntityType statementType, int statementNumber) {
+	return EntityStore::addStatementWithType(statementType, statementNumber);
 }
 
-/* bool addFollows(int follower, int followee);
-bool addFollowsT(int follower, int followee);
-bool addParent(int parent, int child);
-bool addParentT(int parent, int child);
-bool addUsesStatement(int statementNumber, EntityType statementType, std::unordered_set<std::string> variables);
-bool addUsesProcedure(std::string procedure, EntityType statementType, std::unordered_set<std::string> variables);
-bool addModifiesStatement(int statementNumber, EntityType statementType, std::unordered_set<std::string> variables);
-bool addModifiesProcedure(std::string procedure, EntityType statementType, std::unordered_set<std::string> variables); */
+bool PKB::addFollows(int follower, int followee) {
+	return FollowsStore::addFollows(follower, followee);
+}
+
+bool PKB::addFollowsT(int follower, int followee) {
+	return FollowsStore::addFollowsT(follower, followee);
+}
+
+bool PKB::addParent(int parent, int child) {
+	return ParentStore::addParent(parent, child);
+}
+
+bool PKB::addParentT(int parent, int child) {
+	return ParentStore::addParentT(parent, child);
+}
+
+bool PKB::addUsesStatement(int statementNumber, const std::unordered_set<std::string>& variables) {
+	return UsesStore::addUsesStatement(statementNumber, variables);
+}
+
+bool PKB::addUsesProcedure(const std::string& procedure, const std::unordered_set<std::string>& variables) {
+	return UsesStore::addUsesProcedure(procedure, variables);
+}
+
+bool PKB::addModifiesStatement(int statementNumber, const std::unordered_set<std::string>& variables) {
+	return ModifiesStore::addModifiesStatement(statementNumber, variables);
+}
+bool PKB::addModifiesProcedure(const std::string& procedure, const std::unordered_set<std::string>& variables) {
+	return ModifiesStore::addModifiesProcedure(procedure, variables);
+}
 
 /* Setters called by Query Evaluator */
-std::unordered_set<std::string> getAllProcedures();
-std::unordered_set<std::string> getAllVariables();
-std::unordered_set<std::string> getAllConstants();
-std::unordered_set<int> getAllStatements();
+std::unordered_set<std::string> PKB::getProcedures() {
+	return EntityStore::getProcedures();
+}
 
-std::unordered_set<int> getAllAssignStatements();
-std::unordered_set<int> getAllStatements(EntityType statementType);
+std::unordered_set<std::string> PKB::getVariables() {
+	return EntityStore::getVariables();
+}
+
+std::unordered_set<std::string> PKB::getConstants() {
+	return EntityStore::getConstants();
+}
+
+std::unordered_set<int> PKB::getStatementNumbers() {
+	return EntityStore::getStatementNumbers();
+}
+
+std::unordered_map<int, AssignStatement> PKB::getAssignStatements() {
+	return EntityStore::getAssignStatements();
+}
+
+std::unordered_set<int> PKB::getStatementsWithType(EntityType statementType) {
+	return EntityStore::getStatementsWithType(statementType);
+}
+
+QueryClauseTable PKB::getFollows(std::string& LHS, std::string& RHS, EntityType LHSType, EntityType RHSType, bool isBooleanResult) {
+	return FollowsStore::getFollows(LHS, RHS, LHSType, RHSType, isBooleanResult);
+}
+
+QueryClauseTable PKB::getFollowsT(std::string& LHS, std::string& RHS, EntityType LHSType, EntityType RHSType, bool isBooleanResult) {
+	return FollowsStore::getFollowsT(LHS, RHS, LHSType, RHSType, isBooleanResult);
+}
+
+QueryClauseTable PKB::getParent(std::string& LHS, std::string& RHS, EntityType LHSType, EntityType RHSType, bool isBooleanResult) {
+	return ParentStore::getParent(LHS, RHS, LHSType, RHSType, isBooleanResult);
+}
+
+QueryClauseTable PKB::getParentT(std::string& LHS, std::string& RHS, EntityType LHSType, EntityType RHSType, bool isBooleanResult) {
+	return ParentStore::getParentT(LHS, RHS, LHSType, RHSType, isBooleanResult);
+}
+
+QueryClauseTable PKB::getUses(const std::string& LHS, const std::string& RHS, EntityType LHSType, EntityType RHSType, bool isBooleanResult) {
+	return UsesStore::getUses(LHS, RHS, LHSType, RHSType, isBooleanResult);
+}
+
+QueryClauseTable PKB::getModifies(const std::string& LHS, const std::string& RHS, EntityType LHSType, EntityType RHSType, bool isBooleanResult) {
+	return ModifiesStore::getModifies(LHS, RHS, LHSType, RHSType, isBooleanResult);
+}

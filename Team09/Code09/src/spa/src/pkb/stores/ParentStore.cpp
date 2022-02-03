@@ -2,6 +2,7 @@
 
 std::unordered_map<int, std::unordered_set<int>> parentToChildren;
 std::unordered_map<int, int> childToParent;
+std::unordered_map<int, int> parentPairs;
 std::unordered_map<int, int> parentTPairs;
 std::unordered_map<int, std::unordered_set<int>> parentToChildrenT;
 std::unordered_map<int, std::unordered_set<int>> childToParentsT;
@@ -9,8 +10,6 @@ std::unordered_map<int, std::unordered_set<int>> childToParentsT;
 ParentStore::ParentStore() {}
 
 void ParentStore::clear() {
-	parentStatements.clear();
-	childStatements.clear();
 	parentToChildren.clear();
 	childToParent.clear();
 	parentToChildrenT.clear();
@@ -18,7 +17,7 @@ void ParentStore::clear() {
 }
 
 bool ParentStore::addParent(int parent, int child) {
-	return PKBUtil::addToMapWithSet(parentToChildren, parent, child) && childToParent.insert({child, parent}).second;
+	return parentPairs.insert({ parent, child }).second && PKBUtil::addToMapWithSet(parentToChildren, parent, child) && childToParent.insert({child, parent}).second;
 }
 
 bool ParentStore::addParentT(int parent, int child) {
@@ -45,13 +44,13 @@ QueryClauseTable ParentStore::getParentByStatementNumber(std::string& LHS, std::
 
 	switch (RHSType) {
 	case EntityType::INT: // Parent(1, 2) 
-		if (isParentRelationship(LHS, RHS)) {
+		if (isParentRelationship(std::stoi(LHS), std::stoi(RHS))) {
 			queryResult.setBooleanResult(true);
 		}
 		break;
 	case EntityType::STMT: // Parent(1, s)
 		if (isParent(std::stoi(LHS))) {
-			queryResult.addColumn(RHS, getChildren(LHS));
+			queryResult.addColumn(RHS, getChildren(std::stoi(LHS)));
 		}
 		break;
 	case EntityType::WILD: // Parent(1, _)
@@ -73,14 +72,16 @@ QueryClauseTable ParentStore::getParentByStatementVariable(std::string& LHS, std
 	case EntityType::INT: // Parent(s, 2)
 		if (isChild(std::stoi(RHS))) {
 			std::vector<int> parent;
-			parent.push_back(getParent(RHS));
+			parent.push_back(getParent(std::stoi(RHS)));
 			queryResult.addColumn(LHS, parent);
 		}
 		break;
 	case EntityType::STMT: // Parent(s1, s2)
+	{ // Curly brackets here to prevent error scoping C2360 from autotester.exe
 		auto [parents, children] = getAllParentPairs();
 		queryResult.addColumn(LHS, parents);
 		queryResult.addColumn(RHS, children);
+	}
 		break;
 	case EntityType::WILD: // Parent(s, _)
 		queryResult.addColumn(LHS, getAllParents());
@@ -101,7 +102,7 @@ QueryClauseTable ParentStore::getParentByUnderscore(std::string& RHS, EntityType
 		}
 		break;
 	case EntityType::STMT: // Parent(_, s)
-		queryResult.addColumn(LHS, getAllChildren());
+		queryResult.addColumn(RHS, getAllChildren());
 		break;
 	case EntityType::WILD: // Parent(_, _)
 		if (hasParentRelationship()) {
@@ -141,13 +142,13 @@ QueryClauseTable ParentStore::getParentTByStatementNumber(std::string& LHS, std:
 
 	switch (RHSType) {
 	case EntityType::INT: // Parent*(1, 2) 
-		if (isParentTRelationship(LHS, RHS)) {
+		if (isParentTRelationship(std::stoi(LHS), std::stoi(RHS))) {
 			queryResult.setBooleanResult(true);
 		}
 		break;
 	case EntityType::STMT: // Parent*(1, s)
 		if (isParentT(std::stoi(LHS))) {
-			queryResult.addColumn(RHS, getChildrenT(LHS));
+			queryResult.addColumn(RHS, getChildrenT(std::stoi(LHS)));
 		}
 		break;
 	case EntityType::WILD: // Parent*(1, _)
@@ -162,21 +163,21 @@ QueryClauseTable ParentStore::getParentTByStatementNumber(std::string& LHS, std:
 	return queryResult;
 }
 
-QueryClauseTable ParentStore::getParentByStatementVariable(std::string& LHS, std::string& RHS, EntityType RHSType) {
+QueryClauseTable ParentStore::getParentTByStatementVariable(std::string& LHS, std::string& RHS, EntityType RHSType) {
 	QueryClauseTable queryResult;
 
 	switch (RHSType) {
 	case EntityType::INT: // Parent*(s, 2)
 		if (isChildT(std::stoi(RHS))) {
-			std::vector<int> parent;
-			parent.push_back(getParentT(RHS));
-			queryResult.addColumn(LHS, parent);
+			queryResult.addColumn(LHS, getParentsT(std::stoi(RHS)));
 		}
 		break;
 	case EntityType::STMT: // Parent*(s1, s2)
+	{ // Curly brackets here to prevent error scoping C2360 from autotester.exe
 		auto [parents, children] = getAllParentTPairs();
 		queryResult.addColumn(LHS, parents);
 		queryResult.addColumn(RHS, children);
+	}
 		break;
 	case EntityType::WILD: // Parent*(s, _)
 		queryResult.addColumn(LHS, getAllParentsT());
@@ -197,7 +198,7 @@ QueryClauseTable ParentStore::getParentTByUnderscore(std::string& RHS, EntityTyp
 		}
 		break;
 	case EntityType::STMT: // Parent*(_, s)
-		queryResult.addColumn(LHS, getAllChildrenT());
+		queryResult.addColumn(RHS, getAllChildrenT());
 		break;
 	case EntityType::WILD: // Parent*(_, _)
 		if (hasParentTRelationship()) {
@@ -271,7 +272,7 @@ std::unordered_set<int> ParentStore::getChildrenT(int parent) {
 	return parentToChildrenT[parent];
 }
 
-std::unordered_set<int> ParentStore::getParentT(int child) {
+std::unordered_set<int> ParentStore::getParentsT(int child) {
 	return childToParentsT[child];
 }
 
@@ -284,7 +285,7 @@ std::unordered_set<int> ParentStore::getAllParentsT() {
 }
 
 std::tuple<std::vector<int>, std::vector<int>> ParentStore::getAllParentPairs() {
-	return PKBUtil::convertMapToVectorTuple(parentToChildren);
+	return PKBUtil::convertMapToVectorTuple(parentPairs);
 }
 
 std::tuple<std::vector<int>, std::vector<int>> ParentStore::getAllParentTPairs() {

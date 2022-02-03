@@ -103,19 +103,19 @@ ModifiesStore::getModifiesByUnderscore(const std::string& LHS, const std::string
 		case EntityType::READ:
 			// e.g. read r; Modifies(r, _)
 			queryResult.addColumn(LHS, PKBUtil::unorderedSetIntersection(modifiesStatements,
-																		 EntityStore::getStatementsByType(EntityType::READ)));
+																		 EntityStore::getStatementsWithType(EntityType::READ)));
 			break;
 
 		case EntityType::IF:
 			// e.g. if ifs; Modifies(ifs, _)
 			queryResult.addColumn(LHS, PKBUtil::unorderedSetIntersection(modifiesStatements,
-																		 EntityStore::getStatementsByType(EntityType::IF)));
+																		 EntityStore::getStatementsWithType(EntityType::IF)));
 			break;
 
 		case EntityType::WHILE:
 			// e.g. while w; Modifies(w, _)
 			queryResult.addColumn(LHS, PKBUtil::unorderedSetIntersection(modifiesStatements,
-																		 EntityStore::getStatementsByType(EntityType::WHILE)));
+																		 EntityStore::getStatementsWithType(EntityType::WHILE)));
 			break;
 
 		default:
@@ -159,19 +159,19 @@ ModifiesStore::getModifiesByVariable(const std::string& LHS, const std::string& 
 		case EntityType::READ:
 			// e.g. read r; Modifies(r, "x")
 			queryResult.addColumn(LHS,
-								  PKBUtil::unorderedSetIntersection(stmtsUsingVar, EntityStore::getStatementsByType(EntityType::READ)));
+								  PKBUtil::unorderedSetIntersection(stmtsUsingVar, EntityStore::getStatementsWithType(EntityType::READ)));
 			break;
 
 		case EntityType::IF:
 			// e.g. if ifs; Modifies(ifs, "x")
 			queryResult.addColumn(LHS,
-								  PKBUtil::unorderedSetIntersection(stmtsUsingVar, EntityStore::getStatementsByType(EntityType::IF)));
+								  PKBUtil::unorderedSetIntersection(stmtsUsingVar, EntityStore::getStatementsWithType(EntityType::IF)));
 			break;
 
 		case EntityType::WHILE:
 			// e.g. while w; Modifies(w, "x")
 			queryResult.addColumn(LHS,
-								  PKBUtil::unorderedSetIntersection(stmtsUsingVar, EntityStore::getStatementsByType(EntityType::WHILE)));
+								  PKBUtil::unorderedSetIntersection(stmtsUsingVar, EntityStore::getStatementsWithType(EntityType::WHILE)));
 			break;
 
 		default:
@@ -215,17 +215,17 @@ ModifiesStore::getModifiesBySynonym(const std::string& LHS, const std::string& R
 		}
 		case EntityType::READ: {
 			// e.g. read r; Modifies(r, v)
-			std::tie(stmts, vars) = getStmtsToModifiedVariable(EntityStore::getStatementsByType(EntityType::READ));
+			std::tie(stmts, vars) = getStmtsToModifiedVariable(EntityStore::getStatementsWithType(EntityType::READ));
 			break;
 		}
 		case EntityType::IF: {
 			// e.g. if ifs; Modifies(ifs, v)
-			std::tie(stmts, vars) = getStmtsToModifiedVariable(EntityStore::getStatementsByType(EntityType::IF));
+			std::tie(stmts, vars) = getStmtsToModifiedVariable(EntityStore::getStatementsWithType(EntityType::IF));
 			break;
 		}
 		case EntityType::WHILE: {
 			// e.g. while w; Modifies(w, v)
-			std::tie(stmts, vars) = getStmtsToModifiedVariable(EntityStore::getStatementsByType(EntityType::WHILE));
+			std::tie(stmts, vars) = getStmtsToModifiedVariable(EntityStore::getStatementsWithType(EntityType::WHILE));
 			break;
 		}
 		default:

@@ -43,14 +43,14 @@ QueryClauseTable FollowsStore::getFollowsByStatementNumber(std::string& LHS, std
 
 	switch (RHSType) {
 	case EntityType::INT: // Follows(1, 2) 
-		if (isFollowsRelationship(LHS, RHS)) {
+		if (isFollowsRelationship(std::stoi(LHS), std::stoi(RHS))) {
 			queryResult.setBooleanResult(true);
 		}
 		break;
 	case EntityType::STMT: // Follows(1, s)
 		if (isFollower(std::stoi(LHS))) {
 			std::vector<int> followee;
-			followee.push_back(getFollowee(LHS));
+			followee.push_back(getFollowee(std::stoi(LHS)));
 			queryResult.addColumn(RHS, followee);
 		}
 		break;
@@ -73,14 +73,16 @@ QueryClauseTable FollowsStore::getFollowsByStatementVariable(std::string& LHS, s
 	case EntityType::INT: // Follows(s, 2)
 		if (isFollowee(std::stoi(RHS))) {
 			std::vector<int> follower;
-			follower.push_back(getFollower(RHS));
+			follower.push_back(getFollower(std::stoi(RHS)));
 			queryResult.addColumn(LHS, follower);
 		}
 		break;
 	case EntityType::STMT: // Follows(s1, s2)
+	{ // Curly brackets here to prevent error scoping C2360 from autotester.exe
 		auto [followers, followees] = getAllFollowsPairs();
 		queryResult.addColumn(LHS, followers);
 		queryResult.addColumn(RHS, followees);
+	}
 		break;
 	case EntityType::WILD: // Follows(s, _)
 		queryResult.addColumn(LHS, getAllFollowers());
@@ -101,7 +103,7 @@ QueryClauseTable FollowsStore::getFollowsByUnderscore(std::string& RHS, EntityTy
 		}
 		break;
 	case EntityType::STMT: // Follows(_, s)
-		queryResult.addColumn(LHS, getAllFollowees());
+		queryResult.addColumn(RHS, getAllFollowees());
 		break;
 	case EntityType::WILD: // Follows(_, _)
 		if (hasFollowsRelationship()) {
@@ -141,13 +143,13 @@ QueryClauseTable FollowsStore::getFollowsTByStatementNumber(std::string& LHS, st
 
 	switch (RHSType) {
 	case EntityType::INT: // Follows*(1, 2) 
-		if (isFollowsTRelationship(LHS, RHS)) {
+		if (isFollowsTRelationship(std::stoi(LHS), std::stoi(RHS))) {
 			queryResult.setBooleanResult(true);
 		}
 		break;
 	case EntityType::STMT: // Follows*(1, s)
 		if (isFollowerT(std::stoi(LHS))) {
-			queryResult.addColumn(RHS, getFolloweesT(LHS));
+			queryResult.addColumn(RHS, getFolloweesT(std::stoi(LHS)));
 		}
 		break;
 	case EntityType::WILD: // Follows*(1, _)
@@ -168,13 +170,15 @@ QueryClauseTable FollowsStore::getFollowsTByStatementVariable(std::string& LHS, 
 	switch (RHSType) {
 	case EntityType::INT: // Follows*(s, 2)
 		if (isFollowee(std::stoi(RHS))) {
-			queryResult.addColumn(LHS, getFollowersT(RHS));
+			queryResult.addColumn(LHS, getFollowersT(std::stoi(RHS)));
 		}
 		break;
 	case EntityType::STMT: // Follows*(s1, s2)
+	{ // Curly brackets here to prevent error scoping C2360 from autotester.exe
 		auto [followers, followees] = getAllFollowsTPairs();
 		queryResult.addColumn(LHS, followers);
 		queryResult.addColumn(RHS, followees);
+	}
 		break;
 	case EntityType::WILD: // Follows*(s, _)
 		queryResult.addColumn(LHS, getAllFollowersT());
@@ -195,7 +199,7 @@ QueryClauseTable FollowsStore::getFollowsTByUnderscore(std::string& RHS, EntityT
 		}
 		break;
 	case EntityType::STMT: // Follows*(_, s)
-		queryResult.addColumn(LHS, getAllFolloweesT());
+		queryResult.addColumn(RHS, getAllFolloweesT());
 		break;
 	case EntityType::WILD: // Follows*(_, _)
 		if (hasFollowsTRelationship()) {

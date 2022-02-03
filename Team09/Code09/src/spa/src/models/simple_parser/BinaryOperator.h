@@ -1,12 +1,12 @@
 enum class BinaryOperator {
-    plus,
-    minus,
-    times,
-    divide,
-    modulo,
-    gt,
-    lte,
-    lt,
-    lte,
-    eq
+    PLUS,
+    MINUS,
+    TIMES,
+    DIVIDE,
+    MODULO,
+    GT,
+    GTE,
+    LT,
+    LTE,
+    EQ
 };

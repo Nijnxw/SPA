@@ -11,8 +11,8 @@ std::shared_ptr<VariableNode> IoNode::getVariable() {
 
 // ReadNode Implementation
 ReadNode::ReadNode(int sn, std::shared_ptr<VariableNode> var)
-	: IoNode(NodeType::Read, sn, var) { }
+	: IoNode(NodeType::READ, sn, var) { }
 
 // PrintNode Implementation
 PrintNode::PrintNode(int sn, std::shared_ptr<VariableNode> var)
-	: IoNode(NodeType::Print, sn, var) { }
+	: IoNode(NodeType::PRINT, sn, var) { }

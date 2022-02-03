@@ -2,7 +2,7 @@
 
 // VariableNode Implementation
 VariableNode::VariableNode(std::string s)
-	: Node(NodeType::Variable) {
+	: Node(NodeType::VARIABLE) {
 	name = s;
 }
 
@@ -12,7 +12,7 @@ std::string VariableNode::getName() {
 
 // ConstantNode Implementation
 ConstantNode::ConstantNode(std::string s)
-	: Node(NodeType::Constant) {
+	: Node(NodeType::CONSTANT) {
 	value = s;
 }
 

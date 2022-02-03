@@ -1,7 +1,7 @@
 #include "ProcedureNode.h"
 
 ProcedureNode::ProcedureNode(std::vector<std::shared_ptr<StmtNode>> stList)
-	: Node(NodeType::Procedure) {
+	: Node(NodeType::PROCEDURE) {
 	stmtList = stList;
 }
 

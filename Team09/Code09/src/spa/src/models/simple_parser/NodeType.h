@@ -1,15 +1,15 @@
 #pragma once
 
 enum class NodeType {
-    If,
-    While,
-    Assign,
-    Read,
-    Print,
-    Call,
-    Variable,
-    Constant,
-    BinOp,
-    Procedure,
-    Root
+    IF,
+    WHILE,
+    ASSIGN,
+    READ,
+    PRINT,
+    CALL,
+    VARIABLE,
+    CONSTANT,
+    BINOP,
+    PROCEDURE,
+    ROOT
 };

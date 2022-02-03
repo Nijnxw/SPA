@@ -19,11 +19,11 @@ TEST_CASE("UsesStore storage functionality") {
 			}
 		*/
 		// Assumed calls from SP/DE
-		EntityStore::addStatement(EntityType::PRINT, 1);
+		EntityStore::addStatementWithType(EntityType::PRINT, 1);
 		EntityStore::addAssignStatement(2, "LHS", "RHS");
-		EntityStore::addStatement(EntityType::IF, 3);
+		EntityStore::addStatementWithType(EntityType::IF, 3);
 		EntityStore::addAssignStatement(4, "LHS", "RHS");
-		EntityStore::addStatement(EntityType::READ, 5);
+		EntityStore::addStatementWithType(EntityType::READ, 5);
 		UsesStore::addUsesStatement(1, std::unordered_set<std::string>({"p"}));
 		UsesStore::addUsesStatement(2, std::unordered_set<std::string>({"p"}));
 		UsesStore::addUsesStatement(3, std::unordered_set<std::string>({"c", "k", "a", "p", "ifs", "w"}));

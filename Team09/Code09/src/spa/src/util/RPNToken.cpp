@@ -4,7 +4,7 @@ RPNToken::RPNToken(RPNTokenType t, std::string c) {
 	type = t;
 	contents = c;
 
-	if (t != RPNTokenType::Operator) {
+	if (t != RPNTokenType::OPERATOR) {
 		precedence = -1;
 	} else if (c == "*" || c == "/" || c == "%") {
 		precedence = 3;
@@ -28,21 +28,21 @@ int RPNToken::comparePrecedence(RPNToken other) {
 }
 
 bool RPNToken::isVariable() {
-	return type == RPNTokenType::Variable;
+	return type == RPNTokenType::VARIABLE;
 }
 
 bool RPNToken::isInteger() {
-	return type == RPNTokenType::Integer;
+	return type == RPNTokenType::INTEGER;
 }
 
 bool RPNToken::isOperator() {
-	return type == RPNTokenType::Operator;
+	return type == RPNTokenType::OPERATOR;
 }
 
 bool RPNToken::isLeftParenthesis() {
-	return type == RPNTokenType::LeftParenthesis;
+	return type == RPNTokenType::LEFT_PARENTHESIS;
 }
 
 bool RPNToken::isRightParenthesis() {
-	return type == RPNTokenType::RightParenthesis;
+	return type == RPNTokenType::RIGHT_PARENTHESIS;
 }

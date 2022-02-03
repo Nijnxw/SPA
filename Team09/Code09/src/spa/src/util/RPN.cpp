@@ -58,20 +58,20 @@ std::vector<RPNToken> tokenize(std::string exp) {
 		} else {
 			if (buffer.size() > 0) {
 				if (isVariable(buffer)) {
-					tokens.push_back(RPNToken(RPNTokenType::Variable, buffer));
+					tokens.push_back(RPNToken(RPNTokenType::VARIABLE, buffer));
 				} else if (isNumber(buffer)) {
-					tokens.push_back(RPNToken(RPNTokenType::Integer, buffer));
+					tokens.push_back(RPNToken(RPNTokenType::INTEGER, buffer));
 				} else {
 					throw std::runtime_error("Invalid Token Detected in Statement.\n");
 				}
 			}
 			buffer = "";
 			if (isOperator(character)) {
-				tokens.push_back(RPNToken(RPNTokenType::Operator, character));
+				tokens.push_back(RPNToken(RPNTokenType::OPERATOR, character));
 			} else if (isLeftParenthesis(character)) {
-				tokens.push_back(RPNToken(RPNTokenType::LeftParenthesis, character));
+				tokens.push_back(RPNToken(RPNTokenType::LEFT_PARENTHESIS, character));
 			} else if (isRightParenthesis(character)) {
-				tokens.push_back(RPNToken(RPNTokenType::RightParenthesis, character));
+				tokens.push_back(RPNToken(RPNTokenType::RIGHT_PARENTHESIS, character));
 			}
 		}
 	}
@@ -79,9 +79,9 @@ std::vector<RPNToken> tokenize(std::string exp) {
 	//final flush
 	if (buffer.size() > 0) {
 		if (isVariable(buffer)) {
-			tokens.push_back(RPNToken(RPNTokenType::Variable, buffer));
+			tokens.push_back(RPNToken(RPNTokenType::VARIABLE, buffer));
 		} else {
-			tokens.push_back(RPNToken(RPNTokenType::Integer, buffer));
+			tokens.push_back(RPNToken(RPNTokenType::INTEGER, buffer));
 		}
 	}
 	if (tokens.size() <= 0) throw std::runtime_error("No tokens Detected.\n");

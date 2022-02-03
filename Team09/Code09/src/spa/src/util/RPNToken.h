@@ -4,11 +4,11 @@
 #include <stdexcept>
 
 enum class RPNTokenType {
-	Variable,
-	Integer,
-	Operator,
-	LeftParenthesis,
-	RightParenthesis
+	VARIABLE,
+	INTEGER,
+	OPERATOR,
+	LEFT_PARENTHESIS,
+	RIGHT_PARENTHESIS
 };
 
 class RPNToken {

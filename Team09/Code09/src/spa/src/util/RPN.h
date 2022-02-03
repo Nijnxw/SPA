@@ -8,9 +8,9 @@
 class RPN {
 
 private:
-    RPN() {};
+	RPN() {};
 
 public:
-    static std::string convertToRpn(std::string);
-    static bool contains(std::string, std::string);
+	static std::string convertToRpn(std::string);
+	static bool contains(std::string, std::string);
 };

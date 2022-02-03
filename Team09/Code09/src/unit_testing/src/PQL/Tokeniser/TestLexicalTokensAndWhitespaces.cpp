@@ -1,5 +1,5 @@
 #include "catch.hpp"
-#include "PQL\Tokeniser.h"
+#include "PQL/Tokeniser.h"
 
 TEST_CASE("PQL tokeniser lexical tokens test case 1 : synonyms with various whitespace") {
 	std::vector<PQLToken> expectedPQLTokens;

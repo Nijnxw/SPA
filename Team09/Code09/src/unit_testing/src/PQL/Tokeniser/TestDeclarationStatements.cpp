@@ -1,5 +1,5 @@
 #include "catch.hpp"
-#include "PQL\Tokeniser.h"
+#include "PQL/Tokeniser.h"
 
 TEST_CASE("PQL tokeniser declaration statement test case 1: statement") {
 	std::vector<PQLToken> expectedPQLTokens;

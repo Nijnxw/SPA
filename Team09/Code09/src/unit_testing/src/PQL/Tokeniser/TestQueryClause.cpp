@@ -1,5 +1,5 @@
 #include "catch.hpp"
-#include "PQL\Tokeniser.h"
+#include "PQL/Tokeniser.h"
 
 TEST_CASE("PQL tokeniser query clause test case 1 : such that + relationship clause 1") {
 	std::vector<PQLToken> expectedPQLTokens;

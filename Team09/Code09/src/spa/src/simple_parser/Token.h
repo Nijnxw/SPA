@@ -6,10 +6,20 @@ enum class TokenType { NAME, INTEGER, OPERATOR, PUNCTUATOR, END_OF_FILE };
 
 // Base class for SIMPLE language lexical tokens
 class Token {
-    public:
-        TokenType type;
-        std::string value;
-        Token(TokenType t, std::string v);
+private:
+	TokenType type;
+	std::string value;
+
+public:
+	Token(TokenType t, std::string v);
+
+	bool isNameToken();
+	bool isIntegerToken();
+	bool isOperatorToken();
+	bool isPunctuatorToken();
+
+	TokenType getTokenType();
+	std::string getValue();
 };
 
 // NAME : LETTER (LETTER | DIGIT)*

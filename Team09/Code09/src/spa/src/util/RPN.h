@@ -8,14 +8,10 @@
 class RPN {
 
 private:
-    std::string eqn;
-    std::vector<RPNToken> rpn;
-    std::vector<RPNToken> convertToRpn(std::string);
+    RPN() {};
+    static std::vector<RPNToken> convertToRpn(std::string);
 
 public:
-    RPN(std::string);
-
-    std::vector<std::string> getRpnNotation() const;
-    std::string getInfixNotation() const;
-    bool contains(RPN other);
+    //static std::string convertToRpn(std::string);
+    static bool contains(std::string, std::string);
 };

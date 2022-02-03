@@ -1,38 +1,10 @@
 #include "util/RPN.h"
 #include "util/RPNToken.h"
 
-//constructor
-RPN::RPN(std::string equation) {
-    eqn = equation;
-    rpn = convertToRpn(eqn);
-}
-
-//getters
-std::vector<std::string> RPN::getRpnNotation() const {
-    std::vector<std::string> output;
-    for (int i = 0; i < rpn.size(); i++) {
-        output.push_back(rpn.at(i).getContents());
-    }
-    return output;
-}
-
-std::string RPN::getInfixNotation() const {
-    return eqn;
-}
-
 //check if this rpn contains the other rpn
-bool RPN::contains(RPN other) {
-    std::vector<std::string> thisRpn = this->getRpnNotation();
-    std::vector<std::string> otherRpn = other.getRpnNotation();
-    if (thisRpn.size() < otherRpn.size()) throw std::runtime_error("RPN elements length mismatch.\n");
-    for (int i = 0; i < thisRpn.size() - otherRpn.size() + 1; i++) {
-        bool match = true;
-        for (int j = 0; j < otherRpn.size(); j++) {
-            if (thisRpn[i + j] != otherRpn[j]) match = false;
-        }
-        if (match) return match;
-    }
-    return false;
+bool RPN::contains(std::string rpn1, std::string rpn2) {
+    if (rpn1.length() < rpn2.length()) throw std::runtime_error("RPN elements length mismatch.\n");
+    return rpn1.find(rpn2) != std::string::npos;
 }
 
 // HELPER IDENTIFIER FUNCTIONS
@@ -117,51 +89,51 @@ std::vector<RPNToken> tokenize(std::string exp) {
 }
 
 //takes in equation in infix notation and returns RPN notation
-std::vector<RPNToken> RPN::convertToRpn(std::string infix) {
-    std::vector<RPNToken> out;
-    std::stack<RPNToken> stack;
-    std::vector<RPNToken> tokens = tokenize(infix);
-
-    for (int i = 0; i < tokens.size(); i++) {
-        RPNToken token = tokens[i];
-
-        if (token.isInteger() || token.isVariable()) {
-            out.push_back(token);
-        } else if (token.isOperator()) {
-            if (!stack.empty()) {
-                RPNToken top = stack.top();
-                while (!stack.empty() && top.comparePrecedence(token) >= 0) {
-                    stack.pop();
-                    out.push_back(top);
-
-                    if (!stack.empty()) {
-                        top = stack.top();
-                    }
-                }
-            }
-            stack.push(token);
-        } else if (token.isLeftParenthesis()) {
-            stack.push(token);
-        } else {
-            bool matched = false;
-            while (!stack.empty() && !matched) {
-                out.push_back(stack.top());
-                stack.pop();
-
-                if (!stack.empty() && stack.top().isLeftParenthesis()) {
-                    matched = true;
-                    stack.pop();
-                }
-            }
-
-            if (stack.empty() && !matched) throw std::runtime_error("Non Matching Parentheses Detected.\n");
-        }
-    }
-
-    while (!stack.empty()) {
-        if (stack.top().isLeftParenthesis()) throw std::runtime_error("Non Matching Parentheses Detected.\n");
-        out.push_back(stack.top());
-        stack.pop();
-    }
-    return out;
-}
+//std::vector<RPNToken> RPN::convertToRpn(std::string infix) {
+//    std::vector<RPNToken> out;
+//    std::stack<RPNToken> stack;
+//    std::vector<RPNToken> tokens = tokenize(infix);
+//
+//    for (int i = 0; i < tokens.size(); i++) {
+//        RPNToken token = tokens[i];
+//
+//        if (token.isInteger() || token.isVariable()) {
+//            out.push_back(token);
+//        } else if (token.isOperator()) {
+//            if (!stack.empty()) {
+//                RPNToken top = stack.top();
+//                while (!stack.empty() && top.comparePrecedence(token) >= 0) {
+//                    stack.pop();
+//                    out.push_back(top);
+//
+//                    if (!stack.empty()) {
+//                        top = stack.top();
+//                    }
+//                }
+//            }
+//            stack.push(token);
+//        } else if (token.isLeftParenthesis()) {
+//            stack.push(token);
+//        } else {
+//            bool matched = false;
+//            while (!stack.empty() && !matched) {
+//                out.push_back(stack.top());
+//                stack.pop();
+//
+//                if (!stack.empty() && stack.top().isLeftParenthesis()) {
+//                    matched = true;
+//                    stack.pop();
+//                }
+//            }
+//
+//            if (stack.empty() && !matched) throw std::runtime_error("Non Matching Parentheses Detected.\n");
+//        }
+//    }
+//
+//    while (!stack.empty()) {
+//        if (stack.top().isLeftParenthesis()) throw std::runtime_error("Non Matching Parentheses Detected.\n");
+//        out.push_back(stack.top());
+//        stack.pop();
+//    }
+//    return out;
+//}

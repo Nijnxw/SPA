@@ -60,7 +60,7 @@ TEST_CASE("Test Procedure nodes") {
 	REQUIRE(p1->getVariable()->isVariableNode() == true);
 	REQUIRE(p2->getVariable()->isVariableNode() == true);
 
-	std::shared_ptr<ProcedureNode> p = std::make_shared<ProcedureNode>(stmtLst);
+	std::shared_ptr<ProcedureNode> p = std::make_shared<ProcedureNode>(stmtLst, "testing");
 	REQUIRE(p->isProcedureNode() == true);
 	REQUIRE(p->getStmtList()[0]->isPrintNode() == true);
 	REQUIRE(p->getStmtList()[1]->isReadNode() == true);

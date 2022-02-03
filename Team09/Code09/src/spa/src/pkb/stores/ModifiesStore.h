@@ -6,10 +6,11 @@
 #include <vector>
 #include <unordered_map>
 #include <unordered_set>
-#include <models/EntityType.h>
-#include <models/QueryClauseTable.h>
-#include <pkb/stores/EntityStore.h>
-#include <pkb/util/PKBUtil.cpp>
+
+#include "../../models/EntityType.h"
+#include "../../models/QueryClauseTable.h"
+#include "../stores/EntityStore.h"
+#include "../util/PKBUtil.cpp"
 
 class ModifiesStore {
 private:

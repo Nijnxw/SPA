@@ -7,8 +7,8 @@
 #include <unordered_map>
 #include <unordered_set>
 
-#include <models/AssignStatement.h>
-#include <models/EntityType.h>
+#include "../../models/AssignStatement.h"
+#include "../../models/EntityType.h"
 
 class EntityStore {
 private:

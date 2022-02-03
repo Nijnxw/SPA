@@ -6,9 +6,10 @@
 #include <vector>
 #include <unordered_map>
 #include <unordered_set>
-#include <pkb/util/PKBUtil.cpp>
-#include <models/QueryClauseTable.h>
-#include <models/EntityType.h>
+
+#include "../../models/EntityType.h"
+#include "../../models/QueryClauseTable.h"
+#include "../util/PKBUtil.cpp"
 
 class ParentStore {
 private:

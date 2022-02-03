@@ -7,14 +7,15 @@
 #include <unordered_map>
 #include <unordered_set>
 
-#include <models/AssignStatement.h>
-#include <models/EntityType.h>
-#include <models/QueryClauseTable.h>
-#include <stores/EntityStore.h>
-#include <stores/FollowsStore.h>
-#include <stores/ParentStore.h>
-#include <stores/UsesStore.h>
-#include <stores/ModifiesStore.h>
+#include "../models/AssignStatement.h"
+#include "../models/entityType.h"
+#include "../models/QueryClauseTable.h"
+
+#include "stores/EntityStore.h"
+#include "stores/FollowsStore.h"
+#include "stores/ParentStore.h"
+#include "stores/UsesStore.h"
+#include "stores/ModifiesStore.h"
 
 class PKB {
 public:

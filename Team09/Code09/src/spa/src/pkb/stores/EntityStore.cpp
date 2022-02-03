@@ -67,6 +67,8 @@ bool EntityStore::addStatement(EntityType statementType, int statementNumber) {
 	case EntityType::READ:
 		resultValue = readStatements.emplace(statementNumber).second;
 		break;
+	default:
+		break;
 	}
 
 	return resultValue;

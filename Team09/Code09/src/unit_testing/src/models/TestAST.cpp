@@ -5,7 +5,7 @@
 #include "../src/models/simple_parser/Node.h"
 #include "../src/models/simple_parser/NodeType.h"
 #include "../src/models/simple_parser/ProcedureNode.h"
-#include "../src/models/simple_parser/RootNode.h"
+#include "../src/models/simple_parser/AST.h"
 #include "../src/models/simple_parser/StmtNode.h"
 
 #include <memory>
@@ -74,9 +74,9 @@ TEST_CASE("Test Equality Comparisons") {
 	std::vector<std::shared_ptr<ProcedureNode>> procList3;
 	procList3.push_back(p3);
 
-	RootNode r1(procList1);
-	RootNode r2(procList2);
-	RootNode r3(procList3);
+	ProgramNode r1(procList1);
+	ProgramNode r2(procList2);
+	ProgramNode r3(procList3);
 
 	REQUIRE(r1 == r2);
 	REQUIRE(r1 != r3);

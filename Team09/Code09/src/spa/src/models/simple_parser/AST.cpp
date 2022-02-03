@@ -1,16 +1,16 @@
-#include "RootNode.h"
+#include "AST.h"
 
-RootNode::RootNode(std::vector<std::shared_ptr<ProcedureNode>> procList) 
-: Node(NodeType::ROOT) {
+ProgramNode::ProgramNode(std::vector<std::shared_ptr<ProcedureNode>> procList) 
+: Node(NodeType::PROGRAM) {
 	procedureList = procList;
 }
 
-std::vector<std::shared_ptr<ProcedureNode>> RootNode::getProcedureList() const {
+std::vector<std::shared_ptr<ProcedureNode>> ProgramNode::getProcedureList() const {
 	return procedureList;
 }
 
-bool RootNode::operator==(const Node& other) const {
-	const RootNode* cast = dynamic_cast<const RootNode*>(&other);
+bool ProgramNode::operator==(const Node& other) const {
+	const ProgramNode* cast = dynamic_cast<const ProgramNode*>(&other);
 	std::vector<std::shared_ptr<ProcedureNode>> otherProcedureList = cast->getProcedureList();
 	return cast != nullptr &&
 		std::equal(begin(procedureList), end(procedureList),

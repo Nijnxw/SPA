@@ -2,8 +2,8 @@ file(GLOB srcs "${CMAKE_CURRENT_SOURCE_DIR}/src/*.cpp"
 			   "${CMAKE_CURRENT_SOURCE_DIR}/src/models/*.cpp"
 			   "${CMAKE_CURRENT_SOURCE_DIR}/src/models/simple_parser/*.cpp"
 			   "${CMAKE_CURRENT_SOURCE_DIR}/src/pkb/*.cpp"
-			   "${CMAKE_CURRENT_SOURCE_DIR}/src/pbl/stores/*.cpp"
-			   "${CMAKE_CURRENT_SOURCE_DIR}/src/pbl/util/*.cpp"
+			   "${CMAKE_CURRENT_SOURCE_DIR}/src/pkb/stores/*.cpp"
+			   "${CMAKE_CURRENT_SOURCE_DIR}/src/pkb/util/*.cpp"
 			   "${CMAKE_CURRENT_SOURCE_DIR}/src/PQL/*.cpp"
 			   "${CMAKE_CURRENT_SOURCE_DIR}/src/simple_parser/*.cpp"
 			   "${CMAKE_CURRENT_SOURCE_DIR}/src/util/*.cpp"
@@ -22,13 +22,26 @@ file(GLOB headers "${CMAKE_CURRENT_SOURCE_DIR}/src/*.h"
 			   "${CMAKE_CURRENT_SOURCE_DIR}/src/models/*.hpp"
 			   "${CMAKE_CURRENT_SOURCE_DIR}/src/models/simple_parser/*.hpp"
 			   "${CMAKE_CURRENT_SOURCE_DIR}/src/pkb/*.hpp"
-			   "${CMAKE_CURRENT_SOURCE_DIR}/src/pbl/stores/*.hpp"
-			   "${CMAKE_CURRENT_SOURCE_DIR}/src/pbl/util/*.hpp"
+			   "${CMAKE_CURRENT_SOURCE_DIR}/src/pkb/stores/*.hpp"
+			   "${CMAKE_CURRENT_SOURCE_DIR}/src/pkb/util/*.hpp"
 			   "${CMAKE_CURRENT_SOURCE_DIR}/src/PQL/*.hpp"
 			   "${CMAKE_CURRENT_SOURCE_DIR}/src/simple_parser/*.hpp"
 			   "${CMAKE_CURRENT_SOURCE_DIR}/src/util/*.hpp"
 	)
-add_library(spa ${srcs} ${headers})
+add_library(spa ${srcs} ${headers}
+
+
+src/pkb/stores/EntityStore.cpp
+src/pkb/stores/EntityStore.h
+src/pkb/stores/FollowsStore.cpp
+src/pkb/stores/FollowsStore.h
+src/pkb/stores/ModifiesStore.cpp
+src/pkb/stores/ModifiesStore.h
+src/pkb/stores/ParentStore.cpp
+src/pkb/stores/ParentStore.h
+src/pkb/stores/UsesStore.cpp
+src/pkb/stores/UsesStore.h
+)
 # this makes the headers accessible for other projects which uses spa lib
 target_include_directories(spa PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/src)
 

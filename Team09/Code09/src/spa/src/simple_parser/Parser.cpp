@@ -3,8 +3,7 @@
 #include <string>
 #include <vector>
 
-#include "PKB.h"
-#include "TNode.h"
+#include "pkb/PKB.h"
 
 int Parse () {
 

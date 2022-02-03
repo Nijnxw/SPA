@@ -1,12 +1,5 @@
 #include "ParentStore.h"
 
-std::unordered_map<int, std::unordered_set<int>> parentToChildren;
-std::unordered_map<int, int> childToParent;
-std::unordered_map<int, int> parentPairs;
-std::unordered_map<int, int> parentTPairs;
-std::unordered_map<int, std::unordered_set<int>> parentToChildrenT;
-std::unordered_map<int, std::unordered_set<int>> childToParentsT;
-
 ParentStore::ParentStore() {}
 
 void ParentStore::clear() {

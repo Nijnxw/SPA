@@ -13,12 +13,12 @@
 
 class ParentStore {
 private:
-	static std::unordered_map<int, std::unordered_set<int>> parentToChildren;
-	static std::unordered_map<int, int> childToParent;
-	static std::unordered_map<int, int> parentPairs;
-	static std::unordered_map<int, int> parentTPairs;
-	static std::unordered_map<int, std::unordered_set<int>> parentToChildrenT;
-	static std::unordered_map<int, std::unordered_set<int>> childToParentsT;
+	static inline std::unordered_map<int, std::unordered_set<int>> parentToChildren;
+	static inline std::unordered_map<int, int> childToParent;
+	static inline std::unordered_map<int, int> parentPairs;
+	static inline std::unordered_map<int, int> parentTPairs;
+	static inline std::unordered_map<int, std::unordered_set<int>> parentToChildrenT;
+	static inline std::unordered_map<int, std::unordered_set<int>> childToParentsT;
 
 	static bool hasParentRelationship();
 	static bool hasParentTRelationship();

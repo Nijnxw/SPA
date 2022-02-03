@@ -1,6 +1,14 @@
 //TODO: Possible optimisation by early termination given isBooleanResult argument, currently boolean is not used
 #include "UsesStore.h"
 
+static inline std::unordered_set<int> usesStatements;
+static inline std::unordered_set<std::string> usedVariables;
+static inline std::unordered_map<int, std::unordered_set<std::string>> statementNumberToVariablesUsed;
+static inline std::unordered_map<std::string, std::unordered_set<int>> variableToStatementNumbersUsedBy;
+static inline std::unordered_map<std::string, std::unordered_set<std::string>> procedureToVariablesUsed;
+static inline std::unordered_map<std::string, std::unordered_set<std::string>> variableToProceduresUsedBy;
+
+
 UsesStore::UsesStore() {}
 
 void UsesStore::clear() {

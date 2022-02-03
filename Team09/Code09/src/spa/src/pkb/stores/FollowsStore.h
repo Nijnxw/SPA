@@ -13,11 +13,11 @@
 
 class FollowsStore {
 private:
-	static std::unordered_map<int, int> followerToFollowee;
-	static std::unordered_map<int, int> followeeToFollower;
-	static std::unordered_map<int, int> followsTPairs;
-	static std::unordered_map<int, std::unordered_set<int>> followerToFolloweesT;
-	static std::unordered_map<int, std::unordered_set<int>> followeeToFollowersT;
+	static inline std::unordered_map<int, int> followerToFollowee;
+	static inline std::unordered_map<int, int> followeeToFollower;
+	static inline std::unordered_map<int, int> followsTPairs;
+	static inline std::unordered_map<int, std::unordered_set<int>> followerToFolloweesT;
+	static inline std::unordered_map<int, std::unordered_set<int>> followeeToFollowersT;
 
 	static bool hasFollowsRelationship();
 	static bool hasFollowsTRelationship();

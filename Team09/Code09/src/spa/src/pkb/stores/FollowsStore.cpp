@@ -1,11 +1,5 @@
 #include "FollowsStore.h"
 
-std::unordered_map<int, int> FollowsStore::followerToFollowee; 
-std::unordered_map<int, int> FollowsStore::followeeToFollower; 
-std::unordered_map<int, int> FollowsStore::followsTPairs;
-std::unordered_map<int, std::unordered_set<int>> FollowsStore::followerToFolloweesT; 
-std::unordered_map<int, std::unordered_set<int>> FollowsStore::followeeToFollowersT;
-
 FollowsStore::FollowsStore() {}
 
 void FollowsStore::clear() {

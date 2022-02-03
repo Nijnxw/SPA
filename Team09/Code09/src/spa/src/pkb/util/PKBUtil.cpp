@@ -7,7 +7,7 @@
 namespace PKBUtil
 {
     template <typename T>
-    std::unordered_set<T> unorderedSetIntersection(const std::unordered_set<T>& set1, const std::unordered_set<T>& set2)
+    static std::unordered_set<T> unorderedSetIntersection(const std::unordered_set<T>& set1, const std::unordered_set<T>& set2)
     {
         std::unordered_set<T> resultSet;
         if (set1.size() < set2.size()) {
@@ -25,7 +25,7 @@ namespace PKBUtil
         return resultSet;
     }
 
-    bool addToMapWithSet(std::unordered_map<int, std::unordered_set<int>>& map, const int key, const int value) {
+    static bool addToMapWithSet(std::unordered_map<int, std::unordered_set<int>>& map, const int key, const int value) {
         bool isAdded = true;
 
         if (map.count(key) <= 0) {
@@ -41,7 +41,7 @@ namespace PKBUtil
         return isAdded;
     }
 
-    bool addToMapWithVector(std::unordered_map<int, std::vector<int>>& map, const int key, const int value) {
+    static bool addToMapWithVector(std::unordered_map<int, std::vector<int>>& map, const int key, const int value) {
         bool isAdded = true;
 
         if (map.count(key) <= 0) {
@@ -58,7 +58,7 @@ namespace PKBUtil
     }
 
     template <typename T, typename U, typename Hash, typename Pred, typename Alloc>
-    std::unordered_set<T> getKeySetFromMap(std::unordered_map<T, U, Hash, Pred, Alloc>& map) {
+    static std::unordered_set<T> getKeySetFromMap(std::unordered_map<T, U, Hash, Pred, Alloc>& map) {
         std::unordered_set<T> keySet;
         for (auto const& pair : map) {
             keySet.insert(pair.first);
@@ -67,7 +67,7 @@ namespace PKBUtil
     }
 
     template <typename T, typename U, typename Hash, typename Pred, typename Alloc>
-    std::tuple<std::vector<T>, std::vector<U>> convertMapToVectorTuple(std::unordered_map<T, U, Hash, Pred, Alloc>& map) {
+    static std::tuple<std::vector<T>, std::vector<U>> convertMapToVectorTuple(std::unordered_map<T, U, Hash, Pred, Alloc>& map) {
         std::vector<T> firstColumn;
         std::vector<U> secondColumn;
 

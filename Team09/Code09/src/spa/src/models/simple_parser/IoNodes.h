@@ -4,23 +4,25 @@
 #include "NodeType.h"
 #include "ExprNodes.h"
 
+#include <memory>
+
 class IoNode : public StmtNode {
 private:
-	VariableNode variable;
+	std::shared_ptr<VariableNode> variable;
 
 protected:
-	IoNode(NodeType t, int sn, VariableNode var);
+	IoNode(NodeType t, int sn, std::shared_ptr<VariableNode> var);
 
 public:
-	VariableNode getVariable();
+	std::shared_ptr<VariableNode> getVariable();
 };
 
 class ReadNode : public IoNode {
 public:
-	ReadNode(int sn, VariableNode var);
+	ReadNode(int sn, std::shared_ptr<VariableNode> var);
 };
 
 class PrintNode : public IoNode {
 public:
-	PrintNode(int sn, VariableNode var);
+	PrintNode(int sn, std::shared_ptr<VariableNode> var);
 };

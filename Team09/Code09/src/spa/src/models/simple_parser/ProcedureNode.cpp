@@ -1,10 +1,10 @@
 #include "ProcedureNode.h"
 
-ProcedureNode::ProcedureNode(std::vector<StmtNode> stList)
+ProcedureNode::ProcedureNode(std::vector<std::shared_ptr<StmtNode>> stList)
 	: Node(NodeType::Procedure) {
 	stmtList = stList;
 }
 
-std::vector<StmtNode> ProcedureNode::getStmtList() {
+std::vector<std::shared_ptr<StmtNode>> ProcedureNode::getStmtList() {
 	return stmtList;
 }

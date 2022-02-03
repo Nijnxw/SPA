@@ -7,7 +7,7 @@ src/simple_parser/TestLexer.cpp
 src/util/TestQueryClauseTable.cpp
 src/pkb/TestUsesStore.cpp
 src/pkb/TestModifiesStore.cpp
-src/util/TestQueryUtils.cpp)
+src/util/TestQueryUtils.cpp "src/models/TestAST.cpp")
 
 target_link_libraries(unit_testing spa)
 

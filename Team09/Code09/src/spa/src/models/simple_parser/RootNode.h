@@ -8,9 +8,9 @@
 
 class RootNode : public Node {
 private:
-	std::vector<ProcedureNode> procedureList;
+	std::vector<std::shared_ptr<ProcedureNode>> procedureList;
 
 public:
-	RootNode(std::vector<ProcedureNode> procList);
-	std::vector<ProcedureNode> getProcedureList();
+	RootNode(std::vector<std::shared_ptr<ProcedureNode>> procList);
+	std::vector<std::shared_ptr<ProcedureNode>> getProcedureList();
 };

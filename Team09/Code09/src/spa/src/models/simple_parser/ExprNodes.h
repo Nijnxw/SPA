@@ -5,12 +5,14 @@
 
 #include <string>
 #include <variant>
+#include <memory>
 
 class VariableNode;
 class ConstantNode;
 //class OperatorNode;
-using ExprNode = std::variant<VariableNode, ConstantNode>;
-//using ExprNode = std::variant<VariableNode, ConstantNode, OperatorNode>;
+using ExprNode = std::variant<std::shared_ptr<VariableNode>, std::shared_ptr<ConstantNode>>;
+//using ExprNode = 
+//	std::variant<std::shared_ptr<VariableNode>, std::shared_ptr<ConstantNode>, std::shared_ptr<OperatorNode>>;
 
 class VariableNode : public Node {
 private:

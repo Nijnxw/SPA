@@ -11,15 +11,16 @@ protected:
 	NodeType getNodeType() const;
 
 public:
-	bool isIfNode();
-	bool isWhileNode();
-	bool isAssignNode();
-	bool isReadNode();
-	bool isPrintNode();
-	bool isCallNode();
-	bool isVariableNode();
-	bool isConstantNode();
-	bool isBinOpNode();
-	bool isProcedureNode();
-	bool isRootNode();
+	virtual ~Node() = default;
+	virtual bool isIfNode();
+	virtual bool isWhileNode();
+	virtual bool isAssignNode();
+	virtual bool isReadNode();
+	virtual bool isPrintNode();
+	virtual bool isCallNode();
+	virtual bool isVariableNode();
+	virtual bool isConstantNode();
+	virtual bool isBinOpNode();
+	virtual bool isProcedureNode();
+	virtual bool isRootNode();
 };

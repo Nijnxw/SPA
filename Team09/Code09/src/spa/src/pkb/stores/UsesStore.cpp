@@ -103,19 +103,19 @@ QueryClauseTable UsesStore::getUsesByUnderscore(const std::string& LHS, const st
 		case EntityType::PRINT:
 			// e.g. print p; Uses(p, _)
 			queryResult.addColumn(LHS,
-								  PKBUtil::unorderedSetIntersection(usesStatements, EntityStore::getPrintStatements()));
+								  PKBUtil::unorderedSetIntersection(usesStatements, EntityStore::getStatementsByType(EntityType::PRINT)));
 			break;
 
 		case EntityType::IF:
 			// e.g. if ifs; Uses(ifs, _)
 			queryResult.addColumn(LHS,
-								  PKBUtil::unorderedSetIntersection(usesStatements, EntityStore::getIfStatements()));
+								  PKBUtil::unorderedSetIntersection(usesStatements, EntityStore::getStatementsByType(EntityType::IF)));
 			break;
 
 		case EntityType::WHILE:
 			// e.g. while w; Uses(w, _)
 			queryResult.addColumn(LHS,
-								  PKBUtil::unorderedSetIntersection(usesStatements, EntityStore::getWhileStatements()));
+								  PKBUtil::unorderedSetIntersection(usesStatements, EntityStore::getStatementsByType(EntityType::WHILE)));
 			break;
 		default:
 			return queryResult;
@@ -158,19 +158,19 @@ QueryClauseTable UsesStore::getUsesByVariable(const std::string& LHS, const std:
 		case EntityType::PRINT:
 			// e.g. print p; Uses(p, "x")
 			queryResult.addColumn(LHS,
-								  PKBUtil::unorderedSetIntersection(stmtsUsingVar, EntityStore::getPrintStatements()));
+								  PKBUtil::unorderedSetIntersection(stmtsUsingVar, EntityStore::getStatementsByType(EntityType::PRINT)));
 			break;
 
 		case EntityType::IF:
 			// e.g. if ifs; Uses(ifs, "x")
 			queryResult.addColumn(LHS,
-								  PKBUtil::unorderedSetIntersection(stmtsUsingVar, EntityStore::getIfStatements()));
+								  PKBUtil::unorderedSetIntersection(stmtsUsingVar, EntityStore::getStatementsByType(EntityType::IF)));
 			break;
 
 		case EntityType::WHILE:
 			// e.g. while w; Uses(w, "x")
 			queryResult.addColumn(LHS,
-								  PKBUtil::unorderedSetIntersection(stmtsUsingVar, EntityStore::getWhileStatements()));
+								  PKBUtil::unorderedSetIntersection(stmtsUsingVar, EntityStore::getStatementsByType(EntityType::WHILE)));
 			break;
 		default:
 			return queryResult;
@@ -212,17 +212,17 @@ QueryClauseTable UsesStore::getUsesBySynonym(const std::string& LHS, const std::
 		}
 		case EntityType::PRINT: {
 			// e.g. print p; Uses(p, v)
-			std::tie(stmts, vars) = getStmtsToUsedVariable(EntityStore::getPrintStatements());
+			std::tie(stmts, vars) = getStmtsToUsedVariable(EntityStore::getStatementsByType(EntityType::PRINT));
 			break;
 		}
 		case EntityType::IF: {
 			// e.g. if ifs; Uses(ifs, v)
-			std::tie(stmts, vars) = getStmtsToUsedVariable(EntityStore::getIfStatements());
+			std::tie(stmts, vars) = getStmtsToUsedVariable(EntityStore::getStatementsByType(EntityType::IF));
 			break;
 		}
 		case EntityType::WHILE: {
 			// e.g. while w; Uses(w, v)
-			std::tie(stmts, vars) = getStmtsToUsedVariable(EntityStore::getWhileStatements());
+			std::tie(stmts, vars) = getStmtsToUsedVariable(EntityStore::getStatementsByType(EntityType::WHILE));
 			break;
 			default:
 				return queryResult;

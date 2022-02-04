@@ -28,6 +28,8 @@ src/simple_parser/Parser.cpp
 src/simple_parser/Parser.h
 src/simple_parser/Token.cpp
 src/simple_parser/Token.h
+src/simple_parser/DesignExtractor.cpp
+src/simple_parser/DesignExtractor.h
 src/models/QueryClauseTable.h
 src/models/QueryClauseTable.h
 src/models/AssignStatement.cpp

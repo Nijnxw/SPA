@@ -89,12 +89,12 @@ std::shared_ptr<ReadNode> Parser::parseRead() {
 
 // Main function driving Parser class (exposed API)
 // program: procedure
-std::shared_ptr<RootNode> Parser::parseProgram() {
+AST Parser::parseProgram() {
 	std::vector<std::shared_ptr<ProcedureNode>> procedureList;
 	std::shared_ptr<ProcedureNode> procedureNode = parseProcedure();
 	if (!procedureNode) {
 		throw std::runtime_error("There must be at least 1 procedure in a SIMPLE program!\n");
 	}
 	procedureList.push_back(procedureNode);
-	return std::make_shared<RootNode>(procedureList);
+	return std::make_shared<ProgramNode>(procedureList);
 }

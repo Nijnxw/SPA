@@ -28,5 +28,5 @@ public:
 	virtual bool isConstantNode();
 	virtual bool isBinOpNode();
 	virtual bool isProcedureNode();
-	virtual bool isRootNode();
+	virtual bool isProgramNode();
 };

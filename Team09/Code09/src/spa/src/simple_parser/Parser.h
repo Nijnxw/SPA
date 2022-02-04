@@ -1,9 +1,10 @@
 #pragma once
 
 #include "simple_parser/Token.h"
-#include "models/simple_parser/RootNode.h"
+#include "models/simple_parser/AST.h"
 #include "models/simple_parser/ExprNodes.h"
 #include "models/simple_parser/IoNodes.h"
+#include "models/simple_parser/ProcedureNode.h"
 
 #include <vector>
 
@@ -31,5 +32,5 @@ private:
 public:
 	explicit Parser(std::vector<Token*> tokens);
 
-	std::shared_ptr<RootNode> parseProgram();
+	AST parseProgram();
 };

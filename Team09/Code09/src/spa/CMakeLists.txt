@@ -24,6 +24,8 @@ src/util/RPNToken.cpp
 src/util/RPNToken.h
 src/simple_parser/Lexer.cpp
 src/simple_parser/Lexer.h
+src/simple_parser/Parser.cpp
+src/simple_parser/Parser.h
 src/simple_parser/Token.cpp
 src/simple_parser/Token.h
 src/models/QueryClauseTable.h

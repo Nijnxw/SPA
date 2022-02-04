@@ -1,17 +1,5 @@
 #include "EntityStore.h"
 
-std::unordered_set<std::string> EntityStore::procedures;
-std::unordered_set<std::string> EntityStore::variables;
-std::unordered_set<std::string> EntityStore::constants;
-std::unordered_set<int> EntityStore::statements;
-
-std::unordered_map<int, AssignStatement> EntityStore::assignStatements;
-std::unordered_set<int> EntityStore::ifStatements;
-std::unordered_set<int> EntityStore::whileStatements;
-std::unordered_set<int> EntityStore::callStatements;
-std::unordered_set<int> EntityStore::printStatements;
-std::unordered_set<int> EntityStore::readStatements;
-
 EntityStore::EntityStore() {}
 
 void EntityStore::clear() {

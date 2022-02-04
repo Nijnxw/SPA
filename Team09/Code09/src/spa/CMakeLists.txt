@@ -28,20 +28,7 @@ file(GLOB headers "${CMAKE_CURRENT_SOURCE_DIR}/src/*.h"
 			   "${CMAKE_CURRENT_SOURCE_DIR}/src/simple_parser/*.hpp"
 			   "${CMAKE_CURRENT_SOURCE_DIR}/src/util/*.hpp"
 	)
-add_library(spa ${srcs} ${headers}
-
-
-src/pkb/stores/EntityStore.cpp
-src/pkb/stores/EntityStore.h
-src/pkb/stores/FollowsStore.cpp
-src/pkb/stores/FollowsStore.h
-src/pkb/stores/ModifiesStore.cpp
-src/pkb/stores/ModifiesStore.h
-src/pkb/stores/ParentStore.cpp
-src/pkb/stores/ParentStore.h
-src/pkb/stores/UsesStore.cpp
-src/pkb/stores/UsesStore.h
-)
+add_library(spa ${srcs} ${headers})
 # this makes the headers accessible for other projects which uses spa lib
 target_include_directories(spa PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/src)
 

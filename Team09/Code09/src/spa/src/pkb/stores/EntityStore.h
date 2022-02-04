@@ -12,17 +12,17 @@
 
 class EntityStore {
 private:
-	static std::unordered_set<std::string> procedures;
-	static std::unordered_set<std::string> variables;
-	static std::unordered_set<std::string> constants;
-	static std::unordered_set<int> statements;
+	static inline std::unordered_set<std::string> procedures;
+	static inline std::unordered_set<std::string> variables;
+	static inline std::unordered_set<std::string> constants;
+	static inline std::unordered_set<int> statements;
 
-	static std::unordered_map<int, AssignStatement> assignStatements;
-	static std::unordered_set<int> ifStatements;
-	static std::unordered_set<int> whileStatements;
-	static std::unordered_set<int> callStatements;
-	static std::unordered_set<int> printStatements;
-	static std::unordered_set<int> readStatements;
+	static inline std::unordered_map<int, AssignStatement> assignStatements;
+	static inline std::unordered_set<int> ifStatements;
+	static inline std::unordered_set<int> whileStatements;
+	static inline std::unordered_set<int> callStatements;
+	static inline std::unordered_set<int> printStatements;
+	static inline std::unordered_set<int> readStatements;
 
 public:
 	EntityStore();

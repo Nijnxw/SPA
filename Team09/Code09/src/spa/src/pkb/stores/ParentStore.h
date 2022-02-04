@@ -15,8 +15,8 @@ class ParentStore {
 private:
 	static inline std::unordered_map<int, std::unordered_set<int>> parentToChildren;
 	static inline std::unordered_map<int, int> childToParent;
-	static inline std::unordered_map<int, int> parentPairs;
-	static inline std::unordered_map<int, int> parentTPairs;
+	static inline std::unordered_set<std::pair<int, int>, PKBUtil::hashFunction> parentPairs;
+	static inline std::unordered_set<std::pair<int, int>, PKBUtil::hashFunction> parentTPairs;
 	static inline std::unordered_map<int, std::unordered_set<int>> parentToChildrenT;
 	static inline std::unordered_map<int, std::unordered_set<int>> childToParentsT;
 

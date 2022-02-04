@@ -34,8 +34,8 @@ namespace PKBUtil
             isAdded = isAdded && map.insert({ key, newSet }).second;
         }
         else {
-            std::unordered_set<int> set = map.at(key);
-            isAdded = isAdded && map[key].insert(value).second;
+            std::unordered_set<int>& set = map[key];
+            isAdded = isAdded && set.insert(value).second;
         }
 
         return isAdded;
@@ -47,7 +47,7 @@ namespace PKBUtil
         if (map.count(key) <= 0) {
             std::vector<int> newVector;
             newVector.push_back(value);
-            isAdded = isAdded && map.emplace(key, newVector).second;
+            isAdded = isAdded && map.insert({ key, newVector }).second;
         }
         else {
             std::vector<int> set = map.at(key);
@@ -72,6 +72,27 @@ namespace PKBUtil
         std::vector<U> secondColumn;
 
         for (auto const& pair : map) {
+            firstColumn.push_back(pair.first);
+            secondColumn.push_back(pair.second);
+        }
+
+        return { firstColumn, secondColumn };
+    }
+
+    static struct hashFunction
+    {
+        size_t operator()(const std::pair<int,
+            int>& x) const
+        {
+            return x.first ^ x.second;
+        }
+    };
+
+    static std::tuple<std::vector<int>, std::vector<int>> convertSetPairsToVectorTuple(std::unordered_set<std::pair<int, int>, hashFunction>& set) {
+        std::vector<int> firstColumn;
+        std::vector<int> secondColumn;
+
+        for (auto const& pair : set) {
             firstColumn.push_back(pair.first);
             secondColumn.push_back(pair.second);
         }

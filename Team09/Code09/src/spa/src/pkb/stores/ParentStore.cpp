@@ -5,16 +5,22 @@ ParentStore::ParentStore() {}
 void ParentStore::clear() {
 	parentToChildren.clear();
 	childToParent.clear();
+	parentPairs.clear();
+	parentTPairs.clear();
 	parentToChildrenT.clear();
 	childToParentsT.clear();
 }
 
 bool ParentStore::addParent(int parent, int child) {
-	return parentPairs.insert({ parent, child }).second && PKBUtil::addToMapWithSet(parentToChildren, parent, child) && childToParent.insert({child, parent}).second;
+	std::pair<int, int> pair;
+	pair = std::make_pair(parent, child);
+	return parentPairs.insert(pair).second && PKBUtil::addToMapWithSet(parentToChildren, parent, child) && childToParent.insert({child, parent}).second;
 }
 
 bool ParentStore::addParentT(int parent, int child) {
-	return parentTPairs.insert({ parent, child }).second && PKBUtil::addToMapWithSet(parentToChildrenT, parent, child) && PKBUtil::addToMapWithSet(childToParentsT, child, parent);
+	std::pair<int, int> pair;
+	pair = std::make_pair(parent, child);
+	return parentTPairs.insert(pair).second && PKBUtil::addToMapWithSet(parentToChildrenT, parent, child) && PKBUtil::addToMapWithSet(childToParentsT, child, parent);
 }
 
 QueryClauseTable ParentStore::getParent(const std::string& LHS, const std::string& RHS, EntityType LHSType, EntityType RHSType, bool isBooleanResult)
@@ -278,9 +284,9 @@ std::unordered_set<int> ParentStore::getAllParentsT() {
 }
 
 std::tuple<std::vector<int>, std::vector<int>> ParentStore::getAllParentPairs() {
-	return PKBUtil::convertMapToVectorTuple(parentPairs);
+	return PKBUtil::convertSetPairsToVectorTuple(parentPairs);
 }
 
 std::tuple<std::vector<int>, std::vector<int>> ParentStore::getAllParentTPairs() {
-	return PKBUtil::convertMapToVectorTuple(parentTPairs);
+	return PKBUtil::convertSetPairsToVectorTuple(parentTPairs);
 }

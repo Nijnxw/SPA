@@ -5,6 +5,7 @@ FollowsStore::FollowsStore() {}
 void FollowsStore::clear() {
 	followerToFollowee.clear();
 	followeeToFollower.clear();
+	followsTPairs.clear();
 	followerToFolloweesT.clear();
 	followeeToFollowersT.clear();
 }
@@ -14,7 +15,9 @@ bool FollowsStore::addFollows(int follower, int followee) {
 }
 
 bool FollowsStore::addFollowsT(int follower, int followee) {
-	return followsTPairs.insert({ follower, followee }).second && PKBUtil::addToMapWithSet(followerToFolloweesT, follower, followee) && PKBUtil::addToMapWithSet(followeeToFollowersT, followee, follower);
+	std::pair<int, int> pair;
+	pair = std::make_pair(follower, followee);
+	return followsTPairs.insert(pair).second && PKBUtil::addToMapWithSet(followerToFolloweesT, follower, followee) && PKBUtil::addToMapWithSet(followeeToFollowersT, followee, follower);
 }
 
 QueryClauseTable FollowsStore::getFollows(const std::string& LHS, const std::string& RHS, EntityType LHSType, EntityType RHSType, bool isBooleanResult)
@@ -283,5 +286,5 @@ std::tuple<std::vector<int>, std::vector<int>> FollowsStore::getAllFollowsPairs(
 }
 
 std::tuple<std::vector<int>, std::vector<int>> FollowsStore::getAllFollowsTPairs() {
-	return PKBUtil::convertMapToVectorTuple(followsTPairs);
+	return PKBUtil::convertSetPairsToVectorTuple(followsTPairs);
 }

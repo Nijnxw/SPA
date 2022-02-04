@@ -2,11 +2,8 @@
 #include "../src/models/simple_parser/BinaryOperator.h"
 #include "../src/models/simple_parser/ExprNodes.h"
 #include "../src/models/simple_parser/IoNodes.h"
-#include "../src/models/simple_parser/Node.h"
-#include "../src/models/simple_parser/NodeType.h"
 #include "../src/models/simple_parser/ProcedureNode.h"
 #include "../src/models/simple_parser/AST.h"
-#include "../src/models/simple_parser/StmtNode.h"
 
 #include <memory>
 
@@ -91,7 +88,7 @@ TEST_CASE("Test Expr nodes") {
 
 	ConstantNode con("12345");
 	REQUIRE(con.isConstantNode() == true);
-	REQUIRE(con.isRootNode() == false);
+	REQUIRE(con.isProgramNode() == false);
 	REQUIRE(con.isPrintNode() == false);
 	REQUIRE(con.getValue() == "12345");
 }

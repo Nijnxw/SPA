@@ -1,8 +1,8 @@
 #pragma once
 
+#include "BinaryOperator.h"
 #include "Node.h"
 #include "NodeType.h"
-#include "BinaryOperator.h"
 
 #include <string>
 #include <variant>
@@ -37,9 +37,13 @@ public:
 class OperatorNode : public Node {
 private:
 	BinaryOperator op;
+	ExprNode lhs;
+	ExprNode rhs;
 
 public:
-	OperatorNode(BinaryOperator bo);
+	OperatorNode(BinaryOperator bo, ExprNode left, ExprNode right);
 	BinaryOperator getOperator() const;
+	ExprNode getLhs() const;
+	ExprNode getRhs() const;
 	bool operator==(const Node& other) const override;
 };

@@ -7,6 +7,7 @@
 #include "models/simple_parser/ProcedureNode.h"
 
 #include <vector>
+#include <stdexcept>
 
 class Parser {
 private:

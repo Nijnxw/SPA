@@ -11,7 +11,9 @@ src/pkb/TestParentStore.cpp
 src/pkb/TestUsesStore.cpp
 src/pkb/TestModifiesStore.cpp
 src/util/TestQueryUtils.cpp
-src/models/TestAST.cpp src/simple_parser/TestParseProcedure.cpp src/simple_parser/TestParseRead.cpp)
+src/models/TestAST.cpp
+src/simple_parser/TestParseProcedure.cpp
+src/simple_parser/TestParseRead.cpp)
 
 target_link_libraries(unit_testing spa)
 

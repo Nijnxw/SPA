@@ -24,6 +24,8 @@ src/util/RPNToken.cpp
 src/util/RPNToken.h
 src/simple_parser/Lexer.cpp
 src/simple_parser/Lexer.h
+src/simple_parser/Parser.cpp
+src/simple_parser/Parser.h
 src/simple_parser/Token.cpp
 src/simple_parser/Token.h
 src/models/QueryClauseTable.h
@@ -47,8 +49,8 @@ src/models/simple_parser/NodeType.h
 src/models/simple_parser/BinaryOperator.h
 src/models/simple_parser/Node.h
 src/models/simple_parser/Node.cpp
-src/models/simple_parser/RootNode.h
-src/models/simple_parser/RootNode.cpp
+src/models/simple_parser/AST.h
+src/models/simple_parser/AST.cpp
 src/models/simple_parser/ProcedureNode.h
 src/models/simple_parser/ProcedureNode.cpp
 src/models/simple_parser/StmtNode.h

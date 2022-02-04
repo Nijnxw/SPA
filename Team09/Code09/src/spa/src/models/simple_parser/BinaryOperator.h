@@ -8,5 +8,6 @@ enum class BinaryOperator {
     GTE,
     LT,
     LTE,
-    EQ
+    EQ,
+    NEQ
 };

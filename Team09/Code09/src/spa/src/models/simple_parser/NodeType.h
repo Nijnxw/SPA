@@ -11,5 +11,5 @@ enum class NodeType {
     CONSTANT,
     BINOP,
     PROCEDURE,
-    ROOT
+    PROGRAM
 };

@@ -15,7 +15,7 @@ class FollowsStore {
 private:
 	static inline std::unordered_map<int, int> followerToFollowee;
 	static inline std::unordered_map<int, int> followeeToFollower;
-	static inline std::unordered_map<int, int> followsTPairs;
+	static inline std::unordered_set<std::pair<int, int>, PKBUtil::hashFunction> followsTPairs;
 	static inline std::unordered_map<int, std::unordered_set<int>> followerToFolloweesT;
 	static inline std::unordered_map<int, std::unordered_set<int>> followeeToFollowersT;
 

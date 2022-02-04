@@ -60,7 +60,9 @@ src/models/simple_parser/StmtNode.cpp
 src/models/simple_parser/IoNodes.h
 src/models/simple_parser/IoNodes.cpp
 src/models/simple_parser/ExprNodes.h
-src/models/simple_parser/ExprNodes.cpp)
+src/models/simple_parser/ExprNodes.cpp
+src/models/simple_parser/AssignNode.h
+src/models/simple_parser/AssignNode.cpp)
 # this makes the headers accessible for other projects which uses spa lib
 target_include_directories(spa PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/src)
 

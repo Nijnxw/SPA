@@ -54,7 +54,8 @@ bool processStmt(std::shared_ptr<StmtNode> stmt) {
 bool processStmtList(std::vector<std::shared_ptr<StmtNode>> stmtList) {
 	bool result = true;
 	for (int i = 0; i < stmtList.size(); i++) {
-		result = result && processStmt(stmtList[i]);
+		bool temp = processStmt(stmtList[i]);
+		result = result && temp;
 	}
 	return result;
 }

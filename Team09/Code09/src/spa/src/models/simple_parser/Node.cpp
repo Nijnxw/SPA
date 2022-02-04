@@ -49,5 +49,5 @@ bool Node::isProcedureNode() {
 }
 
 bool Node::isRootNode() {
-	return this->getNodeType() == NodeType::ROOT;
+	return this->getNodeType() == NodeType::PROGRAM;
 }

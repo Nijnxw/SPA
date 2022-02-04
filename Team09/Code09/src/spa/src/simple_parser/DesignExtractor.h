@@ -14,5 +14,5 @@ class DesignExtractor {
 public:
 	DesignExtractor();
 
-	static bool extractDesignElements(AST ast);
+	static void extractDesignElements(AST ast);
 };

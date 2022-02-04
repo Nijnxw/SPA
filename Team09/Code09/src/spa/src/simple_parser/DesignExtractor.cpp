@@ -3,78 +3,69 @@
 DesignExtractor::DesignExtractor() {}
 
 //PKB interface functions - TO DO: might xfer to another facade class
-bool addProcedureToPkb(std::shared_ptr<ProcedureNode> proc) {
-	return PKB::addProcedure(proc->getProcName());
+void addProcedureToPkb(std::shared_ptr<ProcedureNode> proc) {
+	PKB::addProcedure(proc->getProcName());
 }
 
-bool addVariableToPkb(std::shared_ptr<VariableNode> var) {
-	return PKB::addVariable(var->getName());
+void addVariableToPkb(std::shared_ptr<VariableNode> var) {
+	PKB::addVariable(var->getName());
 }
 
-bool addConstantToPkb(std::shared_ptr<ConstantNode> con) {
-	return PKB::addConstant(con->getValue());
+void addConstantToPkb(std::shared_ptr<ConstantNode> con) {
+	PKB::addConstant(con->getValue());
 }
 
-bool addStmtNoToPkb(std::shared_ptr<StmtNode> stmt) {
-	return PKB::addStatementNumber(stmt->getStmtNumber());
+void addStmtNoToPkb(std::shared_ptr<StmtNode> stmt) {
+	PKB::addStatementNumber(stmt->getStmtNumber());
 }
 
-bool addPrintToPkb(std::shared_ptr<PrintNode> print) {
-	return PKB::addStatementWithType(EntityType::PRINT, print->getStmtNumber());
+void addPrintToPkb(std::shared_ptr<PrintNode> print) {
+	PKB::addStatementWithType(EntityType::PRINT, print->getStmtNumber());
 }
 
-bool addReadToPkb(std::shared_ptr<ReadNode> read) {
-	return PKB::addStatementWithType(EntityType::READ, read->getStmtNumber());
+void addReadToPkb(std::shared_ptr<ReadNode> read) {
+	PKB::addStatementWithType(EntityType::READ, read->getStmtNumber());
 }
 
 //individual node processing functions
-bool processPrintNode(std::shared_ptr<PrintNode> print) {
-	return
-		addVariableToPkb(print->getVariable()) &&
-		addPrintToPkb(print);
+void processPrintNode(std::shared_ptr<PrintNode> print) {
+	addVariableToPkb(print->getVariable());
+	addPrintToPkb(print);
 }
 
-bool processReadNode(std::shared_ptr<ReadNode> read) {
-	return 
-		addVariableToPkb(read->getVariable()) &&
-		addReadToPkb(read);
+void processReadNode(std::shared_ptr<ReadNode> read) {
+	addVariableToPkb(read->getVariable());
+	addReadToPkb(read);
 }
 
 //statement (list) processing functions
-bool processStmt(std::shared_ptr<StmtNode> stmt) {
-	bool result = addStmtNoToPkb(stmt);
+void processStmt(std::shared_ptr<StmtNode> stmt) {
+	addStmtNoToPkb(stmt);
 	if (stmt->isReadNode()) {
-		result = result && processReadNode(std::dynamic_pointer_cast<ReadNode>(stmt));
+		processReadNode(std::dynamic_pointer_cast<ReadNode>(stmt));
 	} else if (stmt->isPrintNode()) {
-		result = result && processPrintNode(std::dynamic_pointer_cast<PrintNode>(stmt));
+		processPrintNode(std::dynamic_pointer_cast<PrintNode>(stmt));
 	}
-	return result;
 }
 
-bool processStmtList(std::vector<std::shared_ptr<StmtNode>> stmtList) {
-	bool result = true;
+void processStmtList(std::vector<std::shared_ptr<StmtNode>> stmtList) {
 	for (int i = 0; i < stmtList.size(); i++) {
-		bool temp = processStmt(stmtList[i]);
-		result = result && temp;
+		processStmt(stmtList[i]);
 	}
-	return result;
 }
 
 //procedure (list) processing functions
-bool processProcedure(std::shared_ptr<ProcedureNode> proc) {
-	return 
-		addProcedureToPkb(proc) &&
-		processStmtList(proc->getStmtList());
+void processProcedure(std::shared_ptr<ProcedureNode> proc) {
+	addProcedureToPkb(proc);
+	processStmtList(proc->getStmtList());
 }
 
-bool processProcedureList(std::vector<std::shared_ptr<ProcedureNode>> procList) {
-	bool result = true;
+void processProcedureList(std::vector<std::shared_ptr<ProcedureNode>> procList) {
 	for (int i = 0; i < procList.size(); i++) {
-		result = result && processProcedure(procList[i]);
+		processProcedure(procList[i]);
 	}
-	return result;
 }
 
-bool DesignExtractor::extractDesignElements(AST ast) {
-	return processProcedureList(ast->getProcedureList());
+void DesignExtractor::extractDesignElements(AST ast) {
+	processProcedureList(ast->getProcedureList());
 }

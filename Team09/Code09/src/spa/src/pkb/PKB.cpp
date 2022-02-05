@@ -15,7 +15,7 @@ void PKB::clearAllStores() {
 	ModifiesStore::clear();
 }
 
-/* Getters called by Source Processor */
+/* Setters called by Source Processor */
 bool PKB::addProcedure(std::string procedure) {
 	return EntityStore::addProcedure(procedure);
 }
@@ -70,7 +70,7 @@ bool PKB::addModifiesProcedure(const std::string& procedure, const std::unordere
 	return ModifiesStore::addModifiesProcedure(procedure, variables);
 }
 
-/* Setters called by Query Evaluator */
+/* Getters called by Query Evaluator */
 std::unordered_set<std::string> PKB::getProcedures() {
 	return EntityStore::getProcedures();
 }

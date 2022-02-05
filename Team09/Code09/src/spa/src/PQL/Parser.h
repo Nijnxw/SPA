@@ -42,6 +42,7 @@ class Parser {
 		std::vector<QueryArgument> resultSynonyms;
 		std::vector<QuerySuchThatClause> suchThatClauses;
 		std::vector<QueryPatternClause> PatternClauses;
+		bool isPatternExactMatch = false;
 
 		PQLToken getNextToken();
 		PQLToken getNextExpectedToken(TokenType tokenType);
@@ -50,9 +51,11 @@ class Parser {
 		void parseDeclaration();
 		void parseSelect();
 		void parseResultSynonym(); 
-		QueryArgument parseRelationshipArgs(PQLToken token);
+		QueryArgument parseArgs(PQLToken token);
 		void parseRelationshipClause();
 		void parseSuchThatClause();
+		QueryArgument parsePatternLHS();
+		QueryArgument parsePatternRHS();
 		void parsePatternClause();
 		void parseAfterSelect();
 };

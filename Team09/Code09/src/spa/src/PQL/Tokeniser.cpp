@@ -88,14 +88,14 @@ std::vector<PQLToken> Tokeniser::tokenise() {
 	std::vector<PQLToken> PQLTokens;
 	for (const auto token : rawTokens) {
 		if (stringTokenMap.find(token) != stringTokenMap.end()) {
-			PQLTokens.push_back(PQLToken( "", stringTokenMap[token] )); 
+			PQLTokens.push_back(PQLToken(stringTokenMap[token])); 
 		} else if (isValidString(token)) {
 			const std::string ident = token.substr(1, token.size() - 2);
-			PQLTokens.push_back(PQLToken( ident, TokenType::STRING));
+			PQLTokens.push_back(PQLToken(TokenType::STRING, ident));
 		} else if (isIdent(token)) {
-			PQLTokens.push_back(PQLToken(token, TokenType::SYNONYM));
+			PQLTokens.push_back(PQLToken(TokenType::SYNONYM, token));
 		} else if (isInt(token)) {
-			PQLTokens.push_back(PQLToken(token, TokenType::INTEGER));
+			PQLTokens.push_back(PQLToken(TokenType::INTEGER, token));
 		} else {
 			throw std::runtime_error("Unknown syntax : " + token + "\n");
 		}

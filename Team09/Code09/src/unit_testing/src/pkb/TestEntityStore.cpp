@@ -42,29 +42,29 @@ TEST_CASE("EntityStore API") {
 		// getProcedures()
 		SECTION("getProcedures() positive query") {
 			std::unordered_set<std::string> res = EntityStore::getProcedures();
-			std::unordered_set<std::string> expectedTable = {"testProg"};
-			REQUIRE(res == expectedTable);
+			std::unordered_set<std::string> expectedSet = {"testProg"};
+			REQUIRE(res == expectedSet);
 		}
 
 		// getVariables()
 		SECTION("getVariables() positive query") {
 			std::unordered_set<std::string> res = EntityStore::getVariables();
-			std::unordered_set<std::string> expectedTable = { "p", "a", "c", "k", "pattern", "ifs", "w" };
-			REQUIRE(res == expectedTable);
+			std::unordered_set<std::string> expectedSet = { "p", "a", "c", "k", "pattern", "ifs", "w" };
+			REQUIRE(res == expectedSet);
 		}
 
 		// getConstants()
 		SECTION("getConstants() positive query") {
 			std::unordered_set<std::string> res = EntityStore::getConstants();
-			std::unordered_set<std::string> expectedTable = { "2", "0", "1" };
-			REQUIRE(res == expectedTable);
+			std::unordered_set<std::string> expectedSet = { "2", "0", "1" };
+			REQUIRE(res == expectedSet);
 		}
 
 		// getStatementNumbers()
 		SECTION("getStatementNumbers() positive query") {
 			std::unordered_set<int> res = EntityStore::getStatementNumbers();
-			std::unordered_set<int> expectedTable = { 1, 2, 3, 4, 5, 6 };
-			REQUIRE(res == expectedTable);
+			std::unordered_set<int> expectedSet = { 1, 2, 3, 4, 5, 6 };
+			REQUIRE(res == expectedSet);
 		}
 
 		// getAssignStatements()
@@ -75,47 +75,47 @@ TEST_CASE("EntityStore API") {
 			AssignStatement assignStatementTwo(4, "pattern", "p a * a * p ifs * + p w * +");
 			AssignStatement assignStatementThree(6, "w", "w 1 -");
 
-			std::unordered_map<int, AssignStatement> expectedTable;
-			expectedTable.insert({ 2, assignStatementOne });
-			expectedTable.insert({ 4, assignStatementTwo });
-			expectedTable.insert({ 6, assignStatementThree });
+			std::unordered_map<int, AssignStatement> expectedMap;
+			expectedMap.insert({ 2, assignStatementOne });
+			expectedMap.insert({ 4, assignStatementTwo });
+			expectedMap.insert({ 6, assignStatementThree });
 
-			REQUIRE(res == expectedTable);
+			REQUIRE(res == expectedMap);
 		}
 
 		// getStatementsWithType() IF
 		SECTION("getStatementsWithType() IF positive query") {
 			std::unordered_set<int> res = EntityStore::getStatementsWithType(EntityType::IF);
-			std::unordered_set<int> expectedTable = { 3 };
-			REQUIRE(res == expectedTable);
+			std::unordered_set<int> expectedSet = { 3 };
+			REQUIRE(res == expectedSet);
 		}
 
 		// getStatementsWithType() WHILE
 		SECTION("getStatementsWithType() WHILE positive query") {
 			std::unordered_set<int> res = EntityStore::getStatementsWithType(EntityType::WHILE);
-			std::unordered_set<int> expectedTable = { 5 };
-			REQUIRE(res == expectedTable);
+			std::unordered_set<int> expectedSet = { 5 };
+			REQUIRE(res == expectedSet);
 		}
 
 		// getStatementsWithType() PRINT
 		SECTION("getStatementsWithType() PRINT positive query") {
 			std::unordered_set<int> res = EntityStore::getStatementsWithType(EntityType::PRINT);
-			std::unordered_set<int> expectedTable;
-			REQUIRE(res == expectedTable);
+			std::unordered_set<int> expectedSet;
+			REQUIRE(res == expectedSet);
 		}
 
 		// getStatementsWithType() READ
 		SECTION("getStatementsWithType() READ positive query") {
 			std::unordered_set<int> res = EntityStore::getStatementsWithType(EntityType::READ);
-			std::unordered_set<int> expectedTable = { 1 };
-			REQUIRE(res == expectedTable);
+			std::unordered_set<int> expectedSet = { 1 };
+			REQUIRE(res == expectedSet);
 		}
 
 		// getStatementsWithType() CALL
 		SECTION("getStatementsWithType() CALL positive query") {
 			std::unordered_set<int> res = EntityStore::getStatementsWithType(EntityType::CALL);
-			std::unordered_set<int> expectedTable;
-			REQUIRE(res == expectedTable);
+			std::unordered_set<int> expectedSet;
+			REQUIRE(res == expectedSet);
 		}
 	}
 	EntityStore::clear();

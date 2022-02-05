@@ -8,9 +8,9 @@
 
 #include "pkb/PKB.h"
 #include "pkb/util/PKBUtil.cpp"
-#include "../models/EntityType.h"
-#include "../models/QueryClauseTable.h"
-#include "../models/QueryClause.h"
+#include "models/EntityType.h"
+#include "models/QueryClauseTable.h"
+#include "models/QueryClause.h"
 
 class UsesEvaluator {
 private:
@@ -24,9 +24,11 @@ private:
 	static std::unordered_set<std::string> getVariablesUsedByProcedure(const std::string& procName);
 	static std::unordered_set<int> getStatementsUsingVariable(const std::string& variable);
 	static std::tuple<std::vector<std::string>, std::vector<std::string>>
-		getStmtsToUsedVariable(const std::unordered_set<int>& stmts);
+	getStmtsToUsedVariable(const std::unordered_set<int>& stmts);
 
 public:
-	static QueryClauseTable getUses(const std::string& LHS, const std::string& RHS, EntityType LHSType, EntityType RHSType, bool isBooleanResult);
+	static QueryClauseTable
+	getUses(const std::string& LHS, const std::string& RHS, EntityType LHSType, EntityType RHSType,
+			bool isBooleanResult);
 
 };

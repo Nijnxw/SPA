@@ -1,9 +1,9 @@
 #include "catch.hpp"
-#include "evaluators/FollowsEvaluator.h"
+#include "PQL/evaluators/FollowsEvaluator.h"
 
 TEST_CASE("Follows Relationship API") {
 	// The same store is reused through tests, so clearing is a must.
-	PKB::clearAllStores();  
+	PKB::clearAllStores();
 
 	// Populating PKB information based on sample_SIMPLE.txt
 	SECTION("Initialization of program variables") {
@@ -40,7 +40,7 @@ TEST_CASE("Follows Relationship API") {
 			REQUIRE(res.getBooleanResult() == false);
 		}
 
-		// getFollowsT(LHS int, RHS int)
+			// getFollowsT(LHS int, RHS int)
 		SECTION("FollowsT(1, 2) positive query") {
 			QueryClauseTable res = FollowsEvaluator::getFollowsT("1", "2", EntityType::INT, EntityType::INT, false);
 			REQUIRE(res.getBooleanResult() == true);
@@ -66,25 +66,25 @@ TEST_CASE("Follows Relationship API") {
 			REQUIRE(res.getBooleanResult() == false);
 		}
 
-		// getFollows(LHS int, RHS stmt)
+			// getFollows(LHS int, RHS stmt)
 		SECTION("Follows(1, s) positive query") {
 			QueryClauseTable res = FollowsEvaluator::getFollows("1", "s", EntityType::INT, EntityType::STMT, false);
 			REQUIRE(res.getBooleanResult() == true);
-			Table expectedTable = { {"s", {"2"}} };
+			Table expectedTable = {{"s", {"2"}}};
 			REQUIRE(res == QueryClauseTable(expectedTable));
 		}
 
 		SECTION("Follows(2, s) positive query") {
 			QueryClauseTable res = FollowsEvaluator::getFollows("2", "s", EntityType::INT, EntityType::STMT, false);
 			REQUIRE(res.getBooleanResult() == true);
-			Table expectedTable = { {"s", {"3"}} };
+			Table expectedTable = {{"s", {"3"}}};
 			REQUIRE(res == QueryClauseTable(expectedTable));
 		}
 
 		SECTION("Follows(4, s) positive query") {
 			QueryClauseTable res = FollowsEvaluator::getFollows("4", "s", EntityType::INT, EntityType::STMT, false);
 			REQUIRE(res.getBooleanResult() == true);
-			Table expectedTable = { {"s", {"5"}} };
+			Table expectedTable = {{"s", {"5"}}};
 			REQUIRE(res == QueryClauseTable(expectedTable));
 		}
 
@@ -93,25 +93,25 @@ TEST_CASE("Follows Relationship API") {
 			REQUIRE(res.getBooleanResult() == false);
 		}
 
-		// getFollowsT(LHS int, RHS stmt)
+			// getFollowsT(LHS int, RHS stmt)
 		SECTION("FollowsT(1, s) positive query") {
 			QueryClauseTable res = FollowsEvaluator::getFollowsT("1", "s", EntityType::INT, EntityType::STMT, false);
 			REQUIRE(res.getBooleanResult() == true);
-			Table expectedTable = { {"s", {"2", "3"}}};
+			Table expectedTable = {{"s", {"2", "3"}}};
 			REQUIRE(res == QueryClauseTable(expectedTable));
 		}
 
 		SECTION("FollowsT(2, s) positive query") {
 			QueryClauseTable res = FollowsEvaluator::getFollowsT("2", "s", EntityType::INT, EntityType::STMT, false);
 			REQUIRE(res.getBooleanResult() == true);
-			Table expectedTable = { {"s", {"3"}} };
+			Table expectedTable = {{"s", {"3"}}};
 			REQUIRE(res == QueryClauseTable(expectedTable));
 		}
 
 		SECTION("FollowsT(4, s) positive query") {
 			QueryClauseTable res = FollowsEvaluator::getFollowsT("4", "s", EntityType::INT, EntityType::STMT, false);
 			REQUIRE(res.getBooleanResult() == true);
-			Table expectedTable = { {"s", {"5"}} };
+			Table expectedTable = {{"s", {"5"}}};
 			REQUIRE(res == QueryClauseTable(expectedTable));
 		}
 
@@ -120,7 +120,7 @@ TEST_CASE("Follows Relationship API") {
 			REQUIRE(res.getBooleanResult() == false);
 		}
 
-		// getFollows(LHS int, RHS wild)
+			// getFollows(LHS int, RHS wild)
 		SECTION("Follows(1, _) positive query") {
 			QueryClauseTable res = FollowsEvaluator::getFollows("1", "_", EntityType::INT, EntityType::WILD, false);
 			REQUIRE(res.getBooleanResult() == true);
@@ -141,7 +141,7 @@ TEST_CASE("Follows Relationship API") {
 			REQUIRE(res.getBooleanResult() == false);
 		}
 
-		// getFollowsT(LHS int, RHS wild)
+			// getFollowsT(LHS int, RHS wild)
 		SECTION("FollowsT(1, _) positive query") {
 			QueryClauseTable res = FollowsEvaluator::getFollowsT("1", "_", EntityType::INT, EntityType::WILD, false);
 			REQUIRE(res.getBooleanResult() == true);
@@ -162,28 +162,28 @@ TEST_CASE("Follows Relationship API") {
 			REQUIRE(res.getBooleanResult() == false);
 		}
 
-		// --------------------------------------------------
-		//                  LHS stmt
-		// --------------------------------------------------
-		// getFollows(LHS stmt, RHS int)
+			// --------------------------------------------------
+			//                  LHS stmt
+			// --------------------------------------------------
+			// getFollows(LHS stmt, RHS int)
 		SECTION("Follows(s, 2) positive query") {
 			QueryClauseTable res = FollowsEvaluator::getFollows("s", "2", EntityType::STMT, EntityType::INT, false);
 			REQUIRE(res.getBooleanResult() == true);
-			Table expectedTable = { {"s", {"1"}} };
+			Table expectedTable = {{"s", {"1"}}};
 			REQUIRE(res == QueryClauseTable(expectedTable));
 		}
 
 		SECTION("Follows(s, 3) positive query") {
 			QueryClauseTable res = FollowsEvaluator::getFollows("s", "3", EntityType::STMT, EntityType::INT, false);
 			REQUIRE(res.getBooleanResult() == true);
-			Table expectedTable = { {"s", {"2"}} };
+			Table expectedTable = {{"s", {"2"}}};
 			REQUIRE(res == QueryClauseTable(expectedTable));
 		}
 
 		SECTION("Follows(s, 5) positive query") {
 			QueryClauseTable res = FollowsEvaluator::getFollows("s", "5", EntityType::STMT, EntityType::INT, false);
 			REQUIRE(res.getBooleanResult() == true);
-			Table expectedTable = { {"s", {"4"}} };
+			Table expectedTable = {{"s", {"4"}}};
 			REQUIRE(res == QueryClauseTable(expectedTable));
 		}
 
@@ -192,25 +192,25 @@ TEST_CASE("Follows Relationship API") {
 			REQUIRE(res.getBooleanResult() == false);
 		}
 
-		// getFollowsT(LHS stmt, RHS int)
+			// getFollowsT(LHS stmt, RHS int)
 		SECTION("FollowsT(s, 2) positive query") {
 			QueryClauseTable res = FollowsEvaluator::getFollowsT("s", "2", EntityType::STMT, EntityType::INT, false);
 			REQUIRE(res.getBooleanResult() == true);
-			Table expectedTable = { {"s", {"1"}} };
+			Table expectedTable = {{"s", {"1"}}};
 			REQUIRE(res == QueryClauseTable(expectedTable));
 		}
 
 		SECTION("FollowsT(s, 3) positive query") {
 			QueryClauseTable res = FollowsEvaluator::getFollowsT("s", "3", EntityType::STMT, EntityType::INT, false);
 			REQUIRE(res.getBooleanResult() == true);
-			Table expectedTable = { {"s", {"1", "2"}} };
+			Table expectedTable = {{"s", {"1", "2"}}};
 			REQUIRE(res == QueryClauseTable(expectedTable));
 		}
 
 		SECTION("FollowsT(s, 5) positive query") {
 			QueryClauseTable res = FollowsEvaluator::getFollowsT("s", "5", EntityType::STMT, EntityType::INT, false);
 			REQUIRE(res.getBooleanResult() == true);
-			Table expectedTable = { {"s", {"4"}} };
+			Table expectedTable = {{"s", {"4"}}};
 			REQUIRE(res == QueryClauseTable(expectedTable));
 		}
 
@@ -219,7 +219,7 @@ TEST_CASE("Follows Relationship API") {
 			REQUIRE(res.getBooleanResult() == false);
 		}
 
-		// getFollows(LHS stmt, RHS stmt)
+			// getFollows(LHS stmt, RHS stmt)
 		SECTION("Follows(s1, s2) positive query") {
 			QueryClauseTable res = FollowsEvaluator::getFollows("s1", "s2", EntityType::STMT, EntityType::STMT, false);
 			REQUIRE(res.getBooleanResult() == true);
@@ -230,7 +230,7 @@ TEST_CASE("Follows Relationship API") {
 			REQUIRE(res == QueryClauseTable(expectedTable));
 		}
 
-		// getFollowsT(LHS stmt, RHS stmt)
+			// getFollowsT(LHS stmt, RHS stmt)
 		SECTION("FollowsT(s1, s2) positive query") {
 			QueryClauseTable res = FollowsEvaluator::getFollowsT("s1", "s2", EntityType::STMT, EntityType::STMT, false);
 			REQUIRE(res.getBooleanResult() == true);
@@ -241,26 +241,26 @@ TEST_CASE("Follows Relationship API") {
 			REQUIRE(res == QueryClauseTable(expectedTable));
 		}
 
-		// getFollows(LHS stmt, RHS wild)
+			// getFollows(LHS stmt, RHS wild)
 		SECTION("Follows(s, _) positive query") {
 			QueryClauseTable res = FollowsEvaluator::getFollows("s", "_", EntityType::STMT, EntityType::WILD, false);
 			REQUIRE(res.getBooleanResult() == true);
-			Table expectedTable = { {"s", {"1", "2", "4"}}};
+			Table expectedTable = {{"s", {"1", "2", "4"}}};
 			REQUIRE(res == QueryClauseTable(expectedTable));
 		}
 
-		// getFollowsT(LHS stmt, RHS wild)
+			// getFollowsT(LHS stmt, RHS wild)
 		SECTION("FollowsT(s, _) positive query") {
 			QueryClauseTable res = FollowsEvaluator::getFollowsT("s", "_", EntityType::STMT, EntityType::WILD, false);
 			REQUIRE(res.getBooleanResult() == true);
-			Table expectedTable = { {"s", {"1", "2", "4"}} };
+			Table expectedTable = {{"s", {"1", "2", "4"}}};
 			REQUIRE(res == QueryClauseTable(expectedTable));
 		}
 
-		// --------------------------------------------------
-		//                  LHS stmt
-		// --------------------------------------------------
-		// getFollows(LHS wild, RHS int)
+			// --------------------------------------------------
+			//                  LHS stmt
+			// --------------------------------------------------
+			// getFollows(LHS wild, RHS int)
 		SECTION("Follows(_, 2) positive query") {
 			QueryClauseTable res = FollowsEvaluator::getFollows("_", "2", EntityType::WILD, EntityType::INT, false);
 			REQUIRE(res.getBooleanResult() == true);
@@ -281,7 +281,7 @@ TEST_CASE("Follows Relationship API") {
 			REQUIRE(res.getBooleanResult() == false);
 		}
 
-		// getFollowsT(LHS wild, RHS int)
+			// getFollowsT(LHS wild, RHS int)
 		SECTION("FollowsT(_, 2) positive query") {
 			QueryClauseTable res = FollowsEvaluator::getFollowsT("_", "2", EntityType::WILD, EntityType::INT, false);
 			REQUIRE(res.getBooleanResult() == true);
@@ -302,23 +302,23 @@ TEST_CASE("Follows Relationship API") {
 			REQUIRE(res.getBooleanResult() == false);
 		}
 
-		// getFollows(LHS wild, RHS stmt)
+			// getFollows(LHS wild, RHS stmt)
 		SECTION("Follows(_, s) positive query") {
 			QueryClauseTable res = FollowsEvaluator::getFollows("_", "s", EntityType::WILD, EntityType::STMT, false);
 			REQUIRE(res.getBooleanResult() == true);
-			Table expectedTable = { {"s", {"2", "3", "5"}} };
+			Table expectedTable = {{"s", {"2", "3", "5"}}};
 			REQUIRE(res == QueryClauseTable(expectedTable));
 		}
 
-		// getFollowsT(LHS wild, RHS stmt)
+			// getFollowsT(LHS wild, RHS stmt)
 		SECTION("FollowsT(_, s) positive query") {
 			QueryClauseTable res = FollowsEvaluator::getFollowsT("_", "s", EntityType::WILD, EntityType::STMT, false);
 			REQUIRE(res.getBooleanResult() == true);
-			Table expectedTable = { {"s", {"2", "3", "5"}} };
+			Table expectedTable = {{"s", {"2", "3", "5"}}};
 			REQUIRE(res == QueryClauseTable(expectedTable));
 		}
 
-		// getFollows(LHS wild, RHS wild)
+			// getFollows(LHS wild, RHS wild)
 		SECTION("Follows(_, _) positive query") {
 			QueryClauseTable res = FollowsEvaluator::getFollows("_", "s", EntityType::WILD, EntityType::WILD, false);
 			REQUIRE(res.getBooleanResult() == true);

@@ -1,9 +1,9 @@
 #include "catch.hpp"
-#include "pkb/stores/UsesStore.h"
+#include "pkb/PKB.h"
+#include "evaluators/UsesEvaluator.h"
 
-TEST_CASE("UsesStore storage functionality") {
-	EntityStore::clear();
-	UsesStore::clear();
+TEST_CASE("Test UsesStore and UsesEvaluator functionality") {
+	PKB::clearAllStores();
 	SECTION("populate pkb with test simple program and retrieve with") {
 		/*
 			Test Simple Program
@@ -19,75 +19,75 @@ TEST_CASE("UsesStore storage functionality") {
 			}
 		*/
 		// Assumed calls from SP/DE
-		EntityStore::addStatementWithType(EntityType::PRINT, 1);
-		EntityStore::addAssignStatement(2, "LHS", "RHS");
-		EntityStore::addStatementWithType(EntityType::IF, 3);
-		EntityStore::addAssignStatement(4, "LHS", "RHS");
-		EntityStore::addStatementWithType(EntityType::READ, 5);
-		UsesStore::addUsesStatement(1, std::unordered_set<std::string>({"p"}));
-		UsesStore::addUsesStatement(2, std::unordered_set<std::string>({"p"}));
-		UsesStore::addUsesStatement(3, std::unordered_set<std::string>({"c", "k", "a", "p", "ifs", "w"}));
-		UsesStore::addUsesStatement(4, std::unordered_set<std::string>({"a", "p", "ifs", "w"}));
+		PKB::addStatementWithType(EntityType::PRINT, 1);
+		PKB::addAssignStatement(2, "LHS", "RHS");
+		PKB::addStatementWithType(EntityType::IF, 3);
+		PKB::addAssignStatement(4, "LHS", "RHS");
+		PKB::addStatementWithType(EntityType::READ, 5);
+		PKB::addUsesStatement(1, std::unordered_set<std::string>({"p"}));
+		PKB::addUsesStatement(2, std::unordered_set<std::string>({"p"}));
+		PKB::addUsesStatement(3, std::unordered_set<std::string>({"c", "k", "a", "p", "ifs", "w"}));
+		PKB::addUsesStatement(4, std::unordered_set<std::string>({"a", "p", "ifs", "w"}));
 
 		// Underscore RHS
 		SECTION("Uses(1,'_') query") {
-			QueryClauseTable res = UsesStore::getUses("1", "_", EntityType::INT, EntityType::WILD, false);
+			QueryClauseTable res = UsesEvaluator::getUses("1", "_", EntityType::INT, EntityType::WILD, false);
 			REQUIRE(res.getBooleanResult() == true);
 		}
 
 		SECTION("Uses(5,'_') query") {
-			QueryClauseTable res = UsesStore::getUses("5", "_", EntityType::INT, EntityType::WILD, false);
+			QueryClauseTable res = UsesEvaluator::getUses("5", "_", EntityType::INT, EntityType::WILD, false);
 			REQUIRE(res.getBooleanResult() == false);
 		}
 
 		SECTION("Uses(s,'_') query") {
-			QueryClauseTable res = UsesStore::getUses("s", "_", EntityType::STMT, EntityType::WILD, false);
+			QueryClauseTable res = UsesEvaluator::getUses("s", "_", EntityType::STMT, EntityType::WILD, false);
 			REQUIRE(res.getBooleanResult() == true);
 			Table expectedTable = {{"s", {"1", "2", "3", "4"}}};
 			REQUIRE(res == QueryClauseTable(expectedTable));
 		}
 
 		SECTION("Uses(a,'_') query") {
-			QueryClauseTable res = UsesStore::getUses("a", "_", EntityType::ASSIGN, EntityType::WILD, false);
+			QueryClauseTable res = UsesEvaluator::getUses("a", "_", EntityType::ASSIGN, EntityType::WILD, false);
 			REQUIRE(res.getBooleanResult() == true);
 			Table expectedTable = {{"a", {"2", "4"}}};
 			REQUIRE(res == QueryClauseTable(expectedTable));
 		}
 
 		SECTION("Uses(p,'_') query") {
-			QueryClauseTable res = UsesStore::getUses("p", "_", EntityType::PRINT, EntityType::WILD, false);
+			QueryClauseTable res = UsesEvaluator::getUses("p", "_", EntityType::PRINT, EntityType::WILD, false);
 			REQUIRE(res.getBooleanResult() == true);
 			Table expectedTable = {{"p", {"1"}}};
 			REQUIRE(res == QueryClauseTable(expectedTable));
 		}
 
 		SECTION("Uses(if,'_') query") {
-			QueryClauseTable res = UsesStore::getUses("if", "_", EntityType::IF, EntityType::WILD, false);
+			QueryClauseTable res = UsesEvaluator::getUses("if", "_", EntityType::IF, EntityType::WILD, false);
 			REQUIRE(res.getBooleanResult() == true);
 			Table expectedTable = {{"if", {"3"}}};
 			REQUIRE(res == QueryClauseTable(expectedTable));
 		}
 
 		SECTION("Uses(w,'_') query") {
-			QueryClauseTable res = UsesStore::getUses("w", "_", EntityType::WHILE, EntityType::WILD, false);
+			QueryClauseTable res = UsesEvaluator::getUses("w", "_", EntityType::WHILE, EntityType::WILD, false);
 			REQUIRE(res.getBooleanResult() == false);
 		}
 
 			// Synonym RHS
 		SECTION("Uses(1, v) query") {
-			QueryClauseTable res = UsesStore::getUses("1", "v", EntityType::INT, EntityType::VAR, false);
+			QueryClauseTable res = UsesEvaluator::getUses("1", "v", EntityType::INT, EntityType::VAR, false);
 			REQUIRE(res.getBooleanResult() == true);
 			Table expectedTable = {{"v", {"p"}}};
 			REQUIRE(res == QueryClauseTable(expectedTable));
 		}
 
 		SECTION("Uses(5, v) query") {
-			QueryClauseTable res = UsesStore::getUses("5", "v", EntityType::INT, EntityType::VAR, false);
+			QueryClauseTable res = UsesEvaluator::getUses("5", "v", EntityType::INT, EntityType::VAR, false);
 			REQUIRE(res.getBooleanResult() == false);
 		}
 
 		SECTION("Uses(s, v) query") {
-			QueryClauseTable res = UsesStore::getUses("s", "v", EntityType::STMT, EntityType::VAR, false);
+			QueryClauseTable res = UsesEvaluator::getUses("s", "v", EntityType::STMT, EntityType::VAR, false);
 			REQUIRE(res.getBooleanResult() == true);
 			Table expectedTable = {
 				{"s", {"1", "2", "3", "3", "3", "3", "3",   "3", "4", "4", "4",   "4"}},
@@ -97,7 +97,7 @@ TEST_CASE("UsesStore storage functionality") {
 		}
 
 		SECTION("Uses(a, v) query") {
-			QueryClauseTable res = UsesStore::getUses("a", "v", EntityType::ASSIGN, EntityType::VAR, false);
+			QueryClauseTable res = UsesEvaluator::getUses("a", "v", EntityType::ASSIGN, EntityType::VAR, false);
 			REQUIRE(res.getBooleanResult() == true);
 			Table expectedTable = {
 				{"a", {"2", "4", "4", "4",   "4"}},
@@ -107,7 +107,7 @@ TEST_CASE("UsesStore storage functionality") {
 		}
 
 		SECTION("Uses(p, v) query") {
-			QueryClauseTable res = UsesStore::getUses("p", "v", EntityType::PRINT, EntityType::VAR, false);
+			QueryClauseTable res = UsesEvaluator::getUses("p", "v", EntityType::PRINT, EntityType::VAR, false);
 			REQUIRE(res.getBooleanResult() == true);
 			Table expectedTable = {
 				{"p", {"1"}},
@@ -117,7 +117,7 @@ TEST_CASE("UsesStore storage functionality") {
 		}
 
 		SECTION("Uses(if, v) query") {
-			QueryClauseTable res = UsesStore::getUses("if", "v", EntityType::IF, EntityType::VAR, false);
+			QueryClauseTable res = UsesEvaluator::getUses("if", "v", EntityType::IF, EntityType::VAR, false);
 			REQUIRE(res.getBooleanResult() == true);
 			Table expectedTable = {
 				{"if", {"3", "3", "3", "3", "3",   "3"}},
@@ -127,24 +127,24 @@ TEST_CASE("UsesStore storage functionality") {
 		}
 
 		SECTION("Uses(w, v) query") {
-			QueryClauseTable res = UsesStore::getUses("w", "v", EntityType::WHILE, EntityType::VAR, false);
+			QueryClauseTable res = UsesEvaluator::getUses("w", "v", EntityType::WHILE, EntityType::VAR, false);
 			REQUIRE(res.getBooleanResult() == false);
 		}
 
 
 			// Variable RHS
 		SECTION("Uses(3, 'k') query") {
-			QueryClauseTable res = UsesStore::getUses("3", "k", EntityType::INT, EntityType::STRING, false);
+			QueryClauseTable res = UsesEvaluator::getUses("3", "k", EntityType::INT, EntityType::STRING, false);
 			REQUIRE(res.getBooleanResult() == true);
 		}
 
 		SECTION("Uses(2, 'x') query") {
-			QueryClauseTable res = UsesStore::getUses("2", "x", EntityType::INT, EntityType::STRING, false);
+			QueryClauseTable res = UsesEvaluator::getUses("2", "x", EntityType::INT, EntityType::STRING, false);
 			REQUIRE(res.getBooleanResult() == false);
 		}
 
 		SECTION("Uses(s, 'a') query") {
-			QueryClauseTable res = UsesStore::getUses("s", "a", EntityType::STMT, EntityType::STRING, false);
+			QueryClauseTable res = UsesEvaluator::getUses("s", "a", EntityType::STMT, EntityType::STRING, false);
 			REQUIRE(res.getBooleanResult() == true);
 			Table expectedTable = {
 				{"s", {"3", "4"}},
@@ -153,7 +153,7 @@ TEST_CASE("UsesStore storage functionality") {
 		}
 
 		SECTION("Uses(a, 'ifs') query") {
-			QueryClauseTable res = UsesStore::getUses("a", "ifs", EntityType::ASSIGN, EntityType::STRING, false);
+			QueryClauseTable res = UsesEvaluator::getUses("a", "ifs", EntityType::ASSIGN, EntityType::STRING, false);
 			REQUIRE(res.getBooleanResult() == true);
 			Table expectedTable = {
 				{"a", {"4"}},
@@ -162,7 +162,7 @@ TEST_CASE("UsesStore storage functionality") {
 		}
 
 		SECTION("Uses(p, 'p') query") {
-			QueryClauseTable res = UsesStore::getUses("p", "p", EntityType::PRINT, EntityType::STRING, false);
+			QueryClauseTable res = UsesEvaluator::getUses("p", "p", EntityType::PRINT, EntityType::STRING, false);
 			REQUIRE(res.getBooleanResult() == true);
 			Table expectedTable = {
 				{"p", {"1"}},
@@ -171,7 +171,7 @@ TEST_CASE("UsesStore storage functionality") {
 		}
 
 		SECTION("Uses(if, 'w') query") {
-			QueryClauseTable res = UsesStore::getUses("if", "w", EntityType::IF, EntityType::STRING, false);
+			QueryClauseTable res = UsesEvaluator::getUses("if", "w", EntityType::IF, EntityType::STRING, false);
 			REQUIRE(res.getBooleanResult() == true);
 			Table expectedTable = {
 				{"if", {"3"}},
@@ -180,11 +180,10 @@ TEST_CASE("UsesStore storage functionality") {
 		}
 
 		SECTION("Uses(w, 'k') query") {
-			QueryClauseTable res = UsesStore::getUses("w", "k", EntityType::WHILE, EntityType::STRING, false);
+			QueryClauseTable res = UsesEvaluator::getUses("w", "k", EntityType::WHILE, EntityType::STRING, false);
 			REQUIRE(res.getBooleanResult() == false);
 		}
 
 	}
-	EntityStore::clear();
-	UsesStore::clear();
+	PKB::clearAllStores();
 }

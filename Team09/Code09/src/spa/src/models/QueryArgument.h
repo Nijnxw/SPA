@@ -8,7 +8,7 @@ public:
     QueryArgument(std::string& value, EntityType type);
 
     const std::string& getValue() const;
-    EntityType getType();
+    EntityType getType() const;
 
 private:
     std::string value;  // can either be a literal or variable name (depending on type)

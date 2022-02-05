@@ -1,9 +1,12 @@
 #include "catch.hpp"
 #include "../src/models/simple_parser/BinaryOperator.h"
+#include "../src/models/simple_parser/AssignNode.h"
 #include "../src/models/simple_parser/ExprNodes.h"
 #include "../src/models/simple_parser/IoNodes.h"
 #include "../src/models/simple_parser/ProcedureNode.h"
 #include "../src/models/simple_parser/AST.h"
+#include "../src/models/simple_parser/BinaryOperator.h"
+#include "../src/util/RPN.h"
 
 #include <memory>
 
@@ -20,9 +23,18 @@ TEST_CASE("Test Equality Comparisons") {
 	REQUIRE(con1 == con2);
 	REQUIRE(con1 != con3);
 
-	REQUIRE(var1 != con1);
-
 	std::shared_ptr<VariableNode> var4 = std::make_shared<VariableNode>("x");
+	std::shared_ptr<ConstantNode> con4 = std::make_shared<ConstantNode>("123");
+	OperatorNode op1(BinaryOperator::PLUS, var4, con4);
+	OperatorNode op2(BinaryOperator::MINUS, var4, con4);
+	OperatorNode op3(BinaryOperator::PLUS, var4, con4);
+	REQUIRE(op1 == op3);
+	REQUIRE(op1 != op2);
+
+	REQUIRE(var1 != con1);
+	REQUIRE(op1 != con1);
+	REQUIRE(var1 != op1);
+
 	std::shared_ptr<VariableNode> var5 = std::make_shared<VariableNode>("y");
 
 	std::shared_ptr<PrintNode> print1 = std::make_shared<PrintNode>(45, var4);
@@ -91,6 +103,92 @@ TEST_CASE("Test Expr nodes") {
 	REQUIRE(con.isProgramNode() == false);
 	REQUIRE(con.isPrintNode() == false);
 	REQUIRE(con.getValue() == "12345");
+
+	ExprNode var2 = std::make_shared<VariableNode>("x");
+	ExprNode con2 = std::make_shared<ConstantNode>("123");
+	OperatorNode op(BinaryOperator::LT, var2, con2);
+	REQUIRE(op.isBinOpNode() == true);
+	REQUIRE(op.isIfNode() == false);
+	REQUIRE(op.isWhileNode() == false);
+	REQUIRE(op.getOperator() == BinaryOperator::LT);
+	REQUIRE(op.getLhs() == var2);
+	REQUIRE(op.getRhs() == con2);
+}
+
+TEST_CASE("Test Assign statement nodes") {
+	SECTION("Constant Assignment") {
+		// testing = 123
+		std::shared_ptr<VariableNode> var = std::make_shared<VariableNode>("testing");
+		ExprNode con = std::make_shared<ConstantNode>("123");
+
+		REQUIRE_NOTHROW(AssignNode::AssignNode(1, var, con, "123"));
+		AssignNode ass = AssignNode::AssignNode(1, var, con, "123");
+
+		REQUIRE(ass.getAssignedVar() == var);
+		REQUIRE(ass.getExpression() == con);
+		REQUIRE(ass.getPostfix() == "123");
+
+		REQUIRE(ass.isAssignNode() == true);
+		REQUIRE(ass.getAssignedVar()->isVariableNode() == true);
+		REQUIRE(std::visit(
+			[](const auto& expr) { return expr->isConstantNode(); },
+			ass.getExpression()));
+	}
+
+	SECTION("Variable Assignment") {
+		// testing = test
+		std::shared_ptr<VariableNode> var1 = std::make_shared<VariableNode>("testing");
+		ExprNode var2 = std::make_shared<VariableNode>("test");
+
+		REQUIRE_NOTHROW(AssignNode::AssignNode(1, var1, var2, "test"));
+		AssignNode ass = AssignNode::AssignNode(1, var1, var2, "test");
+
+		REQUIRE(ass.getAssignedVar() == var1);
+		REQUIRE(ass.getExpression() == var2);
+		REQUIRE(ass.getPostfix() == "test");
+
+		REQUIRE(ass.isAssignNode() == true);
+		REQUIRE(ass.getAssignedVar()->isVariableNode() == true);
+		REQUIRE(std::visit(
+			[](const auto& expr) { return expr->isVariableNode(); },
+			ass.getExpression()) == true);
+	}
+
+	SECTION("Expression Assignment") {
+		// build somewhat complicated expression
+		// testing = a * b + 123 / 1
+		std::shared_ptr<VariableNode> var = std::make_shared<VariableNode>("testing");
+
+		std::string expr = "a * b + 123 / 1";
+		std::string postfix = RPN::convertToRpn(expr);
+
+		ExprNode a = std::make_shared<VariableNode>("a");
+		ExprNode b = std::make_shared<VariableNode>("b");
+		ExprNode left_side = std::make_shared<OperatorNode>(BinaryOperator::TIMES, a, b);
+
+		ExprNode con123 = std::make_shared<ConstantNode>("123");
+		ExprNode con1 = std::make_shared<ConstantNode>("1");
+		ExprNode right_side = std::make_shared<OperatorNode>(BinaryOperator::DIVIDE, con123, con1);
+
+		ExprNode overall = std::make_shared<OperatorNode>(BinaryOperator::PLUS, left_side, right_side);
+
+		REQUIRE_NOTHROW(AssignNode::AssignNode(1, var, overall, postfix));
+
+		AssignNode ass1 = AssignNode::AssignNode(1, var, overall, postfix);
+		AssignNode ass2 = AssignNode::AssignNode(1, var, overall, postfix);
+		AssignNode ass3 = AssignNode::AssignNode(2, var, overall, postfix);
+		AssignNode ass4 = AssignNode::AssignNode(1, var, left_side, postfix);
+
+		REQUIRE(ass1 == ass2);
+		REQUIRE(ass1 != ass3);
+		REQUIRE(ass1 != ass4);
+
+		REQUIRE(ass1.isAssignNode() == true);
+		REQUIRE(ass1.getAssignedVar()->isVariableNode() == true);
+		REQUIRE(std::visit(
+			[](const auto& expr) { return expr->isBinOpNode(); },
+			ass1.getExpression()) == true);
+	}
 }
 
 TEST_CASE("Test IO statement nodes") {

@@ -16,6 +16,5 @@ public:
 	std::string getLeftHandSide();
 	std::string getRightHandSide();
 
-	/* TODO: Consider adding equals method for comparison between AssignStatement objects, 
-	possibly using the RPN util */
+	bool operator==(const AssignStatement& otherStmt) const;
 };

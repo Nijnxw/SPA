@@ -4,8 +4,8 @@
 #include "catch.hpp"
 #include <sstream>
 
-bool tokenComparator(const Token* t1, const Token* t2) {
-    return t1->type == t2->type && t1->value == t2->value;
+bool tokenComparator(Token *t1, Token* t2) {
+    return t1->getTokenType() == t2->getTokenType() && t1->getValue() == t2->getValue();
 }
 
 bool compareVectors(const std::vector<Token*> output, const std::vector<Token*> expected) {

@@ -1,17 +1,5 @@
 #include "EntityStore.h"
 
-std::unordered_set<std::string> EntityStore::procedures;
-std::unordered_set<std::string> EntityStore::variables;
-std::unordered_set<std::string> EntityStore::constants;
-std::unordered_set<int> EntityStore::statements;
-
-std::unordered_map<int, AssignStatement> EntityStore::assignStatements;
-std::unordered_set<int> EntityStore::ifStatements;
-std::unordered_set<int> EntityStore::whileStatements;
-std::unordered_set<int> EntityStore::callStatements;
-std::unordered_set<int> EntityStore::printStatements;
-std::unordered_set<int> EntityStore::readStatements;
-
 EntityStore::EntityStore() {}
 
 void EntityStore::clear() {
@@ -48,24 +36,26 @@ bool EntityStore::addAssignStatement(int statementNumber, const std::string& lef
 	return assignStatements.emplace(statementNumber, assignStatement).second;
 }
 
-bool EntityStore::addStatement(EntityType statementType, int statementNumber) {
+bool EntityStore::addStatementWithType(EntityType statementType, int statementNumber) {
 	bool resultValue = true;
 
 	switch (statementType) {
 	case EntityType::IF:
-		resultValue = ifStatements.emplace(statementNumber).second;
+		resultValue = ifStatements.insert(statementNumber).second;
 		break;
 	case EntityType::WHILE:
-		resultValue = whileStatements.emplace(statementNumber).second;
+		resultValue = whileStatements.insert(statementNumber).second;
 		break;
 	case EntityType::CALL:
-		resultValue = callStatements.emplace(statementNumber).second;
+		resultValue = callStatements.insert(statementNumber).second;
 		break;
 	case EntityType::PRINT:
-		resultValue = printStatements.emplace(statementNumber).second;
+		resultValue = printStatements.insert(statementNumber).second;
 		break;
 	case EntityType::READ:
-		resultValue = readStatements.emplace(statementNumber).second;
+		resultValue = readStatements.insert(statementNumber).second;
+		break;
+	default:
 		break;
 	}
 
@@ -84,7 +74,7 @@ std::unordered_set<std::string> EntityStore::getConstants() {
 	return constants;
 }
 
-std::unordered_set<int> EntityStore::getStatements() {
+std::unordered_set<int> EntityStore::getStatementNumbers() {
 	return statements;
 }
 
@@ -92,23 +82,29 @@ std::unordered_map<int, AssignStatement> EntityStore::getAssignStatements() {
 	return assignStatements;
 }
 
-std::unordered_set<int> EntityStore::getIfStatements() {
-	return ifStatements;
-}
+std::unordered_set<int> EntityStore::getStatementsWithType(EntityType statementType) {
+	std::unordered_set<int> statements;
 
-std::unordered_set<int> EntityStore::getWhileStatements() {
-	return whileStatements;
-}
+	switch (statementType) {
+	case EntityType::IF:
+		statements = ifStatements;
+		break;
+	case EntityType::WHILE:
+		statements = whileStatements;
+		break;
+	case EntityType::CALL:
+		statements = callStatements;
+		break;
+	case EntityType::PRINT:
+		statements = printStatements;
+		break;
+	case EntityType::READ:
+		statements = readStatements;
+		break;
+	default:
+		break;
+	}
 
-std::unordered_set<int> EntityStore::getCallStatements() {
-	return callStatements;
-}
-
-std::unordered_set<int> EntityStore::getPrintStatements() {
-	return printStatements;
-}
-
-std::unordered_set<int> EntityStore::getReadStatements() {
-	return readStatements;
+	return statements;
 }
 

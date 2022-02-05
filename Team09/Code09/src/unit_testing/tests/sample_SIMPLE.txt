@@ -1,0 +1,9 @@
+procedure testProg {
+1    read p;
+2    a = p * 2;
+3    if (c == k) then {
+4        pattern = p * a * a + p * ifs + p * w;
+5        while(w > 0) {
+6            w = w - 1;
+		}
+}

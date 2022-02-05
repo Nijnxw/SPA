@@ -33,7 +33,7 @@ bool EntityStore::addStatementNumber(int statementNumber) {
 
 bool EntityStore::addAssignStatement(int statementNumber, const std::string& leftHandSide, const std::string& rightHandSide) {
 	AssignStatement assignStatement(statementNumber, leftHandSide, rightHandSide);
-	return assignStatements.emplace(statementNumber, assignStatement).second;
+	return assignStatements.insert({ statementNumber, assignStatement }).second;
 }
 
 bool EntityStore::addStatementWithType(EntityType statementType, int statementNumber) {

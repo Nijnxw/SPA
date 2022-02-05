@@ -4,6 +4,7 @@
 #include "../src/models/simple_parser/IoNodes.h"
 #include "../src/models/simple_parser/ProcedureNode.h"
 #include "../src/models/simple_parser/AST.h"
+#include "../src/models/simple_parser/BinaryOperator.h"
 
 #include <memory>
 
@@ -20,9 +21,19 @@ TEST_CASE("Test Equality Comparisons") {
 	REQUIRE(con1 == con2);
 	REQUIRE(con1 != con3);
 
-	REQUIRE(var1 != con1);
-
 	std::shared_ptr<VariableNode> var4 = std::make_shared<VariableNode>("x");
+	std::shared_ptr<ConstantNode> con4 = std::make_shared<ConstantNode>("123");
+	OperatorNode op1(BinaryOperator::PLUS, var4, con4);
+	OperatorNode op2(BinaryOperator::MINUS, var4, con4);
+	OperatorNode op3(BinaryOperator::PLUS, var4, con4);
+	REQUIRE(op1 == op3);
+	REQUIRE(op1 != op2);
+
+
+	REQUIRE(var1 != con1);
+	REQUIRE(op1 != con1);
+	REQUIRE(var1 != op1);
+
 	std::shared_ptr<VariableNode> var5 = std::make_shared<VariableNode>("y");
 
 	std::shared_ptr<PrintNode> print1 = std::make_shared<PrintNode>(45, var4);
@@ -91,6 +102,13 @@ TEST_CASE("Test Expr nodes") {
 	REQUIRE(con.isProgramNode() == false);
 	REQUIRE(con.isPrintNode() == false);
 	REQUIRE(con.getValue() == "12345");
+
+	ExprNode var2 = std::make_shared<VariableNode>("x");
+	ExprNode con2 = std::make_shared<ConstantNode>("123");
+	OperatorNode op(BinaryOperator::LT, var2, con2);
+	REQUIRE(op.isBinOpNode() == true);
+	REQUIRE(op.isIfNode() == false);
+	REQUIRE(op.isWhileNode() == false);
 }
 
 TEST_CASE("Test IO statement nodes") {

@@ -10,6 +10,7 @@
 #include "../models/AssignStatement.h"
 #include "../models/entityType.h"
 #include "../models/QueryClauseTable.h"
+#include "../models/QueryClause.h"
 
 #include "stores/EntityStore.h"
 #include "stores/FollowsStore.h"
@@ -50,10 +51,25 @@ public:
 	static std::unordered_map<int, AssignStatement> getAssignStatements();
 	static std::unordered_set<int> getStatementsWithType(EntityType statementType);
 
+
+	/* Uses Getters */
+	static std::unordered_set<int> getUsesStatements();
+	static std::unordered_set<std::string> getUsedVariables();
+	static std::unordered_map<int, std::unordered_set<std::string>> getStatementNumberToVariablesUsed();
+	static std::unordered_map<std::string, std::unordered_set<int>> getVariableToStatementNumbersUsedBy();
+	static std::unordered_map<std::string, std::unordered_set<std::string>> getProcedureToVariablesUsed();
+	static std::unordered_map<std::string, std::unordered_set<std::string>> getVariableToProceduresUsedBy();
+
+	/* Modifies Getters */
+	static std::unordered_set<int> getModifiesStatements();
+	static std::unordered_set<std::string> getModifiedVariables();
+	static std::unordered_map<int, std::unordered_set<std::string>> getStatementNumberToVariablesModified();
+	static std::unordered_map<std::string, std::unordered_set<int>> getVariableToStatementNumbersModifiedBy();
+	static std::unordered_map<std::string, std::unordered_set<std::string>> getProcedureToVariablesModified();
+	static std::unordered_map<std::string, std::unordered_set<std::string>> getVariableToProceduresModifiedBy();
+
 	static QueryClauseTable getFollows(const std::string& LHS, const std::string& RHS, EntityType LHSType, EntityType RHSType, bool isBooleanResult);
 	static QueryClauseTable getFollowsT(const std::string& LHS, const std::string& RHS, EntityType LHSType, EntityType RHSType, bool isBooleanResult);
 	static QueryClauseTable getParent(const std::string& LHS, const std::string& RHS, EntityType LHSType, EntityType RHSType, bool isBooleanResult);
 	static QueryClauseTable getParentT(const std::string& LHS, const std::string& RHS, EntityType LHSType, EntityType RHSType, bool isBooleanResult);
-	static QueryClauseTable getUses(const std::string& LHS, const std::string& RHS, EntityType LHSType, EntityType RHSType, bool isBooleanResult);
-	static QueryClauseTable getModifies(const std::string& LHS, const std::string& RHS, EntityType LHSType, EntityType RHSType, bool isBooleanResult);
 };

@@ -8,7 +8,7 @@ src/util/TestQueryClauseTable.cpp
 src/pkb/TestEntityStore.cpp
 src/pkb/TestFollowsStore.cpp
 src/pkb/TestParentStore.cpp
-src/pkb/TestUsesStore.cpp
+src/pkb/TestUses.cpp
 src/pkb/TestModifiesStore.cpp
 src/util/TestQueryUtils.cpp
 src/models/TestAST.cpp

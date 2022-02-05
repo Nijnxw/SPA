@@ -8,9 +8,6 @@
 #include <unordered_set>
 
 #include "../../models/EntityType.h"
-#include "../../models/QueryClauseTable.h"
-#include "../stores/EntityStore.h"
-#include "../util/PKBUtil.cpp"
 
 class UsesStore {
 private:
@@ -22,27 +19,25 @@ private:
 	static inline std::unordered_map<std::string, std::unordered_set<std::string>> procedureToVariablesUsed;
 	static inline std::unordered_map<std::string, std::unordered_set<std::string>> variableToProceduresUsedBy;
 
-	// Internal helper methods
-	static QueryClauseTable getUsesByVariable(const std::string& LHS, const std::string& RHS, EntityType LHSType);
-	static QueryClauseTable getUsesBySynonym(const std::string& LHS, const std::string& RHS, EntityType LHSType);
-	static QueryClauseTable getUsesByUnderscore(const std::string& LHS, const std::string& RHS, EntityType LHSType);
-	static std::unordered_set<std::string> getVariablesUsedByStatement(int stmtNo);
-	static std::unordered_set<std::string> getVariablesUsedByProcedure(const std::string& procName);
-	static std::unordered_set<int> getStatementsUsingVariable(const std::string& variable);
-	static std::tuple<std::vector<std::string>, std::vector<std::string>>
-	getStmtsToUsedVariable(const std::unordered_set<int>& stmts);
-
 public:
 	UsesStore();
 
 	static void clear();
 
+	/* Getters */
+	static std::unordered_set<int> getUsesStatements();
+	static std::unordered_set<std::string> getUsedVariables();
+	static std::unordered_map<int, std::unordered_set<std::string>> getStatementNumberToVariablesUsed();
+	static std::unordered_map<std::string, std::unordered_set<int>> getVariableToStatementNumbersUsedBy();
+	static std::unordered_map<std::string, std::unordered_set<std::string>> getProcedureToVariablesUsed();
+	static std::unordered_map<std::string, std::unordered_set<std::string>> getVariableToProceduresUsedBy();
+	static std::unordered_set<std::string> getVariablesUsedByStatement(int stmtNo);
+	static std::unordered_set<std::string> getVariablesUsedByProcedure(const std::string& procName);
+	static std::unordered_set<int> getStatementsUsingVariable(const std::string& variable);
+	static std::tuple<std::vector<std::string>, std::vector<std::string>>
+		getStmtsToUsedVariable(const std::unordered_set<int>& stmts);
+
 	/* Setters called by SP and DE */
 	static bool addUsesStatement(int statementNumber, const std::unordered_set<std::string>& variables);
 	static bool addUsesProcedure(const std::string& procedure, const std::unordered_set<std::string>& variables);
-
-	/* Getters called by QE */
-	static QueryClauseTable
-	getUses(const std::string& LHS, const std::string& RHS, EntityType LHSType, EntityType RHSType,
-			bool isBooleanResult);
 };

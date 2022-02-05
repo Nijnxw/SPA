@@ -7,6 +7,6 @@ const std::string& QueryArgument::getValue() const {
     return value;
 }
 
-EntityType QueryArgument::getType() {
+EntityType QueryArgument::getType() const {
     return type;
 }

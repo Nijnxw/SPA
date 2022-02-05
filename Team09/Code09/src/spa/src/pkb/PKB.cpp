@@ -111,8 +111,13 @@ QueryClauseTable PKB::getParentT(const std::string& LHS, const std::string& RHS,
 	return ParentStore::getParentT(LHS, RHS, LHSType, RHSType, isBooleanResult);
 }
 
-QueryClauseTable PKB::getUses(const std::string& LHS, const std::string& RHS, EntityType LHSType, EntityType RHSType, bool isBooleanResult) {
-	return UsesStore::getUses(LHS, RHS, LHSType, RHSType, isBooleanResult);
+QueryClauseTable PKB::getUses(const QueryClause& queryClause, bool isBooleanResult) {
+	const std::string& LHS = queryClause.getArguments().at(0).getValue();
+	const std::string& RHS = queryClause.getArguments().at(1).getValue();
+	EntityType LHSType = queryClause.getArguments().at(0).getType();
+	EntityType RHSType = queryClause.getArguments().at(1).getType();
+
+	return UsesEvaluator::getUses(LHS, RHS, LHSType, RHSType, isBooleanResult);
 }
 
 QueryClauseTable PKB::getModifies(const std::string& LHS, const std::string& RHS, EntityType LHSType, EntityType RHSType, bool isBooleanResult) {

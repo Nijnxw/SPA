@@ -1,5 +1,6 @@
 #include "catch.hpp"
 #include "pkb/PKB.h"
+#include "evaluators/UsesEvaluator.h"
 
 TEST_CASE("Test UsesStore and UsesEvaluator functionality") {
 	PKB::clearAllStores();

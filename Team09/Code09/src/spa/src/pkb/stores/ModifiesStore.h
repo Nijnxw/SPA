@@ -30,11 +30,11 @@ public:
 
 	// Getters
 	static std::unordered_set<int> getModifiesStatements();
-	static std::unordered_set<std::string> getVariablesModifiedByStatement(int stmtNo);
-	static std::unordered_set<std::string> getVariablesModifiedByProcedure(const std::string& procName);
-	static std::unordered_set<int> getStatementsModifyingVariable(const std::string& variable);
-	static std::tuple<std::vector<std::string>, std::vector<std::string>>
-	getStmtsToModifiedVariable(const std::unordered_set<int>& stmts);
+	static std::unordered_set<std::string> getModifiedVariables();
+	static std::unordered_map<int, std::unordered_set<std::string>> getStatementNumberToVariablesModified();
+	static std::unordered_map<std::string, std::unordered_set<int>> getVariableToStatementNumbersModifiedBy();
+	static std::unordered_map<std::string, std::unordered_set<std::string>> getProcedureToVariablesModified();
+	static std::unordered_map<std::string, std::unordered_set<std::string>> getVariableToProceduresModifiedBy();
 
 	/* Setters called by SP and DE */
 	static bool addModifiesStatement(int statementNumber, const std::unordered_set<std::string>& variables);

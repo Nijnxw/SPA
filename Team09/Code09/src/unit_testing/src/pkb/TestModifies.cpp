@@ -1,8 +1,8 @@
 #include "catch.hpp"
 #include "pkb/PKB.h"
+#include "evaluators/ModifiesEvaluator.h"
 
-
-TEST_CASE("ModifiesStore storage functionality") {
+TEST_CASE("Test ModifiesStore and ModifiesEvaluator functionality") {
 	PKB::clearAllStores();
 	SECTION("populate pkb with test simple program and retrieve with") {
 		/*
@@ -18,18 +18,18 @@ TEST_CASE("ModifiesStore storage functionality") {
 			}
 		*/
 		// Assumed calls from SP/DE
-		EntityStore::addStatementWithType(EntityType::READ, 1);
-		EntityStore::addAssignStatement(2, "LHS", "RHS");
-		EntityStore::addStatementWithType(EntityType::IF, 3);
-		EntityStore::addAssignStatement(4, "LHS", "RHS");
-		EntityStore::addStatementWithType(EntityType::WHILE, 5);
-		EntityStore::addAssignStatement(6, "LHS", "RHS");
-		ModifiesStore::addModifiesStatement(1, std::unordered_set<std::string>({"p"}));
-		ModifiesStore::addModifiesStatement(2, std::unordered_set<std::string>({"a"}));
-		ModifiesStore::addModifiesStatement(3, std::unordered_set<std::string>({"pattern", "w", "ifs", "a", "p", "x"}));
-		ModifiesStore::addModifiesStatement(4, std::unordered_set<std::string>({"pattern"}));
-		ModifiesStore::addModifiesStatement(5, std::unordered_set<std::string>({"w"}));
-		ModifiesStore::addModifiesStatement(6, std::unordered_set<std::string>({"w"}));
+		PKB::addStatementWithType(EntityType::READ, 1);
+		PKB::addAssignStatement(2, "LHS", "RHS");
+		PKB::addStatementWithType(EntityType::IF, 3);
+		PKB::addAssignStatement(4, "LHS", "RHS");
+		PKB::addStatementWithType(EntityType::WHILE, 5);
+		PKB::addAssignStatement(6, "LHS", "RHS");
+		PKB::addModifiesStatement(1, std::unordered_set<std::string>({"p"}));
+		PKB::addModifiesStatement(2, std::unordered_set<std::string>({"a"}));
+		PKB::addModifiesStatement(3, std::unordered_set<std::string>({"pattern", "w", "ifs", "a", "p", "x"}));
+		PKB::addModifiesStatement(4, std::unordered_set<std::string>({"pattern"}));
+		PKB::addModifiesStatement(5, std::unordered_set<std::string>({"w"}));
+		PKB::addModifiesStatement(6, std::unordered_set<std::string>({"w"}));
 
 		// Underscore RHS
 		SECTION("Modifies(1,'_') query") {

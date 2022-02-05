@@ -18,6 +18,7 @@
 #include "stores/UsesStore.h"
 #include "stores/ModifiesStore.h"
 #include "evaluators/UsesEvaluator.h"
+#include "evaluators/ModifiesEvaluator.h"
 
 class PKB {
 public:
@@ -58,5 +59,5 @@ public:
 	static QueryClauseTable getParent(const std::string& LHS, const std::string& RHS, EntityType LHSType, EntityType RHSType, bool isBooleanResult);
 	static QueryClauseTable getParentT(const std::string& LHS, const std::string& RHS, EntityType LHSType, EntityType RHSType, bool isBooleanResult);
 	static QueryClauseTable getUses(const QueryClause& queryClause, bool isBooleanResult);
-	static QueryClauseTable getModifies(const std::string& LHS, const std::string& RHS, EntityType LHSType, EntityType RHSType, bool isBooleanResult);
+	static QueryClauseTable getModifies(const QueryClause& queryClause, bool isBooleanResult);
 };

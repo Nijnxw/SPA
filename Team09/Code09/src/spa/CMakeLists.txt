@@ -47,6 +47,8 @@ src/pkb/PKB.h
 src/pkb/util/PKBUtil.cpp 
 src/pkb/evaluators/UsesEvaluator.cpp
 src/pkb/evaluators/UsesEvaluator.h
+src/pkb/evaluators/ModifiesEvaluator.cpp
+src/pkb/evaluators/ModifiesEvaluator.h
 src/models/simple_parser/NodeType.h
 src/models/simple_parser/BinaryOperator.h
 src/models/simple_parser/Node.h

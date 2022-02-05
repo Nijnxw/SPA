@@ -9,7 +9,7 @@ src/pkb/TestEntityStore.cpp
 src/pkb/TestFollowsStore.cpp
 src/pkb/TestParentStore.cpp
 src/pkb/TestUses.cpp
-src/pkb/TestModifiesStore.cpp
+src/pkb/TestModifies.cpp
 src/util/TestQueryUtils.cpp
 src/models/TestAST.cpp
 src/simple_parser/TestParseProcedure.cpp

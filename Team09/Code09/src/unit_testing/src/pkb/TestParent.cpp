@@ -1,5 +1,6 @@
 #include "catch.hpp"
-#include "evaluators/ParentEvaluator.h"
+#include "PQL/evaluators/ParentEvaluator.h"
+#include "models/EntityType.h"
 
 TEST_CASE("Parent Relationship API") {
 	// The same store is reused through tests, so clearing is a must.
@@ -40,7 +41,7 @@ TEST_CASE("Parent Relationship API") {
 			REQUIRE(res.getBooleanResult() == false);
 		}
 
-		// getParentT(LHS int, RHS int)
+			// getParentT(LHS int, RHS int)
 		SECTION("ParentT(3, 4) positive query") {
 			QueryClauseTable res = ParentEvaluator::getParentT("3", "4", EntityType::INT, EntityType::INT, false);
 			REQUIRE(res.getBooleanResult() == true);
@@ -66,18 +67,18 @@ TEST_CASE("Parent Relationship API") {
 			REQUIRE(res.getBooleanResult() == false);
 		}
 
-		// getParent(LHS int, RHS stmt)
+			// getParent(LHS int, RHS stmt)
 		SECTION("Parent(3, s) positive query") {
 			QueryClauseTable res = ParentEvaluator::getParent("3", "s", EntityType::INT, EntityType::STMT, false);
 			REQUIRE(res.getBooleanResult() == true);
-			Table expectedTable = { {"s", {"4", "5"}}};
+			Table expectedTable = {{"s", {"4", "5"}}};
 			REQUIRE(res == QueryClauseTable(expectedTable));
 		}
 
 		SECTION("Parent(5, s) positive query") {
 			QueryClauseTable res = ParentEvaluator::getParent("5", "s", EntityType::INT, EntityType::STMT, false);
 			REQUIRE(res.getBooleanResult() == true);
-			Table expectedTable = { {"s", {"6"}} };
+			Table expectedTable = {{"s", {"6"}}};
 			REQUIRE(res == QueryClauseTable(expectedTable));
 		}
 
@@ -86,18 +87,18 @@ TEST_CASE("Parent Relationship API") {
 			REQUIRE(res.getBooleanResult() == false);
 		}
 
-		// getParentT(LHS int, RHS stmt)
+			// getParentT(LHS int, RHS stmt)
 		SECTION("ParentT(3, s) positive query") {
 			QueryClauseTable res = ParentEvaluator::getParentT("3", "s", EntityType::INT, EntityType::STMT, false);
 			REQUIRE(res.getBooleanResult() == true);
-			Table expectedTable = { {"s", {"4", "5", "6"}}};
+			Table expectedTable = {{"s", {"4", "5", "6"}}};
 			REQUIRE(res == QueryClauseTable(expectedTable));
 		}
 
 		SECTION("ParentT(5, s) positive query") {
 			QueryClauseTable res = ParentEvaluator::getParentT("5", "s", EntityType::INT, EntityType::STMT, false);
 			REQUIRE(res.getBooleanResult() == true);
-			Table expectedTable = { {"s", {"6"}} };
+			Table expectedTable = {{"s", {"6"}}};
 			REQUIRE(res == QueryClauseTable(expectedTable));
 		}
 
@@ -106,7 +107,7 @@ TEST_CASE("Parent Relationship API") {
 			REQUIRE(res.getBooleanResult() == false);
 		}
 
-		// getParent(LHS int, RHS wild)
+			// getParent(LHS int, RHS wild)
 		SECTION("Parent(3, _) positive query") {
 			QueryClauseTable res = ParentEvaluator::getParent("3", "_", EntityType::INT, EntityType::WILD, false);
 			REQUIRE(res.getBooleanResult() == true);
@@ -122,7 +123,7 @@ TEST_CASE("Parent Relationship API") {
 			REQUIRE(res.getBooleanResult() == false);
 		}
 
-		// getParentT(LHS int, RHS wild)
+			// getParentT(LHS int, RHS wild)
 		SECTION("ParentT(3, _) positive query") {
 			QueryClauseTable res = ParentEvaluator::getParentT("3", "_", EntityType::INT, EntityType::WILD, false);
 			REQUIRE(res.getBooleanResult() == true);
@@ -138,28 +139,28 @@ TEST_CASE("Parent Relationship API") {
 			REQUIRE(res.getBooleanResult() == false);
 		}
 
-		// --------------------------------------------------
-		//                  LHS stmt
-		// --------------------------------------------------
-		// getParent(LHS stmt, RHS int)
+			// --------------------------------------------------
+			//                  LHS stmt
+			// --------------------------------------------------
+			// getParent(LHS stmt, RHS int)
 		SECTION("Parent(s, 4) positive query") {
 			QueryClauseTable res = ParentEvaluator::getParent("s", "4", EntityType::STMT, EntityType::INT, false);
 			REQUIRE(res.getBooleanResult() == true);
-			Table expectedTable = { {"s", {"3"}} };
+			Table expectedTable = {{"s", {"3"}}};
 			REQUIRE(res == QueryClauseTable(expectedTable));
 		}
 
 		SECTION("Parent(s, 5) positive query") {
 			QueryClauseTable res = ParentEvaluator::getParent("s", "5", EntityType::STMT, EntityType::INT, false);
 			REQUIRE(res.getBooleanResult() == true);
-			Table expectedTable = { {"s", {"3"}} };
+			Table expectedTable = {{"s", {"3"}}};
 			REQUIRE(res == QueryClauseTable(expectedTable));
 		}
 
 		SECTION("Parent(s, 6) positive query") {
 			QueryClauseTable res = ParentEvaluator::getParent("s", "6", EntityType::STMT, EntityType::INT, false);
 			REQUIRE(res.getBooleanResult() == true);
-			Table expectedTable = { {"s", {"5"}} };
+			Table expectedTable = {{"s", {"5"}}};
 			REQUIRE(res == QueryClauseTable(expectedTable));
 		}
 
@@ -168,25 +169,25 @@ TEST_CASE("Parent Relationship API") {
 			REQUIRE(res.getBooleanResult() == false);
 		}
 
-		// getParentT(LHS stmt, RHS int)
+			// getParentT(LHS stmt, RHS int)
 		SECTION("ParentT(s, 4) positive query") {
 			QueryClauseTable res = ParentEvaluator::getParentT("s", "4", EntityType::STMT, EntityType::INT, false);
 			REQUIRE(res.getBooleanResult() == true);
-			Table expectedTable = { {"s", {"3"}} };
+			Table expectedTable = {{"s", {"3"}}};
 			REQUIRE(res == QueryClauseTable(expectedTable));
 		}
 
 		SECTION("ParentT(s, 5) positive query") {
 			QueryClauseTable res = ParentEvaluator::getParentT("s", "5", EntityType::STMT, EntityType::INT, false);
 			REQUIRE(res.getBooleanResult() == true);
-			Table expectedTable = { {"s", {"3"}} };
+			Table expectedTable = {{"s", {"3"}}};
 			REQUIRE(res == QueryClauseTable(expectedTable));
 		}
 
 		SECTION("ParentT(s, 6) positive query") {
 			QueryClauseTable res = ParentEvaluator::getParentT("s", "6", EntityType::STMT, EntityType::INT, false);
 			REQUIRE(res.getBooleanResult() == true);
-			Table expectedTable = { {"s", {"3", "5"}} };
+			Table expectedTable = {{"s", {"3", "5"}}};
 			REQUIRE(res == QueryClauseTable(expectedTable));
 		}
 
@@ -195,7 +196,7 @@ TEST_CASE("Parent Relationship API") {
 			REQUIRE(res.getBooleanResult() == false);
 		}
 
-		// getParent(LHS stmt, RHS stmt)
+			// getParent(LHS stmt, RHS stmt)
 		SECTION("Parent(s1, s2) positive query") {
 			QueryClauseTable res = ParentEvaluator::getParent("s1", "s2", EntityType::STMT, EntityType::STMT, false);
 			REQUIRE(res.getBooleanResult() == true);
@@ -206,7 +207,7 @@ TEST_CASE("Parent Relationship API") {
 			REQUIRE(res == QueryClauseTable(expectedTable));
 		}
 
-		// getParentT(LHS stmt, RHS stmt)
+			// getParentT(LHS stmt, RHS stmt)
 		SECTION("ParentT(s1, s2) positive query") {
 			QueryClauseTable res = ParentEvaluator::getParentT("s1", "s2", EntityType::STMT, EntityType::STMT, false);
 			REQUIRE(res.getBooleanResult() == true);
@@ -217,26 +218,26 @@ TEST_CASE("Parent Relationship API") {
 			REQUIRE(res == QueryClauseTable(expectedTable));
 		}
 
-		// getParent(LHS stmt, RHS wild)
+			// getParent(LHS stmt, RHS wild)
 		SECTION("Parent(s, _) positive query") {
 			QueryClauseTable res = ParentEvaluator::getParent("s", "_", EntityType::STMT, EntityType::WILD, false);
 			REQUIRE(res.getBooleanResult() == true);
-			Table expectedTable = { {"s", {"3", "5"}} };
+			Table expectedTable = {{"s", {"3", "5"}}};
 			REQUIRE(res == QueryClauseTable(expectedTable));
 		}
 
-		// getParentT(LHS stmt, RHS wild)
+			// getParentT(LHS stmt, RHS wild)
 		SECTION("ParentT(s, _) positive query") {
 			QueryClauseTable res = ParentEvaluator::getParentT("s", "_", EntityType::STMT, EntityType::WILD, false);
 			REQUIRE(res.getBooleanResult() == true);
-			Table expectedTable = { {"s", {"3", "5"}} };
+			Table expectedTable = {{"s", {"3", "5"}}};
 			REQUIRE(res == QueryClauseTable(expectedTable));
 		}
 
-		// --------------------------------------------------
-		//                  LHS stmt
-		// --------------------------------------------------
-		// getParent(LHS wild, RHS int)
+			// --------------------------------------------------
+			//                  LHS stmt
+			// --------------------------------------------------
+			// getParent(LHS wild, RHS int)
 		SECTION("Parent(_, 4) positive query") {
 			QueryClauseTable res = ParentEvaluator::getParent("_", "4", EntityType::WILD, EntityType::INT, false);
 			REQUIRE(res.getBooleanResult() == true);
@@ -257,7 +258,7 @@ TEST_CASE("Parent Relationship API") {
 			REQUIRE(res.getBooleanResult() == false);
 		}
 
-		// getParentT(LHS wild, RHS int)
+			// getParentT(LHS wild, RHS int)
 		SECTION("ParentT(_, 4) positive query") {
 			QueryClauseTable res = ParentEvaluator::getParentT("_", "4", EntityType::WILD, EntityType::INT, false);
 			REQUIRE(res.getBooleanResult() == true);
@@ -278,23 +279,23 @@ TEST_CASE("Parent Relationship API") {
 			REQUIRE(res.getBooleanResult() == false);
 		}
 
-		// getParent(LHS wild, RHS stmt)
+			// getParent(LHS wild, RHS stmt)
 		SECTION("Parent(_, s) positive query") {
 			QueryClauseTable res = ParentEvaluator::getParent("_", "s", EntityType::WILD, EntityType::STMT, false);
 			REQUIRE(res.getBooleanResult() == true);
-			Table expectedTable = { {"s", {"4", "5", "6"}} };
+			Table expectedTable = {{"s", {"4", "5", "6"}}};
 			REQUIRE(res == QueryClauseTable(expectedTable));
 		}
 
-		// getParentT(LHS wild, RHS stmt)
+			// getParentT(LHS wild, RHS stmt)
 		SECTION("ParentT(_, s) positive query") {
 			QueryClauseTable res = ParentEvaluator::getParentT("_", "s", EntityType::WILD, EntityType::STMT, false);
 			REQUIRE(res.getBooleanResult() == true);
-			Table expectedTable = { {"s", {"4", "5", "6"}} };
+			Table expectedTable = {{"s", {"4", "5", "6"}}};
 			REQUIRE(res == QueryClauseTable(expectedTable));
 		}
 
-		// getParent(LHS wild, RHS wild)
+			// getParent(LHS wild, RHS wild)
 		SECTION("Parent(_, _) positive query") {
 			QueryClauseTable res = ParentEvaluator::getParent("_", "_", EntityType::WILD, EntityType::WILD, false);
 			REQUIRE(res.getBooleanResult() == true);

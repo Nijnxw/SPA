@@ -121,8 +121,8 @@ TEST_CASE("Test Assign statement nodes") {
 		std::shared_ptr<VariableNode> var = std::make_shared<VariableNode>("testing");
 		ExprNode con = std::make_shared<ConstantNode>("123");
 
-		REQUIRE_NOTHROW(AssignNode::AssignNode(1, var, con, "123"));
-		AssignNode ass = AssignNode::AssignNode(1, var, con, "123");
+		REQUIRE_NOTHROW(AssignNode(1, var, con, "123"));
+		AssignNode ass = AssignNode(1, var, con, "123");
 
 		REQUIRE(ass.getAssignedVar() == var);
 		REQUIRE(ass.getExpression() == con);
@@ -140,8 +140,8 @@ TEST_CASE("Test Assign statement nodes") {
 		std::shared_ptr<VariableNode> var1 = std::make_shared<VariableNode>("testing");
 		ExprNode var2 = std::make_shared<VariableNode>("test");
 
-		REQUIRE_NOTHROW(AssignNode::AssignNode(1, var1, var2, "test"));
-		AssignNode ass = AssignNode::AssignNode(1, var1, var2, "test");
+		REQUIRE_NOTHROW(AssignNode(1, var1, var2, "test"));
+		AssignNode ass = AssignNode(1, var1, var2, "test");
 
 		REQUIRE(ass.getAssignedVar() == var1);
 		REQUIRE(ass.getExpression() == var2);
@@ -172,12 +172,12 @@ TEST_CASE("Test Assign statement nodes") {
 
 		ExprNode overall = std::make_shared<OperatorNode>(BinaryOperator::PLUS, left_side, right_side);
 
-		REQUIRE_NOTHROW(AssignNode::AssignNode(1, var, overall, postfix));
+		REQUIRE_NOTHROW(AssignNode(1, var, overall, postfix));
 
-		AssignNode ass1 = AssignNode::AssignNode(1, var, overall, postfix);
-		AssignNode ass2 = AssignNode::AssignNode(1, var, overall, postfix);
-		AssignNode ass3 = AssignNode::AssignNode(2, var, overall, postfix);
-		AssignNode ass4 = AssignNode::AssignNode(1, var, left_side, postfix);
+		AssignNode ass1 = AssignNode(1, var, overall, postfix);
+		AssignNode ass2 = AssignNode(1, var, overall, postfix);
+		AssignNode ass3 = AssignNode(2, var, overall, postfix);
+		AssignNode ass4 = AssignNode(1, var, left_side, postfix);
 
 		REQUIRE(ass1 == ass2);
 		REQUIRE(ass1 != ass3);

@@ -111,10 +111,52 @@ QueryClauseTable PKB::getParentT(const std::string& LHS, const std::string& RHS,
 	return ParentStore::getParentT(LHS, RHS, LHSType, RHSType, isBooleanResult);
 }
 
-QueryClauseTable PKB::getUses(const std::string& LHS, const std::string& RHS, EntityType LHSType, EntityType RHSType, bool isBooleanResult) {
-	return UsesStore::getUses(LHS, RHS, LHSType, RHSType, isBooleanResult);
+/* Uses Getters */
+std::unordered_set<int> PKB::getUsesStatements() {
+	return UsesStore::getUsesStatements();
 }
 
-QueryClauseTable PKB::getModifies(const std::string& LHS, const std::string& RHS, EntityType LHSType, EntityType RHSType, bool isBooleanResult) {
-	return ModifiesStore::getModifies(LHS, RHS, LHSType, RHSType, isBooleanResult);
+std::unordered_set<std::string> PKB::getUsedVariables() {
+	return UsesStore::getUsedVariables();
+}
+
+std::unordered_map<int, std::unordered_set<std::string>> PKB::getStatementNumberToVariablesUsed() {
+	return UsesStore::getStatementNumberToVariablesUsed();
+}
+
+std::unordered_map<std::string, std::unordered_set<int>> PKB::getVariableToStatementNumbersUsedBy() {
+	return UsesStore::getVariableToStatementNumbersUsedBy();
+}
+
+std::unordered_map<std::string, std::unordered_set<std::string>> PKB::getProcedureToVariablesUsed() {
+	return UsesStore::getProcedureToVariablesUsed();
+}
+
+std::unordered_map<std::string, std::unordered_set<std::string>> PKB::getVariableToProceduresUsedBy() {
+	return UsesStore::getVariableToProceduresUsedBy();
+}
+
+/* Modifies Getters */
+std::unordered_set<int> PKB::getModifiesStatements() {
+	return ModifiesStore::getModifiesStatements();
+}
+
+std::unordered_set<std::string> PKB::getModifiedVariables() {
+	return ModifiesStore::getModifiedVariables();
+}
+
+std::unordered_map<int, std::unordered_set<std::string>> PKB::getStatementNumberToVariablesModified() {
+	return ModifiesStore::getStatementNumberToVariablesModified();
+}
+
+std::unordered_map<std::string, std::unordered_set<int>> PKB::getVariableToStatementNumbersModifiedBy() {
+	return ModifiesStore::getVariableToStatementNumbersModifiedBy();
+}
+
+std::unordered_map<std::string, std::unordered_set<std::string>> PKB::getProcedureToVariablesModified() {
+	return ModifiesStore::getProcedureToVariablesModified();
+}
+
+std::unordered_map<std::string, std::unordered_set<std::string>> PKB::getVariableToProceduresModifiedBy() {
+	return ModifiesStore::getVariableToProceduresModifiedBy();
 }

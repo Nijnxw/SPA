@@ -27,6 +27,10 @@ void addReadToPkb(std::shared_ptr<ReadNode> read) {
 	PKB::addStatementWithType(EntityType::READ, read->getStmtNumber());
 }
 
+void addFollowsToPkb(std::shared_ptr<StmtNode> stmt1, std::shared_ptr<StmtNode>stmt2) {
+	PKB::addFollows(stmt1->getStmtNumber(), stmt2->getStmtNumber());
+}
+
 //individual node processing functions
 void processPrintNode(std::shared_ptr<PrintNode> print) {
 	addVariableToPkb(print->getVariable());
@@ -50,6 +54,7 @@ void processStmt(std::shared_ptr<StmtNode> stmt) {
 
 void processStmtList(std::vector<std::shared_ptr<StmtNode>> stmtList) {
 	for (int i = 0; i < stmtList.size(); i++) {
+		if (i < stmtList.size() - 1) addFollowsToPkb(stmtList[i], stmtList[i + 1]);
 		processStmt(stmtList[i]);
 	}
 }

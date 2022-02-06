@@ -22,7 +22,10 @@ Table QueryEvaluator::evaluate(Query& query) {
 		if (clauseContainsSelect) {
 			results = ClauseEvaluator::evaluate(clause, false).getTable();
 		} else {
-			results = EntityEvaluator::evaluate(resultSynonym).getTable();
+			Table clauseResult = ClauseEvaluator::evaluate(clause, true).getTable();
+			if (!clauseResult.empty()) {
+				results = EntityEvaluator::evaluate(resultSynonym).getTable();
+			}
 		}
 	} else {
 		QueryClause firstClause = query.getClauses().at(0);
@@ -52,7 +55,19 @@ Table QueryEvaluator::evaluate(Query& query) {
 				}
 			}
 		} else {
-			results = EntityEvaluator::evaluate(resultSynonym).getTable();
+			Table firstTable = ClauseEvaluator::evaluate(firstClause, false).getTable();
+			Table secondTable = ClauseEvaluator::evaluate(secondClause, false).getTable();
+
+			if (firstClause.containsCommonSynonym(secondClause)) {
+				Table intermediateResult = QueryUtils::hashJoin(firstTable, secondTable);
+				if (!intermediateResult.empty()) {
+					results = EntityEvaluator::evaluate(resultSynonym).getTable();
+				}
+			} else {
+				if (!firstTable.empty() && !secondTable.empty()) {
+					results = EntityEvaluator::evaluate(resultSynonym).getTable();
+				}
+			}
 		}
 	}
 

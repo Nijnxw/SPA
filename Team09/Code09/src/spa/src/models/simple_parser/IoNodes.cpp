@@ -20,7 +20,6 @@ bool ReadNode::operator==(const Node& other) const {
 		*(this->getVariable()) == *(cast->getVariable());
 }
 
-
 // PrintNode Implementation
 PrintNode::PrintNode(int sn, std::shared_ptr<VariableNode> var)
 	: IoNode(NodeType::PRINT, sn, var) { }

@@ -1,4 +1,5 @@
 #include "QueryClauseTable.h"
+#include "util/QueryUtils.h"
 
 QueryClauseTable::QueryClauseTable() {}
 
@@ -29,8 +30,8 @@ bool QueryClauseTable::operator==(const QueryClauseTable& other) const {
 		return false;
 	}
 
-	std::unordered_set<std::string> thisRowStrings = stringifyRows();
-	std::unordered_set<std::string> otherRowStrings = other.stringifyRows();
+	std::unordered_set<std::string> thisRowStrings = QueryUtils::stringifyRows(table);
+	std::unordered_set<std::string> otherRowStrings = QueryUtils::stringifyRows(other.table);
 	return thisRowStrings == otherRowStrings;
 }
 
@@ -63,29 +64,6 @@ bool QueryClauseTable::getBooleanResult() {
 
 void QueryClauseTable::setBooleanResult(bool inputBool) {
 	booleanResult = inputBool;
-}
-
-std::unordered_set<std::string> QueryClauseTable::stringifyRows() const {
-	std::vector<std::string> headers;
-	std::unordered_set<std::string> rows;
-
-	for (const auto& col: table) {
-		headers.push_back(col.first);
-	}
-	std::sort(headers.begin(), headers.end());
-
-	auto numRows = table.at(headers.front()).size();
-	for (auto i = 0; i < numRows; i++) {
-		std::string row;
-		for (const auto& header: headers) {
-			row += table.at(header).at(i);
-			if (header != headers.back()) {
-				row += " ";
-			}
-		}
-		rows.emplace(row);
-	}
-	return rows;
 }
 
 template bool QueryClauseTable::addColumn<std::unordered_set<std::string>>(const std::string& header,

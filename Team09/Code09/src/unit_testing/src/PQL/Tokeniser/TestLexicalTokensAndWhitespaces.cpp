@@ -25,7 +25,7 @@ TEST_CASE("PQL tokeniser lexical tokens test case 2 : integers with various whit
 	expectedPQLTokens.push_back(PQLToken(TokenType::INTEGER, "123"));
 	expectedPQLTokens.push_back(PQLToken(TokenType::INTEGER, "456"));
 	expectedPQLTokens.push_back(PQLToken(TokenType::INTEGER, "789"));
-	expectedPQLTokens.push_back(PQLToken(TokenType::INTEGER, "789"));
+	expectedPQLTokens.push_back(PQLToken(TokenType::INTEGER, "0"));
 
 	std::vector<PQLToken> PQLTokens = tokeniser.tokenise();
 

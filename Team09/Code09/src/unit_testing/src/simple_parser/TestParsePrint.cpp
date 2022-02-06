@@ -7,17 +7,17 @@
 // --------------------------------------------------
 //                  HAPPY PATHS
 // --------------------------------------------------
-TEST_CASE ("Test parsing of valid read statements") {
-	SECTION("One read statement") {
+TEST_CASE ("Test parsing of valid print statements") {
+	SECTION("One print statement") {
 		/*
 		 * Test Simple Program
 		 * procedure testProgram {
-		 * 1	read p;
+		 * 1	print p;
 		 * }
 		 */
 		std::vector<Token*> input = {
 				new NameToken("procedure"), 	new NameToken("testProgram"),
-				new PunctuatorToken("{"),   	new NameToken("read"),
+				new PunctuatorToken("{"),   	new NameToken("print"),
 				new NameToken("p"),        	new PunctuatorToken(";"),
 				new PunctuatorToken("}"),	new EndOfFileToken(),
 		};
@@ -25,27 +25,27 @@ TEST_CASE ("Test parsing of valid read statements") {
 		Parser parser = Parser(input);
 		AST output = parser.parseProgram();
 
-		std::shared_ptr<ReadNode> readNode = std::make_shared<ReadNode>(1, std::make_shared<VariableNode>("p"));
-		std::vector<std::shared_ptr<StmtNode>> stmtLst{move(readNode)};
+		std::shared_ptr<PrintNode> printNode = std::make_shared<PrintNode>(1, std::make_shared<VariableNode>("p"));
+		std::vector<std::shared_ptr<StmtNode>> stmtLst{move(printNode)};
 		std::shared_ptr<ProcedureNode> procedureNode = std::make_shared<ProcedureNode>(stmtLst, "testProgram");
 		std::vector<std::shared_ptr<ProcedureNode>> procLst{move(procedureNode)};
 		AST expected = std::make_shared<ProgramNode>(procLst);
 
 		REQUIRE(*output == *expected);
 	}
-	SECTION("A few read statements") {
+	SECTION("A few print statements") {
 		/*
 		 * Test Simple Program
 		 * procedure testProgram {
-		 * 1	read p;
-		 * 2	read testProgram;
+		 * 1	print p;
+		 * 2	print testProgram;
 		 * }
 		 */
 		std::vector<Token*> input = {
 				new NameToken("procedure"),	new NameToken("testProgram"),
-				new PunctuatorToken("{"),   	new NameToken("read"),
+				new PunctuatorToken("{"),   	new NameToken("print"),
 				new NameToken("p"), 			new PunctuatorToken(";"),
-				new NameToken("read"),		new NameToken("testProgram"),
+				new NameToken("print"),		new NameToken("testProgram"),
 				new PunctuatorToken(";"),	new PunctuatorToken("}"),
 				new EndOfFileToken(),
 		};
@@ -53,9 +53,9 @@ TEST_CASE ("Test parsing of valid read statements") {
 		Parser parser = Parser(input);
 		AST output = parser.parseProgram();
 
-		std::shared_ptr<ReadNode> readNode1 = std::make_shared<ReadNode>(1, std::make_shared<VariableNode>("p"));
-		std::shared_ptr<ReadNode> readNode2 = std::make_shared<ReadNode>(2, std::make_shared<VariableNode>("testProgram"));
-		std::vector<std::shared_ptr<StmtNode>> stmtLst{move(readNode1), move(readNode2)};
+		std::shared_ptr<PrintNode> printNode1 = std::make_shared<PrintNode>(1, std::make_shared<VariableNode>("p"));
+		std::shared_ptr<PrintNode> printNode2 = std::make_shared<PrintNode>(2, std::make_shared<VariableNode>("testProgram"));
+		std::vector<std::shared_ptr<StmtNode>> stmtLst{move(printNode1), move(printNode2)};
 		std::shared_ptr<ProcedureNode> procedureNode = std::make_shared<ProcedureNode>(stmtLst, "testProgram");
 		std::vector<std::shared_ptr<ProcedureNode>> procLst{move(procedureNode)};
 		AST expected = std::make_shared<ProgramNode>(procLst);
@@ -67,31 +67,31 @@ TEST_CASE ("Test parsing of valid read statements") {
 // --------------------------------------------------
 //                  UNHAPPY PATHS
 // --------------------------------------------------
-TEST_CASE ("Test parsing of invalid read statement") {
-	SECTION ("Misspell `read` keyword") {
+TEST_CASE ("Test parsing of invalid print statement") {
+	SECTION ("Misspell `print` keyword") {
 		std::vector<Token*> input = {
 				new NameToken("procedure"), 	new NameToken("testProgram"),
-				new PunctuatorToken("{"),   	new NameToken("reed"),
+				new PunctuatorToken("{"),   	new NameToken("preen"),
 				new NameToken("p"),        	new PunctuatorToken(";"),
 				new PunctuatorToken("}"),	new EndOfFileToken(),
 		};
 		Parser parser = Parser(input);
-		REQUIRE_THROWS_WITH(parser.parseProgram(), "Invalid statement! Expected '}' / 'read' / 'print' but got 'reed' instead.\n");
+		REQUIRE_THROWS_WITH(parser.parseProgram(), "Invalid statement! Expected '}' / 'read' / 'print' but got 'preen' instead.\n");
 	}
-	SECTION ("'read' keyword is case sensitive") {
+	SECTION ("'print' keyword is case sensitive") {
 		std::vector<Token*> input = {
 				new NameToken("procedure"), 	new NameToken("testProgram"),
-				new PunctuatorToken("{"),   	new NameToken("Read"),
+				new PunctuatorToken("{"),   	new NameToken("Print"),
 				new NameToken("p"),        	new PunctuatorToken(";"),
 				new PunctuatorToken("}"),	new EndOfFileToken(),
 		};
 		Parser parser = Parser(input);
-		REQUIRE_THROWS_WITH(parser.parseProgram(), "Invalid statement! Expected '}' / 'read' / 'print' but got 'Read' instead.\n");
+		REQUIRE_THROWS_WITH(parser.parseProgram(), "Invalid statement! Expected '}' / 'read' / 'print' but got 'Print' instead.\n");
 	}
 	SECTION ("Constants as var_name") {
 		std::vector<Token*> input = {
 				new NameToken("procedure"), 	new NameToken("testProgram"),
-				new PunctuatorToken("{"),   	new NameToken("read"),
+				new PunctuatorToken("{"),   	new NameToken("print"),
 				new IntegerToken("123"),     new PunctuatorToken(";"),
 				new PunctuatorToken("}"),	new EndOfFileToken(),
 		};
@@ -101,7 +101,7 @@ TEST_CASE ("Test parsing of invalid read statement") {
 	SECTION ("Missing var_name") {
 		std::vector<Token*> input = {
 				new NameToken("procedure"),	new NameToken("testProgram"),
-				new PunctuatorToken("{"),   	new NameToken("read"),
+				new PunctuatorToken("{"),   	new NameToken("print"),
 				new PunctuatorToken(";"),
 				new PunctuatorToken("}"),	new EndOfFileToken(),
 		};
@@ -111,7 +111,7 @@ TEST_CASE ("Test parsing of invalid read statement") {
 	SECTION ("Missing ';'") {
 		std::vector<Token*> input = {
 				new NameToken("procedure"), 	new NameToken("testProgram"),
-				new PunctuatorToken("{"),	new NameToken("read"),
+				new PunctuatorToken("{"),	new NameToken("print"),
 				new NameToken("p"),
 				new PunctuatorToken("}"),	new EndOfFileToken(),
 		};

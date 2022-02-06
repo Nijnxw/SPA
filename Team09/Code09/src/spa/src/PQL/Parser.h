@@ -21,13 +21,13 @@ std::unordered_set<EntityType> EntRef = {
 	EntityType::WILD, EntityType::STRING
 };
 
-std::unordered_map < QueryRelationType, std::vector<std::unordered_set<EntityType>>> relationValidArgsTypeMap = {
-	{QueryRelationType::USES, {stmtRef, EntRef}},
-	{QueryRelationType::MODIFIES, {stmtRef, EntRef}},
-	{QueryRelationType::FOLLOWS, {stmtRef, stmtRef}},
-	{QueryRelationType::FOLLOWS_T, {stmtRef, stmtRef}},
-	{QueryRelationType::PARENT, {stmtRef, stmtRef}},
-	{QueryRelationType::PARENT_T, {stmtRef, stmtRef}}
+std::unordered_map < RelationRef, std::vector<std::unordered_set<EntityType>>> relationValidArgsTypeMap = {
+	{RelationRef::USES, {stmtRef, EntRef}},
+	{RelationRef::MODIFIES, {stmtRef, EntRef}},
+	{RelationRef::FOLLOWS, {stmtRef, stmtRef}},
+	{RelationRef::FOLLOWS_T, {stmtRef, stmtRef}},
+	{RelationRef::PARENT, {stmtRef, stmtRef}},
+	{RelationRef::PARENT_T, {stmtRef, stmtRef}}
 };
 
 class Parser {
@@ -40,9 +40,7 @@ class Parser {
 		std::vector<PQLToken>::iterator end;
 		std::unordered_map<std::string, EntityType> Declarations;
 		std::vector<QueryArgument> resultSynonyms;
-		std::vector<QuerySuchThatClause> suchThatClauses;
-		std::vector<QueryPatternClause> PatternClauses;
-		bool isPatternExactMatch = false;
+		std::vector<QueryClause> QueryClauses;
 
 		PQLToken getNextToken();
 		PQLToken getNextExpectedToken(TokenType tokenType);
@@ -51,11 +49,11 @@ class Parser {
 		void parseDeclaration();
 		void parseSelect();
 		void parseResultSynonym(); 
-		QueryArgument parseArgs(PQLToken token);
+		QueryArgument parseArgs(PQLToken token, std::unordered_set<std::string>& usedSynonyms);
 		void parseRelationshipClause();
 		void parseSuchThatClause();
-		QueryArgument parsePatternLHS();
-		QueryArgument parsePatternRHS();
-		void parsePatternClause();
+		//QueryArgument parsePatternLHS(std::unordered_set<std::string>& usedSynonyms);
+		//QueryArgument parsePatternRHS();
+		//void parsePatternClause();
 		void parseAfterSelect();
 };

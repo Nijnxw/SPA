@@ -1,7 +1,7 @@
 #pragma once
 #include <unordered_map>
 #include "models/EntityType.h"
-#include "models/QueryRelationType.h"
+#include "models/RelationRef.h"
 
 enum class TokenType {
 	//Lexical tokens
@@ -98,11 +98,11 @@ static std::unordered_map<TokenType, EntityType> entityTypeMapping = {
 	{TokenType::STRING, EntityType::STRING},
 };
 
-static std::unordered_map<TokenType, QueryRelationType> relationTypeMapping = {
-	{TokenType::PARENT, QueryRelationType::PARENT},
-	{TokenType::PARENT_T, QueryRelationType::PARENT_T},
-	{TokenType::FOLLOWS, QueryRelationType::FOLLOWS},
-	{TokenType::FOLLOWS_T, QueryRelationType::FOLLOWS_T},
-	{TokenType::MODIFIES, QueryRelationType::MODIFIES},
-	{TokenType::USES, QueryRelationType::USES},
+static std::unordered_map<TokenType, RelationRef> relationTypeMapping = {
+	{TokenType::PARENT, RelationRef::PARENT},
+	{TokenType::PARENT_T, RelationRef::PARENT_T},
+	{TokenType::FOLLOWS, RelationRef::FOLLOWS},
+	{TokenType::FOLLOWS_T, RelationRef::FOLLOWS_T},
+	{TokenType::MODIFIES, RelationRef::MODIFIES},
+	{TokenType::USES, RelationRef::USES},
 };

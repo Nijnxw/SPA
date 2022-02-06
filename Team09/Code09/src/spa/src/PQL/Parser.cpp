@@ -61,7 +61,7 @@ void Parser::parseResultSynonym() {
 	resultSynonyms.push_back(QueryArgument(std::string(nextToken.getValue()), Declarations[nextToken.getValue()]));
 }
 
-QueryArgument Parser::parseArgs(PQLToken token) {
+QueryArgument Parser::parseArgs(PQLToken token, std::unordered_set<std::string>& usedSynonyms) {
 	switch(token.getType()) {
 	case TokenType::STRING : 
 	case TokenType::UNDERSCORE:
@@ -70,6 +70,7 @@ QueryArgument Parser::parseArgs(PQLToken token) {
 		break;
 	case TokenType::SYNONYM:
 		if (Declarations.find(token.getValue()) != Declarations.end()) {
+			usedSynonyms.insert(token.getValue());
 			return QueryArgument(std::string(token.getValue()), entityTypeMapping[token.getType()]);
 			break;
 		}
@@ -87,14 +88,14 @@ void Parser::parseRelationshipClause() {
 	const auto validArgTypes = relationValidArgsTypeMap.at(relationType->second);
 	getNextExpectedToken(TokenType::OPEN_PARAN);
 	std::vector<QueryArgument> relArgs;
-
+	std::unordered_set<std::string> usedSynonyms;
 	for (int i = 0; i < validArgTypes.size(); i++) {
 		const auto validArgs = validArgTypes[i];
 		const auto nextToken = getNextToken();
 		if (validArgs.find(entityTypeMapping[nextToken.getType()]) == validArgs.end()) {
 			throw "Invalid arguments for relationship clause.";
 		}
-		auto validArg = parseArgs(nextToken);
+		auto validArg = parseArgs(nextToken, usedSynonyms);
 		relArgs.push_back(validArg);
 		if (i != validArgTypes.size() - 1) {
 			getNextExpectedToken(TokenType::COMMA);
@@ -106,7 +107,7 @@ void Parser::parseRelationshipClause() {
 	if (relArgs.size() != validArgTypes.size()) {
 		throw "Invalid number of arguments.";
 	}
-	suchThatClauses.push_back(QuerySuchThatClause(relationType->second, relArgs));
+	QueryClauses.push_back(QueryClause(relationType->second, relArgs,usedSynonyms));
 }
 
 void Parser::parseSuchThatClause() {
@@ -116,43 +117,45 @@ void Parser::parseSuchThatClause() {
 	parseRelationshipClause();
 }
 
-QueryArgument Parser::parsePatternLHS() {
-	return parseArgs(getNextToken());
-}
-
-QueryArgument Parser::parsePatternRHS() {
-	const auto nextToken = getNextToken();
-	switch (nextToken.getType()) {
-	case TokenType::UNDERSCORE: {
-		const auto followingToken = getNextToken();
-		switch (followingToken.getType()) {
-		case TokenType::STRING:
-			getNextExpectedToken(TokenType::UNDERSCORE);
-			return QueryArgument(std::string("_" + followingToken.getValue() + "_"), entityTypeMapping[TokenType::STRING]);
-		case TokenType::CLOSE_PARAN:
-			return QueryArgument(std::string(""), entityTypeMapping[TokenType::UNDERSCORE]);
-		}
-	}
-	case TokenType::STRING:
-		isPatternExactMatch = true;
-		return QueryArgument(std::string(nextToken.getValue()), entityTypeMapping[TokenType::STRING]);
-	default:
-		throw "Invalid Argument.";
-	};
-}
-
-void Parser::parsePatternClause() {
-	std::vector<QueryArgument> patternArgs;
-	getNextExpectedToken(TokenType::PATTERN);
-	const auto synonymToken = getNextExpectedToken(TokenType::SYNONYM);
-	QueryArgument synonymArg = QueryArgument(std::string(synonymToken.getValue()), entityTypeMapping[synonymToken.getType()]);
-	getNextExpectedToken(TokenType::OPEN_PARAN);
-	patternArgs.push_back(parsePatternLHS());
-	getNextExpectedToken(TokenType::COMMA);
-	patternArgs.push_back(parsePatternRHS());
-	getNextExpectedToken(TokenType::CLOSE_PARAN);
-	PatternClauses.push_back(QueryPatternClause(synonymArg, patternArgs, isPatternExactMatch));
-}
+//QueryArgument Parser::parsePatternLHS(std::unordered_set<std::string>& usedSynonyms) {
+//	return parseArgs(getNextToken(), usedSynonyms);
+//}
+//
+//QueryArgument Parser::parsePatternRHS() {
+//	const auto nextToken = getNextToken();
+//	switch (nextToken.getType()) {
+//	case TokenType::UNDERSCORE: {
+//		const auto followingToken = getNextToken();
+//		switch (followingToken.getType()) {
+//		case TokenType::STRING:
+//			getNextExpectedToken(TokenType::UNDERSCORE);
+//			getNextExpectedToken(TokenType::CLOSE_PARAN);
+//			return QueryArgument(std::string("_" + followingToken.getValue() + "_"), entityTypeMapping[TokenType::STRING]);
+//		case TokenType::CLOSE_PARAN:
+//			return QueryArgument(std::string(""), entityTypeMapping[TokenType::UNDERSCORE]);
+//		}
+//	}
+//	case TokenType::STRING:
+//		getNextExpectedToken(TokenType::CLOSE_PARAN);
+//		return QueryArgument(std::string(nextToken.getValue()), entityTypeMapping[TokenType::STRING]);
+//	default:
+//		throw "Invalid Argument.";
+//	};
+//}
+//
+//void Parser::parsePatternClause() {
+//	std::vector<QueryArgument> patternArgs;
+//	std::unordered_set<std::string> usedSynonyms;
+//
+//	getNextExpectedToken(TokenType::PATTERN);
+//	const auto synonymToken = getNextExpectedToken(TokenType::SYNONYM);
+//	getNextExpectedToken(TokenType::OPEN_PARAN);
+//	patternArgs.push_back(parsePatternLHS(usedSynonyms));
+//	getNextExpectedToken(TokenType::COMMA);
+//	patternArgs.push_back(parsePatternRHS());
+//
+//	QueryClauses.push_back(QueryClause(RelationRef::PATTERN, patternArgs, usedSynonyms, synonymToken.getValue()));
+//}
 
 void Parser::parseAfterSelect() {
 	while (current != end) {
@@ -160,10 +163,9 @@ void Parser::parseAfterSelect() {
 		case TokenType::SUCH:
 			parseSuchThatClause();
 			break;
-		case TokenType::PATTERN:
-			isPatternExactMatch = false;
-			parsePatternClause();
-			break;
+		//case TokenType::PATTERN:
+		//	parsePatternClause();
+		//	break;
 		default:
 			throw "Expected such that or pattern";
 		}
@@ -177,6 +179,6 @@ Query Parser::parse() {
 	parseSelect();
 	parseResultSynonym();
 	parseAfterSelect();
-	return Query(resultSynonyms, suchThatClauses, PatternClauses);
+	return Query(resultSynonyms, QueryClauses);
 }
 

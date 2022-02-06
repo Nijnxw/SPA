@@ -135,6 +135,6 @@ TEST_CASE ("Test parsing of invalid procedure") {
 												new EndOfFileToken(),
 		};
 		Parser parser = Parser(input);
-		REQUIRE_THROWS_WITH(parser.parseProgram(), "Expected 'read' but got '' instead.\n");
+		REQUIRE_THROWS_WITH(parser.parseProgram(), "Invalid statement! Expected '}' / 'read' / 'print' but got '' instead.\n");
 	}
 }

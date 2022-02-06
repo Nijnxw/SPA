@@ -19,12 +19,12 @@ bool Parser::isEndOfFile() {
 	return peek()->isEndOfFileToken();
 }
 
-bool Parser::check(const std::string& s) {
-	return peek()->getValue() == s;
-}
-
 bool Parser::check(TokenType t) {
 	return peek()->getTokenType() == t;
+}
+
+bool Parser::check(const std::string& s) {
+	return peek()->getValue() == s;
 }
 
 bool Parser::expect(const std::string& s) {
@@ -73,10 +73,19 @@ std::vector<std::shared_ptr<StmtNode>> Parser::parseStmtLst() {
 std::shared_ptr<StmtNode> Parser::parseStatement() {
 	if (check("}")) return nullptr;
 	int currIdx = currentIdx;
-	std::shared_ptr<ReadNode> readNode = parseRead();
-	if (readNode) return readNode;
-	currentIdx = currIdx;
-	return nullptr;
+
+	if (check("read")) {
+		std::shared_ptr<ReadNode> readNode = parseRead();
+		if (readNode) return readNode;
+	}
+	else if (check("print")) {
+		std::shared_ptr<PrintNode> printNode = parsePrint();
+		if (printNode) return printNode;
+	}
+	else {
+		throw std::runtime_error("Invalid statement! Expected '}' / 'read' / 'print' but got '"
+									+ peek()->getValue() + "' instead.\n");
+	}
 }
 
 // read: 'read' var_name';'
@@ -85,6 +94,14 @@ std::shared_ptr<ReadNode> Parser::parseRead() {
 	std::shared_ptr<VariableNode> variableNode = parseVariable();
 	expect(";");
 	return std::make_shared<ReadNode>(stmtNo, variableNode);
+}
+
+// print: 'print' var_name';'
+std::shared_ptr<PrintNode> Parser::parsePrint() {
+	expect("print");
+	std::shared_ptr<VariableNode> variableNode = parseVariable();
+	expect(";");
+	return std::make_shared<PrintNode>(stmtNo, variableNode);
 }
 
 // Main function driving Parser class (exposed API)

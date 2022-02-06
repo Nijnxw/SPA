@@ -113,7 +113,8 @@ TEST_CASE("stringify rows of table with single column with valid column order re
 	};
 	std::vector<std::string> colOrder = {"a"};
 	std::unordered_set<std::string> expected = {"1", "2", "3", "4"};
-	std::unordered_set<std::string> actual = QueryUtils::stringifyRows(table, colOrder);
+	std::list<std::string> actualList = QueryUtils::stringifyRows(table, colOrder);
+	std::unordered_set<std::string> actual = {actualList.begin(), actualList.end()};
 
 	REQUIRE(actual == expected);
 }
@@ -123,7 +124,8 @@ TEST_CASE("stringify rows of table with single column with invalid column order 
 		{"a", {"1", "2", "3", "4"}}
 	};
 	std::vector<std::string> colOrder = {"b"};
-	std::unordered_set<std::string> actual = QueryUtils::stringifyRows(table, colOrder);
+	std::list<std::string> actualList = QueryUtils::stringifyRows(table, colOrder);
+	std::unordered_set<std::string> actual = {actualList.begin(), actualList.end()};
 
 	REQUIRE(actual.empty());
 }
@@ -133,9 +135,11 @@ TEST_CASE("stringify rows of table with multiple columns with valid column order
 		{"a", {"1", "2", "3", "4"}},
 		{"b", {"5", "6", "7", "8"}}
 	};
-	std::vector<std::string> colOrder = {"a", "b"};
+	std::vector<std::string> colOrder = {"a",
+										 "b"};
 	std::unordered_set<std::string> expected = {"1 5", "2 6", "3 7", "4 8"};
-	std::unordered_set<std::string> actual = QueryUtils::stringifyRows(table, colOrder);
+	std::list<std::string> actualList = QueryUtils::stringifyRows(table, colOrder);
+	std::unordered_set<std::string> actual = {actualList.begin(), actualList.end()};
 
 	REQUIRE(actual == expected);
 }
@@ -148,7 +152,8 @@ TEST_CASE(
 	};
 	std::vector<std::string> colOrder = {"a"};
 	std::unordered_set<std::string> expected = {"1", "2", "3", "4"};
-	std::unordered_set<std::string> actual = QueryUtils::stringifyRows(table, colOrder);
+	std::list<std::string> actualList = QueryUtils::stringifyRows(table, colOrder);
+	std::unordered_set<std::string> actual = {actualList.begin(), actualList.end()};
 
 	REQUIRE(actual == expected);
 }
@@ -159,7 +164,8 @@ TEST_CASE("stringify rows of table with multiple columns with invalid column ord
 		{"b", {"5", "6", "7", "8"}}
 	};
 	std::vector<std::string> colOrder = {"c"};
-	std::unordered_set<std::string> actual = QueryUtils::stringifyRows(table, colOrder);
+	std::list<std::string> actualList = QueryUtils::stringifyRows(table, colOrder);
+	std::unordered_set<std::string> actual = {actualList.begin(), actualList.end()};
 
 	REQUIRE(actual.empty());
 }

@@ -4,8 +4,16 @@ QueryClause::QueryClause(RelationRef clauseType, std::vector<QueryArgument>& arg
 						 std::unordered_set<std::string>& usedSynonyms, const std::string& clauseSynonym) : clauseType(
 	clauseType), arguments(arguments), usedSynonyms(usedSynonyms), clauseSynonym(clauseSynonym) {}
 
+RelationRef QueryClause::getClauseType() const {
+	return clauseType;
+}
+
 const std::vector<QueryArgument>& QueryClause::getArguments() const {
 	return arguments;
+}
+
+const std::unordered_set<std::string>& QueryClause::getUsedSynonyms() const {
+	return usedSynonyms;
 }
 
 bool QueryClause::containsCommonSynonym(QueryClause& other) const {

@@ -3,7 +3,7 @@
 
 QueryClauseTable::QueryClauseTable() {}
 
-QueryClauseTable::QueryClauseTable(Table& table) : table(table), booleanResult(table.size() != 0) {}
+QueryClauseTable::QueryClauseTable(const Table& table) : table(table), booleanResult(table.size() != 0) {}
 
 bool QueryClauseTable::operator==(const QueryClauseTable& other) const {
 	bool diffNumHeaders = table.size() != other.table.size();

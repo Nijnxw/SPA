@@ -5,7 +5,7 @@
 /*
 TEST_CASE("PQL parser such that clause test case 1") {
 	std::vector<QueryArgument> expectedResultSynonms;
-	std::vector<QueryClause> expectedClauses; 
+	std::vector<QueryClause> expectedClauses;
 	std::vector<QueryArgument> clauseArgs;
 	std::unordered_set<std::string> usedSynonyms;
 	std::string queryString = "while w;\nSelect w such that Parent*(1,w)";

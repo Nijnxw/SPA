@@ -15,12 +15,20 @@ volatile bool AbstractWrapper::GlobalStop = false;
 TestWrapper::TestWrapper() {
     // create any objects here as instance variables of this class
     // as well as any initialization required for your spa program
+    
 }
 
 // method for parsing the SIMPLE source
 void TestWrapper::parse(std::string filename) {
     // call your parser to do the parsing
     // ...rest of your code...
+    std::ifstream sourceFile(filename);
+
+    if (sourceFile.is_open()) {
+        Lexer lexer(&sourceFile);
+        Parser parser(lexer.tokenize());
+        DesignExtractor::extractDesignElements(parser.parseProgram());
+    }
 }
 
 // method to evaluating a query
@@ -30,4 +38,11 @@ void TestWrapper::evaluate(std::string query, std::list<std::string>& results) {
 
     // store the answers to the query in the results list (it is initially empty)
     // each result must be a string.
+    std::vector<PQLToken> tokens = PQL::tokenise(query);
+    Query queryObject = PQL::parse(tokens);
+    Table queryTable = QueryEvaluator::evaluate(queryObject);
+    std::vector<QueryArgument> resultSynonyms = queryObject.getResultSynonyms();
+    std::unordered_set<std::string> queryResult = QueryResultProjector::formatResult(queryTable, resultSynonyms);
+
+    results = queryResult;
 }

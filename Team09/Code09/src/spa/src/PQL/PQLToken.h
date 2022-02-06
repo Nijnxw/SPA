@@ -16,7 +16,7 @@ public:
 	const TokenType getType() const ;
 
 	bool operator==(const PQLToken& other) const {
-		return type == other.type && value == other.value;
+		return type == other.getType() && value == other.getValue();
 	}
 
 private:

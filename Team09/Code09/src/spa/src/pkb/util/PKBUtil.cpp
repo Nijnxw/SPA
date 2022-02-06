@@ -6,6 +6,15 @@
 
 namespace PKBUtil
 {
+    static struct hashFunction
+    {
+        size_t operator()(const std::pair<int,
+            int>& x) const
+        {
+            return x.first ^ x.second;
+        }
+    };
+
     template <typename T>
     static std::unordered_set<T> unorderedSetIntersection(const std::unordered_set<T>& set1, const std::unordered_set<T>& set2)
     {
@@ -78,15 +87,6 @@ namespace PKBUtil
 
         return { firstColumn, secondColumn };
     }
-
-    static struct hashFunction
-    {
-        size_t operator()(const std::pair<int,
-            int>& x) const
-        {
-            return x.first ^ x.second;
-        }
-    };
 
     static std::tuple<std::vector<int>, std::vector<int>> convertSetPairsToVectorTuple(std::unordered_set<std::pair<int, int>, hashFunction>& set) {
         std::vector<int> firstColumn;

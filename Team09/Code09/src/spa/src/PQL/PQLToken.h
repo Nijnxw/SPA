@@ -15,7 +15,7 @@ public:
 	const std::string getValue() const;
 	const TokenType getType() const ;
 
-	bool PQLToken::operator==(const PQLToken& other) const {
+	bool operator==(const PQLToken& other) const {
 		return type == other.type && value == other.value;
 	}
 

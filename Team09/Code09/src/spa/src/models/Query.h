@@ -1,20 +1,16 @@
 #pragma once
 
 #include "QueryArgument.h"
-#include "QueryPatternClause.h"
-#include "QuerySuchThatClause.h"
+#include "QueryClause.h"
 
 class Query {
 public:
-    Query(std::vector<QueryArgument>& resultSynonyms, std::vector<QuerySuchThatClause>& suchThatClauses,
-          std::vector<QueryPatternClause>& patternClauses);
+	Query(std::vector<QueryArgument>& resultSynonyms, std::vector<QueryClause>& clauses);
 
-    const std::vector<QueryArgument>& getResultSynonyms() const;
-    const std::vector<QuerySuchThatClause>& getSuchThatClauses() const;
-    const std::vector<QueryPatternClause>& getPatternClauses() const;
+	const std::vector<QueryArgument>& getResultSynonyms() const;
+	const std::vector<QueryClause>& getClauses() const;
 
 private:
-    std::vector<QueryArgument> resultSynonyms;
-    std::vector<QuerySuchThatClause> suchThatClauses;
-    std::vector<QueryPatternClause> patternClauses;
+	std::vector<QueryArgument> resultSynonyms;
+	std::vector<QueryClause> clauses;
 };

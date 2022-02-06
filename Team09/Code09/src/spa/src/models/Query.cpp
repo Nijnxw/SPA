@@ -1,19 +1,13 @@
 #include <vector>
 #include "Query.h"
 
-Query::Query(std::vector<QueryArgument>& resultSynonyms, std::vector<QuerySuchThatClause>& suchThatClauses,
-             std::vector<QueryPatternClause>& patternClauses) : resultSynonyms(resultSynonyms),
-                                                                suchThatClauses(suchThatClauses),
-                                                                patternClauses(patternClauses) {}
+Query::Query(std::vector<QueryArgument>& resultSynonyms, std::vector<QueryClause>& clauses) : resultSynonyms(
+	resultSynonyms), clauses(clauses) {}
 
 const std::vector<QueryArgument>& Query::getResultSynonyms() const {
-    return resultSynonyms;
+	return resultSynonyms;
 }
 
-const std::vector<QuerySuchThatClause>& Query::getSuchThatClauses() const {
-    return suchThatClauses;
-}
-
-const std::vector<QueryPatternClause>& Query::getPatternClauses() const {
-    return patternClauses;
+const std::vector<QueryClause>& Query::getClauses() const {
+	return clauses;
 }

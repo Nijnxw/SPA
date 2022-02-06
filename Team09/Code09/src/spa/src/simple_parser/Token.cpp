@@ -2,34 +2,34 @@
 
 #include <utility>
 
-Token::Token(TokenType t, std::string v) : type(t), value(std::move(v)){}
-NameToken::NameToken(std::string v) : Token(TokenType::NAME, std::move(v)){}
-IntegerToken::IntegerToken(std::string v) : Token(TokenType::INTEGER, std::move(v)){}
-OperatorToken::OperatorToken(std::string v) : Token(TokenType::OPERATOR, std::move(v)){}
-PunctuatorToken::PunctuatorToken(std::string v) : Token(TokenType::PUNCTUATOR, std::move(v)){}
-EndOfFileToken::EndOfFileToken() : Token(TokenType::END_OF_FILE, ""){}
+Token::Token(ParserTokenType t, std::string v) : type(t), value(std::move(v)){}
+NameToken::NameToken(std::string v) : Token(ParserTokenType::NAME, std::move(v)){}
+IntegerToken::IntegerToken(std::string v) : Token(ParserTokenType::INTEGER, std::move(v)){}
+OperatorToken::OperatorToken(std::string v) : Token(ParserTokenType::OPERATOR, std::move(v)){}
+PunctuatorToken::PunctuatorToken(std::string v) : Token(ParserTokenType::PUNCTUATOR, std::move(v)){}
+EndOfFileToken::EndOfFileToken() : Token(ParserTokenType::END_OF_FILE, ""){}
 
 bool Token::isNameToken() {
-	return type == TokenType::NAME;
+	return type == ParserTokenType::NAME;
 }
 
 bool Token::isIntegerToken() {
-	return type == TokenType::INTEGER;
+	return type == ParserTokenType::INTEGER;
 }
 
 bool Token::isOperatorToken() {
-	return type == TokenType::OPERATOR;
+	return type == ParserTokenType::OPERATOR;
 }
 
 bool Token::isPunctuatorToken() {
-	return type == TokenType::PUNCTUATOR;
+	return type == ParserTokenType::PUNCTUATOR;
 }
 
 bool Token::isEndOfFileToken() {
-	return type == TokenType::END_OF_FILE;
+	return type == ParserTokenType::END_OF_FILE;
 }
 
-TokenType Token::getTokenType() {
+ParserTokenType Token::getTokenType() {
 	return type;
 }
 

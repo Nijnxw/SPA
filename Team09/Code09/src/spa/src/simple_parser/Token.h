@@ -2,16 +2,16 @@
 
 #include <string>
 
-enum class TokenType { NAME, INTEGER, OPERATOR, PUNCTUATOR, END_OF_FILE };
+enum class ParserTokenType { NAME, INTEGER, OPERATOR, PUNCTUATOR, END_OF_FILE };
 
 // Base class for SIMPLE language lexical tokens
 class Token {
 private:
-	TokenType type;
+	ParserTokenType type;
 	std::string value;
 
 public:
-	Token(TokenType t, std::string v);
+	Token(ParserTokenType t, std::string v);
 
 	bool isNameToken();
 	bool isIntegerToken();
@@ -19,7 +19,7 @@ public:
 	bool isPunctuatorToken();
 	bool isEndOfFileToken();
 
-	TokenType getTokenType();
+	ParserTokenType getTokenType();
 	std::string getValue();
 };
 

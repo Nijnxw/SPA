@@ -1,6 +1,5 @@
 #include "catch.hpp"
-#include "pkb/PKB.h"
-#include "evaluators/ModifiesEvaluator.h"
+#include "PQL/evaluators/ModifiesEvaluator.h"
 
 TEST_CASE("Test ModifiesStore and ModifiesEvaluator functionality") {
 	PKB::clearAllStores();
@@ -50,7 +49,8 @@ TEST_CASE("Test ModifiesStore and ModifiesEvaluator functionality") {
 		}
 
 		SECTION("Modifies(a,'_') query") {
-			QueryClauseTable res = ModifiesEvaluator::getModifies("a", "_", EntityType::ASSIGN, EntityType::WILD, false);
+			QueryClauseTable res = ModifiesEvaluator::getModifies("a", "_", EntityType::ASSIGN, EntityType::WILD,
+																  false);
 			REQUIRE(res.getBooleanResult() == true);
 			Table expectedTable = {{"a", {"2", "4", "6"}}};
 			REQUIRE(res == QueryClauseTable(expectedTable));
@@ -150,7 +150,8 @@ TEST_CASE("Test ModifiesStore and ModifiesEvaluator functionality") {
 		}
 
 		SECTION("Modifies(s, 'w') query") {
-			QueryClauseTable res = ModifiesEvaluator::getModifies("s", "w", EntityType::STMT, EntityType::STRING, false);
+			QueryClauseTable res = ModifiesEvaluator::getModifies("s", "w", EntityType::STMT, EntityType::STRING,
+																  false);
 			REQUIRE(res.getBooleanResult() == true);
 			Table expectedTable = {
 				{"s", {"3", "5", "6"}},
@@ -159,8 +160,9 @@ TEST_CASE("Test ModifiesStore and ModifiesEvaluator functionality") {
 		}
 
 		SECTION("Modifies(a, 'pattern') query") {
-			QueryClauseTable res = ModifiesEvaluator::getModifies("a", "pattern", EntityType::ASSIGN, EntityType::STRING,
-															  false);
+			QueryClauseTable res = ModifiesEvaluator::getModifies("a", "pattern", EntityType::ASSIGN,
+																  EntityType::STRING,
+																  false);
 			REQUIRE(res.getBooleanResult() == true);
 			Table expectedTable = {
 				{"a", {"4"}},
@@ -169,7 +171,8 @@ TEST_CASE("Test ModifiesStore and ModifiesEvaluator functionality") {
 		}
 
 		SECTION("Modifies(r, 'p') query") {
-			QueryClauseTable res = ModifiesEvaluator::getModifies("r", "p", EntityType::READ, EntityType::STRING, false);
+			QueryClauseTable res = ModifiesEvaluator::getModifies("r", "p", EntityType::READ, EntityType::STRING,
+																  false);
 			REQUIRE(res.getBooleanResult() == true);
 			Table expectedTable = {
 				{"r", {"1"}},
@@ -187,7 +190,8 @@ TEST_CASE("Test ModifiesStore and ModifiesEvaluator functionality") {
 		}
 
 		SECTION("Modifies(w, 'w') query") {
-			QueryClauseTable res = ModifiesEvaluator::getModifies("w", "w", EntityType::WHILE, EntityType::STRING, false);
+			QueryClauseTable res = ModifiesEvaluator::getModifies("w", "w", EntityType::WHILE, EntityType::STRING,
+																  false);
 			REQUIRE(res.getBooleanResult() == true);
 			Table expectedTable = {
 				{"w", {"5"}},

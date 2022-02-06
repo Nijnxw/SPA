@@ -106,3 +106,81 @@ TEST_CASE("join with duplicate common values returns natural-joined tables with 
 
 	REQUIRE(actual == expected);
 }
+
+TEST_CASE("stringify rows of table with single column with valid column order returns space separated values") {
+	Table table = {
+		{"a", {"1", "2", "3", "4"}}
+	};
+	std::vector<std::string> colOrder = {"a"};
+	std::unordered_set<std::string> expected = {"1", "2", "3", "4"};
+	std::unordered_set<std::string> actual = QueryUtils::stringifyRows(table, colOrder);
+
+	REQUIRE(actual == expected);
+}
+
+TEST_CASE("stringify rows of table with single column with invalid column order returns empty set") {
+	Table table = {
+		{"a", {"1", "2", "3", "4"}}
+	};
+	std::vector<std::string> colOrder = {"b"};
+	std::unordered_set<std::string> actual = QueryUtils::stringifyRows(table, colOrder);
+
+	REQUIRE(actual.empty());
+}
+
+TEST_CASE("stringify rows of table with multiple columns with valid column order returns space separated values") {
+	Table table = {
+		{"a", {"1", "2", "3", "4"}},
+		{"b", {"5", "6", "7", "8"}}
+	};
+	std::vector<std::string> colOrder = {"a", "b"};
+	std::unordered_set<std::string> expected = {"1 5", "2 6", "3 7", "4 8"};
+	std::unordered_set<std::string> actual = QueryUtils::stringifyRows(table, colOrder);
+
+	REQUIRE(actual == expected);
+}
+
+TEST_CASE(
+	"stringify rows of table with multiple columns with valid subset column order returns space separated values") {
+	Table table = {
+		{"a", {"1", "2", "3", "4"}},
+		{"b", {"5", "6", "7", "8"}}
+	};
+	std::vector<std::string> colOrder = {"a"};
+	std::unordered_set<std::string> expected = {"1", "2", "3", "4"};
+	std::unordered_set<std::string> actual = QueryUtils::stringifyRows(table, colOrder);
+
+	REQUIRE(actual == expected);
+}
+
+TEST_CASE("stringify rows of table with multiple columns with invalid column order returns empty set") {
+	Table table = {
+		{"a", {"1", "2", "3", "4"}},
+		{"b", {"5", "6", "7", "8"}}
+	};
+	std::vector<std::string> colOrder = {"c"};
+	std::unordered_set<std::string> actual = QueryUtils::stringifyRows(table, colOrder);
+
+	REQUIRE(actual.empty());
+}
+
+TEST_CASE("stringify rows of table with single column without column order returns space separated values") {
+	Table table = {
+		{"a", {"1", "2", "3", "4"}}
+	};
+	std::unordered_set<std::string> expected = {"1", "2", "3", "4"};
+	std::unordered_set<std::string> actual = QueryUtils::stringifyRows(table);
+
+	REQUIRE(actual == expected);
+}
+
+TEST_CASE("stringify rows of table with multiple columns without column order returns space separated values") {
+	Table table = {
+		{"a", {"1", "2", "3", "4"}},
+		{"b", {"5", "6", "7", "8"}}
+	};
+	std::unordered_set<std::string> expected = {"1 5", "2 6", "3 7", "4 8"};
+	std::unordered_set<std::string> actual = QueryUtils::stringifyRows(table);
+
+	REQUIRE(actual == expected);
+}

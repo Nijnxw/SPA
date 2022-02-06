@@ -5,12 +5,18 @@
 
 class QueryArgument {
 public:
-    QueryArgument(std::string& value, EntityType type);
+	QueryArgument(const std::string& value, EntityType type);
 
-    const std::string& getValue() const;
-    EntityType getType() const;
+	const std::string& getValue() const;
+	EntityType getType() const;
 
 private:
     std::string value;  // can either be a literal or variable name (depending on type)
     EntityType type;
+};
+
+struct QueryArgumentHash {
+	std::size_t operator()(const QueryArgument& arg) const {
+		return std::hash<std::string>()(arg.getValue());
+	}
 };

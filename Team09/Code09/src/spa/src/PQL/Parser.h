@@ -7,21 +7,21 @@
 #include "PQLToken.h"
 #include "models/Query.h"
 
-std::unordered_set<EntityType> stmtRef = {
+static std::unordered_set<EntityType> stmtRef = {
 	EntityType::STMT, EntityType::READ, EntityType::PRINT,
 	EntityType::WHILE, EntityType::IF, EntityType::ASSIGN,
 	EntityType::VAR, EntityType::CONST, EntityType::PROC,
 	EntityType::WILD, EntityType::INT
 };
 
-std::unordered_set<EntityType> EntRef = {
+static std::unordered_set<EntityType> EntRef = {
 	EntityType::STMT, EntityType::READ, EntityType::PRINT,
 	EntityType::WHILE, EntityType::IF, EntityType::ASSIGN,
 	EntityType::VAR, EntityType::CONST, EntityType::PROC,
 	EntityType::WILD, EntityType::STRING
 };
 
-std::unordered_map < RelationRef, std::vector<std::unordered_set<EntityType>>> relationValidArgsTypeMap = {
+static std::unordered_map < RelationRef, std::vector<std::unordered_set<EntityType>>> relationValidArgsTypeMap = {
 	{RelationRef::USES, {stmtRef, EntRef}},
 	{RelationRef::MODIFIES, {stmtRef, EntRef}},
 	{RelationRef::FOLLOWS, {stmtRef, stmtRef}},
@@ -32,8 +32,8 @@ std::unordered_map < RelationRef, std::vector<std::unordered_set<EntityType>>> r
 
 class Parser {
 	public:
-		Query parse();
 		Parser(std::vector<PQLToken> &PQLTokens);
+		Query parse();
 
 	private:
 		std::vector<PQLToken>::iterator current;
@@ -49,11 +49,11 @@ class Parser {
 		void parseDeclaration();
 		void parseSelect();
 		void parseResultSynonym(); 
-		QueryArgument parseArgs(PQLToken token, std::unordered_set<std::string>& usedSynonyms);
+		QueryArgument parseArgs(PQLToken token);
 		void parseRelationshipClause();
 		void parseSuchThatClause();
-		//QueryArgument parsePatternLHS(std::unordered_set<std::string>& usedSynonyms);
-		//QueryArgument parsePatternRHS();
-		//void parsePatternClause();
+		QueryArgument parsePatternLHS();
+		QueryArgument parsePatternRHS();
+		void parsePatternClause();
 		void parseAfterSelect();
 };

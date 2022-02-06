@@ -7,7 +7,7 @@ const std::vector<PQLToken> PQL::tokenise(std::string query) {
 	return tokeniser.tokenise();
 }
 
-Query parse(std::vector<PQLToken>& tokens) {
+Query PQL::parse(std::vector<PQLToken>& tokens) {
 	auto parser = Parser(tokens);
 	return parser.parse();
 }

@@ -6,13 +6,13 @@
 
 #include "PQL/Parser.h"
 
-Parser::Parser(std::vector<PQLToken> &PQLTokens) : current(PQLTokens.begin()), end(PQLTokens.end()) {}
+Parser::Parser(std::vector<PQLToken> &PQLTokens) : current(0), end(PQLTokens.size()), tokens(PQLTokens) {}
 
 PQLToken Parser::getNextToken() {
 	if (current == end) {
 		throw "Runtime error : no more tokens to parse";
 	}
-	const auto token = *current;
+	const auto token = tokens.at(current);
 	current++;
 	return token;
 }
@@ -41,7 +41,7 @@ void Parser::parseDeclaration() {
 	}
 	Declarations[expectedSynonym.getValue()] = entityType->second;
 
-	while (current != end && current->getType() == TokenType::COMMA) {
+	while (current != end && tokens.at(current).getType() == TokenType::COMMA) {
 		getNextExpectedToken(TokenType::COMMA); 
 		nextToken = getNextExpectedToken(TokenType::SYNONYM);
 		if (Declarations.find(nextToken.getValue()) != Declarations.end()) {
@@ -172,7 +172,7 @@ void Parser::parsePatternClause() {
 
 void Parser::parseAfterSelect() {
 	while (current != end) {
-		switch (current->getType()) {
+		switch (tokens.at(current).getType()) {
 		case TokenType::SUCH:
 			parseSuchThatClause();
 			break;
@@ -187,7 +187,7 @@ void Parser::parseAfterSelect() {
 
 Query Parser::parse() {
 	
-	while (current != end && entityTypeMapping.find(current->getType()) != entityTypeMapping.end()) {
+	while (current != end && entityTypeMapping.find(tokens.at(current).getType()) != entityTypeMapping.end()) {
 		parseDeclaration();
 	}
 	parseSelect();

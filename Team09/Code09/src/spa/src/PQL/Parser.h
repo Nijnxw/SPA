@@ -36,8 +36,9 @@ class Parser {
 		Query parse();
 
 	private:
-		std::vector<PQLToken>::iterator current;
-		std::vector<PQLToken>::iterator end;
+		int current;
+		int end;
+		std::vector<PQLToken> tokens;
 		std::unordered_map<std::string, EntityType> Declarations;
 		std::vector<QueryArgument> resultSynonyms;
 		std::vector<QueryClause> QueryClauses;

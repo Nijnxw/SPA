@@ -2,6 +2,7 @@
 #include "PQL/Parser.h"
 #include "PQL/Tokeniser.h"
 
+/*
 TEST_CASE("PQL parser such that clause test case 1") {
 	std::vector<QueryArgument> expectedResultSynonms;
 	std::vector<QueryClause> expectedClauses; 
@@ -25,3 +26,4 @@ TEST_CASE("PQL parser such that clause test case 1") {
 	bool isResultSynonymEqual = std::equal(expectedResultSynonms.begin(), expectedResultSynonms.end(), actualResultSynonms.begin());
 	REQUIRE((isClausesEqual && isResultSynonymEqual));
 }
+*/

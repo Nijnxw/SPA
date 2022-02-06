@@ -8,6 +8,10 @@ RelationRef QueryClause::getClauseType() const {
 	return clauseType;
 }
 
+const std::string& QueryClause::getClauseSynonym() const {
+	return clauseSynonym;
+}
+
 const std::vector<QueryArgument>& QueryClause::getArguments() const {
 	return arguments;
 }

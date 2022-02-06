@@ -10,13 +10,13 @@
 class PQLToken {
 public:
 	PQLToken();
-	PQLToken(std::string value, TokenType type);
+	PQLToken(TokenType type, std::string value = "");
 
-	const std::string& getValue() const;
-	TokenType getType();
+	const std::string getValue() const;
+	const TokenType getType() const ;
 
 	bool operator==(const PQLToken& other) const {
-		return type == other.type && value == other.value;
+		return type == other.getType() && value == other.getValue();
 	}
 
 private:

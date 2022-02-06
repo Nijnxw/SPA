@@ -1,5 +1,7 @@
 #pragma once
 #include <unordered_map>
+#include "models/EntityType.h"
+#include "models/RelationRef.h"
 
 enum class TokenType {
 	//Lexical tokens
@@ -78,4 +80,29 @@ static std::unordered_map<std::string, TokenType> stringTokenMap = {
 
 	//Pattern clause token mapping 
 	{"pattern", TokenType::PATTERN},
+};
+
+static std::unordered_map<TokenType, EntityType> entityTypeMapping = {
+	{TokenType::STMT, EntityType::STMT},
+	{TokenType::READ, EntityType::READ},
+	{TokenType::PRINT, EntityType::PRINT},
+	{TokenType::WHILE, EntityType::WHILE},
+	{TokenType::IF, EntityType::IF},
+	{TokenType::ASSIGN, EntityType::ASSIGN},
+	{TokenType::VARIABLE, EntityType::VAR},
+	{TokenType::CONST, EntityType::CONST},
+	{TokenType::PROC, EntityType::PROC},
+
+	{TokenType::UNDERSCORE, EntityType::WILD},
+	{TokenType::INTEGER, EntityType::INT},
+	{TokenType::STRING, EntityType::STRING},
+};
+
+static std::unordered_map<TokenType, RelationRef> relationTypeMapping = {
+	{TokenType::PARENT, RelationRef::PARENT},
+	{TokenType::PARENT_T, RelationRef::PARENT_T},
+	{TokenType::FOLLOWS, RelationRef::FOLLOWS},
+	{TokenType::FOLLOWS_T, RelationRef::FOLLOWS_T},
+	{TokenType::MODIFIES, RelationRef::MODIFIES},
+	{TokenType::USES, RelationRef::USES},
 };

@@ -17,6 +17,13 @@ public:
 	const std::unordered_set<std::string>& getUsedSynonyms() const;
 	bool containsSynonym(QueryArgument& synonym) const;
 	bool containsCommonSynonym(QueryClause& other) const;
+	bool operator==(const QueryClause& other) const {
+		bool isRelationRefEqual = clauseType == other.getClauseType(); 
+		bool isclauseSynonymEqual = clauseSynonym == other.getClauseSynonym();
+		bool isArgumentsEqual = std::equal(arguments.begin(), arguments.end(), other.getArguments().begin());
+		bool isUsedSynonymsEqual = std::equal(usedSynonyms.begin(), usedSynonyms.end(), other.getUsedSynonyms().begin());
+		return isRelationRefEqual && isclauseSynonymEqual && isArgumentsEqual && isUsedSynonymsEqual;
+	}
 
 private:
 	RelationRef clauseType;

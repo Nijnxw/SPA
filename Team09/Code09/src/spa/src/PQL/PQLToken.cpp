@@ -1,9 +1,10 @@
 #include <string>
 #include "PQLToken.h"
 
-PQLToken::PQLToken() : value(""), type(TokenType::STRING) {}
-PQLToken::PQLToken(std::string value, TokenType type) : value(value), type(type) {}
+PQLToken::PQLToken() : type(TokenType::STRING), value("") {}
+PQLToken::PQLToken(TokenType tokenType, std::string value) : type(tokenType), value(value) {}
 
-const std::string& PQLToken::getValue() const { return value; }
 
-TokenType PQLToken::getType() { return type; }
+const std::string PQLToken::getValue() const { return value; }
+
+const TokenType PQLToken::getType() const { return type; }

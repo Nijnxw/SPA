@@ -43,6 +43,12 @@ void TestWrapper::evaluate(std::string query, std::list<std::string>& results) {
     Table queryTable = QueryEvaluator::evaluate(queryObject);
     std::vector<QueryArgument> resultSynonyms = queryObject.getResultSynonyms();
     std::list<std::string> queryResult = QueryResultProjector::formatResult(queryTable, resultSynonyms);
-
+    
     results = queryResult;
+}
+
+/*=== DESTRUCTOR ===*/
+TestWrapper::~TestWrapper() {
+	// Clears all static list
+	PKB::clearAllStores();
 }

@@ -68,7 +68,7 @@ TEST_CASE ("Test parsing of valid print statements") {
 //                  UNHAPPY PATHS
 // --------------------------------------------------
 TEST_CASE ("Test parsing of invalid print statement") {
-	SECTION ("Misspell `print` keyword") {
+	SECTION("Misspell `print` keyword") {
 		std::vector<Token*> input = {
 				new NameToken("procedure"), 	new NameToken("testProgram"),
 				new PunctuatorToken("{"),   	new NameToken("preen"),

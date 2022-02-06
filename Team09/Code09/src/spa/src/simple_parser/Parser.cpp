@@ -19,7 +19,7 @@ bool Parser::isEndOfFile() {
 	return peek()->isEndOfFileToken();
 }
 
-bool Parser::check(TokenType t) {
+bool Parser::check(ParserTokenType t) {
 	return peek()->getTokenType() == t;
 }
 
@@ -36,7 +36,7 @@ bool Parser::expect(const std::string& s) {
 }
 
 std::shared_ptr<VariableNode> Parser::parseVariable() {
-	if (!check(TokenType::NAME)) {
+	if (!check(ParserTokenType::NAME)) {
 		throw std::runtime_error("Invalid variable name!\n");
 	}
 	return std::make_shared<VariableNode>(get()->getValue());
@@ -45,7 +45,7 @@ std::shared_ptr<VariableNode> Parser::parseVariable() {
 // procedure: 'procedure' proc_name '{' stmtLst '}'
 std::shared_ptr<ProcedureNode> Parser::parseProcedure() {
 	expect("procedure");
-	if (!check(TokenType::NAME)) {
+	if (!check(ParserTokenType::NAME)) {
 		throw std::runtime_error("Expected a valid procedure name but got '" + peek()->getValue() + "' instead.\n");
 	}
 	std::string procName = get()->getValue();

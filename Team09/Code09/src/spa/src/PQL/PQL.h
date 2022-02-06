@@ -19,6 +19,6 @@ namespace PQL {
 	 * @param	tokens Vector of tokens 
 	 * @return	Query object to be passed to the evaluator
 	 */
-	Query parse(std::vector<PQLToken>& tokens);
+	Query parse(std::vector<PQLToken> tokens);
 
 }

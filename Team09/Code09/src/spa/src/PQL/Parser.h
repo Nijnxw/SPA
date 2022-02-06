@@ -31,30 +31,30 @@ static std::unordered_map < RelationRef, std::vector<std::unordered_set<EntityTy
 };
 
 class Parser {
-	public:
-		Parser(std::vector<PQLToken> &PQLTokens);
-		Query parse();
+public:
+	Parser(std::vector<PQLToken>& PQLTokens);
+	Query parse();
 
-	private:
-		int current;
-		int end;
-		std::vector<PQLToken> tokens;
-		std::unordered_map<std::string, EntityType> Declarations;
-		std::vector<QueryArgument> resultSynonyms;
-		std::vector<QueryClause> QueryClauses;
+private:
+	int current;
+	int end;
+	std::vector<PQLToken> tokens;
+	std::unordered_map<std::string, EntityType> Declarations;
+	std::vector<QueryArgument> resultSynonyms;
+	std::vector<QueryClause> QueryClauses;
 
-		PQLToken getNextToken();
-		PQLToken getNextExpectedToken(TokenType tokenType);
+	PQLToken getNextToken();
+	PQLToken getNextExpectedToken(TokenType tokenType);
 
-		void parseEndOfDeclaration();
-		void parseDeclaration();
-		void parseSelect();
-		void parseResultSynonym(); 
-		QueryArgument parseArgs(PQLToken token);
-		void parseRelationshipClause();
-		void parseSuchThatClause();
-		QueryArgument parsePatternLHS();
-		QueryArgument parsePatternRHS();
-		void parsePatternClause();
-		void parseAfterSelect();
+	void parseEndOfDeclaration();
+	void parseDeclaration();
+	void parseSelect();
+	void parseResultSynonym();
+	QueryArgument parseArgs(PQLToken token);
+	void parseRelationshipClause();
+	void parseSuchThatClause();
+	QueryArgument parsePatternLHS();
+	QueryArgument parsePatternRHS();
+	void parsePatternClause();
+	void parseAfterSelect();
 };

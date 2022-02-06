@@ -17,7 +17,7 @@ private:
 
 public:
 	QueryClauseTable();
-	QueryClauseTable(Table& table);
+	QueryClauseTable(const Table& table);
 	bool operator==(const QueryClauseTable& other) const;
 	Table getTable();
 	bool getBooleanResult();

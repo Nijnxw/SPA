@@ -6,7 +6,7 @@
 
 #include "PQL/Parser.h"
 
-Parser::Parser(std::vector<PQLToken> &PQLTokens) : current(0), end(PQLTokens.size()), tokens(PQLTokens) {}
+Parser::Parser(std::vector<PQLToken>& PQLTokens) : current(0), end(PQLTokens.size()), tokens(PQLTokens) {}
 
 PQLToken Parser::getNextToken() {
 	if (current == end) {
@@ -42,7 +42,7 @@ void Parser::parseDeclaration() {
 	Declarations[expectedSynonym.getValue()] = entityType->second;
 
 	while (current != end && tokens.at(current).getType() == TokenType::COMMA) {
-		getNextExpectedToken(TokenType::COMMA); 
+		getNextExpectedToken(TokenType::COMMA);
 		nextToken = getNextExpectedToken(TokenType::SYNONYM);
 		if (Declarations.find(nextToken.getValue()) != Declarations.end()) {
 			throw "Duplicated declarations detected";
@@ -66,8 +66,8 @@ void Parser::parseResultSynonym() {
 }
 
 QueryArgument Parser::parseArgs(PQLToken token) {
-	switch(token.getType()) {
-	case TokenType::STRING : 
+	switch (token.getType()) {
+	case TokenType::STRING:
 	case TokenType::UNDERSCORE:
 	case TokenType::INTEGER:
 		return QueryArgument(std::string(token.getValue()), entityTypeMapping[token.getType()]);
@@ -121,7 +121,7 @@ void Parser::parseRelationshipClause() {
 void Parser::parseSuchThatClause() {
 	getNextExpectedToken(TokenType::SUCH);
 	getNextExpectedToken(TokenType::THAT);
-	
+
 	parseRelationshipClause();
 }
 
@@ -186,7 +186,7 @@ void Parser::parseAfterSelect() {
 }
 
 Query Parser::parse() {
-	
+
 	while (current != end && entityTypeMapping.find(tokens.at(current).getType()) != entityTypeMapping.end()) {
 		parseDeclaration();
 	}
@@ -195,4 +195,3 @@ Query Parser::parse() {
 	parseAfterSelect();
 	return Query(resultSynonyms, QueryClauses);
 }
-

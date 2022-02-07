@@ -24,9 +24,9 @@ TEST_CASE("Test Equality Comparisons") {
 
 	std::shared_ptr<VariableNode> var4 = std::make_shared<VariableNode>("x");
 	std::shared_ptr<ConstantNode> con4 = std::make_shared<ConstantNode>("123");
-	OperatorNode op1(BinaryOperator::PLUS, var4, con4);
-	OperatorNode op2(BinaryOperator::MINUS, var4, con4);
-	OperatorNode op3(BinaryOperator::PLUS, var4, con4);
+	BinaryOperatorNode op1(BinaryOperator::PLUS, var4, con4);
+	BinaryOperatorNode op2(BinaryOperator::MINUS, var4, con4);
+	BinaryOperatorNode op3(BinaryOperator::PLUS, var4, con4);
 	REQUIRE(op1 == op3);
 	REQUIRE(op1 != op2);
 
@@ -105,11 +105,11 @@ TEST_CASE("Test Expr nodes") {
 
 	ExprNode var2 = std::make_shared<VariableNode>("x");
 	ExprNode con2 = std::make_shared<ConstantNode>("123");
-	OperatorNode op(BinaryOperator::LT, var2, con2);
+	BinaryOperatorNode op(BinaryOperator::PLUS, var2, con2);
 	REQUIRE(op.isBinOpNode() == true);
 	REQUIRE(op.isIfNode() == false);
 	REQUIRE(op.isWhileNode() == false);
-	REQUIRE(op.getOperator() == BinaryOperator::LT);
+	REQUIRE(op.getOperator() == BinaryOperator::PLUS);
 	REQUIRE(op.getLhs() == var2);
 	REQUIRE(op.getRhs() == con2);
 }
@@ -163,13 +163,13 @@ TEST_CASE("Test Assign statement nodes") {
 
 		ExprNode a = std::make_shared<VariableNode>("a");
 		ExprNode b = std::make_shared<VariableNode>("b");
-		ExprNode left_side = std::make_shared<OperatorNode>(BinaryOperator::TIMES, a, b);
+		ExprNode left_side = std::make_shared<BinaryOperatorNode>(BinaryOperator::TIMES, a, b);
 
 		ExprNode con123 = std::make_shared<ConstantNode>("123");
 		ExprNode con1 = std::make_shared<ConstantNode>("1");
-		ExprNode right_side = std::make_shared<OperatorNode>(BinaryOperator::DIVIDE, con123, con1);
+		ExprNode right_side = std::make_shared<BinaryOperatorNode>(BinaryOperator::DIVIDE, con123, con1);
 
-		ExprNode overall = std::make_shared<OperatorNode>(BinaryOperator::PLUS, left_side, right_side);
+		ExprNode overall = std::make_shared<BinaryOperatorNode>(BinaryOperator::PLUS, left_side, right_side);
 
 		REQUIRE_NOTHROW(AssignNode(1, var, overall, postfix));
 

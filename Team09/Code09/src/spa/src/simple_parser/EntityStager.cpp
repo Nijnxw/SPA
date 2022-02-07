@@ -176,11 +176,11 @@ void EntityStager::commit() {
 	for (auto& con : stagedVariables) { PKB::addVariable(con); }
 
 	for (auto& stmt : stagedStatements) { PKB::addStatementNumber(stmt); }
-	for (auto& read : stagedReadStatements) { PKB::addStatementNumber(read); }
-	for (auto& print : stagedPrintStatements) { PKB::addStatementNumber(print); }
-	for (auto& ifs : stagedIfStatements) { PKB::addStatementNumber(ifs); }
-	for (auto& whiles : stagedWhileStatements) { PKB::addStatementNumber(whiles); }
-	for (auto& call : stagedCallStatements) { PKB::addStatementNumber(call); }
+	for (auto& read : stagedReadStatements) { PKB::addStatementWithType(EntityType::READ, read); }
+	for (auto& print : stagedPrintStatements) { PKB::addStatementWithType(EntityType::PRINT, print); }
+	for (auto& ifs : stagedIfStatements) { PKB::addStatementWithType(EntityType::IF, ifs); }
+	for (auto& whiles : stagedWhileStatements) { PKB::addStatementWithType(EntityType::WHILE, whiles); }
+	for (auto& call : stagedCallStatements) { PKB::addStatementWithType(EntityType::CALL, call); }
 
 	for (auto& assign : stagedAssignStatements) {
 		PKB::addAssignStatement(std::get<0>(assign), std::get<1>(assign), std::get<2>(assign));

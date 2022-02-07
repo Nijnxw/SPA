@@ -1,6 +1,7 @@
 #pragma once
 
 #include "pkb/PKB.h"
+#include "models/EntityType.h"
 
 #include <string>
 #include <tuple>

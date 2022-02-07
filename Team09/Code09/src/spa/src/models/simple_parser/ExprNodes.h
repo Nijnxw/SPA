@@ -1,6 +1,6 @@
 #pragma once
 
-#include "BinaryOperator.h"
+#include "Operator.h"
 #include "Node.h"
 #include "NodeType.h"
 

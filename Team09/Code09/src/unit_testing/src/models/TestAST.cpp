@@ -1,11 +1,10 @@
 #include "catch.hpp"
-#include "../src/models/simple_parser/BinaryOperator.h"
+#include "../src/models/simple_parser/Operator.h"
 #include "../src/models/simple_parser/AssignNode.h"
 #include "../src/models/simple_parser/ExprNodes.h"
 #include "../src/models/simple_parser/IoNodes.h"
 #include "../src/models/simple_parser/ProcedureNode.h"
 #include "../src/models/simple_parser/AST.h"
-#include "../src/models/simple_parser/BinaryOperator.h"
 #include "../src/util/RPN.h"
 
 #include <memory>

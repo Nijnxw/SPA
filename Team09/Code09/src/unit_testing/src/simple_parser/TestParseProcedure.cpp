@@ -85,7 +85,7 @@ TEST_CASE ("Test parsing of invalid procedure") {
 				new PunctuatorToken("}"),	new EndOfFileToken(),
 		};
 		Parser parser = Parser(input);
-		REQUIRE_THROWS_WITH(parser.parseProgram(), "Expected 'procedure' but got 'procedur' instead.\n");
+		REQUIRE_THROWS_WITH(parser.parseProgram(), "There must be at least 1 procedure in a SIMPLE program!\n");
 	}
 	SECTION ("'procedure' keyword is case sensitive") {
 		std::vector<Token*> input = {
@@ -95,7 +95,7 @@ TEST_CASE ("Test parsing of invalid procedure") {
 				new PunctuatorToken("}"),	new EndOfFileToken(),
 		};
 		Parser parser = Parser(input);
-		REQUIRE_THROWS_WITH(parser.parseProgram(), "Expected 'procedure' but got 'Procedure' instead.\n");
+		REQUIRE_THROWS_WITH(parser.parseProgram(), "There must be at least 1 procedure in a SIMPLE program!\n");
 	}
 	SECTION ("Constants as proc_name") {
 		std::vector<Token*> input = {

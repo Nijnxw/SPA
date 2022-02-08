@@ -36,14 +36,13 @@ bool Parser::expect(const std::string& s) {
 }
 
 std::shared_ptr<VariableNode> Parser::parseVariable() {
-	if (!check(ParserTokenType::NAME)) {
-		throw std::runtime_error("Invalid variable name!\n");
-	}
+	if (!check(ParserTokenType::NAME)) return nullptr;
 	return std::make_shared<VariableNode>(get()->getValue());
 }
 
 // procedure: 'procedure' proc_name '{' stmtLst '}'
 std::shared_ptr<ProcedureNode> Parser::parseProcedure() {
+	if (!check("procedure")) return nullptr;
 	expect("procedure");
 	if (!check(ParserTokenType::NAME)) {
 		throw std::runtime_error("Expected a valid procedure name but got '" + peek()->getValue() + "' instead.\n");
@@ -72,34 +71,37 @@ std::vector<std::shared_ptr<StmtNode>> Parser::parseStmtLst() {
 
 std::shared_ptr<StmtNode> Parser::parseStatement() {
 	if (check("}")) return nullptr;
-	int currIdx = currentIdx;
 
-	if (check("read")) {
-		std::shared_ptr<ReadNode> readNode = parseRead();
-		if (readNode) return readNode;
-	}
-	else if (check("print")) {
-		std::shared_ptr<PrintNode> printNode = parsePrint();
-		if (printNode) return printNode;
-	}
-	else {
-		throw std::runtime_error("Invalid statement! Expected '}' / 'read' / 'print' but got '"
-									+ peek()->getValue() + "' instead.\n");
-	}
+	std::shared_ptr<ReadNode> readNode = parseRead();
+	if (readNode) return readNode;
+
+	std::shared_ptr<PrintNode> printNode = parsePrint();
+	if (printNode) return printNode;
+
+	throw std::runtime_error("Invalid statement! Expected '}' / 'read' / 'print' but got '"
+							  + peek()->getValue() + "' instead.\n");
 }
 
 // read: 'read' var_name';'
 std::shared_ptr<ReadNode> Parser::parseRead() {
+	if (!check("read")) return nullptr;
 	expect("read");
 	std::shared_ptr<VariableNode> variableNode = parseVariable();
+	if (!variableNode) {
+		throw std::runtime_error("Expected a variable name but got '" + peek()->getValue() + "' instead.\n");
+	}
 	expect(";");
 	return std::make_shared<ReadNode>(stmtNo, variableNode);
 }
 
 // print: 'print' var_name';'
 std::shared_ptr<PrintNode> Parser::parsePrint() {
+	if (!check("print")) return nullptr;
 	expect("print");
 	std::shared_ptr<VariableNode> variableNode = parseVariable();
+	if (!variableNode) {
+		throw std::runtime_error("Expected a variable name but got '" + peek()->getValue() + "' instead.\n");
+	}
 	expect(";");
 	return std::make_shared<PrintNode>(stmtNo, variableNode);
 }

@@ -1,0 +1,6 @@
+procedure testProgram {
+    print x;
+    read y;
+    print y;
+    read x;
+}

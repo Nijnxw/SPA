@@ -1,0 +1,3 @@
+procedure a$3#4 {
+    read x;
+}

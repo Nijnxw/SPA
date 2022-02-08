@@ -24,23 +24,24 @@ public:
 	bool operator==(const Node& other) const override;
 };
 
-//class PredicateNode : public Node {
-//private:
-//	std::shared_ptr<RelExprNode> relExpr;
-//	std::shared_ptr<PredicateNode> lhs;
-//	std::shared_ptr<ConditionalOperator> op;
-//	std::shared_ptr<PredicateNode> rhs;
-//
-//public:
-//	PredicateNode(RelExprNode relExpr);
-//	PredicateNode(ConditionalOperator op, PredicateNode rhs);
-//	PredicateNode(PredicateNode lhs, ConditionalOperator op, PredicateNode rhs);
-//
-//	std::shared_ptr<RelExprNode> getRelExprNode();
-//	std::shared_ptr<PredicateNode> getLhs();
-//	std::shared_ptr<PredicateNode> getRhs();
-//
-//	bool isTerminalPredicate();
-//
-//	bool operator==(const Node& other) const override;
-//};
+class PredicateNode : public Node {
+private:
+	std::shared_ptr<RelExprNode> relExpr = nullptr;
+	std::shared_ptr<PredicateNode> lhs = nullptr;
+	ConditionalOperator op;
+	std::shared_ptr<PredicateNode> rhs = nullptr;
+
+public:
+	PredicateNode(std::shared_ptr<RelExprNode> re);
+	PredicateNode(ConditionalOperator oper, std::shared_ptr<PredicateNode> right);
+	PredicateNode(std::shared_ptr<PredicateNode> left, ConditionalOperator oper, std::shared_ptr<PredicateNode> right);
+
+	std::shared_ptr<RelExprNode> getRelExprNode() const;
+	std::shared_ptr<PredicateNode> getLhs() const;
+	std::shared_ptr<PredicateNode> getRhs() const;
+	ConditionalOperator getOperator() const;
+
+	bool isTerminalPredicate();
+
+	bool operator==(const Node& other) const override;
+};

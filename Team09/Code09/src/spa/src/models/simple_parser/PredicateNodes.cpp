@@ -33,3 +33,50 @@ bool RelExprNode::operator==(const Node& other) const {
 			rhs,
 			cast->getRhs());
 }
+
+PredicateNode::PredicateNode(std::shared_ptr<RelExprNode> re) :
+	Node(NodeType::PREDICATE) {
+	relExpr = re;
+}
+
+PredicateNode::PredicateNode(ConditionalOperator oper, std::shared_ptr<PredicateNode> right) :
+	Node(NodeType::PREDICATE) {
+	op = oper;
+	rhs = right;
+}
+
+PredicateNode::PredicateNode(std::shared_ptr<PredicateNode> left, ConditionalOperator oper, std::shared_ptr<PredicateNode> right) :
+	Node(NodeType::PREDICATE) {
+	lhs = left;
+	op = oper;
+	rhs = right;
+}
+
+std::shared_ptr<RelExprNode> PredicateNode::getRelExprNode() const {
+	return relExpr;
+}
+
+std::shared_ptr<PredicateNode> PredicateNode::getLhs() const {
+	return lhs;
+}
+
+std::shared_ptr<PredicateNode> PredicateNode::getRhs() const {
+	return rhs;
+}
+
+ConditionalOperator PredicateNode::getOperator() const {
+	return op;
+}
+
+bool PredicateNode::isTerminalPredicate() {
+	return relExpr == nullptr;
+}
+
+bool PredicateNode::operator==(const Node& other) const {
+	const PredicateNode* cast = dynamic_cast<const PredicateNode*>(&other);
+	return cast != nullptr &&
+		op == cast->getOperator() &&
+		lhs == cast->getLhs() &&
+		rhs == cast->getRhs() &&
+		relExpr == cast->getRelExprNode();
+}

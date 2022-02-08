@@ -4,6 +4,7 @@
 #include "../src/models/simple_parser/ExprNodes.h"
 #include "../src/models/simple_parser/IoNodes.h"
 #include "../src/models/simple_parser/ProcedureNode.h"
+#include "../src/models/simple_parser/PredicateNodes.h"
 #include "../src/models/simple_parser/AST.h"
 #include "../src/util/RPN.h"
 
@@ -189,6 +190,86 @@ TEST_CASE("Test Assign statement nodes") {
 			ass1.getExpression()) == true);
 	}
 }
+
+TEST_CASE("Test Predicate Nodes") {
+	SECTION("Simple Predicate without binary operators") {
+		// if (x > 0) ...
+		std::shared_ptr<VariableNode> var = std::make_shared<VariableNode>("x");
+		std::shared_ptr<ConstantNode> con = std::make_shared<ConstantNode>("0");
+		std::shared_ptr<ConstantNode> con2 = std::make_shared<ConstantNode>("0");
+		std::shared_ptr<RelExprNode> rel1 = std::make_shared<RelExprNode>(var, ComparatorOperator::GT, con);
+		std::shared_ptr<RelExprNode> rel2 = std::make_shared<RelExprNode>(var, ComparatorOperator::GT, con2);
+
+		PredicateNode pred1(rel1);
+		PredicateNode pred2(rel2);
+		
+		REQUIRE(pred1 == pred2);
+		REQUIRE(pred1.isTerminalPredicate() == true);
+	}
+
+	SECTION("Predicate with binary operators") {
+		// if (x + y == 8 * 9) ...
+		std::shared_ptr<VariableNode> x = std::make_shared<VariableNode>("x");
+		std::shared_ptr<VariableNode> y = std::make_shared<VariableNode>("y");
+		std::shared_ptr<BinaryOperatorNode> lhs = std::make_shared<BinaryOperatorNode>(BinaryOperator::PLUS, x, y);
+
+		std::shared_ptr<ConstantNode> eight = std::make_shared<ConstantNode>("8");
+		std::shared_ptr<ConstantNode> nine = std::make_shared<ConstantNode>("9");
+		std::shared_ptr<BinaryOperatorNode> rhs = std::make_shared<BinaryOperatorNode>(BinaryOperator::PLUS, eight, nine);
+
+		std::shared_ptr<RelExprNode> rel = std::make_shared<RelExprNode>(lhs, ComparatorOperator::EQ, rhs);
+		PredicateNode pred(rel);
+		PredicateNode pred2(std::make_shared<RelExprNode>(lhs, ComparatorOperator::EQ, rhs));
+		PredicateNode pred3(std::make_shared<RelExprNode>(rhs, ComparatorOperator::EQ, lhs));
+		PredicateNode pred4(std::make_shared<RelExprNode>(lhs, ComparatorOperator::LTE, rhs));
+
+		REQUIRE(pred == pred2);
+		REQUIRE(pred != pred3);
+		REQUIRE(pred != pred4);
+
+		REQUIRE(pred.isTerminalPredicate() == true);
+	}
+
+	SECTION("Simple Predicate with NOT") {
+		// if (!(x > 0)) ...
+		std::shared_ptr<VariableNode> var = std::make_shared<VariableNode>("x");
+		std::shared_ptr<ConstantNode> con = std::make_shared<ConstantNode>("0");
+		std::shared_ptr<ConstantNode> con2 = std::make_shared<ConstantNode>("0");
+		std::shared_ptr<RelExprNode> rel = std::make_shared<RelExprNode>(var, ComparatorOperator::GT, con);
+
+		std::shared_ptr<PredicateNode> pred = std::make_shared<PredicateNode>(rel);
+		PredicateNode pred2(ConditionalOperator::NOT, pred);
+
+		REQUIRE(*pred != pred2);
+		REQUIRE(pred2.isTerminalPredicate() == false);
+	}
+
+	SECTION("Predicate with multiple comparisons") {
+		// if (x == 9 && 10 != y) ...
+		std::shared_ptr<VariableNode> x = std::make_shared<VariableNode>("x");
+		std::shared_ptr<ConstantNode> nine = std::make_shared<ConstantNode>("9");
+		std::shared_ptr<RelExprNode> relLhs = std::make_shared<RelExprNode>(x, ComparatorOperator::EQ, nine);
+
+		std::shared_ptr<VariableNode> y = std::make_shared<VariableNode>("y");
+		std::shared_ptr<ConstantNode> ten = std::make_shared<ConstantNode>("10");
+		std::shared_ptr<RelExprNode> relRhs = std::make_shared<RelExprNode>(ten, ComparatorOperator::NEQ, y);
+
+		std::shared_ptr<PredicateNode> predLeft = std::make_shared<PredicateNode>(relLhs);
+		std::shared_ptr<PredicateNode> predRight = std::make_shared<PredicateNode>(relRhs);
+
+		PredicateNode pred1(predLeft, ConditionalOperator::AND, predRight);
+		PredicateNode pred2(predLeft, ConditionalOperator::AND, predRight);
+		PredicateNode pred3(predRight, ConditionalOperator::AND, predLeft);
+		PredicateNode pred4(predLeft, ConditionalOperator::OR, predRight);
+
+		REQUIRE(pred1 == pred2);
+		REQUIRE(pred1 != pred3);
+		REQUIRE(pred1 != pred4);
+
+		REQUIRE(pred1.isTerminalPredicate() == false);
+	}
+}
+
 
 TEST_CASE("Test IO statement nodes") {
 	std::shared_ptr<VariableNode> var1 = std::make_shared<VariableNode>("x");

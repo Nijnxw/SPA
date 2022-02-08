@@ -68,15 +68,16 @@ ConditionalOperator PredicateNode::getOperator() const {
 	return op;
 }
 
-bool PredicateNode::isTerminalPredicate() {
-	return relExpr == nullptr;
+bool PredicateNode::isTerminalPredicate() const {
+	return relExpr != nullptr;
 }
 
 bool PredicateNode::operator==(const Node& other) const {
 	const PredicateNode* cast = dynamic_cast<const PredicateNode*>(&other);
-	return cast != nullptr &&
-		op == cast->getOperator() &&
-		lhs == cast->getLhs() &&
-		rhs == cast->getRhs() &&
-		relExpr == cast->getRelExprNode();
+	return cast != nullptr && 
+		cast->isTerminalPredicate() == this->isTerminalPredicate() &&
+		(lhs == cast->getLhs() || *lhs == *(cast->getLhs())) &&
+		(rhs == cast->getRhs() || *rhs == *(cast->getRhs())) &&
+		(relExpr == cast->getRelExprNode() || *relExpr == *(cast->getRelExprNode())) &&
+		op == cast->getOperator();	
 }

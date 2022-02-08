@@ -41,7 +41,7 @@ public:
 	std::shared_ptr<PredicateNode> getRhs() const;
 	ConditionalOperator getOperator() const;
 
-	bool isTerminalPredicate();
+	bool isTerminalPredicate() const;
 
 	bool operator==(const Node& other) const override;
 };

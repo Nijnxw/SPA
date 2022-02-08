@@ -9,7 +9,8 @@ TEST_CASE("project single column results using no columns returns empty set") {
 	};
 
 	std::vector<QueryArgument> colOrder;
-	std::unordered_set<std::string> actual = QueryResultProjector::formatResult(table, colOrder);
+	std::list<std::string> actualList = QueryResultProjector::formatResult(table, colOrder);
+	std::unordered_set<std::string> actual = {actualList.begin(), actualList.end()};
 
 	REQUIRE(actual.empty());
 }
@@ -24,7 +25,8 @@ TEST_CASE("project single column results using selected columns returns set of s
 		{"a", EntityType::ASSIGN}
 	};
 	std::unordered_set<std::string> expected = {"1", "2", "3", "4"};
-	std::unordered_set<std::string> actual = QueryResultProjector::formatResult(table, colOrder);
+	std::list<std::string> actualList = QueryResultProjector::formatResult(table, colOrder);
+	std::unordered_set<std::string> actual = {actualList.begin(), actualList.end()};
 
 	REQUIRE(actual == expected);
 }
@@ -42,7 +44,8 @@ TEST_CASE("project multiple column results using selected columns returns set of
 		{"c", EntityType::CALL}
 	};
 	std::unordered_set<std::string> expected = {"5 1 9", "6 2 10", "7 3 11", "8 4 12"};
-	std::unordered_set<std::string> actual = QueryResultProjector::formatResult(table, colOrder);
+	std::list<std::string> actualList = QueryResultProjector::formatResult(table, colOrder);
+	std::unordered_set<std::string> actual = {actualList.begin(), actualList.end()};
 
 	REQUIRE(actual == expected);
 }

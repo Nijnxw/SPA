@@ -19,8 +19,8 @@ private:
 	Token* get();
 
 	bool isEndOfFile();
+	bool check(ParserTokenType t);
 	bool check(const std::string& s);
-	bool check(TokenType t);
 	bool expect(const std::string& s);
 
 	std::shared_ptr<VariableNode> parseVariable();
@@ -29,6 +29,7 @@ private:
 	std::vector<std::shared_ptr<StmtNode>> parseStmtLst();
 	std::shared_ptr<StmtNode> parseStatement();
 	std::shared_ptr<ReadNode> parseRead();
+	std::shared_ptr<PrintNode> parsePrint();
 
 public:
 	explicit Parser(std::vector<Token*> tokens);

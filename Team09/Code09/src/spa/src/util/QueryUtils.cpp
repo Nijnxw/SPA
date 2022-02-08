@@ -164,8 +164,8 @@ Table QueryUtils::joinRows(const std::unordered_set<std::pair<int, int>, PairHas
 	return joinedTable;
 }
 
-std::unordered_set<std::string> QueryUtils::stringifyRows(Table table, std::vector<std::string> colOrder) {
-	std::unordered_set<std::string> rows;
+std::list<std::string> QueryUtils::stringifyRows(Table table, std::vector<std::string> colOrder) {
+	std::list<std::string> rows;
 
 	if (colOrder.empty()) {
 		return rows;
@@ -186,7 +186,7 @@ std::unordered_set<std::string> QueryUtils::stringifyRows(Table table, std::vect
 				row += " ";
 			}
 		}
-		rows.emplace(row);
+		rows.push_back(row);
 	}
 	return rows;
 }
@@ -198,5 +198,6 @@ std::unordered_set<std::string> QueryUtils::stringifyRows(Table table) {
 		headers.push_back(col.first);
 	}
 	std::sort(headers.begin(), headers.end());
-	return stringifyRows(table, headers);
+	std::list<std::string> rows = stringifyRows(table, headers);
+	return {rows.begin(), rows.end()};
 }

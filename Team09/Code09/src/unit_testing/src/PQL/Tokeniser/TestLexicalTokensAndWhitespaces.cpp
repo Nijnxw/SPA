@@ -6,10 +6,10 @@ TEST_CASE("PQL tokeniser lexical tokens test case 1 : synonyms with various whit
 	std::string queryString = "these\nare synonyms\ttoo"; 
 	Tokeniser tokeniser = Tokeniser(queryString);
 
-	expectedPQLTokens.push_back(PQLToken("these", TokenType::SYNONYM));
-	expectedPQLTokens.push_back(PQLToken("are", TokenType::SYNONYM));
-	expectedPQLTokens.push_back(PQLToken("synonyms", TokenType::SYNONYM));
-	expectedPQLTokens.push_back(PQLToken("too", TokenType::SYNONYM));
+	expectedPQLTokens.push_back(PQLToken(TokenType::SYNONYM,"these"));
+	expectedPQLTokens.push_back(PQLToken(TokenType::SYNONYM, "are"));
+	expectedPQLTokens.push_back(PQLToken(TokenType::SYNONYM, "synonyms"));
+	expectedPQLTokens.push_back(PQLToken(TokenType::SYNONYM, "too")) ;
 
 	std::vector<PQLToken> PQLTokens = tokeniser.tokenise();
 
@@ -22,10 +22,10 @@ TEST_CASE("PQL tokeniser lexical tokens test case 2 : integers with various whit
 	std::string queryString = "123\n456 789\t0";
 	Tokeniser tokeniser = Tokeniser(queryString);
 
-	expectedPQLTokens.push_back(PQLToken("123", TokenType::INTEGER));
-	expectedPQLTokens.push_back(PQLToken("456", TokenType::INTEGER));
-	expectedPQLTokens.push_back(PQLToken("789", TokenType::INTEGER));
-	expectedPQLTokens.push_back(PQLToken("0", TokenType::INTEGER));
+	expectedPQLTokens.push_back(PQLToken(TokenType::INTEGER, "123"));
+	expectedPQLTokens.push_back(PQLToken(TokenType::INTEGER, "456"));
+	expectedPQLTokens.push_back(PQLToken(TokenType::INTEGER, "789"));
+	expectedPQLTokens.push_back(PQLToken(TokenType::INTEGER, "0"));
 
 	std::vector<PQLToken> PQLTokens = tokeniser.tokenise();
 
@@ -38,10 +38,10 @@ TEST_CASE("PQL tokeniser lexical tokens test case 3 : strings with various white
 	std::string queryString = "\"these\"\n\"are\" \"strings\"\t\"too\"";
 	Tokeniser tokeniser = Tokeniser(queryString);
 
-	expectedPQLTokens.push_back(PQLToken("these", TokenType::STRING));
-	expectedPQLTokens.push_back(PQLToken("are", TokenType::STRING));
-	expectedPQLTokens.push_back(PQLToken("strings", TokenType::STRING));
-	expectedPQLTokens.push_back(PQLToken("too", TokenType::STRING));
+	expectedPQLTokens.push_back(PQLToken(TokenType::STRING, "these"));
+	expectedPQLTokens.push_back(PQLToken(TokenType::STRING, "are"));
+	expectedPQLTokens.push_back(PQLToken(TokenType::STRING, "strings"));
+	expectedPQLTokens.push_back(PQLToken(TokenType::STRING, "too"));
 
 	std::vector<PQLToken> PQLTokens = tokeniser.tokenise();
 

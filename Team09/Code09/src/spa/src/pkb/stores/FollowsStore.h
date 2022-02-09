@@ -39,8 +39,8 @@ public:
 	static bool isFollowerT(int follower);
 	static bool isFolloweeT(int followee);
 
-	static int getFollowee(int follower);
-	static int getFollower(int followee);
+	static std::unordered_set<int> getFollowee(int follower);
+	static std::unordered_set<int> getFollower(int followee);
 	static std::unordered_set<int> getAllFollowees();
 	static std::unordered_set<int> getAllFollowers();
 

@@ -12,27 +12,14 @@
 #include "models/QueryClauseTable.h"
 #include "models/QueryClause.h"
 
-class FollowsEvaluator {
-private:
+#include "StatementOnlyRelationshipEvaluator.h";
 
-	// Internal helper methods
-	static QueryClauseTable
-	getFollowsByStatementNumber(const std::string& LHS, const std::string& RHS, EntityType RHSType);
-	static QueryClauseTable
-	getFollowsByStatementVariable(const std::string& LHS, const std::string& RHS, EntityType RHSType);
-	static QueryClauseTable getFollowsByUnderscore(const std::string& RHS, EntityType RHSType);
-
-	static QueryClauseTable
-	getFollowsTByStatementNumber(const std::string& LHS, const std::string& RHS, EntityType RHSType);
-	static QueryClauseTable
-	getFollowsTByStatementVariable(const std::string& LHS, const std::string& RHS, EntityType RHSType);
-	static QueryClauseTable getFollowsTByUnderscore(const std::string& RHS, EntityType RHSType);
-
+class FollowsEvaluator : public StatementOnlyRelationshipEvaluator {
 public:
 	static QueryClauseTable
-	getFollows(const std::string& LHS, const std::string& RHS, EntityType LHSType, EntityType RHSType,
-			   bool isBooleanResult);
+		getFollows(const std::string& LHS, const std::string& RHS, EntityType LHSType, EntityType RHSType,
+			bool isBooleanResult);
 	static QueryClauseTable
-	getFollowsT(const std::string& LHS, const std::string& RHS, EntityType LHSType, EntityType RHSType,
-				bool isBooleanResult);
+		getFollowsT(const std::string& LHS, const std::string& RHS, EntityType LHSType, EntityType RHSType,
+			bool isBooleanResult);
 };

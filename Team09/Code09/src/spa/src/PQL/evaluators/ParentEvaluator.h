@@ -12,27 +12,14 @@
 #include "models/QueryClauseTable.h"
 #include "models/QueryClause.h"
 
-class ParentEvaluator {
-private:
+#include "StatementOnlyRelationshipEvaluator.h";
 
-	// Internal helper methods
-	static QueryClauseTable
-	getParentByStatementNumber(const std::string& LHS, const std::string& RHS, EntityType RHSType);
-	static QueryClauseTable
-	getParentByStatementVariable(const std::string& LHS, const std::string& RHS, EntityType RHSType);
-	static QueryClauseTable getParentByUnderscore(const std::string& RHS, EntityType RHSType);
-
-	static QueryClauseTable
-	getParentTByStatementNumber(const std::string& LHS, const std::string& RHS, EntityType RHSType);
-	static QueryClauseTable
-	getParentTByStatementVariable(const std::string& LHS, const std::string& RHS, EntityType RHSType);
-	static QueryClauseTable getParentTByUnderscore(const std::string& RHS, EntityType RHSType);
-
+class ParentEvaluator : public StatementOnlyRelationshipEvaluator {
 public:
 	static QueryClauseTable
 	getParent(const std::string& LHS, const std::string& RHS, EntityType LHSType, EntityType RHSType,
 			  bool isBooleanResult);
 	static QueryClauseTable
 	getParentT(const std::string& LHS, const std::string& RHS, EntityType LHSType, EntityType RHSType,
-			   bool isBooleanResult);
+			bool isBooleanResult);
 };

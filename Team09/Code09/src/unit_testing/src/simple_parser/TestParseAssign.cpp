@@ -30,7 +30,7 @@ TEST_CASE ("Test parsing of valid assign - variable") {
 	AST expected = std::make_shared<ProgramNode>(procLst);
 
 	REQUIRE(*output == *expected);
-};
+}
 
 TEST_CASE ("Test parsing of valid assign - constant") {
 	// a = 123;
@@ -55,7 +55,7 @@ TEST_CASE ("Test parsing of valid assign - constant") {
 	AST expected = std::make_shared<ProgramNode>(procLst);
 
 	REQUIRE(*output == *expected);
-};
+}
 
 TEST_CASE ("Test parsing of valid assign - PLUS") {
 	SECTION("Simple expression") {
@@ -540,6 +540,148 @@ TEST_CASE ("Test parsing of valid assign - parentheses") {
 //                  UNHAPPY PATHS
 // --------------------------------------------------
 TEST_CASE ("Test parsing of invalid assign statements") {
+	SECTION ("Constants as var_name") {
+		std::vector<Token*> input = {
+				new NameToken("procedure"), 	new NameToken("testProgram"),
+				new PunctuatorToken("{"),   	new IntegerToken("123"),
+				new OperatorToken("="),		new NameToken("x"),
+				new PunctuatorToken(";"),	new PunctuatorToken("}"),
+				new EndOfFileToken(),
+		};
+		Parser parser = Parser(input);
+		REQUIRE_THROWS_WITH(parser.parseProgram(), "Invalid statement syntax at statement 1.\n");
+	}
+	SECTION ("Missing ';'") {
+		std::vector<Token*> input = {
+				new NameToken("procedure"), 	new NameToken("testProgram"),
+				new PunctuatorToken("{"),   	new NameToken("a"),
+				new OperatorToken("="),		new NameToken("x"),
+												new PunctuatorToken("}"),
+				new EndOfFileToken(),
+		};
+		Parser parser = Parser(input);
+		REQUIRE_THROWS_WITH(parser.parseProgram(), "Expected arithmetic operator but got '}' instead.\n");
+	}
+	SECTION ("Missing lhs") {
+		std::vector<Token*> input = {
+				new NameToken("procedure"), 	new NameToken("testProgram"),
+				new PunctuatorToken("{"),
+				new OperatorToken("="),		new NameToken("x"),
+				new PunctuatorToken(";"),	new PunctuatorToken("}"),
+				new EndOfFileToken(),
+		};
+		Parser parser = Parser(input);
+		REQUIRE_THROWS_WITH(parser.parseProgram(), "Invalid statement syntax at statement 1.\n");
+	}
+	SECTION ("Missing rhs") {
+		std::vector<Token*> input = {
+				new NameToken("procedure"), 	new NameToken("testProgram"),
+				new PunctuatorToken("{"),	new NameToken("a"),
+				new OperatorToken("="),		new PunctuatorToken(";"),
+				new PunctuatorToken("}"),
+				new EndOfFileToken(),
+		};
+		Parser parser = Parser(input);
+		REQUIRE_THROWS_WITH(parser.parseProgram(), "Expected an expression but got '}' instead.\n");
+	}
+}
 
+TEST_CASE("Invalid expressions") {
+	SECTION ("Missing operators") {
+		// a = x   b
+		std::vector<Token*> input = {
+				new NameToken("procedure"), 	new NameToken("testProgram"),
+				new PunctuatorToken("{"),	new NameToken("a"),
+				new OperatorToken("="),		new NameToken("x"),
+				new NameToken("b"),			new PunctuatorToken(";"),
+				new PunctuatorToken("}"),	new EndOfFileToken(),
+		};
+		Parser parser = Parser(input);
+		REQUIRE_THROWS_WITH(parser.parseProgram(), "Expected arithmetic operator but got 'b' instead.\n");
+	}
+	SECTION ("Missing operands") {
+		// a = x + b /
+		std::vector<Token*> input = {
+				new NameToken("procedure"), 	new NameToken("testProgram"),
+				new PunctuatorToken("{"),	new NameToken("a"),
+				new OperatorToken("="),		new NameToken("x"),
+				new OperatorToken("+"),		new NameToken("b"),
+				new OperatorToken("/"),		new PunctuatorToken(";"),
+				new PunctuatorToken("}"), 	new EndOfFileToken(),
+		};
+		Parser parser = Parser(input);
+		REQUIRE_THROWS_WITH(parser.parseProgram(), "Expected an expression but got ';' instead.\n");
+	}
+	SECTION ("extra operands") {
+		// a = x +- b
+		std::vector<Token*> input = {
+				new NameToken("procedure"), 	new NameToken("testProgram"),
+				new PunctuatorToken("{"),	new NameToken("a"),
+				new OperatorToken("="),		new NameToken("x"),
+				new OperatorToken("+"),		new OperatorToken("-"),
+				new NameToken("b"),			new PunctuatorToken(";"),
+				new PunctuatorToken("}"),	new EndOfFileToken(),
+		};
+		Parser parser = Parser(input);
+		REQUIRE_THROWS_WITH(parser.parseProgram(), "Expected an expression but got '-' instead.\n");
+	}
+	SECTION ("Missing opening parentheses") {
+		// a = x + b - 1)
+		std::vector<Token *> input = {
+				new NameToken("procedure"), 	new NameToken("testProgram"),
+				new PunctuatorToken("{"), 	new NameToken("a"),
+				new OperatorToken("="), 		new NameToken("x"),
+				new OperatorToken("+"), 		new NameToken("b"),
+				new OperatorToken("-"), 		new IntegerToken("1"),
+				new PunctuatorToken(")"), 	new PunctuatorToken(";"),
+				new PunctuatorToken("}"),	new EndOfFileToken(),
+		};
+		Parser parser = Parser(input);
+		REQUIRE_THROWS_WITH(parser.parseProgram(), "Expected ';' but got ')' instead.\n");
+
+		// a = x + (b - 1)) / 3;
+		std::vector<Token *> input1 = {
+				new NameToken("procedure"), 	new NameToken("testProgram"),
+				new PunctuatorToken("{"), 	new NameToken("a"),
+				new OperatorToken("="),		new NameToken("x"),
+				new OperatorToken("+"),		new PunctuatorToken("("),
+				new NameToken("b"),			new OperatorToken("-"),
+				new IntegerToken("1"),		new PunctuatorToken(")"),
+				new PunctuatorToken(")"), 		new OperatorToken("/"),
+				new IntegerToken("3"), 		new PunctuatorToken(";"),
+				new PunctuatorToken("}"),	new EndOfFileToken(),
+		};
+		Parser parser1 = Parser(input1);
+		REQUIRE_THROWS_WITH(parser1.parseProgram(), "Expected ';' but got ')' instead.\n");
+	}
+	SECTION("Missing closing parentheses") {
+		// a = x + (b - 1
+		std::vector<Token*> input = {
+				new NameToken("procedure"), 	new NameToken("testProgram"),
+				new PunctuatorToken("{"),	new NameToken("a"),
+				new OperatorToken("="),		new NameToken("x"),
+				new OperatorToken("+"),		new PunctuatorToken("("),
+				new NameToken("b"),				new OperatorToken("-"),
+				new IntegerToken("1"),		new PunctuatorToken("}"),
+				new EndOfFileToken(),
+		};
+		Parser parser = Parser(input);
+		REQUIRE_THROWS_WITH(parser.parseProgram(), "Expected arithmetic operator but got '}' instead.\n");
+
+		// a = (x + (b - 1) / 3;
+		std::vector<Token *> input1 = {
+				new NameToken("procedure"), 	new NameToken("testProgram"),
+				new PunctuatorToken("{"), 	new NameToken("a"),
+				new OperatorToken("="), 		new PunctuatorToken("("),
+				new NameToken("x"),			new OperatorToken("+"),
+				new PunctuatorToken("("),	new NameToken("b"),
+				new OperatorToken("-"), 		new IntegerToken("1"),
+				new PunctuatorToken(")"), 	new OperatorToken("/"),
+				new IntegerToken("3"), 		new PunctuatorToken(";"),
+				new PunctuatorToken("}"),	new EndOfFileToken(),
+		};
+		Parser parser1 = Parser(input1);
+		REQUIRE_THROWS_WITH(parser1.parseProgram(), "Expected ')' but got ';' instead.\n");
+	}
 }
 

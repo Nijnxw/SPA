@@ -14,4 +14,5 @@ public:
 	DesignExtractor();
 
 	static void extractDesignElements(AST ast);
+	static void commit();
 };

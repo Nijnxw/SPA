@@ -47,5 +47,8 @@ void processProcedureList(std::vector<std::shared_ptr<ProcedureNode>> procList) 
 void DesignExtractor::extractDesignElements(AST ast) {
 	EntityStager::clear();
 	processProcedureList(ast->getProcedureList());
+}
+
+void DesignExtractor::commit() {
 	EntityStager::commit();
 }

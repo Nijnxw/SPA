@@ -32,26 +32,26 @@ bool ConstantNode::operator==(const Node& other) const {
 		value == cast->getValue();
 }
 
-// OperatorNode Implementation
-OperatorNode::OperatorNode(BinaryOperator bo, ExprNode left, ExprNode right)
+// BinaryOperatorNode Implementation
+BinaryOperatorNode::BinaryOperatorNode(BinaryOperator bo, ExprNode left, ExprNode right)
 	: Node(NodeType::BINOP), lhs(left), rhs(right) {
 	op = bo;
 }
 
-BinaryOperator OperatorNode::getOperator() const {
+BinaryOperator BinaryOperatorNode::getOperator() const {
 	return op;
 }
 
-ExprNode OperatorNode::getLhs() const {
+ExprNode BinaryOperatorNode::getLhs() const {
 	return lhs;
 }
 
-ExprNode OperatorNode::getRhs() const {
+ExprNode BinaryOperatorNode::getRhs() const {
 	return rhs;
 }
 
-bool OperatorNode::operator==(const Node& other) const {
-	const OperatorNode* cast = dynamic_cast<const OperatorNode*>(&other);
+bool BinaryOperatorNode::operator==(const Node& other) const {
+	const BinaryOperatorNode* cast = dynamic_cast<const BinaryOperatorNode*>(&other);
 	return cast != nullptr &&
 		op == cast->getOperator() &&
 		std::visit(

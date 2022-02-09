@@ -356,17 +356,106 @@ TEST_CASE("TestIfNode") {
 		outerThenStmtLst.push_back(readx);
 		outerElseStmtLst.push_back(printx);
 
+		// completely wrong stmtList
 		std::vector<std::shared_ptr<StmtNode>> outerWrongThenStmtLst;
 		outerWrongThenStmtLst.push_back(ready);
 		outerWrongThenStmtLst.push_back(readx);
 
+		// stmtList wrong order
+		std::vector<std::shared_ptr<StmtNode>> outerWrongOrderThenStmtLst;
+		outerWrongOrderThenStmtLst.push_back(readx);
+		outerWrongOrderThenStmtLst.push_back(innerIf);
+
 		IfNode ifs1(1, outerPred, outerThenStmtLst, outerElseStmtLst);
 		IfNode ifs2(1, outerPred, outerElseStmtLst, outerThenStmtLst);
 		IfNode ifs3(1, outerPred, outerWrongThenStmtLst, outerElseStmtLst);
+		IfNode ifs4(1, outerPred, outerWrongOrderThenStmtLst, outerElseStmtLst);
 
-		//REQUIRE(ifs1 == ifs1);
-		//REQUIRE(ifs1 != ifs2);
+		REQUIRE(ifs1 == ifs1);
+		REQUIRE(ifs1 != ifs2);
 		REQUIRE(ifs1 != ifs3);
+		REQUIRE(ifs1 != ifs4);
+	}
+}
+
+TEST_CASE("TestWhileNode") {
+	SECTION("Single While") {
+		/*
+		while (x > 0) {
+			read x;
+		}
+		*/
+		std::shared_ptr<VariableNode> x = std::make_shared<VariableNode>("x");
+		std::shared_ptr<ConstantNode> zero = std::make_shared<ConstantNode>("0");
+		std::shared_ptr<RelExprNode> rel1 = std::make_shared<RelExprNode>(x, ComparatorOperator::GT, zero);
+		std::shared_ptr<PredicateNode> pred = std::make_shared<PredicateNode>(rel1);
+
+		std::shared_ptr<ReadNode> read = std::make_shared<ReadNode>(1, x);
+
+		std::vector<std::shared_ptr<StmtNode>> stmtLst;
+		stmtLst.push_back(read);
+
+		WhileNode while1(1, pred, stmtLst);
+		WhileNode while2(2, pred, stmtLst);
+		//empty stmtList
+		std::vector<std::shared_ptr<StmtNode>> emptyStmtLst;
+		WhileNode while3(1, pred, emptyStmtLst);
+
+		REQUIRE(while1 == while1);
+		REQUIRE(while1 != while2);
+		REQUIRE(while1 != while3);
+	}
+	
+	SECTION("Nested While") {
+		/*
+		while (x > 0)  {
+			while (y < 1) {
+				print y;
+			}
+			read y;
+		}
+		*/
+		std::shared_ptr<VariableNode> x = std::make_shared<VariableNode>("x");
+		std::shared_ptr<ConstantNode> zero = std::make_shared<ConstantNode>("0");
+		std::shared_ptr<RelExprNode> outerRel = std::make_shared<RelExprNode>(x, ComparatorOperator::GT, zero);
+		std::shared_ptr<PredicateNode> outerPred = std::make_shared<PredicateNode>(outerRel);
+
+		std::shared_ptr<VariableNode> y = std::make_shared<VariableNode>("y");
+		std::shared_ptr<ConstantNode> one = std::make_shared<ConstantNode>("one");
+		std::shared_ptr<RelExprNode> innerRel = std::make_shared<RelExprNode>(y, ComparatorOperator::LT, one);
+		std::shared_ptr<PredicateNode> innerPred = std::make_shared<PredicateNode>(innerRel);
+
+		std::shared_ptr<PrintNode> printy = std::make_shared<PrintNode>(1, y);
+		std::shared_ptr<ReadNode> ready = std::make_shared<ReadNode>(2, y);
+
+		std::vector<std::shared_ptr<StmtNode>> innerStmtLst;
+		innerStmtLst.push_back(printy);
+
+		std::shared_ptr<WhileNode> innerWhile = std::make_shared<WhileNode>(1, innerPred, innerStmtLst);
+		//random line to replace innerWhile
+		std::shared_ptr<ReadNode> ready2 = std::make_shared<ReadNode>(1, y);
+
+		std::vector<std::shared_ptr<StmtNode>> outerStmtLst;
+		outerStmtLst.push_back(innerWhile);
+		outerStmtLst.push_back(ready);
+
+		// completely wrong stmtList
+		std::vector<std::shared_ptr<StmtNode>> outerWrongStmtLst;
+		outerWrongStmtLst.push_back(ready2);
+		outerWrongStmtLst.push_back(ready);
+
+		// stmtList wrong order
+		std::vector<std::shared_ptr<StmtNode>> outerWrongOrderStmtLst;
+		outerWrongOrderStmtLst.push_back(ready);
+		outerWrongOrderStmtLst.push_back(innerWhile);
+
+		WhileNode while1(1, outerPred, outerStmtLst);
+		WhileNode while2(1, outerPred, outerWrongStmtLst);
+		WhileNode while3(1, outerPred, outerWrongOrderStmtLst);
+
+		REQUIRE(while1 == while1);
+		REQUIRE(while1 != while2);
+		REQUIRE(while1 != while3);
 	}
 }
 

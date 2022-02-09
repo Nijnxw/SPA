@@ -16,8 +16,10 @@ std::vector<std::shared_ptr<StmtNode>> WhileNode::getStmtList() const {
 
 bool WhileNode::operator==(const Node& other) const {
 	const WhileNode* cast = dynamic_cast<const WhileNode*>(&other);
+	if (cast == nullptr) return false;
 	std::vector<std::shared_ptr<StmtNode>> otherStmtList = cast->getStmtList();
 	return cast != nullptr &&
+		StmtNode::operator==(other) &&
 		*predicate == *(cast->getPredicate()) &&
 		std::equal(begin(stmtList), end(stmtList),
 			begin(otherStmtList), end(otherStmtList),

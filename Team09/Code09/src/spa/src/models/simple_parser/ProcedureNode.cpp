@@ -16,6 +16,7 @@ std::string ProcedureNode::getProcName() const {
 
 bool ProcedureNode::operator==(const Node& other) const {
 	const ProcedureNode* cast = dynamic_cast<const ProcedureNode*>(&other);
+	if (cast == nullptr) return false;
 	std::vector<std::shared_ptr<StmtNode>> otherStmtList = cast->getStmtList();
 	return cast != nullptr &&
 		name == cast->getProcName() &&

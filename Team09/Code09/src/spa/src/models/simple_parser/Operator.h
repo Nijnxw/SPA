@@ -18,8 +18,8 @@ enum class ComparatorOperator {
 };
 
 enum class ConditionalOperator {
+	NONE,
     AND,
     OR,
     NOT,
-	NONE,
 };

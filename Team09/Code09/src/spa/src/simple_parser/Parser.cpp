@@ -107,7 +107,7 @@ ExprNode Parser::parseOperator(const ExprNode& lhs) {
 	}
 }
 
-ExprNode Parser::parseExpression(int rightBindingPower = 0) {
+ExprNode Parser::parseExpression(int rightBindingPower = BindingPower::OPERAND) {
 	ExprNode left = parseOperand();
 	while (!check(";") && !check(")") && rightBindingPower < getLeftBindingPower()) {
 		left = parseOperator( left);

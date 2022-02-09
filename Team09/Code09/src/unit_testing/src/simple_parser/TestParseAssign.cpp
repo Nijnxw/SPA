@@ -541,17 +541,19 @@ TEST_CASE ("Test parsing of valid assign - parentheses") {
 // --------------------------------------------------
 TEST_CASE ("Test parsing of invalid assign statements") {
 	SECTION ("Constants as var_name") {
-		std::vector<Token*> input = {
-				new NameToken("procedure"), 	new NameToken("testProgram"),
-				new PunctuatorToken("{"),   	new IntegerToken("123"),
-				new OperatorToken("="),		new NameToken("x"),
-				new PunctuatorToken(";"),	new PunctuatorToken("}"),
+		// 123 = x;
+		std::vector<Token *> input = {
+				new NameToken("procedure"), new NameToken("testProgram"),
+				new PunctuatorToken("{"), new IntegerToken("123"),
+				new OperatorToken("="), new NameToken("x"),
+				new PunctuatorToken(";"), new PunctuatorToken("}"),
 				new EndOfFileToken(),
 		};
 		Parser parser = Parser(input);
 		REQUIRE_THROWS_WITH(parser.parseProgram(), "Invalid statement syntax at statement 1.\n");
 	}
 	SECTION ("Missing ';'") {
+		// a = x
 		std::vector<Token*> input = {
 				new NameToken("procedure"), 	new NameToken("testProgram"),
 				new PunctuatorToken("{"),   	new NameToken("a"),
@@ -563,6 +565,7 @@ TEST_CASE ("Test parsing of invalid assign statements") {
 		REQUIRE_THROWS_WITH(parser.parseProgram(), "Expected arithmetic operator but got '}' instead.\n");
 	}
 	SECTION ("Missing lhs") {
+		// = x;
 		std::vector<Token*> input = {
 				new NameToken("procedure"), 	new NameToken("testProgram"),
 				new PunctuatorToken("{"),
@@ -574,6 +577,7 @@ TEST_CASE ("Test parsing of invalid assign statements") {
 		REQUIRE_THROWS_WITH(parser.parseProgram(), "Invalid statement syntax at statement 1.\n");
 	}
 	SECTION ("Missing rhs") {
+		// a = ;
 		std::vector<Token*> input = {
 				new NameToken("procedure"), 	new NameToken("testProgram"),
 				new PunctuatorToken("{"),	new NameToken("a"),
@@ -582,13 +586,13 @@ TEST_CASE ("Test parsing of invalid assign statements") {
 				new EndOfFileToken(),
 		};
 		Parser parser = Parser(input);
-		REQUIRE_THROWS_WITH(parser.parseProgram(), "Expected an expression but got '}' instead.\n");
+		REQUIRE_THROWS_WITH(parser.parseProgram(), "Expected an expression but got ';' instead.\n");
 	}
 }
 
 TEST_CASE("Invalid expressions") {
 	SECTION ("Missing operators") {
-		// a = x   b
+		// a = x   b;
 		std::vector<Token*> input = {
 				new NameToken("procedure"), 	new NameToken("testProgram"),
 				new PunctuatorToken("{"),	new NameToken("a"),
@@ -600,7 +604,7 @@ TEST_CASE("Invalid expressions") {
 		REQUIRE_THROWS_WITH(parser.parseProgram(), "Expected arithmetic operator but got 'b' instead.\n");
 	}
 	SECTION ("Missing operands") {
-		// a = x + b /
+		// a = x + b /;
 		std::vector<Token*> input = {
 				new NameToken("procedure"), 	new NameToken("testProgram"),
 				new PunctuatorToken("{"),	new NameToken("a"),
@@ -613,7 +617,7 @@ TEST_CASE("Invalid expressions") {
 		REQUIRE_THROWS_WITH(parser.parseProgram(), "Expected an expression but got ';' instead.\n");
 	}
 	SECTION ("extra operands") {
-		// a = x +- b
+		// a = x +- b;
 		std::vector<Token*> input = {
 				new NameToken("procedure"), 	new NameToken("testProgram"),
 				new PunctuatorToken("{"),	new NameToken("a"),
@@ -626,7 +630,7 @@ TEST_CASE("Invalid expressions") {
 		REQUIRE_THROWS_WITH(parser.parseProgram(), "Expected an expression but got '-' instead.\n");
 	}
 	SECTION ("Missing opening parentheses") {
-		// a = x + b - 1)
+		// a = x + b - 1);
 		std::vector<Token *> input = {
 				new NameToken("procedure"), 	new NameToken("testProgram"),
 				new PunctuatorToken("{"), 	new NameToken("a"),
@@ -655,7 +659,7 @@ TEST_CASE("Invalid expressions") {
 		REQUIRE_THROWS_WITH(parser1.parseProgram(), "Expected ';' but got ')' instead.\n");
 	}
 	SECTION("Missing closing parentheses") {
-		// a = x + (b - 1
+		// a = x + (b - 1;
 		std::vector<Token*> input = {
 				new NameToken("procedure"), 	new NameToken("testProgram"),
 				new PunctuatorToken("{"),	new NameToken("a"),

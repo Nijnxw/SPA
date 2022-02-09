@@ -15,7 +15,7 @@ private:
 	int currentIdx = 0;
 	int stmtNo = 1;
 	std::vector<Token*> tokens;
-	std::string exprStr = "";
+	std::string exprStr;
 
 	Token* peek();
 	Token* get();
@@ -28,7 +28,7 @@ private:
 	int getLeftBindingPower();
 	BinaryOperator getOperatorEnum();
 	ExprNode parseOperand();
-	ExprNode parseOperator(ExprNode lhs);
+	ExprNode parseOperator(const ExprNode& lhs);
 	ExprNode parseExpression(int rightBindingPower);
 	ExprNode parseExpr();
 

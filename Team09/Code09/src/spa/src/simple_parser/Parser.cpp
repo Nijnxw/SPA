@@ -1,7 +1,6 @@
 #include <string>
 #include <utility>
 #include <vector>
-#include <iostream>
 #include "Parser.h"
 #include "util/RPN.h"
 
@@ -89,7 +88,7 @@ ExprNode Parser::parseOperand() {
 	}
 }
 
-ExprNode Parser::parseOperator(ExprNode lhs) {
+ExprNode Parser::parseOperator(const ExprNode& lhs) {
 	ExprNode rhs;
 	BinaryOperator op = getOperatorEnum();
 	exprStr += get()->getValue();

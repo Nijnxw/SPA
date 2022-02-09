@@ -76,7 +76,7 @@ TEST_CASE ("Test parsing of invalid read statement") {
 				new PunctuatorToken("}"),	new EndOfFileToken(),
 		};
 		Parser parser = Parser(input);
-		REQUIRE_THROWS_WITH(parser.parseProgram(), "Invalid statement! Expected '}' / 'read' / 'print' but got 'reed' instead.\n");
+		REQUIRE_THROWS_WITH(parser.parseProgram(), "Expected '=' but got 'p' instead.\n");
 	}
 	SECTION ("'read' keyword is case sensitive") {
 		std::vector<Token*> input = {
@@ -86,7 +86,7 @@ TEST_CASE ("Test parsing of invalid read statement") {
 				new PunctuatorToken("}"),	new EndOfFileToken(),
 		};
 		Parser parser = Parser(input);
-		REQUIRE_THROWS_WITH(parser.parseProgram(), "Invalid statement! Expected '}' / 'read' / 'print' but got 'Read' instead.\n");
+		REQUIRE_THROWS_WITH(parser.parseProgram(), "Expected '=' but got 'p' instead.\n");
 	}
 	SECTION ("Constants as var_name") {
 		std::vector<Token*> input = {
@@ -96,7 +96,7 @@ TEST_CASE ("Test parsing of invalid read statement") {
 				new PunctuatorToken("}"),	new EndOfFileToken(),
 		};
 		Parser parser = Parser(input);
-		REQUIRE_THROWS_WITH(parser.parseProgram(), "Invalid variable name!\n");
+		REQUIRE_THROWS_WITH(parser.parseProgram(), "Expected a variable name but got '123' instead.\n");
 	}
 	SECTION ("Missing var_name") {
 		std::vector<Token*> input = {
@@ -106,7 +106,7 @@ TEST_CASE ("Test parsing of invalid read statement") {
 				new PunctuatorToken("}"),	new EndOfFileToken(),
 		};
 		Parser parser = Parser(input);
-		REQUIRE_THROWS_WITH(parser.parseProgram(), "Invalid variable name!\n");
+		REQUIRE_THROWS_WITH(parser.parseProgram(), "Expected a variable name but got ';' instead.\n");
 	}
 	SECTION ("Missing ';'") {
 		std::vector<Token*> input = {

@@ -4,14 +4,14 @@
 #include "models/simple_parser/ExprNodes.h"
 #include "models/simple_parser/IoNodes.h"
 #include "models/simple_parser/ProcedureNode.h"
-#include "pkb/PKB.h"
+#include "simple_parser/EntityStager.h"
 #include "simple_parser/DesignExtractor.h"
 
 #include <memory>
 #include <vector>
 
 TEST_CASE("Extract simple SIMPLE code no design entities") {
-	PKB::clearAllStores();
+	EntityStager::clear();
 
 	/*
 	 * Test Simple Program
@@ -43,29 +43,29 @@ TEST_CASE("Extract simple SIMPLE code no design entities") {
 
 	DesignExtractor::extractDesignElements(ast);
 
-	std::unordered_set<std::string> expected_procedure_table;
-	expected_procedure_table.insert("testProgram");
-	REQUIRE(PKB::getProcedures() == expected_procedure_table);
+	std::vector<std::string> expected_procedure_table;
+	expected_procedure_table.push_back("testProgram");
+	REQUIRE(EntityStager::getStagedProcedures() == expected_procedure_table);
 
-	std::unordered_set<std::string> expected_var_table;
-	expected_var_table.insert("x");
-	expected_var_table.insert("y");
-	REQUIRE(PKB::getVariables() == expected_var_table);
+	std::vector<std::string> expected_var_table;
+	expected_var_table.push_back("x");
+	expected_var_table.push_back("y");
+	REQUIRE(EntityStager::getStagedVariables() == expected_var_table);
 
-	std::unordered_set<int> expected_stmt_table;
-	expected_stmt_table.insert(1);
-	expected_stmt_table.insert(2);
-	expected_stmt_table.insert(3);
-	REQUIRE(PKB::getStatementNumbers() == expected_stmt_table);
+	std::vector<int> expected_stmt_table;
+	expected_stmt_table.push_back(1);
+	expected_stmt_table.push_back(2);
+	expected_stmt_table.push_back(3);
+	REQUIRE(EntityStager::getStagedStatements() == expected_stmt_table);
 
-	std::unordered_set<int> expected_print_table;
-	expected_print_table.insert(2);
-	expected_print_table.insert(3);
-	REQUIRE(PKB::getStatementsWithType(EntityType::PRINT) == expected_print_table);
+	std::vector<int> expected_print_table;
+	expected_print_table.push_back(2);
+	expected_print_table.push_back(3);
+	REQUIRE(EntityStager::getStagedPrintStatements() == expected_print_table);
 
-	std::unordered_set<int> expected_read_table;
-	expected_read_table.insert(1);
-	REQUIRE(PKB::getStatementsWithType(EntityType::READ) == expected_read_table);
+	std::vector<int> expected_read_table;
+	expected_read_table.push_back(1);
+	REQUIRE(EntityStager::getStagedReadStatements() == expected_read_table);
 
-	PKB::clearAllStores();
+	EntityStager::clear();
 }

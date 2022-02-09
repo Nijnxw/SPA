@@ -28,6 +28,9 @@ void processStmtList(std::vector<std::shared_ptr<StmtNode>> stmtList) {
 		if (i < stmtList.size() - 1) {
 			EntityStager::stageFollows(stmtList[i]->getStmtNumber(), stmtList[i + 1]->getStmtNumber());
 		}
+		for (int j = i + 1; j < stmtList.size(); j++) {
+			EntityStager::stageFollowsT(stmtList[i]->getStmtNumber(), stmtList[j]->getStmtNumber());
+		}
 		processStmt(stmtList[i]);
 	}
 }

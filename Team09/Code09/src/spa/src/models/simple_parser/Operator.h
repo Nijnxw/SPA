@@ -6,10 +6,19 @@ enum class BinaryOperator {
     TIMES,
     DIVIDE,
     MODULO,
+};
+
+enum class ComparatorOperator {
     GT,
     GTE,
     LT,
     LTE,
     EQ,
     NEQ
+};
+
+enum class ConditionalOperator {
+    AND,
+    OR,
+    NOT
 };

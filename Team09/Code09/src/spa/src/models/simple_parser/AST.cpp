@@ -11,6 +11,7 @@ std::vector<std::shared_ptr<ProcedureNode>> ProgramNode::getProcedureList() cons
 
 bool ProgramNode::operator==(const Node& other) const {
 	const ProgramNode* cast = dynamic_cast<const ProgramNode*>(&other);
+	if (cast == nullptr) return false;
 	std::vector<std::shared_ptr<ProcedureNode>> otherProcedureList = cast->getProcedureList();
 	return cast != nullptr &&
 		std::equal(begin(procedureList), end(procedureList),

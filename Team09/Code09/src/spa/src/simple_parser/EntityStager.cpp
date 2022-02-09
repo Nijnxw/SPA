@@ -27,147 +27,147 @@ void EntityStager::clear() {
 }
 
 // getters
-std::vector<std::string> EntityStager::getStagedProcedures() {
+std::unordered_set<std::string> EntityStager::getStagedProcedures() {
 	return stagedProcedures;
 }
 
-std::vector<std::string> EntityStager::getStagedVariables() {
+std::unordered_set<std::string> EntityStager::getStagedVariables() {
 	return stagedVariables;
 }
 
-std::vector<std::string> EntityStager::getStagedConstants() {
+std::unordered_set<std::string> EntityStager::getStagedConstants() {
 	return stagedConstants;
 }
 
-std::vector<int> EntityStager::getStagedStatements() {
+std::unordered_set<int> EntityStager::getStagedStatements() {
 	return stagedStatements;
 }
 
-std::vector<int> EntityStager::getStagedReadStatements() {
+std::unordered_set<int> EntityStager::getStagedReadStatements() {
 	return stagedReadStatements;
 }
-std::vector<int> EntityStager::getStagedPrintStatements() {
+std::unordered_set<int> EntityStager::getStagedPrintStatements() {
 	return stagedPrintStatements;
 }
 
-std::vector<int> EntityStager::getStagedIfStatements() {
+std::unordered_set<int> EntityStager::getStagedIfStatements() {
 	return stagedIfStatements;
 }
 
-std::vector<int> EntityStager::getStagedWhileStatements() {
+std::unordered_set<int> EntityStager::getStagedWhileStatements() {
 	return stagedWhileStatements;
 }
 
-std::vector<int> EntityStager::getStagedCallStatements() {
+std::unordered_set<int> EntityStager::getStagedCallStatements() {
 	return stagedCallStatements;
 }
 
-std::vector<std::tuple<int, std::string, std::string>> EntityStager::getStagedAssignStatements() {
+std::unordered_set<std::tuple<int, std::string, std::string>> EntityStager::getStagedAssignStatements() {
 	return stagedAssignStatements;
 }
 
-std::vector<std::pair<int, int>> EntityStager::getStagedFollows() {
+std::unordered_set<std::pair<int, int>> EntityStager::getStagedFollows() {
 	return stagedFollows;
 }
 
-std::vector<std::pair<int, int>> EntityStager::getStagedFollowsT() {
+std::unordered_set<std::pair<int, int>> EntityStager::getStagedFollowsT() {
 	return stagedFollowsT;
 }
 
-std::vector<std::pair<int, int>> EntityStager::getStagedParent() {
+std::unordered_set<std::pair<int, int>> EntityStager::getStagedParent() {
 	return stagedParent;
 }
 
-std::vector<std::pair<int, int>> EntityStager::getStagedParentT() {
+std::unordered_set<std::pair<int, int>> EntityStager::getStagedParentT() {
 	return stagedParentT;
 }
 
-std::vector<std::pair<int, std::unordered_set<std::string>>> EntityStager::getStagedUsesStatement() {
+std::unordered_set<std::pair<int, std::unordered_set<std::string>>> EntityStager::getStagedUsesStatement() {
 	return stagedUsesStatement;
 }
 
-std::vector<std::pair<std::string, std::unordered_set<std::string>>> EntityStager::getStagedUsesProcedure() {
+std::unordered_set<std::pair<std::string, std::unordered_set<std::string>>> EntityStager::getStagedUsesProcedure() {
 	return stagedUsesProcedure;
 }
 
-std::vector<std::pair<int, std::unordered_set<std::string>>> EntityStager::getStagedModifiesStatement() {
+std::unordered_set<std::pair<int, std::unordered_set<std::string>>> EntityStager::getStagedModifiesStatement() {
 	return stagedModifiesStatement;
 }
 
-std::vector<std::pair<std::string, std::unordered_set<std::string>>> EntityStager::getStagedModifiesProcedure() {
+std::unordered_set<std::pair<std::string, std::unordered_set<std::string>>> EntityStager::getStagedModifiesProcedure() {
 	return stagedModifiesProcedure;
 }
 
 // stagers
 void EntityStager::stageProcedure(const std::string& procedure) {
-	stagedProcedures.push_back(procedure);
+	stagedProcedures.insert(procedure);
 }
 void EntityStager::stageVariable(const std::string& variable) {
-	stagedVariables.push_back(variable);
+	stagedVariables.insert(variable);
 }
 void EntityStager::stageConstant(const std::string& constant) {
-	stagedConstants.push_back(constant);
+	stagedConstants.insert(constant);
 }
 
 void EntityStager::stageStatement(int stmtNo) {
-	stagedStatements.push_back(stmtNo);
+	stagedStatements.insert(stmtNo);
 }
 
 void EntityStager::stageIfStatement(int stmtNo) {
-	stagedIfStatements.push_back(stmtNo);
+	stagedIfStatements.insert(stmtNo);
 }
 
 void EntityStager::stageWhileStatement(int stmtNo) {
-	stagedWhileStatements.push_back(stmtNo);
+	stagedWhileStatements.insert(stmtNo);
 }
 
 void EntityStager::stageReadStatement(int stmtNo) {
-	stagedReadStatements.push_back(stmtNo);
+	stagedReadStatements.insert(stmtNo);
 }
 
 void EntityStager::stagePrintStatement(int stmtNo) {
-	stagedPrintStatements.push_back(stmtNo);
+	stagedPrintStatements.insert(stmtNo);
 }
 
 void EntityStager::stageCallStatement(int stmtNo) {
-	stagedCallStatements.push_back(stmtNo);
+	stagedCallStatements.insert(stmtNo);
 }
 
 void EntityStager::stageAssignStatement(int stmtNo, std::string lhs, std::string rhs) {
-	stagedAssignStatements.push_back(std::make_tuple(stmtNo, lhs, rhs));
+	stagedAssignStatements.insert(std::make_tuple(stmtNo, lhs, rhs));
 }
 
 void EntityStager::stageFollows(int follower, int followee) {
-	stagedFollows.push_back(std::make_pair(follower, followee));
+	stagedFollows.insert(std::make_pair(follower, followee));
 }
 
 void EntityStager::stageFollowsT(int follower, int followee) {
-	stagedFollowsT.push_back(std::make_pair(follower, followee));
+	stagedFollowsT.insert(std::make_pair(follower, followee));
 }
 
 void EntityStager::stageParent(int parent, int child) {
-	stagedParent.push_back(std::make_pair(parent, child));
+	stagedParent.insert(std::make_pair(parent, child));
 }
 
 void EntityStager::stageParentT(int parent, int child) {
-	stagedParentT.push_back(std::make_pair(parent, child));
+	stagedParentT.insert(std::make_pair(parent, child));
 }
 
 void EntityStager::stageUsesStatements(int stmt, std::unordered_set<std::string> variables) {
-	stagedUsesStatement.push_back(std::make_pair(stmt, variables));
+	stagedUsesStatement.insert(std::make_pair(stmt, variables));
 }
 
 void EntityStager::stageUsesProcedure(std::string proc, std::unordered_set<std::string> variables) {
-	stagedUsesProcedure.push_back(std::make_pair(proc, variables));
+	stagedUsesProcedure.insert(std::make_pair(proc, variables));
 }
 
 void EntityStager::stageModifiesStatements(int stmt, std::unordered_set<std::string> variables) {
-	stagedModifiesStatement.push_back(std::make_pair(stmt, variables));
+	stagedModifiesStatement.insert(std::make_pair(stmt, variables));
 
 }
 
 void EntityStager::stageModifiesProcedure(std::string proc, std::unordered_set<std::string> variables) {
-	stagedModifiesProcedure.push_back(std::make_pair(proc, variables));
+	stagedModifiesProcedure.insert(std::make_pair(proc, variables));
 }
 
 void EntityStager::commit() {

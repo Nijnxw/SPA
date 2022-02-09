@@ -11,28 +11,28 @@
 
 class EntityStager {
 private:
-	static inline std::vector<std::string> stagedProcedures;
-	static inline std::vector<std::string> stagedVariables;
-	static inline std::vector<std::string> stagedConstants;
+	static inline std::unordered_set<std::string> stagedProcedures;
+	static inline std::unordered_set<std::string> stagedVariables;
+	static inline std::unordered_set<std::string> stagedConstants;
 
-	static inline std::vector<int> stagedStatements;
-	static inline std::vector<int> stagedReadStatements;
-	static inline std::vector<int> stagedPrintStatements;
-	static inline std::vector<int> stagedIfStatements;
-	static inline std::vector<int> stagedWhileStatements;
-	static inline std::vector<int> stagedCallStatements;
+	static inline std::unordered_set<int> stagedStatements;
+	static inline std::unordered_set<int> stagedReadStatements;
+	static inline std::unordered_set<int> stagedPrintStatements;
+	static inline std::unordered_set<int> stagedIfStatements;
+	static inline std::unordered_set<int> stagedWhileStatements;
+	static inline std::unordered_set<int> stagedCallStatements;
 
-	static inline std::vector<std::tuple<int, std::string, std::string>> stagedAssignStatements;
+	static inline std::unordered_set<std::tuple<int, std::string, std::string>> stagedAssignStatements;
 
-	static inline std::vector<std::pair<int, int>> stagedFollows;
-	static inline std::vector<std::pair<int, int>> stagedFollowsT;
-	static inline std::vector<std::pair<int, int>> stagedParent;
-	static inline std::vector<std::pair<int, int>> stagedParentT;
+	static inline std::unordered_set<std::pair<int, int>> stagedFollows;
+	static inline std::unordered_set<std::pair<int, int>> stagedFollowsT;
+	static inline std::unordered_set<std::pair<int, int>> stagedParent;
+	static inline std::unordered_set<std::pair<int, int>> stagedParentT;
 
-	static inline std::vector<std::pair<int, std::unordered_set<std::string>>> stagedUsesStatement;
-	static inline std::vector<std::pair<std::string, std::unordered_set<std::string>>> stagedUsesProcedure;
-	static inline std::vector<std::pair<int, std::unordered_set<std::string>>> stagedModifiesStatement;
-	static inline std::vector<std::pair<std::string, std::unordered_set<std::string>>> stagedModifiesProcedure;
+	static inline std::unordered_set<std::pair<int, std::unordered_set<std::string>>> stagedUsesStatement;
+	static inline std::unordered_set<std::pair<std::string, std::unordered_set<std::string>>> stagedUsesProcedure;
+	static inline std::unordered_set<std::pair<int, std::unordered_set<std::string>>> stagedModifiesStatement;
+	static inline std::unordered_set<std::pair<std::string, std::unordered_set<std::string>>> stagedModifiesProcedure;
 
 public:
 	EntityStager();
@@ -40,28 +40,28 @@ public:
 	static void clear();
 
 	// getters
-	static std::vector<std::string> getStagedProcedures();
-	static std::vector<std::string> getStagedVariables();
-	static std::vector<std::string> getStagedConstants();
+	static std::unordered_set<std::string> getStagedProcedures();
+	static std::unordered_set<std::string> getStagedVariables();
+	static std::unordered_set<std::string> getStagedConstants();
 
-	static std::vector<int> getStagedStatements();
-	static std::vector<int> getStagedReadStatements();
-	static std::vector<int> getStagedPrintStatements();
-	static std::vector<int> getStagedIfStatements();
-	static std::vector<int> getStagedWhileStatements();
-	static std::vector<int> getStagedCallStatements();
+	static std::unordered_set<int> getStagedStatements();
+	static std::unordered_set<int> getStagedReadStatements();
+	static std::unordered_set<int> getStagedPrintStatements();
+	static std::unordered_set<int> getStagedIfStatements();
+	static std::unordered_set<int> getStagedWhileStatements();
+	static std::unordered_set<int> getStagedCallStatements();
 
-	static std::vector<std::tuple<int, std::string, std::string>> getStagedAssignStatements();
+	static std::unordered_set<std::tuple<int, std::string, std::string>> getStagedAssignStatements();
 
-	static std::vector<std::pair<int, int>> getStagedFollows();
-	static std::vector<std::pair<int, int>> getStagedFollowsT();
-	static std::vector<std::pair<int, int>> getStagedParent();
-	static std::vector<std::pair<int, int>> getStagedParentT();
+	static std::unordered_set<std::pair<int, int>> getStagedFollows();
+	static std::unordered_set<std::pair<int, int>> getStagedFollowsT();
+	static std::unordered_set<std::pair<int, int>> getStagedParent();
+	static std::unordered_set<std::pair<int, int>> getStagedParentT();
 
-	static std::vector<std::pair<int, std::unordered_set<std::string>>> getStagedUsesStatement();
-	static std::vector<std::pair<std::string, std::unordered_set<std::string>>> getStagedUsesProcedure();
-	static std::vector<std::pair<int, std::unordered_set<std::string>>> getStagedModifiesStatement();
-	static std::vector<std::pair<std::string, std::unordered_set<std::string>>> getStagedModifiesProcedure();
+	static std::unordered_set<std::pair<int, std::unordered_set<std::string>>> getStagedUsesStatement();
+	static std::unordered_set<std::pair<std::string, std::unordered_set<std::string>>> getStagedUsesProcedure();
+	static std::unordered_set<std::pair<int, std::unordered_set<std::string>>> getStagedModifiesStatement();
+	static std::unordered_set<std::pair<std::string, std::unordered_set<std::string>>> getStagedModifiesProcedure();
 
 	// stagers
 	static void stageProcedure(const std::string& procedure);

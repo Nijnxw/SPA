@@ -21,10 +21,12 @@ std::vector<std::shared_ptr<StmtNode>> IfNode::getElseStmtList() const {
 
 bool IfNode::operator==(const Node& other) const {
 	const IfNode* cast = dynamic_cast<const IfNode*>(&other);
+	if (cast == nullptr) return false;
 	std::vector<std::shared_ptr<StmtNode>> otherThenStmtList = cast->getThenStmtList();
 	std::vector<std::shared_ptr<StmtNode>> otherElseStmtList = cast->getElseStmtList();
 	return cast != nullptr &&
 		*predicate == *(cast->getPredicate()) &&
+		StmtNode::operator==(other) &&
 		std::equal(begin(thenStmtList), end(thenStmtList),
 			begin(otherThenStmtList), end(otherThenStmtList),
 			[](const std::shared_ptr<StmtNode> lhs, const std::shared_ptr<StmtNode> rhs) { return *lhs == *rhs; }) &&

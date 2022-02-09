@@ -5,6 +5,8 @@
 #include "../src/models/simple_parser/IoNodes.h"
 #include "../src/models/simple_parser/ProcedureNode.h"
 #include "../src/models/simple_parser/PredicateNodes.h"
+#include "../src/models/simple_parser/WhileNode.h"
+#include "../src/models/simple_parser/IfNode.h"
 #include "../src/models/simple_parser/AST.h"
 #include "../src/util/RPN.h"
 
@@ -270,7 +272,6 @@ TEST_CASE("Test Predicate Nodes") {
 	}
 }
 
-
 TEST_CASE("Test IO statement nodes") {
 	std::shared_ptr<VariableNode> var1 = std::make_shared<VariableNode>("x");
 	std::shared_ptr<VariableNode> var2 = std::make_shared<VariableNode>("y");
@@ -282,6 +283,91 @@ TEST_CASE("Test IO statement nodes") {
 	ReadNode read(10, var2);
 	REQUIRE(read.isReadNode() == true);
 	REQUIRE(read.getVariable()->isVariableNode() == true);
+}
+
+TEST_CASE("TestIfNode") {
+	SECTION("Single If") {
+		/*
+		if (x > 0) then {
+			read x;
+		} else {
+			print x;
+		}
+		*/
+		std::shared_ptr<VariableNode> x = std::make_shared<VariableNode>("x");
+		std::shared_ptr<ConstantNode> zero = std::make_shared<ConstantNode>("0");
+		std::shared_ptr<RelExprNode> rel1 = std::make_shared<RelExprNode>(x, ComparatorOperator::GT, zero);
+		std::shared_ptr<PredicateNode> pred = std::make_shared<PredicateNode>(rel1);
+
+		std::shared_ptr<PrintNode> print = std::make_shared<PrintNode>(1, x);
+		std::shared_ptr<ReadNode> read = std::make_shared<ReadNode>(2, x);
+
+		std::vector<std::shared_ptr<StmtNode>> thenStmtLst;
+		thenStmtLst.push_back(read);
+
+		std::vector<std::shared_ptr<StmtNode>> elseStmtLst;
+		elseStmtLst.push_back(print);
+
+		IfNode ifs1(1, pred, thenStmtLst, elseStmtLst);
+		IfNode ifs2(2, pred, thenStmtLst, elseStmtLst);
+		IfNode ifs3(1, pred, elseStmtLst, thenStmtLst);
+
+		REQUIRE(ifs1 == ifs1);
+		REQUIRE(ifs1 != ifs2);
+		REQUIRE(ifs1 != ifs3);
+	}
+
+	SECTION("Nested If") {
+		/*
+		if (x > 0) then {
+			if (y == 1) then {
+				print y;
+			} else {}
+			read x;
+		} else {
+			print x;
+		}
+		*/
+		std::shared_ptr<VariableNode> x = std::make_shared<VariableNode>("x");
+		std::shared_ptr<ConstantNode> zero = std::make_shared<ConstantNode>("0");
+		std::shared_ptr<RelExprNode> outerRel = std::make_shared<RelExprNode>(x, ComparatorOperator::GT, zero);
+		std::shared_ptr<PredicateNode> outerPred = std::make_shared<PredicateNode>(outerRel);
+
+		std::shared_ptr<VariableNode> y = std::make_shared<VariableNode>("y");
+		std::shared_ptr<ConstantNode> one = std::make_shared<ConstantNode>("one");
+		std::shared_ptr<RelExprNode> innerRel = std::make_shared<RelExprNode>(y, ComparatorOperator::EQ, one);
+		std::shared_ptr<PredicateNode> innerPred = std::make_shared<PredicateNode>(innerRel);
+
+		std::shared_ptr<PrintNode> printx = std::make_shared<PrintNode>(1, x);
+		std::shared_ptr<PrintNode> printy = std::make_shared<PrintNode>(1, y);
+		std::shared_ptr<ReadNode> readx = std::make_shared<ReadNode>(2, x);
+
+		std::vector<std::shared_ptr<StmtNode>> innerThenStmtLst;
+		std::vector<std::shared_ptr<StmtNode>> innerElseStmtLst;
+		innerThenStmtLst.push_back(printy);
+
+		std::shared_ptr<IfNode> innerIf = std::make_shared<IfNode>(1, innerPred, innerThenStmtLst, innerElseStmtLst);
+		//random line to replace innerIf
+		std::shared_ptr<ReadNode> ready = std::make_shared<ReadNode>(1, y);
+
+		std::vector<std::shared_ptr<StmtNode>> outerThenStmtLst;
+		std::vector<std::shared_ptr<StmtNode>> outerElseStmtLst;
+		outerThenStmtLst.push_back(innerIf);
+		outerThenStmtLst.push_back(readx);
+		outerElseStmtLst.push_back(printx);
+
+		std::vector<std::shared_ptr<StmtNode>> outerWrongThenStmtLst;
+		outerWrongThenStmtLst.push_back(ready);
+		outerWrongThenStmtLst.push_back(readx);
+
+		IfNode ifs1(1, outerPred, outerThenStmtLst, outerElseStmtLst);
+		IfNode ifs2(1, outerPred, outerElseStmtLst, outerThenStmtLst);
+		IfNode ifs3(1, outerPred, outerWrongThenStmtLst, outerElseStmtLst);
+
+		//REQUIRE(ifs1 == ifs1);
+		//REQUIRE(ifs1 != ifs2);
+		REQUIRE(ifs1 != ifs3);
+	}
 }
 
 TEST_CASE("Test Procedure nodes") {

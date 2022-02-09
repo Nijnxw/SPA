@@ -39,9 +39,9 @@ bool Parser::expect(const std::string& s) {
 int Parser::getLeftBindingPower() {
 	std::string op = peek()->getValue();
 	if (op == "+" || op == "-") {
-		return 10;
+		return BindingPower::SUM;
 	} else if (op == "*" || op == "/" || op == "%") {
-		return 20;
+		return BindingPower::PRODUCT;
 	} else {
 		throw std::runtime_error("Expected arithmetic operator but got '" + peek()->getValue() + "' instead.\n");
 	}
@@ -95,12 +95,12 @@ ExprNode Parser::parseOperator(const ExprNode& lhs) {
 	switch (op) {
 		case BinaryOperator::PLUS:
 		case BinaryOperator::MINUS:
-			rhs = parseExpression(10);
+			rhs = parseExpression(BindingPower::SUM);
 			return std::make_shared<BinaryOperatorNode>(op, lhs, rhs);
 		case BinaryOperator::TIMES:
 		case BinaryOperator::DIVIDE:
 		case BinaryOperator::MODULO:
-			rhs = parseExpression(20);
+			rhs = parseExpression(BindingPower::PRODUCT);
 			return std::make_shared<BinaryOperatorNode>(op, lhs, rhs);
 		default:
 			throw std::runtime_error("Expected arithmetic operator but got invalid operator instead.\n");
@@ -123,7 +123,7 @@ ExprNode Parser::parseExpression(int rightBindingPower = 0) {
 // 	   | term '%' factor
 // 	   | factor
 ExprNode Parser::parseExpr() {
-	return parseExpression(0);
+	return parseExpression(BindingPower::OPERAND);
 }
 
 std::shared_ptr<ConstantNode> Parser::parseConstant() {

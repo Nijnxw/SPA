@@ -25,6 +25,12 @@ private:
 	bool check(const std::string& s);
 	bool expect(const std::string& s);
 
+	enum BindingPower {
+		OPERAND = 0,
+		SUM = 10,
+		PRODUCT = 20,
+	};
+
 	int getLeftBindingPower();
 	BinaryOperator getOperatorEnum();
 	ExprNode parseOperand();

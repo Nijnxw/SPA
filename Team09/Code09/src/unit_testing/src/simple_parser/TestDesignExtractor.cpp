@@ -8,6 +8,7 @@
 #include "simple_parser/DesignExtractor.h"
 
 #include <memory>
+#include <unordered_set>
 #include <vector>
 
 TEST_CASE("Extract simple SIMPLE code no design entities") {
@@ -43,28 +44,28 @@ TEST_CASE("Extract simple SIMPLE code no design entities") {
 
 	DesignExtractor::extractDesignElements(ast);
 
-	std::vector<std::string> expected_procedure_table;
-	expected_procedure_table.push_back("testProgram");
+	std::unordered_set<std::string> expected_procedure_table;
+	expected_procedure_table.insert("testProgram");
 	REQUIRE(EntityStager::getStagedProcedures() == expected_procedure_table);
 
-	std::vector<std::string> expected_var_table;
-	expected_var_table.push_back("x");
-	expected_var_table.push_back("y");
+	std::unordered_set<std::string> expected_var_table;
+	expected_var_table.insert("x");
+	expected_var_table.insert("y");
 	REQUIRE(EntityStager::getStagedVariables() == expected_var_table);
 
-	std::vector<int> expected_stmt_table;
-	expected_stmt_table.push_back(1);
-	expected_stmt_table.push_back(2);
-	expected_stmt_table.push_back(3);
+	std::unordered_set<int> expected_stmt_table;
+	expected_stmt_table.insert(1);
+	expected_stmt_table.insert(2);
+	expected_stmt_table.insert(3);
 	REQUIRE(EntityStager::getStagedStatements() == expected_stmt_table);
 
-	std::vector<int> expected_print_table;
-	expected_print_table.push_back(2);
-	expected_print_table.push_back(3);
+	std::unordered_set<int> expected_print_table;
+	expected_print_table.insert(2);
+	expected_print_table.insert(3);
 	REQUIRE(EntityStager::getStagedPrintStatements() == expected_print_table);
 
-	std::vector<int> expected_read_table;
-	expected_read_table.push_back(1);
+	std::unordered_set<int> expected_read_table;
+	expected_read_table.insert(1);
 	REQUIRE(EntityStager::getStagedReadStatements() == expected_read_table);
 
 	EntityStager::clear();

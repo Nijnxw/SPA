@@ -22,17 +22,17 @@ private:
 	static inline std::unordered_set<int> stagedWhileStatements;
 	static inline std::unordered_set<int> stagedCallStatements;
 
-	static inline std::unordered_set<std::tuple<int, std::string, std::string>> stagedAssignStatements;
+	static inline std::vector<std::tuple<int, std::string, std::string>> stagedAssignStatements;
 
-	static inline std::unordered_set<std::pair<int, int>> stagedFollows;
-	static inline std::unordered_set<std::pair<int, int>> stagedFollowsT;
-	static inline std::unordered_set<std::pair<int, int>> stagedParent;
-	static inline std::unordered_set<std::pair<int, int>> stagedParentT;
+	static inline std::vector<std::pair<int, int>> stagedFollows;
+	static inline std::vector<std::pair<int, int>> stagedFollowsT;
+	static inline std::vector<std::pair<int, int>> stagedParent;
+	static inline std::vector<std::pair<int, int>> stagedParentT;
 
-	static inline std::unordered_set<std::pair<int, std::unordered_set<std::string>>> stagedUsesStatement;
-	static inline std::unordered_set<std::pair<std::string, std::unordered_set<std::string>>> stagedUsesProcedure;
-	static inline std::unordered_set<std::pair<int, std::unordered_set<std::string>>> stagedModifiesStatement;
-	static inline std::unordered_set<std::pair<std::string, std::unordered_set<std::string>>> stagedModifiesProcedure;
+	static inline std::vector<std::pair<int, std::unordered_set<std::string>>> stagedUsesStatement;
+	static inline std::vector<std::pair<std::string, std::unordered_set<std::string>>> stagedUsesProcedure;
+	static inline std::vector<std::pair<int, std::unordered_set<std::string>>> stagedModifiesStatement;
+	static inline std::vector<std::pair<std::string, std::unordered_set<std::string>>> stagedModifiesProcedure;
 
 public:
 	EntityStager();
@@ -51,17 +51,17 @@ public:
 	static std::unordered_set<int> getStagedWhileStatements();
 	static std::unordered_set<int> getStagedCallStatements();
 
-	static std::unordered_set<std::tuple<int, std::string, std::string>> getStagedAssignStatements();
+	static std::vector<std::tuple<int, std::string, std::string>> getStagedAssignStatements();
 
-	static std::unordered_set<std::pair<int, int>> getStagedFollows();
-	static std::unordered_set<std::pair<int, int>> getStagedFollowsT();
-	static std::unordered_set<std::pair<int, int>> getStagedParent();
-	static std::unordered_set<std::pair<int, int>> getStagedParentT();
+	static std::vector<std::pair<int, int>> getStagedFollows();
+	static std::vector<std::pair<int, int>> getStagedFollowsT();
+	static std::vector<std::pair<int, int>> getStagedParent();
+	static std::vector<std::pair<int, int>> getStagedParentT();
 
-	static std::unordered_set<std::pair<int, std::unordered_set<std::string>>> getStagedUsesStatement();
-	static std::unordered_set<std::pair<std::string, std::unordered_set<std::string>>> getStagedUsesProcedure();
-	static std::unordered_set<std::pair<int, std::unordered_set<std::string>>> getStagedModifiesStatement();
-	static std::unordered_set<std::pair<std::string, std::unordered_set<std::string>>> getStagedModifiesProcedure();
+	static std::vector<std::pair<int, std::unordered_set<std::string>>> getStagedUsesStatement();
+	static std::vector<std::pair<std::string, std::unordered_set<std::string>>> getStagedUsesProcedure();
+	static std::vector<std::pair<int, std::unordered_set<std::string>>> getStagedModifiesStatement();
+	static std::vector<std::pair<std::string, std::unordered_set<std::string>>> getStagedModifiesProcedure();
 
 	// stagers
 	static void stageProcedure(const std::string& procedure);

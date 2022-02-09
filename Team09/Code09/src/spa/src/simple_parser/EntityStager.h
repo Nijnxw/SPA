@@ -11,16 +11,16 @@
 
 class EntityStager {
 private:
-	static inline std::vector<std::string> stagedProcedures;
-	static inline std::vector<std::string> stagedVariables;
-	static inline std::vector<std::string> stagedConstants;
+	static inline std::unordered_set<std::string> stagedProcedures;
+	static inline std::unordered_set<std::string> stagedVariables;
+	static inline std::unordered_set<std::string> stagedConstants;
 
-	static inline std::vector<int> stagedStatements;
-	static inline std::vector<int> stagedReadStatements;
-	static inline std::vector<int> stagedPrintStatements;
-	static inline std::vector<int> stagedIfStatements;
-	static inline std::vector<int> stagedWhileStatements;
-	static inline std::vector<int> stagedCallStatements;
+	static inline std::unordered_set<int> stagedStatements;
+	static inline std::unordered_set<int> stagedReadStatements;
+	static inline std::unordered_set<int> stagedPrintStatements;
+	static inline std::unordered_set<int> stagedIfStatements;
+	static inline std::unordered_set<int> stagedWhileStatements;
+	static inline std::unordered_set<int> stagedCallStatements;
 
 	static inline std::vector<std::tuple<int, std::string, std::string>> stagedAssignStatements;
 
@@ -40,16 +40,16 @@ public:
 	static void clear();
 
 	// getters
-	static std::vector<std::string> getStagedProcedures();
-	static std::vector<std::string> getStagedVariables();
-	static std::vector<std::string> getStagedConstants();
+	static std::unordered_set<std::string> getStagedProcedures();
+	static std::unordered_set<std::string> getStagedVariables();
+	static std::unordered_set<std::string> getStagedConstants();
 
-	static std::vector<int> getStagedStatements();
-	static std::vector<int> getStagedReadStatements();
-	static std::vector<int> getStagedPrintStatements();
-	static std::vector<int> getStagedIfStatements();
-	static std::vector<int> getStagedWhileStatements();
-	static std::vector<int> getStagedCallStatements();
+	static std::unordered_set<int> getStagedStatements();
+	static std::unordered_set<int> getStagedReadStatements();
+	static std::unordered_set<int> getStagedPrintStatements();
+	static std::unordered_set<int> getStagedIfStatements();
+	static std::unordered_set<int> getStagedWhileStatements();
+	static std::unordered_set<int> getStagedCallStatements();
 
 	static std::vector<std::tuple<int, std::string, std::string>> getStagedAssignStatements();
 

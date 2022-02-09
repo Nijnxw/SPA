@@ -11,9 +11,7 @@
 #include <unordered_set>
 #include <vector>
 
-//missing basic single line test cases
-
-TEST_CASE("Extract simple SIMPLE code no design entities") {
+TEST_CASE("Basic Follows* - 3 lines") {
 	EntityStager::clear();
 
 	/*
@@ -25,7 +23,7 @@ TEST_CASE("Extract simple SIMPLE code no design entities") {
 	 * }
 	 */
 
-	// building AST
+	 // building AST
 	std::shared_ptr<VariableNode> x = std::make_shared<VariableNode>("x");
 	std::shared_ptr<VariableNode> y = std::make_shared<VariableNode>("y");
 
@@ -46,29 +44,12 @@ TEST_CASE("Extract simple SIMPLE code no design entities") {
 
 	DesignExtractor::extractDesignElements(ast);
 
-	std::unordered_set<std::string> expected_procedure_table;
-	expected_procedure_table.insert("testProgram");
-	REQUIRE(EntityStager::getStagedProcedures() == expected_procedure_table);
+	std::vector<std::pair<int, int>> expectedFollowsT;
+	expectedFollowsT.push_back(std::make_pair(1, 2));
+	expectedFollowsT.push_back(std::make_pair(1, 3));
+	expectedFollowsT.push_back(std::make_pair(2, 3));
 
-	std::unordered_set<std::string> expected_var_table;
-	expected_var_table.insert("x");
-	expected_var_table.insert("y");
-	REQUIRE(EntityStager::getStagedVariables() == expected_var_table);
-
-	std::unordered_set<int> expected_stmt_table;
-	expected_stmt_table.insert(1);
-	expected_stmt_table.insert(2);
-	expected_stmt_table.insert(3);
-	REQUIRE(EntityStager::getStagedStatements() == expected_stmt_table);
-
-	std::unordered_set<int> expected_print_table;
-	expected_print_table.insert(2);
-	expected_print_table.insert(3);
-	REQUIRE(EntityStager::getStagedPrintStatements() == expected_print_table);
-
-	std::unordered_set<int> expected_read_table;
-	expected_read_table.insert(1);
-	REQUIRE(EntityStager::getStagedReadStatements() == expected_read_table);
+	REQUIRE(EntityStager::getStagedFollowsT() == expectedFollowsT);
 
 	EntityStager::clear();
 }

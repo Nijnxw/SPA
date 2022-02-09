@@ -27,38 +27,38 @@ void EntityStager::clear() {
 }
 
 // getters
-std::vector<std::string> EntityStager::getStagedProcedures() {
+std::unordered_set<std::string> EntityStager::getStagedProcedures() {
 	return stagedProcedures;
 }
 
-std::vector<std::string> EntityStager::getStagedVariables() {
+std::unordered_set<std::string> EntityStager::getStagedVariables() {
 	return stagedVariables;
 }
 
-std::vector<std::string> EntityStager::getStagedConstants() {
+std::unordered_set<std::string> EntityStager::getStagedConstants() {
 	return stagedConstants;
 }
 
-std::vector<int> EntityStager::getStagedStatements() {
+std::unordered_set<int> EntityStager::getStagedStatements() {
 	return stagedStatements;
 }
 
-std::vector<int> EntityStager::getStagedReadStatements() {
+std::unordered_set<int> EntityStager::getStagedReadStatements() {
 	return stagedReadStatements;
 }
-std::vector<int> EntityStager::getStagedPrintStatements() {
+std::unordered_set<int> EntityStager::getStagedPrintStatements() {
 	return stagedPrintStatements;
 }
 
-std::vector<int> EntityStager::getStagedIfStatements() {
+std::unordered_set<int> EntityStager::getStagedIfStatements() {
 	return stagedIfStatements;
 }
 
-std::vector<int> EntityStager::getStagedWhileStatements() {
+std::unordered_set<int> EntityStager::getStagedWhileStatements() {
 	return stagedWhileStatements;
 }
 
-std::vector<int> EntityStager::getStagedCallStatements() {
+std::unordered_set<int> EntityStager::getStagedCallStatements() {
 	return stagedCallStatements;
 }
 
@@ -100,37 +100,37 @@ std::vector<std::pair<std::string, std::unordered_set<std::string>>> EntityStage
 
 // stagers
 void EntityStager::stageProcedure(const std::string& procedure) {
-	stagedProcedures.push_back(procedure);
+	stagedProcedures.insert(procedure);
 }
 void EntityStager::stageVariable(const std::string& variable) {
-	stagedVariables.push_back(variable);
+	stagedVariables.insert(variable);
 }
 void EntityStager::stageConstant(const std::string& constant) {
-	stagedConstants.push_back(constant);
+	stagedConstants.insert(constant);
 }
 
 void EntityStager::stageStatement(int stmtNo) {
-	stagedStatements.push_back(stmtNo);
+	stagedStatements.insert(stmtNo);
 }
 
 void EntityStager::stageIfStatement(int stmtNo) {
-	stagedIfStatements.push_back(stmtNo);
+	stagedIfStatements.insert(stmtNo);
 }
 
 void EntityStager::stageWhileStatement(int stmtNo) {
-	stagedWhileStatements.push_back(stmtNo);
+	stagedWhileStatements.insert(stmtNo);
 }
 
 void EntityStager::stageReadStatement(int stmtNo) {
-	stagedReadStatements.push_back(stmtNo);
+	stagedReadStatements.insert(stmtNo);
 }
 
 void EntityStager::stagePrintStatement(int stmtNo) {
-	stagedPrintStatements.push_back(stmtNo);
+	stagedPrintStatements.insert(stmtNo);
 }
 
 void EntityStager::stageCallStatement(int stmtNo) {
-	stagedCallStatements.push_back(stmtNo);
+	stagedCallStatements.insert(stmtNo);
 }
 
 void EntityStager::stageAssignStatement(int stmtNo, std::string lhs, std::string rhs) {

@@ -28,7 +28,7 @@ class PredicateNode : public Node {
 private:
 	std::shared_ptr<RelExprNode> relExpr = nullptr;
 	std::shared_ptr<PredicateNode> lhs = nullptr;
-	ConditionalOperator op;
+	ConditionalOperator op = ConditionalOperator::NONE;
 	std::shared_ptr<PredicateNode> rhs = nullptr;
 
 public:

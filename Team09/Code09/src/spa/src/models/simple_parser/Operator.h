@@ -20,5 +20,6 @@ enum class ComparatorOperator {
 enum class ConditionalOperator {
     AND,
     OR,
-    NOT
+    NOT,
+	NONE,
 };

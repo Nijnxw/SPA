@@ -96,12 +96,12 @@ ExprNode Parser::parseOperator(const ExprNode& lhs) {
 		case BinaryOperator::PLUS:
 		case BinaryOperator::MINUS:
 			rhs = parseExpression(10);
-			return std::make_shared<OperatorNode>(op, lhs, rhs);
+			return std::make_shared<BinaryOperatorNode>(op, lhs, rhs);
 		case BinaryOperator::TIMES:
 		case BinaryOperator::DIVIDE:
 		case BinaryOperator::MODULO:
 			rhs = parseExpression(20);
-			return std::make_shared<OperatorNode>(op, lhs, rhs);
+			return std::make_shared<BinaryOperatorNode>(op, lhs, rhs);
 		default:
 			throw std::runtime_error("Expected arithmetic operator but got invalid operator instead.\n");
 	}

@@ -41,7 +41,7 @@ public:
 	static bool isChildT(int child);
 
 	static std::unordered_set<int> getChildren(int parent);
-	static int getParent(int child);
+	static std::unordered_set<int> getParent(int child);
 	static std::unordered_set<int> getAllChildren();
 	static std::unordered_set<int> getAllParents();
 

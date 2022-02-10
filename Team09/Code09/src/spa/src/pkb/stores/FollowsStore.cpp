@@ -59,12 +59,16 @@ bool FollowsStore::isFolloweeT(int followee) {
 	return followeeToFollowersT.count(followee) > 0;
 }
 
-int FollowsStore::getFollowee(int follower) {
-	return followerToFollowee[follower];
+std::unordered_set<int> FollowsStore::getFollowee(int follower) {
+	std::unordered_set<int> result;
+	result.insert(followerToFollowee[follower]);
+	return result;
 }
 
-int FollowsStore::getFollower(int followee) {
-	return followeeToFollower[followee];
+std::unordered_set<int> FollowsStore::getFollower(int followee) {
+	std::unordered_set<int> result;
+	result.insert(followeeToFollower[followee]);
+	return result;
 }
 
 std::unordered_set<int> FollowsStore::getAllFollowees() {

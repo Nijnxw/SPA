@@ -164,3 +164,68 @@ TEST_CASE("Follows* - 3 statements - With While") {
 
 	EntityStager::clear();
 }
+
+TEST_CASE("Follows* - With If") {
+	EntityStager::clear();
+
+	//TODO: nested if
+	SECTION("Single if - simple predicate") {
+		/*
+		 * Test Simple Program
+		 * procedure testProgram {
+		 * 1	if (y > 1) then {
+		 * 2        read x;
+		 * 3        read x;
+		 * 4        read x;
+		 *      } else {
+		 *      }
+		 * 5    read y;
+		 * 6    read y;
+		 * 7    read y;
+		 *  }
+		 */
+
+		 // building AST
+		std::shared_ptr<VariableNode> x = std::make_shared<VariableNode>("x");
+		std::shared_ptr<VariableNode> y = std::make_shared<VariableNode>("y");
+		RelFactorNode one = std::make_shared<ConstantNode>("1");
+
+		std::shared_ptr<RelExprNode> rel = std::make_shared<RelExprNode>(y, ComparatorOperator::GT, one);
+		std::shared_ptr<PredicateNode> pred = std::make_shared<PredicateNode>(rel);
+
+		std::vector<std::shared_ptr<StmtNode>> thenStmtList;
+		std::shared_ptr<ReadNode> readx2 = std::make_shared<ReadNode>(2, x);
+		std::shared_ptr<ReadNode> readx3 = std::make_shared<ReadNode>(3, x);
+		std::shared_ptr<ReadNode> readx4 = std::make_shared<ReadNode>(4, x);
+		thenStmtList.push_back(readx2);
+		thenStmtList.push_back(readx3);
+		thenStmtList.push_back(readx4);
+
+		std::vector<std::shared_ptr<StmtNode>> elseStmtList;
+
+		std::shared_ptr<IfNode> ifs = std::make_shared<IfNode>(1, pred, thenStmtList, elseStmtList);
+		std::shared_ptr<ReadNode> ready5 = std::make_shared<ReadNode>(5, y);
+		std::shared_ptr<ReadNode> ready6 = std::make_shared<ReadNode>(6, y);
+		std::shared_ptr<ReadNode> ready7 = std::make_shared<ReadNode>(7, y);
+		std::vector<std::shared_ptr<StmtNode>> stmtList{ ifs, ready5, ready6, ready7 };
+		std::shared_ptr<ProcedureNode> proc = std::make_shared<ProcedureNode>(stmtList, "testProgram");
+		std::vector<std::shared_ptr<ProcedureNode>> procList;
+		procList.push_back(proc);
+
+		AST ast = std::make_shared<ProgramNode>(procList);
+
+		DesignExtractor::extractDesignElements(ast);
+		std::vector<std::pair<int, int>> test = EntityStager::getStagedFollowsT();
+		std::vector<std::pair<int, int>> expectedFollows{
+			std::make_pair(1, 5), std::make_pair(1, 6), std::make_pair(1, 7),
+			std::make_pair(2, 3), std::make_pair(2, 4), std::make_pair(3, 4),
+			std::make_pair(5, 6), std::make_pair(5, 7), std::make_pair(6, 7)
+		};
+
+		REQUIRE(EntityStager::getStagedFollowsT() == expectedFollows);
+
+		DesignExtractor::extractDesignElements(ast);
+
+		EntityStager::clear();
+	}
+}

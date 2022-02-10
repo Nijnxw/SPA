@@ -327,3 +327,138 @@ TEST_CASE("Extract SIMPLE while statement") {
 		EntityStager::clear();
 	}
 }
+
+TEST_CASE("Extract SIMPLE if statement") {
+	EntityStager::clear();
+
+	SECTION("Single if - simple predicate") {
+		/*
+		 * Test Simple Program
+		 * procedure testProgram {
+		 * 1	if (y > 1) then {
+		 * 2        read x;
+		 *      } else {
+		 * 3        print z;
+		 *      }
+		 * }
+		 */
+
+		 // building AST
+		std::shared_ptr<VariableNode> x = std::make_shared<VariableNode>("x");
+		std::shared_ptr<VariableNode> y = std::make_shared<VariableNode>("y");
+		std::shared_ptr<VariableNode> z = std::make_shared<VariableNode>("z");
+		RelFactorNode one = std::make_shared<ConstantNode>("1");
+
+		std::shared_ptr<RelExprNode> rel = std::make_shared<RelExprNode>(y, ComparatorOperator::GT, one);
+		std::shared_ptr<PredicateNode> pred = std::make_shared<PredicateNode>(rel);
+
+		std::vector<std::shared_ptr<StmtNode>> thenStmtList;
+		std::shared_ptr<ReadNode> read = std::make_shared<ReadNode>(2, x);
+		thenStmtList.push_back(read);
+
+		std::vector<std::shared_ptr<StmtNode>> elseStmtList;
+		std::shared_ptr<PrintNode> print = std::make_shared<PrintNode>(3, z);
+		elseStmtList.push_back(print);
+
+		std::shared_ptr<IfNode> ifs = std::make_shared<IfNode>(1, pred, thenStmtList, elseStmtList);
+
+		std::vector<std::shared_ptr<StmtNode>> stmtList{ ifs };
+		std::shared_ptr<ProcedureNode> proc = std::make_shared<ProcedureNode>(stmtList, "testProgram");
+		std::vector<std::shared_ptr<ProcedureNode>> procList;
+		procList.push_back(proc);
+
+		AST ast = std::make_shared<ProgramNode>(procList);
+
+		DesignExtractor::extractDesignElements(ast);
+
+		std::unordered_set<std::string> expectedProcedureTable{ "testProgram" };
+		REQUIRE(EntityStager::getStagedProcedures() == expectedProcedureTable);
+
+		std::unordered_set<std::string> expectedVarTable{ "y", "x", "z" };
+		REQUIRE(EntityStager::getStagedVariables() == expectedVarTable);
+
+		std::unordered_set<std::string> expectedConstTable{ "1" };
+		REQUIRE(EntityStager::getStagedConstants() == expectedConstTable);
+
+		std::unordered_set<int> expectedStmtTable{ 1, 2, 3 };
+		REQUIRE(EntityStager::getStagedStatements() == expectedStmtTable);
+
+		std::unordered_set<int> expectedIfTable{ 1 };
+		REQUIRE(EntityStager::getStagedIfStatements() == expectedIfTable);
+
+		EntityStager::clear();
+	}
+
+	SECTION("Nested if - simple predicate") {
+		/*
+		 * Test Simple Program
+		 * procedure testProgram {
+		 * 1	if (y > 1) then {
+		 * 2        if (a > 123) then {
+		 * 3            read m;
+		 *          } else {}
+		 * 4        read x;
+		 *      } else {
+		 * 5        print z;
+		 *      }
+		 * }
+		 */
+
+		 // building AST
+		std::shared_ptr<VariableNode> a = std::make_shared<VariableNode>("a");
+		std::shared_ptr<VariableNode> m = std::make_shared<VariableNode>("m");
+		std::shared_ptr<VariableNode> x = std::make_shared<VariableNode>("x");
+		std::shared_ptr<VariableNode> y = std::make_shared<VariableNode>("y");
+		std::shared_ptr<VariableNode> z = std::make_shared<VariableNode>("z");
+		RelFactorNode one = std::make_shared<ConstantNode>("1");
+		RelFactorNode onetwothree = std::make_shared<ConstantNode>("123");
+
+		std::shared_ptr<RelExprNode> outerRel = std::make_shared<RelExprNode>(y, ComparatorOperator::GT, one);
+		std::shared_ptr<PredicateNode> outerPred = std::make_shared<PredicateNode>(outerRel);
+
+		std::shared_ptr<RelExprNode> innerRel = std::make_shared<RelExprNode>(a, ComparatorOperator::GT, onetwothree);
+		std::shared_ptr<PredicateNode> innerPred = std::make_shared<PredicateNode>(innerRel);
+		std::vector<std::shared_ptr<StmtNode>> innerThenStmtList;
+		std::vector<std::shared_ptr<StmtNode>> innerElseStmtList;
+		std::shared_ptr<ReadNode> readm = std::make_shared<ReadNode>(3, m);
+		innerThenStmtList.push_back(readm);
+
+		std::vector<std::shared_ptr<StmtNode>> thenStmtList;
+		std::shared_ptr<IfNode> innerIf = std::make_shared<IfNode>(2, innerPred, innerThenStmtList, innerElseStmtList);
+		std::shared_ptr<ReadNode> readx = std::make_shared<ReadNode>(4, x);
+		thenStmtList.push_back(innerIf);
+		thenStmtList.push_back(readx);
+
+		std::vector<std::shared_ptr<StmtNode>> elseStmtList;
+		std::shared_ptr<PrintNode> print = std::make_shared<PrintNode>(5, z);
+		elseStmtList.push_back(print);
+
+		std::shared_ptr<IfNode> ifs = std::make_shared<IfNode>(1, outerPred, thenStmtList, elseStmtList);
+
+		std::vector<std::shared_ptr<StmtNode>> stmtList{ ifs };
+		std::shared_ptr<ProcedureNode> proc = std::make_shared<ProcedureNode>(stmtList, "testProgram");
+		std::vector<std::shared_ptr<ProcedureNode>> procList;
+		procList.push_back(proc);
+
+		AST ast = std::make_shared<ProgramNode>(procList);
+
+		DesignExtractor::extractDesignElements(ast);
+
+		std::unordered_set<std::string> expectedProcedureTable{ "testProgram" };
+		REQUIRE(EntityStager::getStagedProcedures() == expectedProcedureTable);
+
+		std::unordered_set<std::string> expectedVarTable{ "y", "x", "z" ,"a", "m"};
+		REQUIRE(EntityStager::getStagedVariables() == expectedVarTable);
+
+		std::unordered_set<std::string> expectedConstTable{ "1", "123"};
+		REQUIRE(EntityStager::getStagedConstants() == expectedConstTable);
+
+		std::unordered_set<int> expectedStmtTable{ 1, 2, 3, 4, 5 };
+		REQUIRE(EntityStager::getStagedStatements() == expectedStmtTable);
+
+		std::unordered_set<int> expectedIfTable{ 1, 2 };
+		REQUIRE(EntityStager::getStagedIfStatements() == expectedIfTable);
+
+		EntityStager::clear();
+	}
+}

@@ -136,7 +136,7 @@ Relationships processWhileNode(std::shared_ptr<WhileNode> whiles) {
 }
 
 Relationships processIfNode(std::shared_ptr<IfNode> ifs) {
-	EntityStager::stageWhileStatement(ifs->getStmtNumber());
+	EntityStager::stageIfStatement(ifs->getStmtNumber());
 
 	//process predicate
 	Relationships rs = processPredicateNode(ifs->getPredicate());

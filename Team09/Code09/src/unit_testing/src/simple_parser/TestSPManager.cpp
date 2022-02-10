@@ -2,6 +2,7 @@
 #include "models/simple_parser/AST.h"
 #include "simple_parser/SPManager.h"
 #include "models/simple_parser/IoNodes.h"
+#include "models/simple_parser/AssignNode.h"
 
 #include <vector>
 
@@ -30,6 +31,36 @@ TEST_CASE("Parse SIMPLE file into AST") {
 		REQUIRE(*output == *expected);
 	}
 
+	SECTION("Assign file") {
+		AST output = SPManager::parseFile("../../../src/unit_testing/tests/simple_source/valid_assign.txt");
+
+		std::shared_ptr<AssignNode> assignNode1 = std::make_shared<AssignNode>(1,
+																			   std::make_shared<VariableNode>("x"),
+																			   std::make_shared<ConstantNode>("3"),
+																			   "3");
+
+		ExprNode exprNode2 = std::make_shared<BinaryOperatorNode>(BinaryOperator::DIVIDE,
+																  std::make_shared<ConstantNode>("1"),
+																  std::make_shared<VariableNode>("x"));
+		ExprNode exprNode3 = std::make_shared<BinaryOperatorNode>(BinaryOperator::PLUS,
+																  std::make_shared<VariableNode>("x"),
+																  exprNode2);
+		ExprNode exprNode4 = std::make_shared<BinaryOperatorNode>(BinaryOperator::MINUS,
+																  exprNode3,
+																  std::make_shared<ConstantNode>("2"));
+		std::shared_ptr<AssignNode> assignNode2 = std::make_shared<AssignNode>(2,
+																			   std::make_shared<VariableNode>("x"),
+																			   exprNode4,
+																			   "x 1 x / + 2 -");
+
+		std::vector<std::shared_ptr<StmtNode>> stmtLst{assignNode1, assignNode2};
+		std::shared_ptr<ProcedureNode> procedureNode = std::make_shared<ProcedureNode>(stmtLst, "testProgram");
+		std::vector<std::shared_ptr<ProcedureNode>> procLst{procedureNode};
+		AST expected = std::make_shared<ProgramNode>(procLst);
+
+		REQUIRE(*output == *expected);
+	}
+
 	SECTION("Simple source file") {
 		AST output = SPManager::parseFile("../../../src/unit_testing/tests/simple_source/valid_SIMPLE.txt");
 
@@ -37,7 +68,27 @@ TEST_CASE("Parse SIMPLE file into AST") {
 		std::shared_ptr<ReadNode> readNode1 = std::make_shared<ReadNode>(2, std::make_shared<VariableNode>("y"));
 		std::shared_ptr<PrintNode> printNode2 = std::make_shared<PrintNode>(3, std::make_shared<VariableNode>("y"));
 		std::shared_ptr<ReadNode> readNode2 = std::make_shared<ReadNode>(4, std::make_shared<VariableNode>("x"));
-		std::vector<std::shared_ptr<StmtNode>> stmtLst{printNode1, readNode1, printNode2, readNode2};
+
+		std::shared_ptr<AssignNode> assignNode1 = std::make_shared<AssignNode>(5,
+																			   std::make_shared<VariableNode>("x"),
+																			   std::make_shared<ConstantNode>("3"),
+																			   "3");
+
+		ExprNode exprNode2 = std::make_shared<BinaryOperatorNode>(BinaryOperator::DIVIDE,
+																  std::make_shared<ConstantNode>("1"),
+																  std::make_shared<VariableNode>("x"));
+		ExprNode exprNode3 = std::make_shared<BinaryOperatorNode>(BinaryOperator::PLUS,
+																  std::make_shared<VariableNode>("x"),
+																  exprNode2);
+		ExprNode exprNode4 = std::make_shared<BinaryOperatorNode>(BinaryOperator::MINUS,
+																  exprNode3,
+																  std::make_shared<ConstantNode>("2"));
+		std::shared_ptr<AssignNode> assignNode2 = std::make_shared<AssignNode>(6,
+																			   std::make_shared<VariableNode>("y"),
+																			   exprNode4,
+																			   "x 1 x / + 2 -");
+
+		std::vector<std::shared_ptr<StmtNode>> stmtLst{printNode1, readNode1, printNode2, readNode2, assignNode1, assignNode2};
 		std::shared_ptr<ProcedureNode> procedureNode = std::make_shared<ProcedureNode>(stmtLst, "testProgram");
 		std::vector<std::shared_ptr<ProcedureNode>> procLst{procedureNode};
 		AST expected = std::make_shared<ProgramNode>(procLst);
@@ -51,7 +102,7 @@ TEST_CASE("File do not exist") {
 	REQUIRE_THROWS_WITH(SPManager::parseFile(filename), "File do not exist!\n");
 }
 
-TEST_CASE("Invalid syntax") {
+TEST_CASE("Invalid SIMPLE syntax") {
 	SECTION("Invalid symbols") {
 		std::string filename = "../../../src/unit_testing/tests/simple_source/invalid_symbols.txt";
 		REQUIRE_THROWS_WITH(SPManager::parseFile(filename), "Invalid SIMPLE Syntax.\n");
@@ -62,11 +113,11 @@ TEST_CASE("Invalid syntax") {
 	}
 	SECTION("Invalid variable name") {
 		std::string filename = "../../../src/unit_testing/tests/simple_source/invalid_variable_name.txt";
-		REQUIRE_THROWS_WITH(SPManager::parseFile(filename), "Invalid variable name!\n");
+		REQUIRE_THROWS_WITH(SPManager::parseFile(filename), "Expected a variable name but got '3' instead.\n");
 	}
 	SECTION("No procedure") {
 		std::string filename = "../../../src/unit_testing/tests/simple_source/invalid_procedure.txt";
-		REQUIRE_THROWS_WITH(SPManager::parseFile(filename), "Expected 'procedure' but got '' instead.\n");
+		REQUIRE_THROWS_WITH(SPManager::parseFile(filename), "There must be at least 1 procedure in a SIMPLE program!\n");
 	}
 	SECTION("No statements") {
 		std::string filename = "../../../src/unit_testing/tests/simple_source/invalid_no_stmts.txt";

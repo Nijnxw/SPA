@@ -3,4 +3,6 @@ procedure testProgram {
     read y;
     print y;
     read x;
+    x = 3;
+    y = x + 1 / x - 2;
 }

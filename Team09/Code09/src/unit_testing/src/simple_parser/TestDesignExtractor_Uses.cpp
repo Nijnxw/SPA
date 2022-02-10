@@ -364,7 +364,122 @@ TEST_CASE("Uses - While Statement") {
 		REQUIRE(EntityStager::getStagedUsesStatement() == expectedUses);
 
 		EntityStager::clear();
+	}
+
+	SECTION("Double Nested While loop - simple predicate") {
+		/*
+		 * Test Simple Program
+		 * procedure testProgram {
+		 * 1	while (y > 1) {
+		 * 2        while (x > 1) {
+		 *          }
+		 *      }
+		 * }
+		 */
+
+		 // building AST
+		std::shared_ptr<VariableNode> x = std::make_shared<VariableNode>("x");
+		std::shared_ptr<VariableNode> y = std::make_shared<VariableNode>("y");
+		std::shared_ptr<ConstantNode> one = std::make_shared<ConstantNode>("1");
+
+		std::shared_ptr<RelExprNode> outerRel = std::make_shared<RelExprNode>(y, ComparatorOperator::GT, one);
+		std::shared_ptr<PredicateNode> outerPred = std::make_shared<PredicateNode>(outerRel);
+		std::shared_ptr<RelExprNode> innerRel = std::make_shared<RelExprNode>(x, ComparatorOperator::GT, one);
+		std::shared_ptr<PredicateNode> innerPred = std::make_shared<PredicateNode>(innerRel);
+
+		std::vector<std::shared_ptr<StmtNode>> outerWhileStmtList;
+		std::vector<std::shared_ptr<StmtNode>> innerWhileStmtList;
+
+		std::shared_ptr<WhileNode> innerWhile = std::make_shared<WhileNode>(2, innerPred, innerWhileStmtList);
+		outerWhileStmtList.push_back(innerWhile);
+
+		std::shared_ptr<WhileNode> outerWhile = std::make_shared<WhileNode>(1, outerPred, outerWhileStmtList);
+		std::vector<std::shared_ptr<StmtNode>> stmtList{ outerWhile };
+
+		std::shared_ptr<ProcedureNode> proc = std::make_shared<ProcedureNode>(stmtList, "testProgram");
+		std::vector<std::shared_ptr<ProcedureNode>> procList;
+		procList.push_back(proc);
+
+		AST ast = std::make_shared<ProgramNode>(procList);
+
+		DesignExtractor::extractDesignElements(ast);
+
+		std::vector<std::pair<int, std::unordered_set<std::string>>> expectedUses;
+		std::unordered_set<std::string> innerWhileUses{ "x" };
+		std::unordered_set<std::string> outerWhileUses{ "x", "y" };
+		expectedUses.push_back(std::make_pair(2, innerWhileUses));
+		expectedUses.push_back(std::make_pair(1, outerWhileUses));
+
+		std::vector<std::pair<int, std::unordered_set<std::string>>> test = EntityStager::getStagedUsesStatement();
+
+		REQUIRE(EntityStager::getStagedUsesStatement() == expectedUses);
 
 		EntityStager::clear();
 	}
+
+	SECTION("Double Nested While loop - simple predicate") {
+		/*
+		 * Test Simple Program
+		 * procedure testProgram {
+		 * 1	while (y > 1) {
+		 * 2        while (x > 1) {
+		 * 3            d = d + 1;
+		 *          }
+		 * 4        print z;
+		 *      }
+		 * }
+		 */
+
+		 // building AST
+		std::shared_ptr<VariableNode> d = std::make_shared<VariableNode>("d");
+		std::shared_ptr<VariableNode> x = std::make_shared<VariableNode>("x");
+		std::shared_ptr<VariableNode> y = std::make_shared<VariableNode>("y");
+		std::shared_ptr<VariableNode> z = std::make_shared<VariableNode>("z");
+		std::shared_ptr<ConstantNode> one = std::make_shared<ConstantNode>("1");
+
+		std::shared_ptr<RelExprNode> outerRel = std::make_shared<RelExprNode>(y, ComparatorOperator::GT, one);
+		std::shared_ptr<PredicateNode> outerPred = std::make_shared<PredicateNode>(outerRel);
+		std::shared_ptr<RelExprNode> innerRel = std::make_shared<RelExprNode>(x, ComparatorOperator::GT, one);
+		std::shared_ptr<PredicateNode> innerPred = std::make_shared<PredicateNode>(innerRel);
+
+		std::vector<std::shared_ptr<StmtNode>> outerWhileStmtList;
+		std::vector<std::shared_ptr<StmtNode>> innerWhileStmtList;
+
+		ExprNode expression = std::make_shared<BinaryOperatorNode>(BinaryOperator::PLUS, d, one);
+		std::shared_ptr<AssignNode> assign = std::make_shared<AssignNode>(3, d, expression, "d 1 +");
+		innerWhileStmtList.push_back(assign);
+
+		std::shared_ptr<WhileNode> innerWhile = std::make_shared<WhileNode>(2, innerPred, innerWhileStmtList);
+		std::shared_ptr<PrintNode> print = std::make_shared<PrintNode>(4, z);
+		outerWhileStmtList.push_back(innerWhile);
+		outerWhileStmtList.push_back(print);
+
+		std::shared_ptr<WhileNode> outerWhile = std::make_shared<WhileNode>(1, outerPred, outerWhileStmtList);
+		std::vector<std::shared_ptr<StmtNode>> stmtList{ outerWhile };
+
+		std::shared_ptr<ProcedureNode> proc = std::make_shared<ProcedureNode>(stmtList, "testProgram");
+		std::vector<std::shared_ptr<ProcedureNode>> procList;
+		procList.push_back(proc);
+
+		AST ast = std::make_shared<ProgramNode>(procList);
+
+		DesignExtractor::extractDesignElements(ast);
+
+		std::vector<std::pair<int, std::unordered_set<std::string>>> expectedUses;
+		std::unordered_set<std::string> assignUses{ "d" };
+		std::unordered_set<std::string> printUses{ "z" };
+		std::unordered_set<std::string> innerWhileUses{ "x", "d"};
+		std::unordered_set<std::string> outerWhileUses{ "x", "y", "d", "z"};
+		expectedUses.push_back(std::make_pair(3, assignUses));
+		expectedUses.push_back(std::make_pair(2, innerWhileUses));
+		expectedUses.push_back(std::make_pair(4, printUses));
+		expectedUses.push_back(std::make_pair(1, outerWhileUses));
+
+		std::vector<std::pair<int, std::unordered_set<std::string>>> test = EntityStager::getStagedUsesStatement();
+
+		REQUIRE(EntityStager::getStagedUsesStatement() == expectedUses);
+
+		EntityStager::clear();
+	}
+
 }

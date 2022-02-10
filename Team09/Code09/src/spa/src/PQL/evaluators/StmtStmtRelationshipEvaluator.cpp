@@ -1,21 +1,21 @@
-#include "StatementOnlyRelationshipEvaluator.h"
+#include "StmtStmtRelationshipEvaluator.h"
 
-QueryClauseTable StatementOnlyRelationshipEvaluator::getRelationship(RelationRef relationship, const std::string& LHS, const std::string& RHS, EntityType LHSType, EntityType RHSType,
+QueryClauseTable StmtStmtRelationshipEvaluator::getRelationship(RelationRef relationship, const std::string& LHS, const std::string& RHS, EntityType LHSType, EntityType RHSType,
 	bool isBooleanResult) {
 	switch (LHSType) {
 	case EntityType::INT:
-		return StatementOnlyRelationshipEvaluator::getRelationshipByStatementNumber(relationship, LHS, RHS, RHSType);
+		return StmtStmtRelationshipEvaluator::getRelationshipByStatementNumber(relationship, LHS, RHS, RHSType);
 	case EntityType::STMT:
-		return StatementOnlyRelationshipEvaluator::getRelationshipByStatementVariable(relationship, LHS, RHS, RHSType);
+		return StmtStmtRelationshipEvaluator::getRelationshipByStatementVariable(relationship, LHS, RHS, RHSType);
 	case EntityType::WILD:
-		return StatementOnlyRelationshipEvaluator::getRelationshipByUnderscore(relationship, RHS, RHSType);
+		return StmtStmtRelationshipEvaluator::getRelationshipByUnderscore(relationship, RHS, RHSType);
 	default:
 		QueryClauseTable emptyQueryResult;
 		return emptyQueryResult;
 	}
 }
 
-QueryClauseTable StatementOnlyRelationshipEvaluator::getRelationshipByStatementNumber(RelationRef relationship, const std::string& LHS, const std::string& RHS, EntityType RHSType) {
+QueryClauseTable StmtStmtRelationshipEvaluator::getRelationshipByStatementNumber(RelationRef relationship, const std::string& LHS, const std::string& RHS, EntityType RHSType) {
 	QueryClauseTable queryResult;
 
 	switch (RHSType) {
@@ -41,7 +41,7 @@ QueryClauseTable StatementOnlyRelationshipEvaluator::getRelationshipByStatementN
 	return queryResult;
 }
 
-QueryClauseTable StatementOnlyRelationshipEvaluator::getRelationshipByStatementVariable(RelationRef relationship, const std::string& LHS, const std::string& RHS, EntityType RHSType) {
+QueryClauseTable StmtStmtRelationshipEvaluator::getRelationshipByStatementVariable(RelationRef relationship, const std::string& LHS, const std::string& RHS, EntityType RHSType) {
 	QueryClauseTable queryResult;
 
 	switch (RHSType) {
@@ -66,7 +66,7 @@ QueryClauseTable StatementOnlyRelationshipEvaluator::getRelationshipByStatementV
 
 	return queryResult;
 }
-QueryClauseTable StatementOnlyRelationshipEvaluator::getRelationshipByUnderscore(RelationRef relationship, const std::string& RHS, EntityType RHSType) {
+QueryClauseTable StmtStmtRelationshipEvaluator::getRelationshipByUnderscore(RelationRef relationship, const std::string& RHS, EntityType RHSType) {
 	QueryClauseTable queryResult;
 
 	switch (RHSType) {

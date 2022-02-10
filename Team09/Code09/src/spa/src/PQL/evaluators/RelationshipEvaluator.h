@@ -6,7 +6,7 @@
 #include "../../models/EntityType.h"
 #include "../../models/QueryClauseTable.h"
 
-class RelationshipEvaluatorInterface {
+class RelationshipEvaluator {
 public:
     // virtual and =0 makes this an interface and does not require this method to be defined.
     virtual QueryClauseTable getRelationship(const std::string& LHS, const std::string& RHS, EntityType LHSType, EntityType RHSType,

@@ -8,10 +8,10 @@
 #include "pkb/util/PKBUtil.cpp"
 #include "models/EntityType.h"
 
-#include "RelationshipEvaluatorInterface.h"
-#include "TransitiveRelationshipEvaluatorInterface.h"
+#include "RelationshipEvaluator.h"
+#include "TransitiveRelationshipEvaluator.h"
 
-class StatementOnlyRelationshipEvaluator : public RelationshipEvaluatorInterface, public TransitiveRelationshipEvaluatorInterface {
+class StmtStmtRelationshipEvaluator : public RelationshipEvaluator, public TransitiveRelationshipEvaluator {
 private:
 	static QueryClauseTable
 		getRelationshipByStatementNumber(RelationRef relationship, const std::string& LHS, const std::string& RHS, EntityType RHSType);

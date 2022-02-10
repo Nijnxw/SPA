@@ -5,6 +5,7 @@
 #include "ExprNodes.h"
 
 #include <memory>
+#include <string>
 
 class IoNode : public StmtNode {
 private:
@@ -15,6 +16,7 @@ protected:
 
 public:
 	std::shared_ptr<VariableNode> getVariable() const;
+	std::string IoNode::getVariableName() const;
 };
 
 class ReadNode : public IoNode {

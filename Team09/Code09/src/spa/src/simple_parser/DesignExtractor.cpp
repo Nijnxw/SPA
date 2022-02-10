@@ -85,8 +85,7 @@ Relationships processPrintNode(std::shared_ptr<PrintNode> print) {
 
 	//stage relationships
 	Relationships rs = buildEmptyMap();
-	//todo: implement getVariableName() -> current implementatiaon violates law of dementer
-	rs["USES"].insert(print->getVariable()->getName());
+	rs["USES"].insert(print->getVariableName());
 	EntityStager::stageUsesStatements(print->getStmtNumber(), rs["USES"]);
 	return rs;
 }
@@ -97,8 +96,7 @@ Relationships processReadNode(std::shared_ptr<ReadNode> read) {
 
 	//stage relationships
 	Relationships rs = buildEmptyMap();
-	//todo: implement getVariableName() -> current implementatiaon violates law of dementer
-	rs["MODIFIES"].insert(read->getVariable()->getName());
+	rs["MODIFIES"].insert(read->getVariableName());
 	EntityStager::stageModifiesStatements(read->getStmtNumber(), rs["MODIFIES"]);
 	return rs;
 }
@@ -116,8 +114,7 @@ Relationships processAssignNode(std::shared_ptr<AssignNode> assign) {
 	Relationships rs = processExprNode(assign->getExpression());
 	
 	//stage relationships
-	//todo: implement getAssignedVarName() -> current implementatiaon violates law of dementer
-	rs["MODIFIES"].insert(assign->getAssignedVar()->getName());
+	rs["MODIFIES"].insert(assign->getAssignedVarName());
 	EntityStager::stageModifiesStatements(assign->getStmtNumber(), rs["MODIFIES"]);
 	EntityStager::stageUsesStatements(assign->getStmtNumber(), rs["USES"]);
 	return rs;

@@ -128,3 +128,55 @@ TEST_CASE("Follows - With Assignment") {
 
 	EntityStager::clear();
 }
+
+TEST_CASE("Follows - With While") {
+	EntityStager::clear();
+
+	/*
+	 * Test Simple Program
+	 * procedure testProgram {
+	 * 1	while (x > 1) {
+	 * 2	    read x;
+	 * 3        read z;
+	 *      }
+	 * 4    read y;
+	 * }
+	 */
+
+	 // building AST
+	std::shared_ptr<VariableNode> x = std::make_shared<VariableNode>("x");
+	std::shared_ptr<VariableNode> y = std::make_shared<VariableNode>("y");
+	std::shared_ptr<VariableNode> z = std::make_shared<VariableNode>("z");
+	std::shared_ptr<ConstantNode> one = std::make_shared<ConstantNode>("1");
+
+	std::shared_ptr<RelExprNode> rel = std::make_shared<RelExprNode>(y, ComparatorOperator::GT, one);
+	std::shared_ptr<PredicateNode> pred = std::make_shared<PredicateNode>(rel);
+
+	std::vector<std::shared_ptr<StmtNode>> whileStmtList;
+	std::shared_ptr<ReadNode> read1 = std::make_shared<ReadNode>(2, x);
+	std::shared_ptr<ReadNode> read2 = std::make_shared<ReadNode>(3, z);
+	whileStmtList.push_back(read1);
+	whileStmtList.push_back(read2);
+	std::shared_ptr<WhileNode> whiles = std::make_shared<WhileNode>(1, pred, whileStmtList);
+
+	std::shared_ptr<ReadNode> read3 = std::make_shared<ReadNode>(4, y);
+	std::vector<std::shared_ptr<StmtNode>> stmtList;
+	stmtList.push_back(whiles);
+	stmtList.push_back(read3);
+
+	std::shared_ptr<ProcedureNode> proc1 = std::make_shared<ProcedureNode>(stmtList, "testProgram");
+	std::vector<std::shared_ptr<ProcedureNode>> procList;
+	procList.push_back(proc1);
+
+	AST ast = std::make_shared<ProgramNode>(procList);
+
+	DesignExtractor::extractDesignElements(ast);
+
+	std::vector<std::pair<int, int>> expectedFollows{
+		std::make_pair(1, 4), std::make_pair(2, 3)
+	};
+
+	REQUIRE(EntityStager::getStagedFollows() == expectedFollows);
+
+	EntityStager::clear();
+}

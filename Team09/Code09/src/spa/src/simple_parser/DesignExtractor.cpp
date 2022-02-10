@@ -17,6 +17,7 @@ Relationships combine(Relationships rs1, Relationships rs2) {
 }
 
 DesignExtractor::DesignExtractor() {}
+Relationships processStmtList(std::vector<std::shared_ptr<StmtNode>> stmtList);
 
 //primitive node processing functions
 void processConstantNode(std::shared_ptr<ConstantNode> constant) {
@@ -63,17 +64,18 @@ Relationships processExprNode(ExprNode expr) {
 //process PredicateNodes; only ifNode, whileNode call this
 //returns the relationships only, no follows no parents relationships involved
 Relationships processPredicateNode(std::shared_ptr<PredicateNode> expr) {
+	Relationships left;
+	Relationships right;
 	if (expr->isTerminalPredicate()) {
+		//todo: violates law of dememter
 		std::shared_ptr<RelExprNode> relExpr = expr->getRelExprNode();
-
 		Relationships left = processExprNode(relExpr->getLhs());
 		Relationships right = processExprNode(relExpr->getRhs());
 	} else {
 		Relationships left = processPredicateNode(expr->getLhs());
 		Relationships right = processPredicateNode(expr->getRhs());
-
-		return combine(left, right);
 	}
+	return combine(left, right);
 }
 
 //individual stmt node processing functions
@@ -106,6 +108,7 @@ Relationships processAssignNode(std::shared_ptr<AssignNode> assign) {
 		assign->getStmtNumber(),
 		assign->getAssignedVar()->getName(),
 		assign->getPostfix());
+	
 	//process lhs
 	processVariableNode(assign->getAssignedVar());
 	//todo: implement getAssignedVarName() -> current implementatiaon violates law of dementer
@@ -122,6 +125,21 @@ Relationships processAssignNode(std::shared_ptr<AssignNode> assign) {
 	return output;
 }
 
+Relationships processWhileNode(std::shared_ptr<WhileNode> whiles) {
+	EntityStager::stageWhileStatement(whiles->getStmtNumber());
+
+	//process predicate
+	Relationships rs = processPredicateNode(whiles->getPredicate());
+
+	//combine with stmtlist
+	rs = combine(rs, processStmtList(whiles->getStmtList()));
+
+	//stage relationships
+	EntityStager::stageModifiesStatements(whiles->getStmtNumber(), rs["MODIFIES"]);
+	EntityStager::stageUsesStatements(whiles->getStmtNumber(), rs["USES"]);
+	return rs;
+}
+
 //statement (list) processing functions
 Relationships processStmt(std::shared_ptr<StmtNode> stmt) {
 	EntityStager::stageStatement(stmt->getStmtNumber());
@@ -131,6 +149,8 @@ Relationships processStmt(std::shared_ptr<StmtNode> stmt) {
 		return processPrintNode(std::dynamic_pointer_cast<PrintNode>(stmt));
 	} else if (stmt->isAssignNode()) {
 		return processAssignNode(std::dynamic_pointer_cast<AssignNode>(stmt));
+	} else if (stmt->isWhileNode()) {
+		return processWhileNode(std::dynamic_pointer_cast<WhileNode>(stmt));
 	}
 	return buildEmptyMap();
 }

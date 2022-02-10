@@ -27,12 +27,10 @@ TEST_CASE("Uses - Print Statement") {
 
 	std::shared_ptr<PrintNode> stmt = std::make_shared<PrintNode>(1, x);
 
-	std::vector<std::shared_ptr<StmtNode>> stmtList;
-	stmtList.push_back(stmt);
+	std::vector<std::shared_ptr<StmtNode>> stmtList{ stmt };
 
 	std::shared_ptr<ProcedureNode> proc = std::make_shared<ProcedureNode>(stmtList, "testProgram");
-	std::vector<std::shared_ptr<ProcedureNode>> procList;
-	procList.push_back(proc);
+	std::vector<std::shared_ptr<ProcedureNode>> procList{ proc };
 
 	AST ast = std::make_shared<ProgramNode>(procList);
 
@@ -62,12 +60,10 @@ TEST_CASE("Uses - Assign Statement") {
 
 		std::shared_ptr<AssignNode> stmt = std::make_shared<AssignNode>(1, x, one, "x 1 +");
 
-		std::vector<std::shared_ptr<StmtNode>> stmtList;
-		stmtList.push_back(stmt);
+		std::vector<std::shared_ptr<StmtNode>> stmtList{ stmt };
 
 		std::shared_ptr<ProcedureNode> proc = std::make_shared<ProcedureNode>(stmtList, "testProgram");
-		std::vector<std::shared_ptr<ProcedureNode>> procList;
-		procList.push_back(proc);
+		std::vector<std::shared_ptr<ProcedureNode>> procList{ proc };
 
 		AST ast = std::make_shared<ProgramNode>(procList);
 
@@ -100,12 +96,10 @@ TEST_CASE("Uses - Assign Statement") {
 
 		std::shared_ptr<AssignNode> stmt = std::make_shared<AssignNode>(1, x, expression, "y 1 +");
 
-		std::vector<std::shared_ptr<StmtNode>> stmtList;
-		stmtList.push_back(stmt);
+		std::vector<std::shared_ptr<StmtNode>> stmtList{ stmt };
 
 		std::shared_ptr<ProcedureNode> proc = std::make_shared<ProcedureNode>(stmtList, "testProgram");
-		std::vector<std::shared_ptr<ProcedureNode>> procList;
-		procList.push_back(proc);
+		std::vector<std::shared_ptr<ProcedureNode>> procList{ proc };
 
 		AST ast = std::make_shared<ProgramNode>(procList);
 
@@ -139,12 +133,10 @@ TEST_CASE("Uses - Assign Statement") {
 
 		std::shared_ptr<AssignNode> stmt = std::make_shared<AssignNode>(1, x, expression, "x y +");
 
-		std::vector<std::shared_ptr<StmtNode>> stmtList;
-		stmtList.push_back(stmt);
+		std::vector<std::shared_ptr<StmtNode>> stmtList{ stmt };
 
 		std::shared_ptr<ProcedureNode> proc = std::make_shared<ProcedureNode>(stmtList, "testProgram");
-		std::vector<std::shared_ptr<ProcedureNode>> procList;
-		procList.push_back(proc);
+		std::vector<std::shared_ptr<ProcedureNode>> procList{ proc };
 
 		AST ast = std::make_shared<ProgramNode>(procList);
 
@@ -187,8 +179,7 @@ TEST_CASE("Uses - While Statement") {
 
 		std::vector<std::shared_ptr<StmtNode>> stmtList{ whiles };
 		std::shared_ptr<ProcedureNode> proc = std::make_shared<ProcedureNode>(stmtList, "testProgram");
-		std::vector<std::shared_ptr<ProcedureNode>> procList;
-		procList.push_back(proc);
+		std::vector<std::shared_ptr<ProcedureNode>> procList{ proc };
 
 		AST ast = std::make_shared<ProgramNode>(procList);
 
@@ -230,8 +221,7 @@ TEST_CASE("Uses - While Statement") {
 
 		std::vector<std::shared_ptr<StmtNode>> stmtList{ whiles };
 		std::shared_ptr<ProcedureNode> proc = std::make_shared<ProcedureNode>(stmtList, "testProgram");
-		std::vector<std::shared_ptr<ProcedureNode>> procList;
-		procList.push_back(proc);
+		std::vector<std::shared_ptr<ProcedureNode>> procList{ proc };
 
 		AST ast = std::make_shared<ProgramNode>(procList);
 
@@ -276,8 +266,7 @@ TEST_CASE("Uses - While Statement") {
 
 		std::vector<std::shared_ptr<StmtNode>> stmtList{ whiles };
 		std::shared_ptr<ProcedureNode> proc = std::make_shared<ProcedureNode>(stmtList, "testProgram");
-		std::vector<std::shared_ptr<ProcedureNode>> procList;
-		procList.push_back(proc);
+		std::vector<std::shared_ptr<ProcedureNode>> procList{ proc };
 
 		AST ast = std::make_shared<ProgramNode>(procList);
 
@@ -344,8 +333,7 @@ TEST_CASE("Uses - While Statement") {
 
 		std::vector<std::shared_ptr<StmtNode>> stmtList{ whiles };
 		std::shared_ptr<ProcedureNode> proc = std::make_shared<ProcedureNode>(stmtList, "testProgram");
-		std::vector<std::shared_ptr<ProcedureNode>> procList;
-		procList.push_back(proc);
+		std::vector<std::shared_ptr<ProcedureNode>> procList{ proc };
 
 		AST ast = std::make_shared<ProgramNode>(procList);
 
@@ -397,8 +385,7 @@ TEST_CASE("Uses - While Statement") {
 		std::vector<std::shared_ptr<StmtNode>> stmtList{ outerWhile };
 
 		std::shared_ptr<ProcedureNode> proc = std::make_shared<ProcedureNode>(stmtList, "testProgram");
-		std::vector<std::shared_ptr<ProcedureNode>> procList;
-		procList.push_back(proc);
+		std::vector<std::shared_ptr<ProcedureNode>> procList{ proc };
 
 		AST ast = std::make_shared<ProgramNode>(procList);
 
@@ -458,8 +445,7 @@ TEST_CASE("Uses - While Statement") {
 		std::vector<std::shared_ptr<StmtNode>> stmtList{ outerWhile };
 
 		std::shared_ptr<ProcedureNode> proc = std::make_shared<ProcedureNode>(stmtList, "testProgram");
-		std::vector<std::shared_ptr<ProcedureNode>> procList;
-		procList.push_back(proc);
+		std::vector<std::shared_ptr<ProcedureNode>> procList{ proc };
 
 		AST ast = std::make_shared<ProgramNode>(procList);
 
@@ -507,8 +493,7 @@ TEST_CASE("Uses - If Statement") {
 		std::shared_ptr<IfNode> ifs = std::make_shared<IfNode>(1, pred, thenStmtList, elseStmtList);
 		std::vector<std::shared_ptr<StmtNode>> stmtList{ ifs };
 		std::shared_ptr<ProcedureNode> proc = std::make_shared<ProcedureNode>(stmtList, "testProgram");
-		std::vector<std::shared_ptr<ProcedureNode>> procList;
-		procList.push_back(proc);
+		std::vector<std::shared_ptr<ProcedureNode>> procList{ proc };
 
 		AST ast = std::make_shared<ProgramNode>(procList);
 
@@ -555,8 +540,7 @@ TEST_CASE("Uses - If Statement") {
 		std::shared_ptr<AssignNode> assignX = std::make_shared<AssignNode>(3, x, expressionX, "x 1 +");
 		std::vector<std::shared_ptr<StmtNode>> stmtList{ ifs, assignX };
 		std::shared_ptr<ProcedureNode> proc = std::make_shared<ProcedureNode>(stmtList, "testProgram");
-		std::vector<std::shared_ptr<ProcedureNode>> procList;
-		procList.push_back(proc);
+		std::vector<std::shared_ptr<ProcedureNode>> procList{ proc };
 
 		AST ast = std::make_shared<ProgramNode>(procList);
 
@@ -627,8 +611,7 @@ TEST_CASE("Uses - If Statement") {
 
 		std::vector<std::shared_ptr<StmtNode>> stmtList{ ifs };
 		std::shared_ptr<ProcedureNode> proc = std::make_shared<ProcedureNode>(stmtList, "testProgram");
-		std::vector<std::shared_ptr<ProcedureNode>> procList;
-		procList.push_back(proc);
+		std::vector<std::shared_ptr<ProcedureNode>> procList{ proc };
 
 		AST ast = std::make_shared<ProgramNode>(procList);
 
@@ -693,8 +676,7 @@ TEST_CASE("Uses - If Statement") {
 		std::vector<std::shared_ptr<StmtNode>> stmtList{ ifs };
 
 		std::shared_ptr<ProcedureNode> proc = std::make_shared<ProcedureNode>(stmtList, "testProgram");
-		std::vector<std::shared_ptr<ProcedureNode>> procList;
-		procList.push_back(proc);
+		std::vector<std::shared_ptr<ProcedureNode>> procList{ proc };
 
 		AST ast = std::make_shared<ProgramNode>(procList);
 
@@ -758,8 +740,7 @@ TEST_CASE("Uses - If Statement") {
 		std::vector<std::shared_ptr<StmtNode>> stmtList{ outerWhile };
 
 		std::shared_ptr<ProcedureNode> proc = std::make_shared<ProcedureNode>(stmtList, "testProgram");
-		std::vector<std::shared_ptr<ProcedureNode>> procList;
-		procList.push_back(proc);
+		std::vector<std::shared_ptr<ProcedureNode>> procList{ proc };
 
 		AST ast = std::make_shared<ProgramNode>(procList);
 

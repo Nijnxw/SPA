@@ -31,14 +31,10 @@ TEST_CASE("Basic Follows* - 3 lines - IO") {
 	std::shared_ptr<PrintNode> stmt2 = std::make_shared<PrintNode>(2, x);
 	std::shared_ptr<PrintNode> stmt3 = std::make_shared<PrintNode>(3, y);
 
-	std::vector<std::shared_ptr<StmtNode>> stmtList;
-	stmtList.push_back(stmt1);
-	stmtList.push_back(stmt2);
-	stmtList.push_back(stmt3);
+	std::vector<std::shared_ptr<StmtNode>> stmtList{ stmt1, stmt2, stmt3 };
 
-	std::shared_ptr<ProcedureNode> proc1 = std::make_shared<ProcedureNode>(stmtList, "testProgram");
-	std::vector<std::shared_ptr<ProcedureNode>> procList;
-	procList.push_back(proc1);
+	std::shared_ptr<ProcedureNode> proc = std::make_shared<ProcedureNode>(stmtList, "testProgram");
+	std::vector<std::shared_ptr<ProcedureNode>> procList{ proc };
 
 	AST ast = std::make_shared<ProgramNode>(procList);
 
@@ -77,14 +73,10 @@ TEST_CASE("Basic Follows* - 3 lines - With Assignment") {
 	ExprNode expression = std::make_shared<BinaryOperatorNode>(BinaryOperator::PLUS, x, one);
 	std::shared_ptr<AssignNode> stmt3 = std::make_shared<AssignNode>(3, y, expression, "x 1 +");
 
-	std::vector<std::shared_ptr<StmtNode>> stmtList;
-	stmtList.push_back(stmt1);
-	stmtList.push_back(stmt2);
-	stmtList.push_back(stmt3);
+	std::vector<std::shared_ptr<StmtNode>> stmtList{ stmt1, stmt2, stmt3 };
 
-	std::shared_ptr<ProcedureNode> proc1 = std::make_shared<ProcedureNode>(stmtList, "testProgram");
-	std::vector<std::shared_ptr<ProcedureNode>> procList;
-	procList.push_back(proc1);
+	std::shared_ptr<ProcedureNode> proc = std::make_shared<ProcedureNode>(stmtList, "testProgram");
+	std::vector<std::shared_ptr<ProcedureNode>> procList{ proc };
 
 	AST ast = std::make_shared<ProgramNode>(procList);
 
@@ -139,13 +131,10 @@ TEST_CASE("Follows* - 3 statements - With While") {
 
 	std::shared_ptr<WhileNode> whiles = std::make_shared<WhileNode>(1, pred, whileStmtList);
 	std::shared_ptr<ReadNode> read3 = std::make_shared<ReadNode>(5, y);
-	std::vector<std::shared_ptr<StmtNode>> stmtList;
-	stmtList.push_back(whiles);
-	stmtList.push_back(read3);
+	std::vector<std::shared_ptr<StmtNode>> stmtList{ whiles, read3 };
 
-	std::shared_ptr<ProcedureNode> proc1 = std::make_shared<ProcedureNode>(stmtList, "testProgram");
-	std::vector<std::shared_ptr<ProcedureNode>> procList;
-	procList.push_back(proc1);
+	std::shared_ptr<ProcedureNode> proc = std::make_shared<ProcedureNode>(stmtList, "testProgram");
+	std::vector<std::shared_ptr<ProcedureNode>> procList{ proc };
 
 	AST ast = std::make_shared<ProgramNode>(procList);
 
@@ -194,23 +183,22 @@ TEST_CASE("Follows* - With If") {
 		std::shared_ptr<PredicateNode> pred = std::make_shared<PredicateNode>(rel);
 
 		std::vector<std::shared_ptr<StmtNode>> thenStmtList;
-		std::shared_ptr<ReadNode> readx2 = std::make_shared<ReadNode>(2, x);
-		std::shared_ptr<ReadNode> readx3 = std::make_shared<ReadNode>(3, x);
-		std::shared_ptr<ReadNode> readx4 = std::make_shared<ReadNode>(4, x);
-		thenStmtList.push_back(readx2);
-		thenStmtList.push_back(readx3);
-		thenStmtList.push_back(readx4);
+		std::shared_ptr<ReadNode> readX2 = std::make_shared<ReadNode>(2, x);
+		std::shared_ptr<ReadNode> readX3 = std::make_shared<ReadNode>(3, x);
+		std::shared_ptr<ReadNode> readX4 = std::make_shared<ReadNode>(4, x);
+		thenStmtList.push_back(readX2);
+		thenStmtList.push_back(readX3);
+		thenStmtList.push_back(readX4);
 
 		std::vector<std::shared_ptr<StmtNode>> elseStmtList;
 
 		std::shared_ptr<IfNode> ifs = std::make_shared<IfNode>(1, pred, thenStmtList, elseStmtList);
-		std::shared_ptr<ReadNode> ready5 = std::make_shared<ReadNode>(5, y);
-		std::shared_ptr<ReadNode> ready6 = std::make_shared<ReadNode>(6, y);
-		std::shared_ptr<ReadNode> ready7 = std::make_shared<ReadNode>(7, y);
-		std::vector<std::shared_ptr<StmtNode>> stmtList{ ifs, ready5, ready6, ready7 };
+		std::shared_ptr<ReadNode> readY5 = std::make_shared<ReadNode>(5, y);
+		std::shared_ptr<ReadNode> readY6 = std::make_shared<ReadNode>(6, y);
+		std::shared_ptr<ReadNode> readY7 = std::make_shared<ReadNode>(7, y);
+		std::vector<std::shared_ptr<StmtNode>> stmtList{ ifs, readY5, readY6, readY7 };
 		std::shared_ptr<ProcedureNode> proc = std::make_shared<ProcedureNode>(stmtList, "testProgram");
-		std::vector<std::shared_ptr<ProcedureNode>> procList;
-		procList.push_back(proc);
+		std::vector<std::shared_ptr<ProcedureNode>> procList{ proc };
 
 		AST ast = std::make_shared<ProgramNode>(procList);
 

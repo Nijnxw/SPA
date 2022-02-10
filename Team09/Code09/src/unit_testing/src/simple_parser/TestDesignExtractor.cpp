@@ -33,14 +33,10 @@ TEST_CASE("Extract simple SIMPLE code no design entities") {
 	std::shared_ptr<PrintNode> stmt2 = std::make_shared<PrintNode>(2, x);
 	std::shared_ptr<PrintNode> stmt3 = std::make_shared<PrintNode>(3, y);
 
-	std::vector<std::shared_ptr<StmtNode>> stmtList;
-	stmtList.push_back(stmt1);
-	stmtList.push_back(stmt2);
-	stmtList.push_back(stmt3);
+	std::vector<std::shared_ptr<StmtNode>> stmtList{ stmt1, stmt2, stmt3 };
 
 	std::shared_ptr<ProcedureNode> proc1 = std::make_shared<ProcedureNode>(stmtList, "testProgram");
-	std::vector<std::shared_ptr<ProcedureNode>> procList;
-	procList.push_back(proc1);
+	std::vector<std::shared_ptr<ProcedureNode>> procList{ proc1 };
 
 	AST ast = std::make_shared<ProgramNode>(procList);
 
@@ -50,24 +46,16 @@ TEST_CASE("Extract simple SIMPLE code no design entities") {
 	expected_procedure_table.insert("testProgram");
 	REQUIRE(EntityStager::getStagedProcedures() == expected_procedure_table);
 
-	std::unordered_set<std::string> expected_var_table;
-	expected_var_table.insert("x");
-	expected_var_table.insert("y");
+	std::unordered_set<std::string> expected_var_table{"x", "y"};
 	REQUIRE(EntityStager::getStagedVariables() == expected_var_table);
 
-	std::unordered_set<int> expected_stmt_table;
-	expected_stmt_table.insert(1);
-	expected_stmt_table.insert(2);
-	expected_stmt_table.insert(3);
+	std::unordered_set<int> expected_stmt_table{ 1, 2, 3 };
 	REQUIRE(EntityStager::getStagedStatements() == expected_stmt_table);
 
-	std::unordered_set<int> expected_print_table;
-	expected_print_table.insert(2);
-	expected_print_table.insert(3);
+	std::unordered_set<int> expected_print_table{ 2, 3 };
 	REQUIRE(EntityStager::getStagedPrintStatements() == expected_print_table);
 
-	std::unordered_set<int> expected_read_table;
-	expected_read_table.insert(1);
+	std::unordered_set<int> expected_read_table{ 1 };
 	REQUIRE(EntityStager::getStagedReadStatements() == expected_read_table);
 
 	EntityStager::clear();
@@ -90,12 +78,10 @@ TEST_CASE("Extract SIMPLE assign statement") {
 
 		std::shared_ptr<AssignNode> stmt = std::make_shared<AssignNode>(1, x, one, "1");
 
-		std::vector<std::shared_ptr<StmtNode>> stmtList;
-		stmtList.push_back(stmt);
+		std::vector<std::shared_ptr<StmtNode>> stmtList{ stmt };
 
 		std::shared_ptr<ProcedureNode> proc = std::make_shared<ProcedureNode>(stmtList, "testProgram");
-		std::vector<std::shared_ptr<ProcedureNode>> procList;
-		procList.push_back(proc);
+		std::vector<std::shared_ptr<ProcedureNode>> procList{ proc };
 
 		AST ast = std::make_shared<ProgramNode>(procList);
 
@@ -135,12 +121,10 @@ TEST_CASE("Extract SIMPLE assign statement") {
 
 		std::shared_ptr<AssignNode> stmt = std::make_shared<AssignNode>(1, x, y, "y");
 
-		std::vector<std::shared_ptr<StmtNode>> stmtList;
-		stmtList.push_back(stmt);
+		std::vector<std::shared_ptr<StmtNode>> stmtList{ stmt };
 
 		std::shared_ptr<ProcedureNode> proc = std::make_shared<ProcedureNode>(stmtList, "testProgram");
-		std::vector<std::shared_ptr<ProcedureNode>> procList;
-		procList.push_back(proc);
+		std::vector<std::shared_ptr<ProcedureNode>> procList{ proc };
 
 		AST ast = std::make_shared<ProgramNode>(procList);
 
@@ -177,12 +161,10 @@ TEST_CASE("Extract SIMPLE assign statement") {
 
 		std::shared_ptr<AssignNode> stmt = std::make_shared<AssignNode>(1, x, expression, "y 1 +");
 
-		std::vector<std::shared_ptr<StmtNode>> stmtList;
-		stmtList.push_back(stmt);
+		std::vector<std::shared_ptr<StmtNode>> stmtList{ stmt };
 
 		std::shared_ptr<ProcedureNode> proc = std::make_shared<ProcedureNode>(stmtList, "testProgram");
-		std::vector<std::shared_ptr<ProcedureNode>> procList;
-		procList.push_back(proc);
+		std::vector<std::shared_ptr<ProcedureNode>> procList{ proc };
 
 		AST ast = std::make_shared<ProgramNode>(procList);
 
@@ -232,9 +214,7 @@ TEST_CASE("Extract SIMPLE while statement") {
 
 		std::vector<std::shared_ptr<StmtNode>> stmtList{ whiles };
 		std::shared_ptr<ProcedureNode> proc = std::make_shared<ProcedureNode>(stmtList, "testProgram");
-		std::vector<std::shared_ptr<ProcedureNode>> procList;
-		procList.push_back(proc);
-
+		std::vector<std::shared_ptr<ProcedureNode>> procList{ proc };
 		AST ast = std::make_shared<ProgramNode>(procList);
 
 		DesignExtractor::extractDesignElements(ast);
@@ -299,8 +279,7 @@ TEST_CASE("Extract SIMPLE while statement") {
 
 		std::vector<std::shared_ptr<StmtNode>> stmtList{ whiles };
 		std::shared_ptr<ProcedureNode> proc = std::make_shared<ProcedureNode>(stmtList, "testProgram");
-		std::vector<std::shared_ptr<ProcedureNode>> procList;
-		procList.push_back(proc);
+		std::vector<std::shared_ptr<ProcedureNode>> procList{ proc };
 
 		AST ast = std::make_shared<ProgramNode>(procList);
 
@@ -364,8 +343,7 @@ TEST_CASE("Extract SIMPLE if statement") {
 
 		std::vector<std::shared_ptr<StmtNode>> stmtList{ ifs };
 		std::shared_ptr<ProcedureNode> proc = std::make_shared<ProcedureNode>(stmtList, "testProgram");
-		std::vector<std::shared_ptr<ProcedureNode>> procList;
-		procList.push_back(proc);
+		std::vector<std::shared_ptr<ProcedureNode>> procList{ proc };
 
 		AST ast = std::make_shared<ProgramNode>(procList);
 
@@ -437,8 +415,7 @@ TEST_CASE("Extract SIMPLE if statement") {
 
 		std::vector<std::shared_ptr<StmtNode>> stmtList{ ifs };
 		std::shared_ptr<ProcedureNode> proc = std::make_shared<ProcedureNode>(stmtList, "testProgram");
-		std::vector<std::shared_ptr<ProcedureNode>> procList;
-		procList.push_back(proc);
+		std::vector<std::shared_ptr<ProcedureNode>> procList{ proc };
 
 		AST ast = std::make_shared<ProgramNode>(procList);
 

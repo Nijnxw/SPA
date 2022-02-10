@@ -79,31 +79,25 @@ Relationships processPredicateNode(std::shared_ptr<PredicateNode> expr) {
 //individual stmt node processing functions
 Relationships processPrintNode(std::shared_ptr<PrintNode> print) {
 	processVariableNode(print->getVariable());
-	//todo: implement getVariableName() -> current implementatiaon violates law of dementer
-	std::unordered_set<std::string> vars;
-	vars.insert(print->getVariable()->getName());
-
-	EntityStager::stageUsesStatements(print->getStmtNumber(), vars);
 	EntityStager::stagePrintStatement(print->getStmtNumber());
 
 	//stage relationships
 	Relationships output = buildEmptyMap();
+	//todo: implement getVariableName() -> current implementatiaon violates law of dementer
 	output["USES"].insert(print->getVariable()->getName());
+	EntityStager::stageUsesStatements(print->getStmtNumber(), output["USES"]);
 	return output;
 }
 
 Relationships processReadNode(std::shared_ptr<ReadNode> read) {
 	processVariableNode(read->getVariable());
-	//todo: implement getVariableName() -> current implementatiaon violates law of dementer
-	std::unordered_set<std::string> vars;
-	vars.insert(read->getVariable()->getName());
-
-	EntityStager::stageModifiesStatements(read->getStmtNumber(), vars);
 	EntityStager::stageReadStatement(read->getStmtNumber());
 
 	//stage relationships
 	Relationships output = buildEmptyMap();
+	//todo: implement getVariableName() -> current implementatiaon violates law of dementer
 	output["MODIFIES"].insert(read->getVariable()->getName());
+	EntityStager::stageModifiesStatements(read->getStmtNumber(), output["MODIFIES"]);
 	return output;
 }
 
@@ -117,7 +111,6 @@ Relationships processAssignNode(std::shared_ptr<AssignNode> assign) {
 	//todo: implement getAssignedVarName() -> current implementatiaon violates law of dementer
 	std::unordered_set<std::string> vars;
 	vars.insert(assign->getAssignedVar()->getName());
-	//EntityStager::stageModifiesStatements(assign->getStmtNumber(), vars);
 
 	//process rhs
 	Relationships output = processExprNode(assign->getExpression());

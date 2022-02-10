@@ -476,11 +476,10 @@ namespace Catch {
 #include <iosfwd>
 #include <string>
 #include <cstdint>
-#include <unordered_set>
 
 // We need a dummy global operator<< so we can bring it into Catch namespace later
 struct Catch_global_namespace_dummy {};
-std::__1::unordered_set<std::string> operator<<(std::ostream&, Catch_global_namespace_dummy);
+std::ostream& operator<<(std::ostream&, Catch_global_namespace_dummy);
 
 namespace Catch {
 

@@ -2,24 +2,33 @@
 
 DesignExtractor::DesignExtractor() {}
 
+//primitive node processing functions
+void processConstantNode(std::shared_ptr<ConstantNode> constant) {
+	EntityStager::stageConstant(constant->getValue());
+}
+
+void processVariableNode(std::shared_ptr<VariableNode> variable) {
+	EntityStager::stageVariable(variable->getName());
+}
+
 //individual node processing functions
 void processPrintNode(std::shared_ptr<PrintNode> print) {
+	processVariableNode(print->getVariable());
 	//todo: implement getVariableName() -> current implementatiaon violates law of dementer
 	std::unordered_set<std::string> vars;
 	vars.insert(print->getVariable()->getName());
 
 	EntityStager::stageUsesStatements(print->getStmtNumber(), vars);
-	EntityStager::stageVariable(print->getVariable()->getName());
 	EntityStager::stagePrintStatement(print->getStmtNumber());
 }
 
 void processReadNode(std::shared_ptr<ReadNode> read) {
+	processVariableNode(read->getVariable());
 	//todo: implement getVariableName() -> current implementatiaon violates law of dementer
 	std::unordered_set<std::string> vars;
 	vars.insert(read->getVariable()->getName());
 
 	EntityStager::stageModifiesStatements(read->getStmtNumber(), vars);
-	EntityStager::stageVariable(read->getVariable()->getName());
 	EntityStager::stageReadStatement(read->getStmtNumber());
 }
 

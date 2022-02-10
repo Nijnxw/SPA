@@ -326,5 +326,4 @@ TEST_CASE("Extract SIMPLE while statement") {
 
 		EntityStager::clear();
 	}
-	
 }

@@ -69,11 +69,11 @@ Relationships processPredicateNode(std::shared_ptr<PredicateNode> expr) {
 	if (expr->isTerminalPredicate()) {
 		//todo: violates law of dememter
 		std::shared_ptr<RelExprNode> relExpr = expr->getRelExprNode();
-		Relationships left = processExprNode(relExpr->getLhs());
-		Relationships right = processExprNode(relExpr->getRhs());
+		left = processExprNode(relExpr->getLhs());
+		right = processExprNode(relExpr->getRhs());
 	} else {
-		Relationships left = processPredicateNode(expr->getLhs());
-		Relationships right = processPredicateNode(expr->getRhs());
+		left = processPredicateNode(expr->getLhs());
+		right = processPredicateNode(expr->getRhs());
 	}
 	return combine(left, right);
 }
@@ -115,8 +115,8 @@ Relationships processAssignNode(std::shared_ptr<AssignNode> assign) {
 	
 	//stage relationships
 	rs["MODIFIES"].insert(assign->getAssignedVarName());
-	EntityStager::stageModifiesStatements(assign->getStmtNumber(), rs["MODIFIES"]);
-	EntityStager::stageUsesStatements(assign->getStmtNumber(), rs["USES"]);
+	if (rs["MODIFIES"].size() > 0) EntityStager::stageModifiesStatements(assign->getStmtNumber(), rs["MODIFIES"]);
+	if (rs["USES"].size() > 0) EntityStager::stageUsesStatements(assign->getStmtNumber(), rs["USES"]);
 	return rs;
 }
 
@@ -130,8 +130,8 @@ Relationships processWhileNode(std::shared_ptr<WhileNode> whiles) {
 	rs = combine(rs, processStmtList(whiles->getStmtList()));
 
 	//stage relationships
-	EntityStager::stageModifiesStatements(whiles->getStmtNumber(), rs["MODIFIES"]);
-	EntityStager::stageUsesStatements(whiles->getStmtNumber(), rs["USES"]);
+	if (rs["MODIFIES"].size() > 0) EntityStager::stageModifiesStatements(whiles->getStmtNumber(), rs["MODIFIES"]);
+	if (rs["USES"].size() > 0) EntityStager::stageUsesStatements(whiles->getStmtNumber(), rs["USES"]);
 	return rs;
 }
 
@@ -147,8 +147,8 @@ Relationships processIfNode(std::shared_ptr<IfNode> ifs) {
 	rs = combine(rs, processStmtList(ifs->getElseStmtList()));
 
 	//stage relationships
-	EntityStager::stageModifiesStatements(ifs->getStmtNumber(), rs["MODIFIES"]);
-	EntityStager::stageUsesStatements(ifs->getStmtNumber(), rs["USES"]);
+	if (rs["MODIFIES"].size() > 0) EntityStager::stageModifiesStatements(ifs->getStmtNumber(), rs["MODIFIES"]);
+	if (rs["USES"].size() > 0)  EntityStager::stageUsesStatements(ifs->getStmtNumber(), rs["USES"]);
 	return rs;
 }
 

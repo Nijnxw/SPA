@@ -54,26 +54,65 @@ public:
 
 	/* Follows and Parent Getters */
 	static bool hasRelationship(RelationRef relationship);
-	static bool hasTransitiveRelationship(RelationRef relationship);
 	static bool isRelationship(RelationRef relationship, int statementOne, int statementTwo);
-	static bool isTransitiveRelationship(RelationRef relationship, int statementOne, int statementTwo);
 	static bool isFirstEntity(RelationRef relationship, int statementOne);
 	static bool isSecondEntity(RelationRef relationship, int statementTwo);
-	static bool isFirstEntityTransitive(RelationRef relationship, int statementOne);
-	static bool isSecondEntityTransitive(RelationRef relationship, int statementTwo);
 
 	static std::unordered_set<int> PKB::getFirstEntities(RelationRef relationship, int statementTwo);
 	static std::unordered_set<int> PKB::getSecondEntities(RelationRef relationship, int statementOne);
-	static std::unordered_set<int> PKB::getFirstEntitiesTransitive(RelationRef relationship, int statementTwo);
-	static std::unordered_set<int> PKB::getSecondEntitiesTransitive(RelationRef relationship, int statementOne);
 
 	static std::unordered_set<int> PKB::getAllFirstEntities(RelationRef relationship);
 	static std::unordered_set<int> PKB::getAllSecondEntities(RelationRef relationship);
-	static std::unordered_set<int> PKB::getAllFirstEntitiesTransitive(RelationRef relationship);
-	static std::unordered_set<int> PKB::getAllSecondEntitiesTransitive(RelationRef relationship);
 
 	static std::tuple<std::vector<int>, std::vector<int>> PKB::getAllRelationshipPairs(RelationRef relationship);
-	static std::tuple<std::vector<int>, std::vector<int>> PKB::getAllRelationshipTransitivePairs(RelationRef relationship);
+
+	/* Follows Getters */
+	static bool hasFollowsRelationship();
+	static bool hasFollowsTRelationship();
+
+	static bool isFollowsRelationship(int follower, int followee);
+	static bool isFollowsTRelationship(int follower, int followee);
+	static bool isFollower(int follower);
+	static bool isFollowee(int followee);
+	static bool isFollowerT(int follower);
+	static bool isFolloweeT(int followee);
+
+	static std::unordered_set<int> getFollowee(int follower);
+	static std::unordered_set<int> getFollower(int followee);
+	static std::unordered_set<int> getAllFollowees();
+	static std::unordered_set<int> getAllFollowers();
+
+	static std::unordered_set<int> getFolloweesT(int follower);
+	static std::unordered_set<int> getFollowersT(int followee);
+	static std::unordered_set<int> getAllFolloweesT();
+	static std::unordered_set<int> getAllFollowersT();
+
+	static std::tuple<std::vector<int>, std::vector<int>> getAllFollowsPairs();
+	static std::tuple<std::vector<int>, std::vector<int>> getAllFollowsTPairs();
+
+	/* Parent Getters */
+	static bool hasParentRelationship();
+	static bool hasParentTRelationship();
+
+	static bool isParentRelationship(int parent, int child);
+	static bool isParentTRelationship(int parent, int child);
+	static bool isParent(int parent);
+	static bool isChild(int child);
+	static bool isParentT(int parent);
+	static bool isChildT(int child);
+
+	static std::unordered_set<int> getChildren(int parent);
+	static std::unordered_set<int> getParent(int child);
+	static std::unordered_set<int> getAllChildren();
+	static std::unordered_set<int> getAllParents();
+
+	static std::unordered_set<int> getChildrenT(int parent);
+	static std::unordered_set<int> getParentsT(int child);
+	static std::unordered_set<int> getAllChildrenT();
+	static std::unordered_set<int> getAllParentsT();
+
+	static std::tuple<std::vector<int>, std::vector<int>> getAllParentPairs();
+	static std::tuple<std::vector<int>, std::vector<int>> getAllParentTPairs();
 
 	/* Uses Getters */
 	static std::unordered_set<int> getUsesStatements();

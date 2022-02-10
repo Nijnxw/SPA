@@ -2,49 +2,20 @@
 
 DesignExtractor::DesignExtractor() {}
 
-//PKB interface functions - TO DO: might xfer to another facade class
-void addProcedureToPkb(std::shared_ptr<ProcedureNode> proc) {
-	PKB::addProcedure(proc->getProcName());
-}
-
-void addVariableToPkb(std::shared_ptr<VariableNode> var) {
-	PKB::addVariable(var->getName());
-}
-
-void addConstantToPkb(std::shared_ptr<ConstantNode> con) {
-	PKB::addConstant(con->getValue());
-}
-
-void addStmtNoToPkb(std::shared_ptr<StmtNode> stmt) {
-	PKB::addStatementNumber(stmt->getStmtNumber());
-}
-
-void addPrintToPkb(std::shared_ptr<PrintNode> print) {
-	PKB::addStatementWithType(EntityType::PRINT, print->getStmtNumber());
-}
-
-void addReadToPkb(std::shared_ptr<ReadNode> read) {
-	PKB::addStatementWithType(EntityType::READ, read->getStmtNumber());
-}
-
-void addFollowsToPkb(std::shared_ptr<StmtNode> stmt1, std::shared_ptr<StmtNode>stmt2) {
-	PKB::addFollows(stmt1->getStmtNumber(), stmt2->getStmtNumber());
-}
-
 //individual node processing functions
 void processPrintNode(std::shared_ptr<PrintNode> print) {
-	addVariableToPkb(print->getVariable());
-	addPrintToPkb(print);
+	EntityStager::stageVariable(print->getVariable()->getName());
+	EntityStager::stagePrintStatement(print->getStmtNumber());
 }
 
 void processReadNode(std::shared_ptr<ReadNode> read) {
-	addVariableToPkb(read->getVariable());
-	addReadToPkb(read);
+	EntityStager::stageVariable(read->getVariable()->getName());
+	EntityStager::stageReadStatement(read->getStmtNumber());
 }
 
 //statement (list) processing functions
 void processStmt(std::shared_ptr<StmtNode> stmt) {
-	addStmtNoToPkb(stmt);
+	EntityStager::stageStatement(stmt->getStmtNumber());
 	if (stmt->isReadNode()) {
 		processReadNode(std::dynamic_pointer_cast<ReadNode>(stmt));
 	} else if (stmt->isPrintNode()) {
@@ -54,14 +25,19 @@ void processStmt(std::shared_ptr<StmtNode> stmt) {
 
 void processStmtList(std::vector<std::shared_ptr<StmtNode>> stmtList) {
 	for (int i = 0; i < stmtList.size(); i++) {
-		if (i < stmtList.size() - 1) addFollowsToPkb(stmtList[i], stmtList[i + 1]);
+		if (i < stmtList.size() - 1) {
+			EntityStager::stageFollows(stmtList[i]->getStmtNumber(), stmtList[i + 1]->getStmtNumber());
+		}
+		for (int j = i + 1; j < stmtList.size(); j++) {
+			EntityStager::stageFollowsT(stmtList[i]->getStmtNumber(), stmtList[j]->getStmtNumber());
+		}
 		processStmt(stmtList[i]);
 	}
 }
 
 //procedure (list) processing functions
 void processProcedure(std::shared_ptr<ProcedureNode> proc) {
-	addProcedureToPkb(proc);
+	EntityStager::stageProcedure(proc->getProcName());
 	processStmtList(proc->getStmtList());
 }
 
@@ -72,5 +48,10 @@ void processProcedureList(std::vector<std::shared_ptr<ProcedureNode>> procList) 
 }
 
 void DesignExtractor::extractDesignElements(AST ast) {
+	EntityStager::clear();
 	processProcedureList(ast->getProcedureList());
+}
+
+void DesignExtractor::commit() {
+	EntityStager::commit();
 }

@@ -12,9 +12,9 @@
 #include "models/QueryClauseTable.h"
 #include "models/QueryClause.h"
 
-#include "StatementOnlyRelationshipEvaluator.h";
+#include "StmtStmtRelationshipEvaluator.h";
 
-class ParentEvaluator : public StatementOnlyRelationshipEvaluator {
+class ParentEvaluator : public StmtStmtRelationshipEvaluator {
 public:
 	static QueryClauseTable
 	getParent(const std::string& LHS, const std::string& RHS, EntityType LHSType, EntityType RHSType,

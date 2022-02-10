@@ -12,9 +12,9 @@
 #include "models/QueryClauseTable.h"
 #include "models/QueryClause.h"
 
-#include "StatementOnlyRelationshipEvaluator.h";
+#include "StmtStmtRelationshipEvaluator.h";
 
-class FollowsEvaluator : public StatementOnlyRelationshipEvaluator {
+class FollowsEvaluator : public StmtStmtRelationshipEvaluator {
 public:
 	static QueryClauseTable
 		getFollows(const std::string& LHS, const std::string& RHS, EntityType LHSType, EntityType RHSType,

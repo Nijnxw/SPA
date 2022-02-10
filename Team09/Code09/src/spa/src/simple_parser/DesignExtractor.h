@@ -4,6 +4,7 @@
 #include "models/simple_parser/AssignNode.h"
 #include "models/simple_parser/ExprNodes.h"
 #include "models/simple_parser/IoNodes.h"
+#include "models/simple_parser/IfNode.h"
 #include "models/simple_parser/PredicateNodes.h"
 #include "models/simple_parser/ProcedureNode.h"
 #include "models/simple_parser/WhileNode.h"

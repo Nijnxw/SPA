@@ -10,6 +10,12 @@ Relationships buildEmptyMap() {
 	};
 }
 
+Relationships combine(Relationships rs1, Relationships rs2) {
+	rs1["USES"].merge(rs2["USES"]);
+	rs1["MODIFIES"].merge(rs2["MODIFIES"]);
+	return rs1;
+}
+
 DesignExtractor::DesignExtractor() {}
 
 //primitive node processing functions
@@ -23,43 +29,55 @@ void processVariableNode(std::shared_ptr<VariableNode> variable) {
 
 //helper expression node processing functions
 
-//process ExprNodes; only assignNode call this
-Relationships processExprNode(int stmtNo, ExprNode expr);
+//process ExprNodes
+Relationships processExprNode(ExprNode expr);
 
 //overloaded functions to handle ExprNode variants
-Relationships processExprEntity(int stmtNo, std::shared_ptr<ConstantNode> constant) {
+Relationships processExprEntity(std::shared_ptr<ConstantNode> constant) {
 	processConstantNode(constant);
 	return buildEmptyMap();
 }
 
-Relationships processExprEntity(int stmtNo, std::shared_ptr<VariableNode> variable) {
+Relationships processExprEntity(std::shared_ptr<VariableNode> variable) {
 	processVariableNode(variable);
 	std::unordered_set<std::string> vars{ variable->getName() };
-	EntityStager::stageUsesStatements(stmtNo, vars);
 
 	Relationships output = buildEmptyMap();
-	output["Uses"].insert(variable->getName());
+	output["USES"].insert(variable->getName());
 	return output;
 }
 
-Relationships processExprEntity(int stmtNo, std::shared_ptr<BinaryOperatorNode> binOp) {
-	Relationships rs1 = processExprNode(stmtNo, binOp->getLhs());
-	Relationships rs2 = processExprNode(stmtNo, binOp->getRhs());
-	Relationships output = buildEmptyMap();
-	rs1["Uses"].merge(rs2["Uses"]);
-	rs1["Modifies"].merge(rs2["Modifies"]);
-	return rs1;
+Relationships processExprEntity(std::shared_ptr<BinaryOperatorNode> binOp) {
+	Relationships rs1 = processExprNode(binOp->getLhs());
+	Relationships rs2 = processExprNode(binOp->getRhs());
+
+	return combine(rs1, rs2);
 }
 
-Relationships processExprNode(int stmtNo, ExprNode expr) {
+Relationships processExprNode(ExprNode expr) {
 	return std::visit(
-		[stmtNo](const auto& entity) { return processExprEntity(stmtNo, entity); },
+		[](const auto& entity) { return processExprEntity(entity); },
 		expr);
+}
+
+//process PredicateNodes; only ifNode, whileNode call this
+//returns the relationships only, no follows no parents relationships involved
+Relationships processPredicateNode(std::shared_ptr<PredicateNode> expr) {
+	if (expr->isTerminalPredicate()) {
+		std::shared_ptr<RelExprNode> relExpr = expr->getRelExprNode();
+
+		Relationships left = processExprNode(relExpr->getLhs());
+		Relationships right = processExprNode(relExpr->getRhs());
+	} else {
+		Relationships left = processPredicateNode(expr->getLhs());
+		Relationships right = processPredicateNode(expr->getRhs());
+
+		return combine(left, right);
+	}
 }
 
 //individual stmt node processing functions
 Relationships processPrintNode(std::shared_ptr<PrintNode> print) {
-	Relationships output = buildEmptyMap();
 	processVariableNode(print->getVariable());
 	//todo: implement getVariableName() -> current implementatiaon violates law of dementer
 	std::unordered_set<std::string> vars;
@@ -67,12 +85,14 @@ Relationships processPrintNode(std::shared_ptr<PrintNode> print) {
 
 	EntityStager::stageUsesStatements(print->getStmtNumber(), vars);
 	EntityStager::stagePrintStatement(print->getStmtNumber());
-	output["Uses"].insert(print->getVariable()->getName());
+
+	//stage relationships
+	Relationships output = buildEmptyMap();
+	output["USES"].insert(print->getVariable()->getName());
 	return output;
 }
 
 Relationships processReadNode(std::shared_ptr<ReadNode> read) {
-	Relationships output = buildEmptyMap();
 	processVariableNode(read->getVariable());
 	//todo: implement getVariableName() -> current implementatiaon violates law of dementer
 	std::unordered_set<std::string> vars;
@@ -80,7 +100,10 @@ Relationships processReadNode(std::shared_ptr<ReadNode> read) {
 
 	EntityStager::stageModifiesStatements(read->getStmtNumber(), vars);
 	EntityStager::stageReadStatement(read->getStmtNumber());
-	output["Modifies"].insert(read->getVariable()->getName());
+
+	//stage relationships
+	Relationships output = buildEmptyMap();
+	output["MODIFIES"].insert(read->getVariable()->getName());
 	return output;
 }
 
@@ -94,11 +117,15 @@ Relationships processAssignNode(std::shared_ptr<AssignNode> assign) {
 	//todo: implement getAssignedVarName() -> current implementatiaon violates law of dementer
 	std::unordered_set<std::string> vars;
 	vars.insert(assign->getAssignedVar()->getName());
-	EntityStager::stageModifiesStatements(assign->getStmtNumber(), vars);
+	//EntityStager::stageModifiesStatements(assign->getStmtNumber(), vars);
 
 	//process rhs
-	Relationships output = processExprNode(assign->getStmtNumber(), assign->getExpression());
-	output["Modifies"].insert(assign->getAssignedVar()->getName());
+	Relationships output = processExprNode(assign->getExpression());
+	
+	//stage relationships
+	output["MODIFIES"].insert(assign->getAssignedVar()->getName());
+	EntityStager::stageModifiesStatements(assign->getStmtNumber(), output["MODIFIES"]);
+	EntityStager::stageUsesStatements(assign->getStmtNumber(), output["USES"]);
 	return output;
 }
 
@@ -125,8 +152,7 @@ Relationships processStmtList(std::vector<std::shared_ptr<StmtNode>> stmtList) {
 			EntityStager::stageFollowsT(stmtList[i]->getStmtNumber(), stmtList[j]->getStmtNumber());
 		}
 		Relationships rs = processStmt(stmtList[i]);
-		output["Uses"].merge(rs["Uses"]);
-		output["Modifies"].merge(rs["Modifies"]);
+		output = combine(output, rs);
 	}
 	return output;
 }

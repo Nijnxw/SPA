@@ -118,10 +118,8 @@ TEST_CASE("Uses - Assign Statement") {
 		DesignExtractor::extractDesignElements(ast);
 
 		std::vector<std::pair<int, std::unordered_set<std::string>>> expectedUses;
-		std::unordered_set<std::string> var1{ "x" };
-		std::unordered_set<std::string> var2{ "y" };
-		expectedUses.push_back(std::make_pair(1, var1));
-		expectedUses.push_back(std::make_pair(1, var2));
+		std::unordered_set<std::string> vars{ "x", "y" };
+		expectedUses.push_back(std::make_pair(1, vars));
 
 		std::vector<std::pair<int, std::unordered_set<std::string>>> test = EntityStager::getStagedUsesStatement();
 

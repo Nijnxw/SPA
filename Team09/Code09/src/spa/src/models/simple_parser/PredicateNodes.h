@@ -7,8 +7,8 @@
 #include <memory>
 #include <variant>
 
-using RelFactorNode =
-	std::variant<std::shared_ptr<VariableNode>, std::shared_ptr<ConstantNode>, std::shared_ptr<BinaryOperatorNode>>;
+using RelFactorNode = ExprNode;
+	//std::variant<std::shared_ptr<VariableNode>, std::shared_ptr<ConstantNode>, std::shared_ptr<BinaryOperatorNode>>;
 
 class RelExprNode : public Node {
 private:

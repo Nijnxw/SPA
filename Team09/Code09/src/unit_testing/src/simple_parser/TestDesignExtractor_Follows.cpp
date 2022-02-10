@@ -11,7 +11,7 @@
 #include <unordered_set>
 #include <vector>
 
-TEST_CASE("Follows") {
+TEST_CASE("Follows - Basic IO") {
 	EntityStager::clear();
 
 	/*
@@ -48,7 +48,7 @@ TEST_CASE("Follows") {
 	EntityStager::clear();
 }
 
-TEST_CASE("Follows - 3 lines") {
+TEST_CASE("Follows - 3 lines - Basic IO") {
 	EntityStager::clear();
 
 	/*
@@ -84,6 +84,45 @@ TEST_CASE("Follows - 3 lines") {
 	std::vector<std::pair<int, int>> expectedFollows;
 	expectedFollows.push_back(std::make_pair(1, 2));
 	expectedFollows.push_back(std::make_pair(2, 3));
+
+	REQUIRE(EntityStager::getStagedFollows() == expectedFollows);
+
+	EntityStager::clear();
+}
+
+TEST_CASE("Follows - With Assignment") {
+	EntityStager::clear();
+
+	/*
+	 * Test Simple Program
+	 * procedure testProgram {
+	 * 1	read x;
+	 * 2	x = y + 1;
+	 * }
+	 */
+
+	 // building AST
+	std::shared_ptr<VariableNode> x = std::make_shared<VariableNode>("x");
+	std::shared_ptr<ReadNode> stmt1 = std::make_shared<ReadNode>(1, x);
+
+	ExprNode y = std::make_shared<VariableNode>("y");
+	ExprNode one = std::make_shared<ConstantNode>("1");
+	ExprNode expression = std::make_shared<BinaryOperatorNode>(BinaryOperator::PLUS, y, one);
+	std::shared_ptr<AssignNode> stmt2 = std::make_shared<AssignNode>(2, x, expression, "y 1 +");
+
+	std::vector<std::shared_ptr<StmtNode>> stmtList;
+	stmtList.push_back(stmt1);
+	stmtList.push_back(stmt2);
+
+	std::shared_ptr<ProcedureNode> proc1 = std::make_shared<ProcedureNode>(stmtList, "testProgram");
+	std::vector<std::shared_ptr<ProcedureNode>> procList;
+	procList.push_back(proc1);
+
+	AST ast = std::make_shared<ProgramNode>(procList);
+
+	DesignExtractor::extractDesignElements(ast);
+
+	std::vector<std::pair<int, int>> expectedFollows{ std::make_pair(1, 2) };
 
 	REQUIRE(EntityStager::getStagedFollows() == expectedFollows);
 

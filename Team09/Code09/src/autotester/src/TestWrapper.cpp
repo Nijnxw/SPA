@@ -22,13 +22,8 @@ TestWrapper::TestWrapper() {
 void TestWrapper::parse(std::string filename) {
     // call your parser to do the parsing
     // ...rest of your code...
-    std::ifstream sourceFile(filename);
-
-    if (sourceFile.is_open()) {
-        Lexer lexer(&sourceFile);
-        SPParser parser(lexer.tokenize());
-        DesignExtractor::extractDesignElements(parser.parseProgram());
-    }
+	AST ast = SPManager::parseFile(filename);
+	SPManager::extractDesign(ast);
 }
 
 // method to evaluating a query

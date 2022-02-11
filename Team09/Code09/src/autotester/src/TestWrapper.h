@@ -14,9 +14,7 @@
 #include "PQL/QueryEvaluator.h"
 #include "PQL/QueryResultProjector.h"
 
-#include "simple_parser/DesignExtractor.h"
-#include "simple_parser/Lexer.h"
-#include "simple_parser/SPParser.h"
+#include "simple_parser/SPManager.h"
 
 class TestWrapper : public AbstractWrapper {
  public:

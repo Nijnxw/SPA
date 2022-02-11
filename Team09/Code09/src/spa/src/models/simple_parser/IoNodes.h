@@ -16,7 +16,7 @@ protected:
 
 public:
 	std::shared_ptr<VariableNode> getVariable() const;
-	std::string IoNode::getVariableName() const;
+	std::string getVariableName() const;
 };
 
 class ReadNode : public IoNode {

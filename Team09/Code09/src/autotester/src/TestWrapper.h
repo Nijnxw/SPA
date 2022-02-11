@@ -16,7 +16,7 @@
 
 #include "simple_parser/DesignExtractor.h"
 #include "simple_parser/Lexer.h"
-#include "simple_parser/Parser.h"
+#include "simple_parser/SPParser.h"
 
 class TestWrapper : public AbstractWrapper {
  public:

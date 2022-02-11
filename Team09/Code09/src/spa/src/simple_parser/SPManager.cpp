@@ -1,11 +1,11 @@
 #include "DesignExtractor.h"
 #include "Lexer.h"
-#include "Parser.h"
+#include "simple_parser/SPParser.h"
 #include "SPManager.h"
 
 #include <utility>
 
-AST SPManager::parseFile(std::string filename) {
+AST SPManager::parseFile(const std::string& filename) {
 	std::ifstream inputStream(filename);
 	if (!inputStream.is_open()) {
 		throw std::runtime_error("File do not exist!\n");
@@ -14,7 +14,7 @@ AST SPManager::parseFile(std::string filename) {
 	Lexer lexer = Lexer(&inputStream);
 	std::vector<Token*> tokens = lexer.tokenize();
 
-	Parser parser = Parser(tokens);
+	SPParser parser = SPParser(tokens);
 	AST ast = parser.parseProgram();
 
 	return ast;

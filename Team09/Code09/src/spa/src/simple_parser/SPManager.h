@@ -5,6 +5,6 @@
 
 class SPManager {
 public:
-	static AST parseFile(std::string filename);
+	static AST parseFile(const std::string& filename);
 	static void extractDesign(AST ast);
 };

@@ -1,4 +1,4 @@
-#include "simple_parser/Parser.h"
+#include "simple_parser/SPParser.h"
 #include "simple_parser/Token.h"
 
 #include "catch.hpp"
@@ -17,7 +17,7 @@ TEST_CASE ("Test parsing of valid assign - variable") {
 			new EndOfFileToken(),
 	};
 
-	Parser parser = Parser(input);
+	SPParser parser = SPParser(input);
 	AST output = parser.parseProgram();
 
 	std::shared_ptr<VariableNode> variableNode = std::make_shared<VariableNode>("a");
@@ -42,7 +42,7 @@ TEST_CASE ("Test parsing of valid assign - constant") {
 			new EndOfFileToken(),
 	};
 
-	Parser parser = Parser(input);
+	SPParser parser = SPParser(input);
 	AST output = parser.parseProgram();
 
 	std::shared_ptr<VariableNode> variableNode = std::make_shared<VariableNode>("a");
@@ -69,7 +69,7 @@ TEST_CASE ("Test parsing of valid assign - PLUS") {
 				new EndOfFileToken(),
 		};
 
-		Parser parser = Parser(input);
+		SPParser parser = SPParser(input);
 		AST output = parser.parseProgram();
 
 		std::shared_ptr<VariableNode> variableNode = std::make_shared<VariableNode>("a");
@@ -99,7 +99,7 @@ TEST_CASE ("Test parsing of valid assign - PLUS") {
 				new EndOfFileToken(),
 		};
 
-		Parser parser = Parser(input);
+		SPParser parser = SPParser(input);
 		AST output = parser.parseProgram();
 
 		std::shared_ptr<VariableNode> variableNode = std::make_shared<VariableNode>("a");
@@ -135,7 +135,7 @@ TEST_CASE ("Test parsing of valid assign - MINUS") {
 				new EndOfFileToken(),
 		};
 
-		Parser parser = Parser(input);
+		SPParser parser = SPParser(input);
 		AST output = parser.parseProgram();
 
 		std::shared_ptr<VariableNode> variableNode = std::make_shared<VariableNode>("a");
@@ -165,7 +165,7 @@ TEST_CASE ("Test parsing of valid assign - MINUS") {
 				new EndOfFileToken(),
 		};
 
-		Parser parser = Parser(input);
+		SPParser parser = SPParser(input);
 		AST output = parser.parseProgram();
 
 		std::shared_ptr<VariableNode> variableNode = std::make_shared<VariableNode>("a");
@@ -201,7 +201,7 @@ TEST_CASE ("Test parsing of valid assign - DIVIDE") {
 				new EndOfFileToken(),
 		};
 
-		Parser parser = Parser(input);
+		SPParser parser = SPParser(input);
 		AST output = parser.parseProgram();
 
 		std::shared_ptr<VariableNode> variableNode = std::make_shared<VariableNode>("a");
@@ -231,7 +231,7 @@ TEST_CASE ("Test parsing of valid assign - DIVIDE") {
 				new EndOfFileToken(),
 		};
 
-		Parser parser = Parser(input);
+		SPParser parser = SPParser(input);
 		AST output = parser.parseProgram();
 
 		std::shared_ptr<VariableNode> variableNode = std::make_shared<VariableNode>("a");
@@ -267,7 +267,7 @@ TEST_CASE ("Test parsing of valid assign - MODULO") {
 				new EndOfFileToken(),
 		};
 
-		Parser parser = Parser(input);
+		SPParser parser = SPParser(input);
 		AST output = parser.parseProgram();
 
 		std::shared_ptr<VariableNode> variableNode = std::make_shared<VariableNode>("a");
@@ -297,7 +297,7 @@ TEST_CASE ("Test parsing of valid assign - MODULO") {
 				new EndOfFileToken(),
 		};
 
-		Parser parser = Parser(input);
+		SPParser parser = SPParser(input);
 		AST output = parser.parseProgram();
 
 		std::shared_ptr<VariableNode> variableNode = std::make_shared<VariableNode>("a");
@@ -334,7 +334,7 @@ TEST_CASE ("Test parsing of valid assign - mixed operators") {
 				new EndOfFileToken(),
 		};
 
-		Parser parser = Parser(input);
+		SPParser parser = SPParser(input);
 		AST output = parser.parseProgram();
 
 		std::shared_ptr<VariableNode> variableNode = std::make_shared<VariableNode>("a");
@@ -365,7 +365,7 @@ TEST_CASE ("Test parsing of valid assign - mixed operators") {
 				new EndOfFileToken(),
 		};
 
-		Parser parser = Parser(input);
+		SPParser parser = SPParser(input);
 		AST output = parser.parseProgram();
 
 		std::shared_ptr<VariableNode> variableNode = std::make_shared<VariableNode>("a");
@@ -400,7 +400,7 @@ TEST_CASE ("Test parsing of valid assign - mixed operators") {
 				new EndOfFileToken(),
 		};
 
-		Parser parser = Parser(input);
+		SPParser parser = SPParser(input);
 		AST output = parser.parseProgram();
 
 		std::shared_ptr<VariableNode> variableNode = std::make_shared<VariableNode>("a");
@@ -440,7 +440,7 @@ TEST_CASE ("Test parsing of valid assign - parentheses") {
 				new EndOfFileToken(),
 		};
 
-		Parser parser = Parser(input);
+		SPParser parser = SPParser(input);
 		AST output = parser.parseProgram();
 
 		std::shared_ptr<VariableNode> variableNode = std::make_shared<VariableNode>("a");
@@ -472,7 +472,7 @@ TEST_CASE ("Test parsing of valid assign - parentheses") {
 				new EndOfFileToken(),
 		};
 
-		Parser parser = Parser(input);
+		SPParser parser = SPParser(input);
 		AST output = parser.parseProgram();
 
 		std::shared_ptr<VariableNode> variableNode = std::make_shared<VariableNode>("a");
@@ -510,7 +510,7 @@ TEST_CASE ("Test parsing of valid assign - parentheses") {
 				new EndOfFileToken(),
 		};
 
-		Parser parser = Parser(input);
+		SPParser parser = SPParser(input);
 		AST output = parser.parseProgram();
 
 		std::shared_ptr<VariableNode> variableNode = std::make_shared<VariableNode>("a");
@@ -549,7 +549,7 @@ TEST_CASE ("Test parsing of invalid assign statements") {
 				new PunctuatorToken(";"), new PunctuatorToken("}"),
 				new EndOfFileToken(),
 		};
-		Parser parser = Parser(input);
+		SPParser parser = SPParser(input);
 		REQUIRE_THROWS_WITH(parser.parseProgram(), "Invalid statement syntax at statement 1.\n");
 	}
 	SECTION ("Missing ';'") {
@@ -561,7 +561,7 @@ TEST_CASE ("Test parsing of invalid assign statements") {
 												new PunctuatorToken("}"),
 				new EndOfFileToken(),
 		};
-		Parser parser = Parser(input);
+		SPParser parser = SPParser(input);
 		REQUIRE_THROWS_WITH(parser.parseProgram(), "Expected arithmetic operator but got '}' instead.\n");
 	}
 	SECTION ("Missing lhs") {
@@ -573,7 +573,7 @@ TEST_CASE ("Test parsing of invalid assign statements") {
 				new PunctuatorToken(";"),	new PunctuatorToken("}"),
 				new EndOfFileToken(),
 		};
-		Parser parser = Parser(input);
+		SPParser parser = SPParser(input);
 		REQUIRE_THROWS_WITH(parser.parseProgram(), "Invalid statement syntax at statement 1.\n");
 	}
 	SECTION ("Missing rhs") {
@@ -585,7 +585,7 @@ TEST_CASE ("Test parsing of invalid assign statements") {
 				new PunctuatorToken("}"),
 				new EndOfFileToken(),
 		};
-		Parser parser = Parser(input);
+		SPParser parser = SPParser(input);
 		REQUIRE_THROWS_WITH(parser.parseProgram(), "Expected an expression but got ';' instead.\n");
 	}
 }
@@ -600,7 +600,7 @@ TEST_CASE("Invalid expressions") {
 				new NameToken("b"),			new PunctuatorToken(";"),
 				new PunctuatorToken("}"),	new EndOfFileToken(),
 		};
-		Parser parser = Parser(input);
+		SPParser parser = SPParser(input);
 		REQUIRE_THROWS_WITH(parser.parseProgram(), "Expected arithmetic operator but got 'b' instead.\n");
 	}
 	SECTION ("Missing operands") {
@@ -613,7 +613,7 @@ TEST_CASE("Invalid expressions") {
 				new OperatorToken("/"),		new PunctuatorToken(";"),
 				new PunctuatorToken("}"), 	new EndOfFileToken(),
 		};
-		Parser parser = Parser(input);
+		SPParser parser = SPParser(input);
 		REQUIRE_THROWS_WITH(parser.parseProgram(), "Expected an expression but got ';' instead.\n");
 	}
 	SECTION ("extra operands") {
@@ -626,7 +626,7 @@ TEST_CASE("Invalid expressions") {
 				new NameToken("b"),			new PunctuatorToken(";"),
 				new PunctuatorToken("}"),	new EndOfFileToken(),
 		};
-		Parser parser = Parser(input);
+		SPParser parser = SPParser(input);
 		REQUIRE_THROWS_WITH(parser.parseProgram(), "Expected an expression but got '-' instead.\n");
 	}
 	SECTION ("Missing opening parentheses") {
@@ -640,7 +640,7 @@ TEST_CASE("Invalid expressions") {
 				new PunctuatorToken(")"), 	new PunctuatorToken(";"),
 				new PunctuatorToken("}"),	new EndOfFileToken(),
 		};
-		Parser parser = Parser(input);
+		SPParser parser = SPParser(input);
 		REQUIRE_THROWS_WITH(parser.parseProgram(), "Expected ';' but got ')' instead.\n");
 
 		// a = x + (b - 1)) / 3;
@@ -655,7 +655,7 @@ TEST_CASE("Invalid expressions") {
 				new IntegerToken("3"), 		new PunctuatorToken(";"),
 				new PunctuatorToken("}"),	new EndOfFileToken(),
 		};
-		Parser parser1 = Parser(input1);
+		SPParser parser1 = SPParser(input1);
 		REQUIRE_THROWS_WITH(parser1.parseProgram(), "Expected ';' but got ')' instead.\n");
 	}
 	SECTION("Missing closing parentheses") {
@@ -669,7 +669,7 @@ TEST_CASE("Invalid expressions") {
 				new IntegerToken("1"),		new PunctuatorToken("}"),
 				new EndOfFileToken(),
 		};
-		Parser parser = Parser(input);
+		SPParser parser = SPParser(input);
 		REQUIRE_THROWS_WITH(parser.parseProgram(), "Expected arithmetic operator but got '}' instead.\n");
 
 		// a = (x + (b - 1) / 3;
@@ -684,7 +684,7 @@ TEST_CASE("Invalid expressions") {
 				new IntegerToken("3"), 		new PunctuatorToken(";"),
 				new PunctuatorToken("}"),	new EndOfFileToken(),
 		};
-		Parser parser1 = Parser(input1);
+		SPParser parser1 = SPParser(input1);
 		REQUIRE_THROWS_WITH(parser1.parseProgram(), "Expected ')' but got ';' instead.\n");
 	}
 }

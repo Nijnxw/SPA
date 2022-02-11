@@ -26,7 +26,7 @@ void TestWrapper::parse(std::string filename) {
 
     if (sourceFile.is_open()) {
         Lexer lexer(&sourceFile);
-        Parser parser(lexer.tokenize());
+        SPParser parser(lexer.tokenize());
         DesignExtractor::extractDesignElements(parser.parseProgram());
     }
 }

@@ -26,6 +26,14 @@ std::unordered_set<std::string> DesignRelationships::getModifies() {
 	return modifies;
 }
 
+int DesignRelationships::getUsesSize() {
+	return uses.size();
+}
+
+int DesignRelationships::getModifiesSize() {
+	return modifies.size();
+}
+
 void DesignRelationships::combine(DesignRelationships other) {
 	uses.merge(other.getUses());
 	modifies.merge(other.getModifies());

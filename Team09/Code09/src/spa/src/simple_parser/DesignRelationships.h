@@ -18,5 +18,8 @@ public:
 	std::unordered_set<std::string> getUses();
 	std::unordered_set<std::string> getModifies();
 
+	int getUsesSize();
+	int getModifiesSize();
+
 	void combine(DesignRelationships other);
 };

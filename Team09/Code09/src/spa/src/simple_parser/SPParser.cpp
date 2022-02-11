@@ -1,34 +1,34 @@
 #include <string>
 #include <utility>
 #include <vector>
-#include "Parser.h"
+#include "SPParser.h"
 #include "util/RPN.h"
 
-Parser::Parser(std::vector<Token*> tokens) : tokens(std::move(tokens)), currentIdx(0), stmtNo(1) {}
+SPParser::SPParser(std::vector<Token*> tokens) : tokens(std::move(tokens)), currentIdx(0), stmtNo(1) {}
 
-Token* Parser::peek() {
+Token* SPParser::peek() {
 	return tokens[currentIdx];
 }
 
-Token* Parser::get() {
+Token* SPParser::get() {
 	Token* currToken = peek();
 	if (!isEndOfFile()) currentIdx++;
 	return currToken;
 }
 
-bool Parser::isEndOfFile() {
+bool SPParser::isEndOfFile() {
 	return peek()->isEndOfFileToken();
 }
 
-bool Parser::check(ParserTokenType t) {
+bool SPParser::check(ParserTokenType t) {
 	return peek()->getTokenType() == t;
 }
 
-bool Parser::check(const std::string& s) {
+bool SPParser::check(const std::string& s) {
 	return peek()->getValue() == s;
 }
 
-bool Parser::expect(const std::string& s) {
+bool SPParser::expect(const std::string& s) {
 	if (!check(s)) {
 		throw std::runtime_error("Expected '" + s + "' but got '" + peek()->getValue() + "' instead.\n");
 	}
@@ -36,7 +36,7 @@ bool Parser::expect(const std::string& s) {
 	return true;
 }
 
-int Parser::getLeftBindingPower() {
+int SPParser::getLeftBindingPower() {
 	std::string op = peek()->getValue();
 	if (op == "+" || op == "-") {
 		return BindingPower::SUM;
@@ -47,7 +47,7 @@ int Parser::getLeftBindingPower() {
 	}
 }
 
-BinaryOperator Parser::getOperatorEnum() {
+BinaryOperator SPParser::getOperatorEnum() {
 	if (!check(ParserTokenType::OPERATOR)) {
 		throw std::runtime_error("Expected arithmetic operator but got '" + peek()->getValue() + "' instead.\n");
 	}
@@ -70,7 +70,7 @@ BinaryOperator Parser::getOperatorEnum() {
 // factor: var_name
 // 		 | const_value
 // 		 | '(' expr ')'
-ExprNode Parser::parseOperand() {
+ExprNode SPParser::parseOperand() {
 	if (check(ParserTokenType::NAME)) {
 		exprStr += peek()->getValue();
 		return parseVariable();
@@ -88,7 +88,7 @@ ExprNode Parser::parseOperand() {
 	}
 }
 
-ExprNode Parser::parseOperator(const ExprNode& lhs) {
+ExprNode SPParser::parseOperator(const ExprNode& lhs) {
 	ExprNode rhs;
 	BinaryOperator op = getOperatorEnum();
 	exprStr += get()->getValue();
@@ -107,7 +107,7 @@ ExprNode Parser::parseOperator(const ExprNode& lhs) {
 	}
 }
 
-ExprNode Parser::parseExpression(int rightBindingPower = BindingPower::OPERAND) {
+ExprNode SPParser::parseExpression(int rightBindingPower = BindingPower::OPERAND) {
 	ExprNode left = parseOperand();
 	while (!check(";") && !check(")") && rightBindingPower < getLeftBindingPower()) {
 		left = parseOperator( left);
@@ -122,22 +122,22 @@ ExprNode Parser::parseExpression(int rightBindingPower = BindingPower::OPERAND) 
 // 	   | term '/' factor
 // 	   | term '%' factor
 // 	   | factor
-ExprNode Parser::parseExpr() {
+ExprNode SPParser::parseExpr() {
 	return parseExpression(BindingPower::OPERAND);
 }
 
-std::shared_ptr<ConstantNode> Parser::parseConstant() {
+std::shared_ptr<ConstantNode> SPParser::parseConstant() {
 	if (!check(ParserTokenType::INTEGER)) return nullptr;
 	return std::make_shared<ConstantNode>(get()->getValue());
 }
 
-std::shared_ptr<VariableNode> Parser::parseVariable() {
+std::shared_ptr<VariableNode> SPParser::parseVariable() {
 	if (!check(ParserTokenType::NAME)) return nullptr;
 	return std::make_shared<VariableNode>(get()->getValue());
 }
 
 // procedure: 'procedure' proc_name '{' stmtLst '}'
-std::shared_ptr<ProcedureNode> Parser::parseProcedure() {
+std::shared_ptr<ProcedureNode> SPParser::parseProcedure() {
 	if (!check("procedure")) return nullptr;
 	expect("procedure");
 	if (!check(ParserTokenType::NAME)) {
@@ -151,7 +151,7 @@ std::shared_ptr<ProcedureNode> Parser::parseProcedure() {
 }
 
 // stmtLst: stmt+
-std::vector<std::shared_ptr<StmtNode>> Parser::parseStmtLst() {
+std::vector<std::shared_ptr<StmtNode>> SPParser::parseStmtLst() {
 	std::vector<std::shared_ptr<StmtNode>> stmtLst;
 	while (true) {
 		std::shared_ptr<StmtNode> stmt = parseStatement();
@@ -165,7 +165,7 @@ std::vector<std::shared_ptr<StmtNode>> Parser::parseStmtLst() {
 	return stmtLst;
 }
 
-std::shared_ptr<StmtNode> Parser::parseStatement() {
+std::shared_ptr<StmtNode> SPParser::parseStatement() {
 	if (check("}")) return nullptr;
 
 	std::shared_ptr<ReadNode> readNode = parseRead();
@@ -181,7 +181,7 @@ std::shared_ptr<StmtNode> Parser::parseStatement() {
 }
 
 // read: 'read' var_name';'
-std::shared_ptr<ReadNode> Parser::parseRead() {
+std::shared_ptr<ReadNode> SPParser::parseRead() {
 	if (!check("read")) return nullptr;
 	expect("read");
 	std::shared_ptr<VariableNode> variableNode = parseVariable();
@@ -193,7 +193,7 @@ std::shared_ptr<ReadNode> Parser::parseRead() {
 }
 
 // print: 'print' var_name';'
-std::shared_ptr<PrintNode> Parser::parsePrint() {
+std::shared_ptr<PrintNode> SPParser::parsePrint() {
 	if (!check("print")) return nullptr;
 	expect("print");
 	std::shared_ptr<VariableNode> variableNode = parseVariable();
@@ -205,7 +205,7 @@ std::shared_ptr<PrintNode> Parser::parsePrint() {
 }
 
 // assign: var_name '=' expr ';'
-std::shared_ptr<AssignNode> Parser::parseAssign() {
+std::shared_ptr<AssignNode> SPParser::parseAssign() {
 	std::shared_ptr<VariableNode> varNode = parseVariable();
 	if (!varNode) return nullptr;
 	expect("=");
@@ -216,9 +216,9 @@ std::shared_ptr<AssignNode> Parser::parseAssign() {
 	return std::make_shared<AssignNode>(stmtNo, varNode, exprNode, postfix);
 }
 
-// Main function driving Parser class (exposed API)
+// Main function driving SPParser class (exposed API)
 // program: procedure
-AST Parser::parseProgram() {
+AST SPParser::parseProgram() {
 	std::vector<std::shared_ptr<ProcedureNode>> procedureList;
 	std::shared_ptr<ProcedureNode> procedureNode = parseProcedure();
 	if (!procedureNode) {

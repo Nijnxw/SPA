@@ -1,4 +1,4 @@
-#include "simple_parser/Parser.h"
+#include "simple_parser/SPParser.h"
 #include "simple_parser/Token.h"
 
 #include "catch.hpp"
@@ -22,7 +22,7 @@ TEST_CASE ("Test parsing of valid read statements") {
 				new PunctuatorToken("}"),	new EndOfFileToken(),
 		};
 
-		Parser parser = Parser(input);
+		SPParser parser = SPParser(input);
 		AST output = parser.parseProgram();
 
 		std::shared_ptr<ReadNode> readNode = std::make_shared<ReadNode>(1, std::make_shared<VariableNode>("p"));
@@ -50,7 +50,7 @@ TEST_CASE ("Test parsing of valid read statements") {
 				new EndOfFileToken(),
 		};
 
-		Parser parser = Parser(input);
+		SPParser parser = SPParser(input);
 		AST output = parser.parseProgram();
 
 		std::shared_ptr<ReadNode> readNode1 = std::make_shared<ReadNode>(1, std::make_shared<VariableNode>("p"));
@@ -75,7 +75,7 @@ TEST_CASE ("Test parsing of invalid read statement") {
 				new NameToken("p"),        	new PunctuatorToken(";"),
 				new PunctuatorToken("}"),	new EndOfFileToken(),
 		};
-		Parser parser = Parser(input);
+		SPParser parser = SPParser(input);
 		REQUIRE_THROWS_WITH(parser.parseProgram(), "Expected '=' but got 'p' instead.\n");
 	}
 	SECTION ("'read' keyword is case sensitive") {
@@ -85,7 +85,7 @@ TEST_CASE ("Test parsing of invalid read statement") {
 				new NameToken("p"),        	new PunctuatorToken(";"),
 				new PunctuatorToken("}"),	new EndOfFileToken(),
 		};
-		Parser parser = Parser(input);
+		SPParser parser = SPParser(input);
 		REQUIRE_THROWS_WITH(parser.parseProgram(), "Expected '=' but got 'p' instead.\n");
 	}
 	SECTION ("Constants as var_name") {
@@ -95,7 +95,7 @@ TEST_CASE ("Test parsing of invalid read statement") {
 				new IntegerToken("123"),     new PunctuatorToken(";"),
 				new PunctuatorToken("}"),	new EndOfFileToken(),
 		};
-		Parser parser = Parser(input);
+		SPParser parser = SPParser(input);
 		REQUIRE_THROWS_WITH(parser.parseProgram(), "Expected a variable name but got '123' instead.\n");
 	}
 	SECTION ("Missing var_name") {
@@ -105,7 +105,7 @@ TEST_CASE ("Test parsing of invalid read statement") {
 				new PunctuatorToken(";"),
 				new PunctuatorToken("}"),	new EndOfFileToken(),
 		};
-		Parser parser = Parser(input);
+		SPParser parser = SPParser(input);
 		REQUIRE_THROWS_WITH(parser.parseProgram(), "Expected a variable name but got ';' instead.\n");
 	}
 	SECTION ("Missing ';'") {
@@ -115,7 +115,7 @@ TEST_CASE ("Test parsing of invalid read statement") {
 				new NameToken("p"),
 				new PunctuatorToken("}"),	new EndOfFileToken(),
 		};
-		Parser parser = Parser(input);
+		SPParser parser = SPParser(input);
 		REQUIRE_THROWS_WITH(parser.parseProgram(), "Expected ';' but got '}' instead.\n");
 	}
 }

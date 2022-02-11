@@ -1,4 +1,4 @@
-#include "simple_parser/Parser.h"
+#include "simple_parser/SPParser.h"
 #include "simple_parser/Token.h"
 
 #include "catch.hpp"
@@ -22,7 +22,7 @@ TEST_CASE ("Test parsing of valid procedure") {
 				new PunctuatorToken("}"),	new EndOfFileToken(),
 		};
 
-		Parser parser = Parser(input);
+		SPParser parser = SPParser(input);
 		AST output = parser.parseProgram();
 
 		std::shared_ptr<ReadNode> readNode = std::make_shared<ReadNode>(1, std::make_shared<VariableNode>("p"));
@@ -50,7 +50,7 @@ TEST_CASE ("Test parsing of valid procedure") {
 				new EndOfFileToken(),
 		};
 
-		Parser parser = Parser(input);
+		SPParser parser = SPParser(input);
 		AST output = parser.parseProgram();
 
 		std::shared_ptr<ReadNode> readNode1 = std::make_shared<ReadNode>(1, std::make_shared<VariableNode>("p"));
@@ -74,7 +74,7 @@ TEST_CASE ("Test parsing of invalid procedure") {
 				new PunctuatorToken("{"),   	new PunctuatorToken("}"),
 				new EndOfFileToken(),
 		};
-		Parser parser = Parser(input);
+		SPParser parser = SPParser(input);
 		REQUIRE_THROWS_WITH(parser.parseProgram(), "There must be at least 1 statement in a statement list!\n");
 	}
 	SECTION ("Misspell `procedure`") {
@@ -84,7 +84,7 @@ TEST_CASE ("Test parsing of invalid procedure") {
 				new NameToken("p"),        	new PunctuatorToken(";"),
 				new PunctuatorToken("}"),	new EndOfFileToken(),
 		};
-		Parser parser = Parser(input);
+		SPParser parser = SPParser(input);
 		REQUIRE_THROWS_WITH(parser.parseProgram(), "There must be at least 1 procedure in a SIMPLE program!\n");
 	}
 	SECTION ("'procedure' keyword is case sensitive") {
@@ -94,7 +94,7 @@ TEST_CASE ("Test parsing of invalid procedure") {
 				new NameToken("p"),        	new PunctuatorToken(";"),
 				new PunctuatorToken("}"),	new EndOfFileToken(),
 		};
-		Parser parser = Parser(input);
+		SPParser parser = SPParser(input);
 		REQUIRE_THROWS_WITH(parser.parseProgram(), "There must be at least 1 procedure in a SIMPLE program!\n");
 	}
 	SECTION ("Constants as proc_name") {
@@ -104,7 +104,7 @@ TEST_CASE ("Test parsing of invalid procedure") {
 				new NameToken("p"),        	new PunctuatorToken(";"),
 				new PunctuatorToken("}"),	new EndOfFileToken(),
 		};
-		Parser parser = Parser(input);
+		SPParser parser = SPParser(input);
 		REQUIRE_THROWS_WITH(parser.parseProgram(), "Expected a valid procedure name but got '123' instead.\n");
 	}
 	SECTION ("Missing proc_name") {
@@ -114,7 +114,7 @@ TEST_CASE ("Test parsing of invalid procedure") {
 				new NameToken("p"),        	new PunctuatorToken(";"),
 				new PunctuatorToken("}"),	new EndOfFileToken(),
 		};
-		Parser parser = Parser(input);
+		SPParser parser = SPParser(input);
 		REQUIRE_THROWS_WITH(parser.parseProgram(), "Expected a valid procedure name but got '{' instead.\n");
 	}
 	SECTION ("Missing '{'") {
@@ -124,7 +124,7 @@ TEST_CASE ("Test parsing of invalid procedure") {
 				new NameToken("p"),			new PunctuatorToken(";"),
 				new PunctuatorToken("}"),	new EndOfFileToken(),
 		};
-		Parser parser = Parser(input);
+		SPParser parser = SPParser(input);
 		REQUIRE_THROWS_WITH(parser.parseProgram(), "Expected '{' but got 'read' instead.\n");
 	}
 	SECTION ("Missing '}'") {
@@ -134,7 +134,7 @@ TEST_CASE ("Test parsing of invalid procedure") {
 				new NameToken("p"),			new PunctuatorToken(";"),
 												new EndOfFileToken(),
 		};
-		Parser parser = Parser(input);
+		SPParser parser = SPParser(input);
 		REQUIRE_THROWS_WITH(parser.parseProgram(), "Invalid statement syntax at statement 2.\n");
 	}
 }

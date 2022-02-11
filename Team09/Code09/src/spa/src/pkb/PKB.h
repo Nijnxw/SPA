@@ -58,13 +58,13 @@ public:
 	static bool isFirstEntity(RelationRef relationship, int statementOne);
 	static bool isSecondEntity(RelationRef relationship, int statementTwo);
 
-	static std::unordered_set<int> PKB::getFirstEntities(RelationRef relationship, int statementTwo);
-	static std::unordered_set<int> PKB::getSecondEntities(RelationRef relationship, int statementOne);
+	static std::unordered_set<int> getFirstEntities(RelationRef relationship, int statementTwo);
+	static std::unordered_set<int> getSecondEntities(RelationRef relationship, int statementOne);
 
-	static std::unordered_set<int> PKB::getAllFirstEntities(RelationRef relationship);
-	static std::unordered_set<int> PKB::getAllSecondEntities(RelationRef relationship);
+	static std::unordered_set<int> getAllFirstEntities(RelationRef relationship);
+	static std::unordered_set<int> getAllSecondEntities(RelationRef relationship);
 
-	static std::tuple<std::vector<int>, std::vector<int>> PKB::getAllRelationshipPairs(RelationRef relationship);
+	static std::tuple<std::vector<int>, std::vector<int>> getAllRelationshipPairs(RelationRef relationship);
 
 	/* Follows Getters */
 	static bool hasFollowsRelationship();

@@ -7,10 +7,28 @@
 
 #include <vector>
 #include <unordered_set>
+#include <fstream>
+
+const char *tempFile = "./filename.txt";
+void createTempFile(std::string program) {
+	std::ofstream inputFile(tempFile);
+	inputFile << program;
+	inputFile.close();
+}
+void deleteTempFile() {
+	remove(tempFile);
+}
 
 TEST_CASE("Parse SIMPLE file into AST") {
 	SECTION("Read file") {
-		AST output = SPManager::parseFile("../../../src/unit_testing/tests/simple_source/valid_read.txt");
+		std::string program = "procedure testProgram {\n"
+					 		  "    read x;\n"
+					  		  "}";
+		createTempFile(program);
+
+		AST output = SPManager::parseFile(tempFile);
+
+		deleteTempFile();
 
 		std::shared_ptr<ReadNode> readNode = std::make_shared<ReadNode>(1, std::make_shared<VariableNode>("x"));
 		std::vector<std::shared_ptr<StmtNode>> stmtLst{readNode};
@@ -22,7 +40,14 @@ TEST_CASE("Parse SIMPLE file into AST") {
 	}
 
 	SECTION("Print file") {
-		AST output = SPManager::parseFile("../../../src/unit_testing/tests/simple_source/valid_print.txt");
+		std::string program = "procedure testProgram {\n"
+					 		  "    print x;\n"
+					 		  "}";
+		createTempFile(program);
+
+		AST output = SPManager::parseFile(tempFile);
+
+		deleteTempFile();
 
 		std::shared_ptr<PrintNode> printNode = std::make_shared<PrintNode>(1, std::make_shared<VariableNode>("x"));
 		std::vector<std::shared_ptr<StmtNode>> stmtLst{printNode};
@@ -34,7 +59,15 @@ TEST_CASE("Parse SIMPLE file into AST") {
 	}
 
 	SECTION("Assign file") {
-		AST output = SPManager::parseFile("../../../src/unit_testing/tests/simple_source/valid_assign.txt");
+		std::string program = "procedure testProgram {\n"
+							  "    x = 3;\n"
+							  "    x = x + 1 / x - 2;\n"
+							  "}";
+		createTempFile(program);
+
+		AST output = SPManager::parseFile(tempFile);
+
+		deleteTempFile();
 
 		std::shared_ptr<AssignNode> assignNode1 = std::make_shared<AssignNode>(1,
 																			   std::make_shared<VariableNode>("x"),
@@ -64,7 +97,19 @@ TEST_CASE("Parse SIMPLE file into AST") {
 	}
 
 	SECTION("Simple source file") {
-		AST output = SPManager::parseFile("../../../src/unit_testing/tests/simple_source/valid_SIMPLE.txt");
+		std::string program = "procedure testProgram {\n"
+							  "    print x;\n"
+							  "    read y;\n"
+							  "    print y;\n"
+							  "    read x;\n"
+							  "    x = 3;\n"
+							  "    y = x + 1 / x - 2;\n"
+							  "}";
+		createTempFile(program);
+
+		AST output = SPManager::parseFile(tempFile);
+
+		deleteTempFile();
 
 		std::shared_ptr<PrintNode> printNode1 = std::make_shared<PrintNode>(1, std::make_shared<VariableNode>("x"));
 		std::shared_ptr<ReadNode> readNode1 = std::make_shared<ReadNode>(2, std::make_shared<VariableNode>("y"));
@@ -100,38 +145,64 @@ TEST_CASE("Parse SIMPLE file into AST") {
 }
 
 TEST_CASE("File do not exist") {
-	std::string filename = "../../../src/unit_testing/tests/simple_source/invalid_file";
+	std::string filename = "./invalid_file";
 	REQUIRE_THROWS_WITH(SPManager::parseFile(filename), "File do not exist!\n");
 }
 
 TEST_CASE("Invalid SIMPLE syntax") {
 	SECTION("Invalid symbols") {
-		std::string filename = "../../../src/unit_testing/tests/simple_source/invalid_symbols.txt";
-		REQUIRE_THROWS_WITH(SPManager::parseFile(filename), "Invalid SIMPLE Syntax.\n");
+		std::string program = "procedure a$3#4 {\n"
+							  "    read x;\n"
+							  "}";
+		createTempFile(program);
+		REQUIRE_THROWS_WITH(SPManager::parseFile(tempFile), "Invalid SIMPLE Syntax.\n");
+		deleteTempFile();
 	}
 	SECTION("Invalid procedure name") {
-		std::string filename = "../../../src/unit_testing/tests/simple_source/invalid_procedure_name.txt";
-		REQUIRE_THROWS_WITH(SPManager::parseFile(filename), "Expected a valid procedure name but got '2' instead.\n");
+		std::string program = "procedure 2test {\n"
+							  "    read x;\n"
+							  "}";
+		createTempFile(program);
+		REQUIRE_THROWS_WITH(SPManager::parseFile(tempFile), "Expected a valid procedure name but got '2' instead.\n");
+		deleteTempFile();
 	}
 	SECTION("Invalid variable name") {
-		std::string filename = "../../../src/unit_testing/tests/simple_source/invalid_variable_name.txt";
-		REQUIRE_THROWS_WITH(SPManager::parseFile(filename), "Expected a variable name but got '3' instead.\n");
+		std::string program = "procedure testProgram {\n"
+							  "    read 3d2d;\n"
+							  "}";
+		createTempFile(program);
+		REQUIRE_THROWS_WITH(SPManager::parseFile(tempFile), "Expected a variable name but got '3' instead.\n");
+		deleteTempFile();
 	}
 	SECTION("No procedure") {
-		std::string filename = "../../../src/unit_testing/tests/simple_source/invalid_procedure.txt";
-		REQUIRE_THROWS_WITH(SPManager::parseFile(filename), "There must be at least 1 procedure in a SIMPLE program!\n");
+		std::string program = "  \n 	 \t		";
+		createTempFile(program);
+		REQUIRE_THROWS_WITH(SPManager::parseFile(tempFile), "There must be at least 1 procedure in a SIMPLE program!\n");
+		deleteTempFile();
 	}
 	SECTION("No statements") {
-		std::string filename = "../../../src/unit_testing/tests/simple_source/invalid_no_stmts.txt";
-		REQUIRE_THROWS_WITH(SPManager::parseFile(filename), "There must be at least 1 statement in a statement list!\n");
+		std::string program = "procedure testProgram {\n"
+							  "\n"
+							  "}";
+		createTempFile(program);
+		REQUIRE_THROWS_WITH(SPManager::parseFile(tempFile), "There must be at least 1 statement in a statement list!\n");
+		deleteTempFile();
 	}
 	SECTION("Missing semicolon") {
-		std::string filename = "../../../src/unit_testing/tests/simple_source/invalid_no_semicolon.txt";
-		REQUIRE_THROWS_WITH(SPManager::parseFile(filename), "Expected ';' but got '}' instead.\n");
+		std::string program = "procedure testProgram {\n"
+							  "    read x\n"
+							  "}";
+		createTempFile(program);
+		REQUIRE_THROWS_WITH(SPManager::parseFile(tempFile), "Expected ';' but got '}' instead.\n");
+		deleteTempFile();
 	}
 	SECTION("Missing curly braces") {
-		std::string filename = "../../../src/unit_testing/tests/simple_source/invalid_no_curly_braces.txt";
-		REQUIRE_THROWS_WITH(SPManager::parseFile(filename), "Expected '{' but got 'read' instead.\n");
+		std::string program = "procedure testProgram\n"
+							  "    read x;\n"
+							  "}";
+		createTempFile(program);
+		REQUIRE_THROWS_WITH(SPManager::parseFile(tempFile), "Expected '{' but got 'read' instead.\n");
+		deleteTempFile();
 	}
 }
 

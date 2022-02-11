@@ -1,3 +1,0 @@
-procedure 2test {
-    read x;
-}

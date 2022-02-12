@@ -108,12 +108,21 @@ DesignRelationships processWhileNode(std::shared_ptr<WhileNode> whiles) {
 	//process predicate
 	DesignRelationships rs = processPredicateNode(whiles->getPredicate());
 
+	std::vector<std::shared_ptr<StmtNode>> stmtList = whiles->getStmtList();
+
 	//combine with stmtlist
-	rs.combine(processStmtList(whiles->getStmtList()));
+	rs.combine(processStmtList(stmtList));
+
+	//extract direct children stmt number
+	std::unordered_set<int> childrenList;
+	std::transform(stmtList.begin(), stmtList.end(), std::inserter(childrenList, childrenList.begin()),
+		[](std::shared_ptr<StmtNode> node) { return node->getStmtNumber(); });
 
 	//stage relationships
 	if (rs.getModifiesSize() > 0) EntityStager::stageModifiesStatements(whiles->getStmtNumber(), rs.getModifies());
 	if (rs.getUsesSize() > 0) EntityStager::stageUsesStatements(whiles->getStmtNumber(), rs.getUses());
+	if (rs.getChildrenSize() > 0) EntityStager::stageParentT(whiles->getStmtNumber(), rs.getChildren());
+	if (childrenList.size() > 0) EntityStager::stageParent(whiles->getStmtNumber(), childrenList);
 	return rs;
 }
 
@@ -123,14 +132,26 @@ DesignRelationships processIfNode(std::shared_ptr<IfNode> ifs) {
 	//process predicate
 	DesignRelationships rs = processPredicateNode(ifs->getPredicate());
 
+	std::vector<std::shared_ptr<StmtNode>> thenStmtList = ifs->getThenStmtList();
+	std::vector<std::shared_ptr<StmtNode>> elseStmtList = ifs->getElseStmtList();
+
 	//combine with thenStmtList
-	rs.combine(processStmtList(ifs->getThenStmtList()));
+	rs.combine(processStmtList(thenStmtList));
 	//combine with elseStmtList
-	rs.combine(processStmtList(ifs->getElseStmtList()));
+	rs.combine(processStmtList(elseStmtList));
+
+	//extract direct children stmt number
+	std::unordered_set<int> childrenList;
+	std::transform(thenStmtList.begin(), thenStmtList.end(), std::inserter(childrenList, childrenList.begin()),
+		[](std::shared_ptr<StmtNode> node) { return node->getStmtNumber(); });
+	std::transform(elseStmtList.begin(), elseStmtList.end(), std::inserter(childrenList, childrenList.begin()), 
+		[](std::shared_ptr<StmtNode> node) { return node->getStmtNumber(); });
 
 	//stage relationships
 	if (rs.getModifiesSize() > 0) EntityStager::stageModifiesStatements(ifs->getStmtNumber(), rs.getModifies());
 	if (rs.getUsesSize() > 0) EntityStager::stageUsesStatements(ifs->getStmtNumber(), rs.getUses());
+	if (rs.getChildrenSize() > 0) EntityStager::stageParentT(ifs->getStmtNumber(), rs.getChildren());
+	if (childrenList.size() > 0) EntityStager::stageParent(ifs->getStmtNumber(), childrenList);
 	return rs;
 }
 
@@ -161,6 +182,7 @@ DesignRelationships processStmtList(std::vector<std::shared_ptr<StmtNode>> stmtL
 			EntityStager::stageFollowsT(stmtList[i]->getStmtNumber(), stmtList[j]->getStmtNumber());
 		}
 		DesignRelationships rs = processStmt(stmtList[i]);
+		rs.addChildren(stmtList[i]->getStmtNumber());
 		output.combine(rs);
 	}
 	return output;

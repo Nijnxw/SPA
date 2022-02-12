@@ -145,12 +145,16 @@ void EntityStager::stageFollowsT(int follower, int followee) {
 	stagedFollowsT.push_back(std::make_pair(follower, followee));
 }
 
-void EntityStager::stageParent(int parent, int child) {
-	stagedParent.push_back(std::make_pair(parent, child));
+void EntityStager::stageParent(int parent, std::unordered_set<int> children) {
+	for (int child : children) {
+		stagedParent.emplace_back(parent, child);
+	}
 }
 
-void EntityStager::stageParentT(int parent, int child) {
-	stagedParentT.push_back(std::make_pair(parent, child));
+void EntityStager::stageParentT(int parent, std::unordered_set<int> children) {
+	for (int child : children) {
+		stagedParentT.emplace_back(parent, child);
+	}
 }
 
 void EntityStager::stageUsesStatements(int stmt, std::unordered_set<std::string> variables) {

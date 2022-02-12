@@ -1,4 +1,4 @@
-#include "simple_parser/Parser.h"
+#include "simple_parser/SPParser.h"
 #include "simple_parser/Token.h"
 
 #include "catch.hpp"
@@ -47,7 +47,7 @@ TEST_CASE("Test parsing of valid while statements") {
 				new PunctuatorToken("}"),	new EndOfFileToken(),
 		};
 
-		Parser parser = Parser(input);
+		SPParser parser = SPParser(input);
 		AST output = parser.parseProgram();
 
 		std::shared_ptr<PredicateNode> predicateNode = std::make_shared<PredicateNode>(xLTOneRelExprNode);
@@ -78,7 +78,7 @@ TEST_CASE("Test parsing of valid while statements") {
 				new PunctuatorToken("}"),	new PunctuatorToken("}"),		new EndOfFileToken(),
 		};
 
-		Parser parser = Parser(input);
+		SPParser parser = SPParser(input);
 		AST output = parser.parseProgram();
 
 		std::shared_ptr<PredicateNode> neqNode = std::make_shared<PredicateNode>(ConditionalOperator::NOT,
@@ -118,7 +118,7 @@ TEST_CASE("Test parsing of valid while statements") {
 				new PunctuatorToken("}"),	new PunctuatorToken("}"),		new EndOfFileToken(),
 		};
 
-		Parser parser = Parser(input);
+		SPParser parser = SPParser(input);
 		AST output = parser.parseProgram();
 
 		std::shared_ptr<PredicateNode> neqNode = std::make_shared<PredicateNode>(ConditionalOperator::NOT,

@@ -1,9 +1,5 @@
 #include "simple_parser/Lexer.h"
-#include "simple_parser/Token.h"
 
-#include <cctype>
-#include <string>
-#include <vector>
 
 Lexer::Lexer(std::istream* new_stream) : stream(new_stream){}
 

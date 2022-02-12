@@ -8,8 +8,11 @@
 #include "models/simple_parser/AssignNode.h"
 #include "models/simple_parser/PredicateNodes.h"
 #include "models/simple_parser/WhileNode.h"
+#include "util/RPN.h"
 
 #include <vector>
+#include <string>
+#include <utility>
 #include <stdexcept>
 #include <unordered_map>
 

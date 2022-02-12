@@ -36,6 +36,12 @@ bool Parser::expect(const std::string& s) {
 	return true;
 }
 
+bool Parser::isEndOfExpr() {
+	std::string val = peek()->getValue();
+	return val == ")" || val == ";" || val == ">" || val == ">=" || val == "<" ||
+		   val == "<=" || val == "==" || val == "!=";
+}
+
 int Parser::getLeftBindingPower() {
 	std::string op = peek()->getValue();
 	if (op == "+" || op == "-") {
@@ -47,24 +53,13 @@ int Parser::getLeftBindingPower() {
 	}
 }
 
-BinaryOperator Parser::getOperatorEnum() {
-	if (!check(ParserTokenType::OPERATOR)) {
+BinaryOperator Parser::getBinaryOperatorEnum() {
+	if (!check(ParserTokenType::OPERATOR) ||
+		strBinaryOpMap.find(peek()->getValue()) == strBinaryOpMap.end()) {
 		throw std::runtime_error("Expected arithmetic operator but got '" + peek()->getValue() + "' instead.\n");
 	}
 	std::string op = peek()->getValue();
-	if (op == "+") {
-		return BinaryOperator::PLUS;
-	} else if (op == "-") {
-		return BinaryOperator::MINUS;
-	} else if (op == "*") {
-		return BinaryOperator::TIMES;
-	} else if (op == "/") {
-		return BinaryOperator::DIVIDE;
-	} else if (op == "%") {
-		return BinaryOperator::MODULO;
-	} else {
-		throw std::runtime_error("Expected arithmetic operator but got '" + peek()->getValue() + "' instead.\n");
-	}
+	return strBinaryOpMap[op];
 }
 
 // factor: var_name
@@ -90,7 +85,7 @@ ExprNode Parser::parseOperand() {
 
 ExprNode Parser::parseOperator(const ExprNode& lhs) {
 	ExprNode rhs;
-	BinaryOperator op = getOperatorEnum();
+	BinaryOperator op = getBinaryOperatorEnum();
 	exprStr += get()->getValue();
 	switch (op) {
 		case BinaryOperator::PLUS:
@@ -109,7 +104,7 @@ ExprNode Parser::parseOperator(const ExprNode& lhs) {
 
 ExprNode Parser::parseExpression(int rightBindingPower = BindingPower::OPERAND) {
 	ExprNode left = parseOperand();
-	while (!check(";") && !check(")") && rightBindingPower < getLeftBindingPower()) {
+	while (!isEndOfExpr() && rightBindingPower < getLeftBindingPower()) {
 		left = parseOperator( left);
 	}
 	return left;
@@ -124,6 +119,74 @@ ExprNode Parser::parseExpression(int rightBindingPower = BindingPower::OPERAND) 
 // 	   | factor
 ExprNode Parser::parseExpr() {
 	return parseExpression(BindingPower::OPERAND);
+}
+
+ComparatorOperator Parser::getComparatorOperatorEnum() {
+	if (!check(ParserTokenType::OPERATOR) ||
+		strComparatorOpMap.find(peek()->getValue()) == strComparatorOpMap.end()) {
+		throw std::runtime_error("Expected comparator operator but got '" + peek()->getValue() + "' instead.\n");
+	}
+	std::string op = peek()->getValue();
+	return strComparatorOpMap[op];
+}
+
+ConditionalOperator Parser::getPrefixConditionalOperatorEnum() {
+	if (!check("!")) {
+		throw std::runtime_error("Expected '!' but got '" + peek()->getValue() + "' instead.\n");
+	}
+	return ConditionalOperator::NOT;
+}
+
+ConditionalOperator Parser::getInfixConditionalOperatorEnum() {
+	if (check("&&")) {
+		return ConditionalOperator::AND;
+	} else if (check("||")) {
+		return ConditionalOperator::OR;
+	} else {
+		throw std::runtime_error("Expected '&&' or '||' but got '" + peek()->getValue() + "' instead.\n");
+	}
+}
+
+// rel_factor: var_name | const_value | expr
+// rel_expr: rel_factor '>' rel_factor
+//		   | rel_factor '>=' rel_factor
+//		   | rel_factor '<' rel_factor
+//		   | rel_factor '<=' rel_factor
+//		   | rel_factor '==' rel_factor
+//		   | rel_factor '!=' rel_factor
+std::shared_ptr<RelExprNode> Parser::parseRelExpr() {
+	ExprNode lhs = parseExpr();
+	ComparatorOperator op = getComparatorOperatorEnum();
+	get(); // advance to the next token
+	ExprNode rhs = parseExpr();
+	return std::make_shared<RelExprNode>(lhs, op, rhs);
+}
+
+// cond_expr: rel_expr
+//			| '!' '(' cond_expr ')'
+//			| '(' cond_expr ')' '&&' '(' cond_expr ')'
+//			| '(' cond_expr ')' '||' '(' cond_expr ')'
+std::shared_ptr<PredicateNode> Parser::parsePredicate() {
+	if (check("!")) {
+		ConditionalOperator notOperator = getPrefixConditionalOperatorEnum();
+		expect("!");
+		expect("(");
+		std::shared_ptr<PredicateNode> predicateNode = parsePredicate();
+		expect(")");
+		return std::make_shared<PredicateNode>(notOperator, predicateNode);
+	} else if (check("(")) {
+		expect("(");
+		std::shared_ptr<PredicateNode> lhs = parsePredicate();
+		expect(")");
+		ConditionalOperator op = getInfixConditionalOperatorEnum();
+		get(); // advance to next
+		expect("(");
+		std::shared_ptr<PredicateNode> rhs = parsePredicate();
+		expect(")");
+		return std::make_shared<PredicateNode>(lhs, op, rhs);
+	} else {
+		return std::make_shared<PredicateNode>(parseRelExpr());
+	}
 }
 
 std::shared_ptr<ConstantNode> Parser::parseConstant() {
@@ -174,6 +237,9 @@ std::shared_ptr<StmtNode> Parser::parseStatement() {
 	std::shared_ptr<PrintNode> printNode = parsePrint();
 	if (printNode) return printNode;
 
+	std::shared_ptr<WhileNode> whileNode = parseWhile();
+	if (whileNode) return whileNode;
+
 	std::shared_ptr<AssignNode> assignNode = parseAssign();
 	if (assignNode) return assignNode;
 
@@ -214,6 +280,21 @@ std::shared_ptr<AssignNode> Parser::parseAssign() {
 	std::string postfix = RPN::convertToRpn(exprStr);
 	exprStr = "";
 	return std::make_shared<AssignNode>(stmtNo, varNode, exprNode, postfix);
+}
+
+// while: 'while' '(' cond_expr ')' '{' stmtLst '}'
+std::shared_ptr<WhileNode> Parser::parseWhile() {
+	if (!check("while")) return nullptr;
+	int currStmtNo = stmtNo;
+	stmtNo++;
+	expect("while");
+	expect("(");
+	std::shared_ptr<PredicateNode> predicateNode = parsePredicate();
+	expect(")");
+	expect("{");
+	std::vector<std::shared_ptr<StmtNode>> stmtLst = parseStmtLst();
+	expect("}");
+	return std::make_shared<WhileNode>(currStmtNo, predicateNode, stmtLst);
 }
 
 // Main function driving Parser class (exposed API)

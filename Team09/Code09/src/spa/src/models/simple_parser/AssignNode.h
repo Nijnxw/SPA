@@ -16,6 +16,7 @@ private:
 public:
 	AssignNode(int sn, std::shared_ptr<VariableNode> var, ExprNode exp, std::string pf);
 	std::shared_ptr<VariableNode> getAssignedVar() const;
+	std::string getAssignedVarName() const;
 	ExprNode getExpression() const;
 	std::string getPostfix() const;
 	bool operator==(const Node& other) const override;

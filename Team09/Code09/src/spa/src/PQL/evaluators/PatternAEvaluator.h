@@ -7,6 +7,8 @@
 #include "pkb/PKB.h"
 #include "pkb/util/PKBUtil.cpp"
 #include "models/EntityType.h"
+#include "models/AssignStatement.h"
+#include "models/QueryClauseTable.h"
 #include "util/RPN.h";
 
 #include "PatternEvaluator.h"

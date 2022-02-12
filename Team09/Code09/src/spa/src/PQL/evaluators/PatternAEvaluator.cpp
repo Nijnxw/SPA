@@ -19,8 +19,10 @@ QueryClauseTable PatternAEvaluator::getPattern(const std::string& LHS, const std
 }
 
 QueryClauseTable PatternAEvaluator::getPatternBySynonym(const std::string& LHS, const std::string& RHS, EntityType RHSType, 
-	const std::unordered_map<int, AssignStatement> assignStatements) {
+const std::unordered_map<int, AssignStatement> assignStatements) {
 	QueryClauseTable queryResult;
+	std::vector<int> statementNumbers;
+	std::vector<std::string> variables;
 
 	switch (RHSType) {
 	case EntityType::STRING: 
@@ -34,10 +36,13 @@ QueryClauseTable PatternAEvaluator::getPatternBySynonym(const std::string& LHS, 
 				std::string statementRHS = statement.getRightHandSide();
 
 				if (RPN::contains(statementRHS, trimmedRHS)) {
-					queryResult.addColumn("a", statementNum);
-					queryResult.addColumn(LHS, statementLHS);
+					statementNumbers.push_back(statementNum);
+					variables.push_back(statementLHS);
 				}
 			}
+
+			queryResult.addColumn("a", statementNumbers);
+			queryResult.addColumn(LHS, variables);
 		}
 		else { // a(v, ”x + 1”) 
 			for (auto const& pair : assignStatements) {
@@ -47,10 +52,13 @@ QueryClauseTable PatternAEvaluator::getPatternBySynonym(const std::string& LHS, 
 				std::string statementRHS = statement.getRightHandSide();
 
 				if (statementRHS == RHS) {
-					queryResult.addColumn("a", statementNum);
-					queryResult.addColumn(LHS, statementLHS);
+					statementNumbers.push_back(statementNum);
+					variables.push_back(statementLHS);
 				}
 			}
+
+			queryResult.addColumn("a", statementNumbers);
+			queryResult.addColumn(LHS, variables);
 		}
 		break;
 	case EntityType::WILD: // a(v, _)
@@ -60,9 +68,13 @@ QueryClauseTable PatternAEvaluator::getPatternBySynonym(const std::string& LHS, 
 			std::string statementLHS = statement.getLeftHandSide();
 			std::string statementRHS = statement.getRightHandSide();
 
-			queryResult.addColumn("a", statementNum);
-			queryResult.addColumn(LHS, statementLHS);
+			statementNumbers.push_back(statementNum);
+			variables.push_back(statementLHS);
 		}
+
+		queryResult.addColumn("a", statementNumbers);
+		queryResult.addColumn(LHS, variables);
+
 		break;
 	default:
 		break;
@@ -74,11 +86,13 @@ QueryClauseTable PatternAEvaluator::getPatternBySynonym(const std::string& LHS, 
 QueryClauseTable PatternAEvaluator::getPatternByVariable(const std::string& LHS, const std::string& RHS, EntityType RHSType, 
 	const std::unordered_map<int, AssignStatement> assignStatements) {
 	QueryClauseTable queryResult;
+	std::vector<int> statementNumbers;
 
 	switch (RHSType) {
 	case EntityType::STRING: 
 		if (RHS[0] == '_') { // a("x", _"x"_)
 			std::string trimmedRHS = RHS.substr(1, RHS.length() - 2);
+
 			for (auto const& pair : assignStatements) {
 				int statementNum = pair.first;
 				AssignStatement statement = pair.second;
@@ -86,9 +100,11 @@ QueryClauseTable PatternAEvaluator::getPatternByVariable(const std::string& LHS,
 				std::string statementRHS = statement.getRightHandSide();
 
 				if ((statementLHS == LHS) && (RPN::contains(statementRHS, trimmedRHS))) {
-					queryResult.addColumn("a", statementNum);
+					statementNumbers.push_back(statementNum);
 				}
 			}
+
+			queryResult.addColumn("a", statementNumbers);
 		}
 		else { // a("x", ”x + 1”)
 			for (auto const& pair : assignStatements) {
@@ -98,9 +114,11 @@ QueryClauseTable PatternAEvaluator::getPatternByVariable(const std::string& LHS,
 				std::string statementRHS = statement.getRightHandSide();
 
 				if ((statementLHS == LHS) && (statementRHS == RHS)) {
-					queryResult.addColumn("a", statementNum);
+					statementNumbers.push_back(statementNum);
 				}
 			}
+
+			queryResult.addColumn("a", statementNumbers);
 		}
 		break;
 	break;
@@ -112,8 +130,10 @@ QueryClauseTable PatternAEvaluator::getPatternByVariable(const std::string& LHS,
 			std::string statementRHS = statement.getRightHandSide();
 
 			if (statementLHS == LHS) {
-				queryResult.addColumn("a", statementNum);
+				statementNumbers.push_back(statementNum);
 			}
+
+			queryResult.addColumn("a", statementNumbers);
 		}
 		break;
 	default:
@@ -125,11 +145,13 @@ QueryClauseTable PatternAEvaluator::getPatternByVariable(const std::string& LHS,
 QueryClauseTable PatternAEvaluator::getPatternByUnderscore(const std::string& RHS, EntityType RHSType, 
 	const std::unordered_map<int, AssignStatement> assignStatements) {
 	QueryClauseTable queryResult;
+	std::vector<int> statementNumbers;
 
 	switch (RHSType) {
 	case EntityType::STRING: 
 		if (RHS[0] == '_') { // a("x", _"x"_)
 			std::string trimmedRHS = RHS.substr(1, RHS.length() - 2);
+
 			for (auto const& pair : assignStatements) {
 				int statementNum = pair.first;
 				AssignStatement statement = pair.second;
@@ -137,9 +159,11 @@ QueryClauseTable PatternAEvaluator::getPatternByUnderscore(const std::string& RH
 				std::string statementRHS = statement.getRightHandSide();
 
 				if (RPN::contains(statementRHS, trimmedRHS)) {
-					queryResult.addColumn("a", statementNum);
+					statementNumbers.push_back(statementNum);
 				}
 			}
+
+			queryResult.addColumn("a", statementNumbers);
 		}
 		else { // a("x", ”x + 1”)
 			for (auto const& pair : assignStatements) {
@@ -149,9 +173,11 @@ QueryClauseTable PatternAEvaluator::getPatternByUnderscore(const std::string& RH
 				std::string statementRHS = statement.getRightHandSide();
 
 				if (statementRHS == RHS) {
-					queryResult.addColumn("a", statementNum);
+					statementNumbers.push_back(statementNum);
 				}
 			}
+
+			queryResult.addColumn("a", statementNumbers);
 		}
 		break;
 	case EntityType::WILD: // a(_,  _)
@@ -161,8 +187,11 @@ QueryClauseTable PatternAEvaluator::getPatternByUnderscore(const std::string& RH
 			std::string statementLHS = statement.getLeftHandSide();
 			std::string statementRHS = statement.getRightHandSide();
 
-			queryResult.addColumn("a", statementNum);
+			statementNumbers.push_back(statementNum);
 		}
+
+		queryResult.addColumn("a", statementNumbers);
+
 		break;
 	default:
 		break;

@@ -13,7 +13,7 @@
 #include <stdexcept>
 #include <unordered_map>
 
-class Parser {
+class SPParser {
 private:
 	int currentIdx = 0;
 	int stmtNo = 1;
@@ -77,7 +77,7 @@ private:
 	std::shared_ptr<WhileNode> parseWhile();
 
 public:
-	explicit Parser(std::vector<Token*> tokens);
+	explicit SPParser(std::vector<Token*> tokens);
 
 	AST parseProgram();
 };

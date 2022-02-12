@@ -46,7 +46,7 @@ QueryClauseTable PatternAEvaluator::getPatternBySynonym(const std::string& LHS, 
 				std::string statementLHS = statement.getLeftHandSide();
 				std::string statementRHS = statement.getRightHandSide();
 
-				if (statementRHS == RHS) {
+				if (statementRHS == RPN::convertToRpn(RHS)) {
 					queryResult.addColumn("a", statementNum);
 					queryResult.addColumn(LHS, statementLHS);
 				}
@@ -97,7 +97,7 @@ QueryClauseTable PatternAEvaluator::getPatternByVariable(const std::string& LHS,
 				std::string statementLHS = statement.getLeftHandSide();
 				std::string statementRHS = statement.getRightHandSide();
 
-				if ((statementLHS == LHS) && (statementRHS == RHS)) {
+				if ((statementLHS == LHS) && (statementRHS == RPN::convertToRpn(RHS))) {
 					queryResult.addColumn("a", statementNum);
 				}
 			}
@@ -148,7 +148,7 @@ QueryClauseTable PatternAEvaluator::getPatternByUnderscore(const std::string& RH
 				std::string statementLHS = statement.getLeftHandSide();
 				std::string statementRHS = statement.getRightHandSide();
 
-				if (statementRHS == RHS) {
+				if (statementRHS == RPN::convertToRpn(RHS)) {
 					queryResult.addColumn("a", statementNum);
 				}
 			}

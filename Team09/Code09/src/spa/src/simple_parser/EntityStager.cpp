@@ -46,6 +46,7 @@ std::unordered_set<int> EntityStager::getStagedStatements() {
 std::unordered_set<int> EntityStager::getStagedReadStatements() {
 	return stagedReadStatements;
 }
+
 std::unordered_set<int> EntityStager::getStagedPrintStatements() {
 	return stagedPrintStatements;
 }
@@ -102,9 +103,11 @@ std::vector<std::pair<std::string, std::unordered_set<std::string>>> EntityStage
 void EntityStager::stageProcedure(const std::string& procedure) {
 	stagedProcedures.insert(procedure);
 }
+
 void EntityStager::stageVariable(const std::string& variable) {
 	stagedVariables.insert(variable);
 }
+
 void EntityStager::stageConstant(const std::string& constant) {
 	stagedConstants.insert(constant);
 }
@@ -134,80 +137,84 @@ void EntityStager::stageCallStatement(int stmtNo) {
 }
 
 void EntityStager::stageAssignStatement(int stmtNo, std::string lhs, std::string rhs) {
-	stagedAssignStatements.push_back(std::make_tuple(stmtNo, lhs, rhs));
+	stagedAssignStatements.emplace_back(stmtNo, lhs, rhs);
 }
 
 void EntityStager::stageFollows(int follower, int followee) {
-	stagedFollows.push_back(std::make_pair(follower, followee));
+	stagedFollows.emplace_back(follower, followee);
 }
 
 void EntityStager::stageFollowsT(int follower, int followee) {
-	stagedFollowsT.push_back(std::make_pair(follower, followee));
+	stagedFollowsT.emplace_back(follower, followee);
 }
 
-void EntityStager::stageParent(int parent, int child) {
-	stagedParent.push_back(std::make_pair(parent, child));
+void EntityStager::stageParent(int parent, std::unordered_set<int> children) {
+	for (int child: children) {
+		stagedParent.emplace_back(parent, child);
+	}
 }
 
-void EntityStager::stageParentT(int parent, int child) {
-	stagedParentT.push_back(std::make_pair(parent, child));
+void EntityStager::stageParentT(int parent, std::unordered_set<int> children) {
+	for (int child: children) {
+		stagedParentT.emplace_back(parent, child);
+	}
 }
 
 void EntityStager::stageUsesStatements(int stmt, std::unordered_set<std::string> variables) {
-	stagedUsesStatement.push_back(std::make_pair(stmt, variables));
+	stagedUsesStatement.emplace_back(stmt, variables);
 }
 
 void EntityStager::stageUsesProcedure(std::string proc, std::unordered_set<std::string> variables) {
-	stagedUsesProcedure.push_back(std::make_pair(proc, variables));
+	stagedUsesProcedure.emplace_back(proc, variables);
 }
 
 void EntityStager::stageModifiesStatements(int stmt, std::unordered_set<std::string> variables) {
-	stagedModifiesStatement.push_back(std::make_pair(stmt, variables));
+	stagedModifiesStatement.emplace_back(stmt, variables);
 
 }
 
 void EntityStager::stageModifiesProcedure(std::string proc, std::unordered_set<std::string> variables) {
-	stagedModifiesProcedure.push_back(std::make_pair(proc, variables));
+	stagedModifiesProcedure.emplace_back(proc, variables);
 }
 
 void EntityStager::commit() {
-	for (auto& proc : stagedProcedures) { PKB::addProcedure(proc); }
-	for (auto& var : stagedConstants) { PKB::addConstant(var); }
-	for (auto& con : stagedVariables) { PKB::addVariable(con); }
+	for (auto& proc: stagedProcedures) { PKB::addProcedure(proc); }
+	for (auto& var: stagedConstants) { PKB::addConstant(var); }
+	for (auto& con: stagedVariables) { PKB::addVariable(con); }
 
-	for (auto& stmt : stagedStatements) { PKB::addStatementNumber(stmt); }
-	for (auto& read : stagedReadStatements) { PKB::addStatementWithType(EntityType::READ, read); }
-	for (auto& print : stagedPrintStatements) { PKB::addStatementWithType(EntityType::PRINT, print); }
-	for (auto& ifs : stagedIfStatements) { PKB::addStatementWithType(EntityType::IF, ifs); }
-	for (auto& whiles : stagedWhileStatements) { PKB::addStatementWithType(EntityType::WHILE, whiles); }
-	for (auto& call : stagedCallStatements) { PKB::addStatementWithType(EntityType::CALL, call); }
+	for (auto& stmt: stagedStatements) { PKB::addStatementNumber(stmt); }
+	for (auto& read: stagedReadStatements) { PKB::addStatementWithType(EntityType::READ, read); }
+	for (auto& print: stagedPrintStatements) { PKB::addStatementWithType(EntityType::PRINT, print); }
+	for (auto& ifs: stagedIfStatements) { PKB::addStatementWithType(EntityType::IF, ifs); }
+	for (auto& whiles: stagedWhileStatements) { PKB::addStatementWithType(EntityType::WHILE, whiles); }
+	for (auto& call: stagedCallStatements) { PKB::addStatementWithType(EntityType::CALL, call); }
 
-	for (auto& assign : stagedAssignStatements) {
+	for (auto& assign: stagedAssignStatements) {
 		PKB::addAssignStatement(std::get<0>(assign), std::get<1>(assign), std::get<2>(assign));
 	}
 
-	for (auto& follow : stagedFollows) {
+	for (auto& follow: stagedFollows) {
 		PKB::addFollows(follow.first, follow.second);
 	}
-	for (auto& followT : stagedFollowsT) {
+	for (auto& followT: stagedFollowsT) {
 		PKB::addFollowsT(followT.first, followT.second);
 	}
-	for (auto& parent : stagedParent) {
+	for (auto& parent: stagedParent) {
 		PKB::addParent(parent.first, parent.second);
 	}
-	for (auto& parentT : stagedParentT) {
+	for (auto& parentT: stagedParentT) {
 		PKB::addParentT(parentT.first, parentT.second);
 	}
-	for (auto& modifiesS : stagedModifiesStatement) {
+	for (auto& modifiesS: stagedModifiesStatement) {
 		PKB::addModifiesStatement(modifiesS.first, modifiesS.second);
 	}
-	for (auto& modifiesP : stagedModifiesProcedure) {
+	for (auto& modifiesP: stagedModifiesProcedure) {
 		PKB::addModifiesProcedure(modifiesP.first, modifiesP.second);
 	}
-	for (auto& usesS : stagedUsesStatement) {
+	for (auto& usesS: stagedUsesStatement) {
 		PKB::addUsesStatement(usesS.first, usesS.second);
 	}
-	for (auto& usesP : stagedUsesProcedure) {
+	for (auto& usesP: stagedUsesProcedure) {
 		PKB::addUsesProcedure(usesP.first, usesP.second);
 	}
 	EntityStager::clear();

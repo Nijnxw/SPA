@@ -12,17 +12,11 @@
 #include "models/QueryClauseTable.h"
 #include "models/QueryClause.h"
 
-class UsesEvaluator {
-private:
+#include "UMEvaluator.h"
 
-	// Internal helper methods
-	static QueryClauseTable getUsesByVariable(const std::string& LHS, const std::string& RHS, EntityType LHSType);
-	static QueryClauseTable getUsesBySynonym(const std::string& LHS, const std::string& RHS, EntityType LHSType);
-	static QueryClauseTable getUsesByUnderscore(const std::string& LHS, const std::string& RHS, EntityType LHSType);
-
+class UsesEvaluator : public UMEvaluator {
 public:
 	static QueryClauseTable
 	getUses(const std::string& LHS, const std::string& RHS, EntityType LHSType, EntityType RHSType,
 			bool isBooleanResult);
-
 };

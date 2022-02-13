@@ -12,14 +12,9 @@
 #include "models/QueryClauseTable.h"
 #include "models/QueryClause.h"
 
-class ModifiesEvaluator {
-private:
+#include "UMEvaluator.h"
 
-	// Internal helper methods
-	static QueryClauseTable getModifiesByVariable(const std::string& LHS, const std::string& RHS, EntityType LHSType);
-	static QueryClauseTable getModifiesBySynonym(const std::string& LHS, const std::string& RHS, EntityType LHSType);
-	static QueryClauseTable getModifiesByUnderscore(const std::string& LHS, const std::string& RHS, EntityType LHSType);
-
+class ModifiesEvaluator : public UMEvaluator {
 public:
 	static QueryClauseTable
 	getModifies(const std::string& LHS, const std::string& RHS, EntityType LHSType, EntityType RHSType,

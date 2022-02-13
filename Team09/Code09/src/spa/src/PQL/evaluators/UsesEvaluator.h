@@ -12,23 +12,11 @@
 #include "models/QueryClauseTable.h"
 #include "models/QueryClause.h"
 
-class UsesEvaluator {
-private:
+#include "UMEvaluator.h"
 
-	// Internal helper methods
-	static QueryClauseTable getUsesByVariable(const std::string& LHS, const std::string& RHS, EntityType LHSType);
-	static QueryClauseTable getUsesBySynonym(const std::string& LHS, const std::string& RHS, EntityType LHSType);
-	static QueryClauseTable getUsesByUnderscore(const std::string& LHS, const std::string& RHS, EntityType LHSType);
-
-	static std::unordered_set<std::string> getVariablesUsedByStatement(int stmtNo);
-	static std::unordered_set<std::string> getVariablesUsedByProcedure(const std::string& procName);
-	static std::unordered_set<int> getStatementsUsingVariable(const std::string& variable);
-	static std::tuple<std::vector<std::string>, std::vector<std::string>>
-	getStmtsToUsedVariable(const std::unordered_set<int>& stmts);
-
+class UsesEvaluator : public UMEvaluator {
 public:
 	static QueryClauseTable
 	getUses(const std::string& LHS, const std::string& RHS, EntityType LHSType, EntityType RHSType,
 			bool isBooleanResult);
-
 };

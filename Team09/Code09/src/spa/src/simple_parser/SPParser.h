@@ -19,7 +19,7 @@
 class SPParser {
 private:
 	int currentIdx = 0;
-	int stmtNo = 1;
+	int stmtNo = 0;
 	std::vector<Token*> tokens;
 	std::string exprStr;
 
@@ -47,6 +47,8 @@ private:
 	bool check(ParserTokenType t);
 	bool check(const std::string& s);
 	bool expect(const std::string& s);
+
+	int getStmtNo();
 
 	enum BindingPower {
 		OPERAND = 0,

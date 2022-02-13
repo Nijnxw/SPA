@@ -1,6 +1,6 @@
 #include "SPParser.h"
 
-SPParser::SPParser(std::vector<Token*> tokens) : tokens(std::move(tokens)), currentIdx(0), stmtNo(1) {}
+SPParser::SPParser(std::vector<Token*> tokens) : tokens(std::move(tokens)), currentIdx(0), stmtNo(0) {}
 
 Token* SPParser::peek() {
 	return tokens[currentIdx];
@@ -30,6 +30,11 @@ bool SPParser::expect(const std::string& s) {
 	}
 	get();
 	return true;
+}
+
+int SPParser::getStmtNo() {
+	stmtNo++;
+	return stmtNo;
 }
 
 bool SPParser::isEndOfExpr() {
@@ -214,7 +219,6 @@ std::vector<std::shared_ptr<StmtNode>> SPParser::parseStmtLst() {
 	std::vector<std::shared_ptr<StmtNode>> stmtLst;
 	while (true) {
 		std::shared_ptr<StmtNode> stmt = parseStatement();
-		stmtNo++;
 		if (!stmt) break;
 		stmtLst.push_back(stmt);
 	}
@@ -239,7 +243,7 @@ std::shared_ptr<StmtNode> SPParser::parseStatement() {
 	std::shared_ptr<AssignNode> assignNode = parseAssign();
 	if (assignNode) return assignNode;
 
-	throw std::runtime_error("Invalid statement syntax at statement " + std::to_string(stmtNo) + ".\n");
+	throw std::runtime_error("Invalid statement syntax at statement " + std::to_string(getStmtNo()) + ".\n");
 }
 
 // read: 'read' var_name';'
@@ -251,7 +255,7 @@ std::shared_ptr<ReadNode> SPParser::parseRead() {
 		throw std::runtime_error("Expected a variable name but got '" + peek()->getValue() + "' instead.\n");
 	}
 	expect(";");
-	return std::make_shared<ReadNode>(stmtNo, variableNode);
+	return std::make_shared<ReadNode>(getStmtNo(), variableNode);
 }
 
 // print: 'print' var_name';'
@@ -263,7 +267,7 @@ std::shared_ptr<PrintNode> SPParser::parsePrint() {
 		throw std::runtime_error("Expected a variable name but got '" + peek()->getValue() + "' instead.\n");
 	}
 	expect(";");
-	return std::make_shared<PrintNode>(stmtNo, variableNode);
+	return std::make_shared<PrintNode>(getStmtNo(), variableNode);
 }
 
 // assign: var_name '=' expr ';'
@@ -275,14 +279,13 @@ std::shared_ptr<AssignNode> SPParser::parseAssign() {
 	expect(";");
 	std::string postfix = RPN::convertToRpn(exprStr);
 	exprStr = "";
-	return std::make_shared<AssignNode>(stmtNo, varNode, exprNode, postfix);
+	return std::make_shared<AssignNode>(getStmtNo(), varNode, exprNode, postfix);
 }
 
 // while: 'while' '(' cond_expr ')' '{' stmtLst '}'
 std::shared_ptr<WhileNode> SPParser::parseWhile() {
 	if (!check("while")) return nullptr;
-	int currStmtNo = stmtNo;
-	stmtNo++;
+	int currStmtNo = getStmtNo();
 	expect("while");
 	expect("(");
 	std::shared_ptr<PredicateNode> predicateNode = parsePredicate();

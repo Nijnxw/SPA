@@ -1,9 +1,4 @@
-#include "DesignExtractor.h"
-#include "Lexer.h"
-#include "simple_parser/SPParser.h"
 #include "SPManager.h"
-
-#include <utility>
 
 AST SPManager::parseFile(const std::string& filename) {
 	std::ifstream inputStream(filename);

@@ -3,14 +3,14 @@
 #include <string>
 #include <unordered_set>
 
-class DesignRelationships {
+class NestableRelationships {
 private:
 	std::unordered_set<std::string> uses;
 	std::unordered_set<std::string> modifies;
 	std::unordered_set<int> children;
 
 public:
-	static DesignRelationships createEmpty();
+	static NestableRelationships createEmpty();
 
 	void addUses(std::string used);
 	void addModifies(std::string modified);
@@ -24,5 +24,5 @@ public:
 	int getModifiesSize();
 	int getChildrenSize();
 
-	void combine(DesignRelationships other);
+	void combine(NestableRelationships other);
 };

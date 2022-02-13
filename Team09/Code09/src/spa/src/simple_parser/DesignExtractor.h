@@ -9,7 +9,7 @@
 #include "models/simple_parser/ProcedureNode.h"
 #include "models/simple_parser/WhileNode.h"
 #include "simple_parser/EntityStager.h"
-#include "simple_parser/DesignRelationships.h"
+#include "simple_parser/NestableRelationships.h"
 
 #include <memory>
 #include <string>

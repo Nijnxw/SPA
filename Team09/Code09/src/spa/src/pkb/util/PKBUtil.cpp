@@ -6,7 +6,7 @@
 
 namespace PKBUtil
 {
-    static struct hashFunction
+    struct hashFunction
     {
         size_t operator()(const std::pair<int,
             int>& x) const

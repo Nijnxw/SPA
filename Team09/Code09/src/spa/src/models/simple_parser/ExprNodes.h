@@ -1,5 +1,6 @@
 #pragma once
 
+#include "Operator.h"
 #include "Node.h"
 #include "NodeType.h"
 
@@ -9,10 +10,9 @@
 
 class VariableNode;
 class ConstantNode;
-//class OperatorNode;
-using ExprNode = std::variant<std::shared_ptr<VariableNode>, std::shared_ptr<ConstantNode>>;
-//using ExprNode = 
-//	std::variant<std::shared_ptr<VariableNode>, std::shared_ptr<ConstantNode>, std::shared_ptr<OperatorNode>>;
+class BinaryOperatorNode;
+using ExprNode = 
+	std::variant<std::shared_ptr<VariableNode>, std::shared_ptr<ConstantNode>, std::shared_ptr<BinaryOperatorNode>>;
 
 class VariableNode : public Node {
 private:
@@ -31,5 +31,19 @@ private:
 public:
 	ConstantNode(std::string s);
 	std::string getValue() const;
+	bool operator==(const Node& other) const override;
+};
+
+class BinaryOperatorNode : public Node {
+private:
+	BinaryOperator op;
+	ExprNode lhs;
+	ExprNode rhs;
+
+public:
+	BinaryOperatorNode(BinaryOperator bo, ExprNode left, ExprNode right);
+	BinaryOperator getOperator() const;
+	ExprNode getLhs() const;
+	ExprNode getRhs() const;
 	bool operator==(const Node& other) const override;
 };

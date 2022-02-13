@@ -1,15 +1,33 @@
 #pragma once
 
 #include <vector>
+#include <unordered_set>
 #include "EntityType.h"
 #include "QueryArgument.h"
+#include "RelationRef.h"
 
 class QueryClause {
 public:
-    QueryClause(std::vector<QueryArgument>& arguments);
+	QueryClause(RelationRef clauseType, std::vector<QueryArgument>& arguments,
+				std::unordered_set<std::string>& usedSynonyms, const std::string& clauseSynonym = "");
 
-    const std::vector<QueryArgument>& getArguments() const;
+	RelationRef getClauseType() const;
+	const std::string& getClauseSynonym() const;
+	const std::vector<QueryArgument>& getArguments() const;
+	const std::unordered_set<std::string>& getUsedSynonyms() const;
+	bool containsSynonym(QueryArgument& synonym) const;
+	bool containsCommonSynonym(QueryClause& other) const;
+	bool operator==(const QueryClause& other) const {
+		bool isRelationRefEqual = clauseType == other.getClauseType(); 
+		bool isclauseSynonymEqual = clauseSynonym == other.getClauseSynonym();
+		bool isArgumentsEqual = std::equal(arguments.begin(), arguments.end(), other.getArguments().begin());
+		bool isUsedSynonymsEqual = std::equal(usedSynonyms.begin(), usedSynonyms.end(), other.getUsedSynonyms().begin());
+		return isRelationRefEqual && isclauseSynonymEqual && isArgumentsEqual && isUsedSynonymsEqual;
+	}
 
-protected:
-    std::vector<QueryArgument> arguments;
+private:
+	RelationRef clauseType;
+	std::string clauseSynonym;
+	std::vector<QueryArgument> arguments;
+	std::unordered_set<std::string> usedSynonyms;
 };

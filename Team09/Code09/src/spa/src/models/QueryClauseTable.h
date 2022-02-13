@@ -14,12 +14,10 @@ class QueryClauseTable {
 private:
 	Table table;
 	bool booleanResult = false;
-	// always order the headers in ascending order before converting each row value to space separated string
-	std::unordered_set<std::string> stringifyRows() const;
 
 public:
 	QueryClauseTable();
-	QueryClauseTable(Table& table);
+	QueryClauseTable(const Table& table);
 	bool operator==(const QueryClauseTable& other) const;
 	Table getTable();
 	bool getBooleanResult();

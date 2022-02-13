@@ -8,6 +8,14 @@
 // include your other headers here
 #include "AbstractWrapper.h"
 
+#include "pkb/PKB.h"
+
+#include "PQL/PQL.h"
+#include "PQL/QueryEvaluator.h"
+#include "PQL/QueryResultProjector.h"
+
+#include "simple_parser/SPManager.h"
+
 class TestWrapper : public AbstractWrapper {
  public:
   // default constructor

@@ -9,6 +9,10 @@ std::shared_ptr<VariableNode> IoNode::getVariable() const{
 	return variable;
 }
 
+std::string IoNode::getVariableName() const {
+	return variable->getName();
+}
+
 // ReadNode Implementation
 ReadNode::ReadNode(int sn, std::shared_ptr<VariableNode> var)
 	: IoNode(NodeType::READ, sn, var) { }
@@ -19,7 +23,6 @@ bool ReadNode::operator==(const Node& other) const {
 		StmtNode::operator==(other) &&
 		*(this->getVariable()) == *(cast->getVariable());
 }
-
 
 // PrintNode Implementation
 PrintNode::PrintNode(int sn, std::shared_ptr<VariableNode> var)

@@ -15,7 +15,7 @@ void PKB::clearAllStores() {
 	ModifiesStore::clear();
 }
 
-/* Getters called by Source Processor */
+/* Setters called by Source Processor */
 bool PKB::addProcedure(std::string procedure) {
 	return EntityStore::addProcedure(procedure);
 }
@@ -70,7 +70,7 @@ bool PKB::addModifiesProcedure(const std::string& procedure, const std::unordere
 	return ModifiesStore::addModifiesProcedure(procedure, variables);
 }
 
-/* Setters called by Query Evaluator */
+/* Getters called by Query Evaluator */
 std::unordered_set<std::string> PKB::getProcedures() {
 	return EntityStore::getProcedures();
 }
@@ -95,20 +95,291 @@ std::unordered_set<int> PKB::getStatementsWithType(EntityType statementType) {
 	return EntityStore::getStatementsWithType(statementType);
 }
 
-QueryClauseTable PKB::getFollows(const std::string& LHS, const std::string& RHS, EntityType LHSType, EntityType RHSType, bool isBooleanResult) {
-	return FollowsStore::getFollows(LHS, RHS, LHSType, RHSType, isBooleanResult);
+/* Follows and Parent Getters */
+bool PKB::hasRelationship(RelationRef relationship) {
+	switch (relationship) {
+	case RelationRef::FOLLOWS:
+		return FollowsStore::hasFollowsRelationship();
+	case RelationRef::PARENT:
+		return ParentStore::hasParentRelationship();
+	case RelationRef::FOLLOWS_T:
+		return FollowsStore::hasFollowsTRelationship();
+	case RelationRef::PARENT_T:
+		return ParentStore::hasParentTRelationship();
+	default:
+		return false;
+	}
 }
 
-QueryClauseTable PKB::getFollowsT(const std::string& LHS, const std::string& RHS, EntityType LHSType, EntityType RHSType, bool isBooleanResult) {
-	return FollowsStore::getFollowsT(LHS, RHS, LHSType, RHSType, isBooleanResult);
+bool PKB::isRelationship(RelationRef relationship, int statementOne, int statementTwo) {
+	switch (relationship) {
+	case RelationRef::FOLLOWS:
+		return FollowsStore::isFollowsRelationship(statementOne, statementTwo);
+	case RelationRef::PARENT:
+		return ParentStore::isParentRelationship(statementOne, statementTwo);
+	case RelationRef::FOLLOWS_T:
+		return FollowsStore::isFollowsTRelationship(statementOne, statementTwo);
+	case RelationRef::PARENT_T:
+		return ParentStore::isParentTRelationship(statementOne, statementTwo);
+	default:
+		return false;
+	}
 }
 
-QueryClauseTable PKB::getParent(const std::string& LHS, const std::string& RHS, EntityType LHSType, EntityType RHSType, bool isBooleanResult) {
-	return ParentStore::getParent(LHS, RHS, LHSType, RHSType, isBooleanResult);
+bool PKB::isFirstEntity(RelationRef relationship, int statementOne) {
+	switch (relationship) {
+	case RelationRef::FOLLOWS:
+		return FollowsStore::isFollower(statementOne);
+	case RelationRef::PARENT:
+		return ParentStore::isParent(statementOne);
+	case RelationRef::FOLLOWS_T:
+		return FollowsStore::isFollowerT(statementOne);
+	case RelationRef::PARENT_T:
+		return ParentStore::isParentT(statementOne);
+	default:
+		return false;
+	}
 }
 
-QueryClauseTable PKB::getParentT(const std::string& LHS, const std::string& RHS, EntityType LHSType, EntityType RHSType, bool isBooleanResult) {
-	return ParentStore::getParentT(LHS, RHS, LHSType, RHSType, isBooleanResult);
+bool PKB::isSecondEntity(RelationRef relationship, int statementTwo) {
+	switch (relationship) {
+	case RelationRef::FOLLOWS:
+		return FollowsStore::isFollowee(statementTwo);
+	case RelationRef::PARENT:
+		return ParentStore::isChild(statementTwo);
+	case RelationRef::FOLLOWS_T:
+		return FollowsStore::isFolloweeT(statementTwo);
+	case RelationRef::PARENT_T:
+		return ParentStore::isChildT(statementTwo);
+	default:
+		return false;
+	}
+}
+
+std::unordered_set<int> PKB::getFirstEntities(RelationRef relationship, int statementTwo) {
+	switch (relationship) {
+	case RelationRef::FOLLOWS:
+		return FollowsStore::getFollower(statementTwo);
+	case RelationRef::PARENT:
+		return ParentStore::getParent(statementTwo);
+	case RelationRef::FOLLOWS_T:
+		return FollowsStore::getFollowersT(statementTwo);
+	case RelationRef::PARENT_T:
+		return ParentStore::getParentsT(statementTwo);
+	default:
+		std::unordered_set<int> emptyResult;
+		return emptyResult;
+	}
+}
+
+std::unordered_set<int> PKB::getSecondEntities(RelationRef relationship, int statementOne) {
+	switch (relationship) {
+	case RelationRef::FOLLOWS:
+		return FollowsStore::getFollowee(statementOne);
+	case RelationRef::PARENT:
+		return ParentStore::getChildren(statementOne);
+	case RelationRef::FOLLOWS_T:
+		return FollowsStore::getFolloweesT(statementOne);
+	case RelationRef::PARENT_T:
+		return ParentStore::getChildrenT(statementOne);
+	default:
+		std::unordered_set<int> emptyResult;
+		return emptyResult;
+	}
+}
+
+std::unordered_set<int> PKB::getAllFirstEntities(RelationRef relationship) {
+	switch (relationship) {
+	case RelationRef::FOLLOWS:
+		return FollowsStore::getAllFollowers();
+	case RelationRef::PARENT:
+		return ParentStore::getAllParents();
+	case RelationRef::FOLLOWS_T:
+		return FollowsStore::getAllFollowersT();
+	case RelationRef::PARENT_T:
+		return ParentStore::getAllParentsT();
+	default:
+		std::unordered_set<int> emptyResult;
+		return emptyResult;
+	}
+}
+
+std::unordered_set<int> PKB::getAllSecondEntities(RelationRef relationship) {
+	switch (relationship) {
+	case RelationRef::FOLLOWS:
+		return FollowsStore::getAllFollowees();
+	case RelationRef::PARENT:
+		return ParentStore::getAllChildren();
+	case RelationRef::FOLLOWS_T:
+		return FollowsStore::getAllFolloweesT();
+	case RelationRef::PARENT_T:
+		return ParentStore::getAllChildrenT();
+	default:
+		std::unordered_set<int> emptyResult;
+		return emptyResult;
+	}
+}
+
+std::tuple<std::vector<int>, std::vector<int>> PKB::getAllRelationshipPairs(RelationRef relationship) {
+	switch (relationship) {
+	case RelationRef::FOLLOWS:
+		return FollowsStore::getAllFollowsPairs();
+	case RelationRef::PARENT:
+		return ParentStore::getAllParentPairs();
+	case RelationRef::FOLLOWS_T:
+		return FollowsStore::getAllFollowsTPairs();
+	case RelationRef::PARENT_T:
+		return ParentStore::getAllParentTPairs();
+	default:
+		std::tuple<std::vector<int>, std::vector<int>> emptyResult;
+		return emptyResult;
+	}
+}
+
+/* Follows Getters */
+bool PKB::hasFollowsRelationship() {
+	return FollowsStore::hasFollowsRelationship();
+}
+
+bool PKB::hasFollowsTRelationship() {
+	return FollowsStore::hasFollowsTRelationship();
+}
+
+bool PKB::isFollowsRelationship(int follower, int followee) {
+	return FollowsStore::isFollowsRelationship(follower, followee);
+}
+
+bool PKB::isFollowsTRelationship(int follower, int followee) {
+	return FollowsStore::isFollowsTRelationship(follower, followee);
+}
+
+bool PKB::isFollower(int follower) {
+	return FollowsStore::isFollower(follower);
+}
+
+bool PKB::isFollowee(int followee) {
+	return FollowsStore::isFollowee(followee);
+}
+
+bool PKB::isFollowerT(int follower) {
+	return FollowsStore::isFollowerT(follower);
+}
+
+bool PKB::isFolloweeT(int followee) {
+	return FollowsStore::isFolloweeT(followee);
+}
+
+std::unordered_set<int> PKB::getFollowee(int follower) {
+	return FollowsStore::getFollowee(follower);
+}
+
+std::unordered_set<int> PKB::getFollower(int followee) {
+	return FollowsStore::getFollower(followee);
+}
+
+std::unordered_set<int> PKB::getAllFollowees() {
+	return FollowsStore::getAllFollowees();
+}
+
+std::unordered_set<int> PKB::getAllFollowers() {
+	return FollowsStore::getAllFollowers();
+}
+
+std::unordered_set<int> PKB::getFolloweesT(int follower) {
+	return FollowsStore::getFolloweesT(follower);
+}
+
+std::unordered_set<int> PKB::getFollowersT(int followee) {
+	return FollowsStore::getFollowersT(followee);
+}
+
+std::unordered_set<int> PKB::getAllFolloweesT() {
+	return FollowsStore::getAllFolloweesT();
+}
+
+std::unordered_set<int> PKB::getAllFollowersT() {
+	return FollowsStore::getAllFollowersT();
+}
+
+std::tuple<std::vector<int>, std::vector<int>> PKB::getAllFollowsPairs() {
+	return FollowsStore::getAllFollowsPairs();
+}
+
+std::tuple<std::vector<int>, std::vector<int>> PKB::getAllFollowsTPairs() {
+	return FollowsStore::getAllFollowsTPairs();
+}
+
+/* Parent Getters */
+bool PKB::hasParentRelationship() {
+	return ParentStore::hasParentRelationship();
+}
+
+bool PKB::hasParentTRelationship() {
+	return ParentStore::hasParentTRelationship();
+}
+
+bool PKB::isParentRelationship(int parent, int child) {
+	return ParentStore::isParentRelationship(parent, child);
+}
+
+bool PKB::isParentTRelationship(int parent, int child) {
+	return ParentStore::isParentTRelationship(parent, child);
+}
+
+bool PKB::isParent(int parent) {
+	return ParentStore::isParent(parent);
+}
+
+bool PKB::isChild(int child) {
+	return ParentStore::isChild(child);
+}
+
+bool PKB::isParentT(int parent) {
+	return ParentStore::isParentT(parent);
+}
+
+bool PKB::isChildT(int child) {
+	return ParentStore::isChildT(child);
+}
+
+std::unordered_set<int> PKB::getChildren(int parent) {
+	return ParentStore::getChildren(parent);
+}
+
+std::unordered_set<int> PKB::getParent(int child) {
+	return ParentStore::getParent(child);
+}
+
+std::unordered_set<int> PKB::getAllChildren() {
+	return ParentStore::getAllChildren();
+}
+
+std::unordered_set<int> PKB::getAllParents() {
+	return ParentStore::getAllParents();
+}
+
+std::unordered_set<int> PKB::getChildrenT(int parent) {
+	return ParentStore::getChildrenT(parent);
+}
+
+std::unordered_set<int> PKB::getParentsT(int child) {
+	return ParentStore::getParentsT(child);
+}
+
+std::unordered_set<int> PKB::getAllChildrenT() {
+	return ParentStore::getAllChildrenT();
+}
+
+std::unordered_set<int> PKB::getAllParentsT() {
+	return ParentStore::getAllParentsT();
+}
+
+std::tuple<std::vector<int>, std::vector<int>> PKB::getAllParentPairs() {
+	return ParentStore::getAllParentPairs();
+}
+
+std::tuple<std::vector<int>, std::vector<int>> PKB::getAllParentTPairs() {
+	return ParentStore::getAllParentTPairs();
 }
 
 /* Uses Getters */

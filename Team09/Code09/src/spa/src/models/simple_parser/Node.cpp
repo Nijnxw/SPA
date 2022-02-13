@@ -51,3 +51,11 @@ bool Node::isProcedureNode() {
 bool Node::isProgramNode() {
 	return this->getNodeType() == NodeType::PROGRAM;
 }
+
+bool Node::isPredicateNode() {
+	return this->getNodeType() == NodeType::PREDICATE;
+}
+
+bool Node::isRelExprNode() {
+	return this->getNodeType() == NodeType::RELEXPR;
+}

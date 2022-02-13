@@ -14,3 +14,9 @@ std::string AssignStatement::getLeftHandSide() {
 std::string AssignStatement::getRightHandSide() {
 	return rightHandSide;
 }
+
+bool AssignStatement::operator==(const AssignStatement& otherStmt) const {
+	return (statementNumber == otherStmt.statementNumber) &&
+		(leftHandSide == otherStmt.leftHandSide) &&
+		(rightHandSide == otherStmt.rightHandSide);
+}

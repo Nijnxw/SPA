@@ -7,7 +7,7 @@
  * headers.
  */
 Table QueryUtils::hashJoin(const Table& firstTable, const Table& secondTable) {
-	const std::vector <std::string> commonTableHeaders = getCommonHeaders(firstTable, secondTable);
+	const std::vector<std::string> commonTableHeaders = getCommonHeaders(firstTable, secondTable);
 
 	// can't hash join (natural join) if no common headers
 	if (commonTableHeaders.empty()) {
@@ -29,7 +29,7 @@ Table QueryUtils::hashJoin(const Table& firstTable, const Table& secondTable) {
 	}
 
 	auto groupedCommonTuples = extractCommonTuples(commonTableHeaders, shorterTable, longerTable);
-	std::unordered_set <std::pair<int, int>, pair_hash> pairedTuples;
+	std::unordered_set<std::pair<int, int>, PairHash> pairedTuples;
 	for (const auto& keyVal: groupedCommonTuples) {
 		const auto& group = keyVal.second;
 		crossProduct(group.first, group.second, pairedTuples);
@@ -41,9 +41,9 @@ Table QueryUtils::hashJoin(const Table& firstTable, const Table& secondTable) {
 /*
  * Performs an intersection between the table headers of two tables.
  */
-std::vector <std::string>
+std::vector<std::string>
 QueryUtils::getCommonHeaders(const Table& firstTable, const Table& secondTable) {
-	std::vector <std::string> commonHeaders;
+	std::vector<std::string> commonHeaders;
 
 	if (firstTable.size() < secondTable.size()) {
 		for (auto& col: firstTable) {
@@ -62,9 +62,9 @@ QueryUtils::getCommonHeaders(const Table& firstTable, const Table& secondTable) 
 	return commonHeaders;
 }
 
-std::vector <std::string>
+std::vector<std::string>
 QueryUtils::getUniqueHeaders(const Table& firstTable, const Table& secondTable) {
-	std::vector <std::string> uniqueHeaders;
+	std::vector<std::string> uniqueHeaders;
 	for (const auto& col: firstTable) {
 		if (secondTable.count(col.first) == 0) {
 			uniqueHeaders.push_back(col.first);
@@ -85,7 +85,7 @@ QueryUtils::getUniqueHeaders(const Table& firstTable, const Table& secondTable) 
  * cross-product of tuples from the tables. The unordered_set<int> represents the set of row numbers from a table after
  * grouping.
  */
-QueryUtils::GroupedTable QueryUtils::extractCommonTuples(const std::vector <std::string>& commonHeaders,
+QueryUtils::GroupedTable QueryUtils::extractCommonTuples(const std::vector<std::string>& commonHeaders,
 														 const Table& firstTable,
 														 const Table& secondTable) {
 	// grouped tables is pre cross-product (int represent row number)
@@ -118,7 +118,7 @@ QueryUtils::GroupedTable QueryUtils::extractCommonTuples(const std::vector <std:
  * Returns a string representation of selected values within a tuple. Each value is separated by a single whitespace
  */
 std::string
-QueryUtils::selectTupleToString(const std::vector <std::string>& headers, size_t rowNum, const Table& table) {
+QueryUtils::selectTupleToString(const std::vector<std::string>& headers, size_t rowNum, const Table& table) {
 	std::string stringRep;
 	for (auto& col: headers) {
 		stringRep += table.at(col).at(rowNum);
@@ -132,7 +132,7 @@ QueryUtils::selectTupleToString(const std::vector <std::string>& headers, size_t
 
 void
 QueryUtils::crossProduct(const std::unordered_set<int>& firstTupleSet, const std::unordered_set<int>& secondTupleSet,
-						 std::unordered_set <std::pair<int, int>, pair_hash>& tuplePairings) {
+						 std::unordered_set<std::pair<int, int>, PairHash>& tuplePairings) {
 	for (auto firstRowNum: firstTupleSet) {
 		for (auto secondRowNum: secondTupleSet) {
 			tuplePairings.emplace(firstRowNum, secondRowNum);
@@ -140,9 +140,9 @@ QueryUtils::crossProduct(const std::unordered_set<int>& firstTupleSet, const std
 	}
 }
 
-Table QueryUtils::joinRows(const std::unordered_set <std::pair<int, int>, pair_hash>& tuplePairings,
+Table QueryUtils::joinRows(const std::unordered_set<std::pair<int, int>, PairHash>& tuplePairings,
 						   const Table& firstTable, const Table& secondTable,
-						   const std::vector <std::string>& commonHeaders) {
+						   const std::vector<std::string>& commonHeaders) {
 	Table joinedTable;
 	std::vector<std::string> uniqueHeaders = getUniqueHeaders(firstTable, secondTable);
 
@@ -162,4 +162,42 @@ Table QueryUtils::joinRows(const std::unordered_set <std::pair<int, int>, pair_h
 	}
 
 	return joinedTable;
+}
+
+std::list<std::string> QueryUtils::stringifyRows(Table table, std::vector<std::string> colOrder) {
+	std::list<std::string> rows;
+
+	if (colOrder.empty()) {
+		return rows;
+	}
+
+	for (const auto& col: colOrder) {
+		if (table.count(col) == 0) {
+			return rows;
+		}
+	}
+
+	auto numRows = table.at(colOrder.front()).size();
+	for (auto i = 0; i < numRows; i++) {
+		std::string row;
+		for (const auto& col: colOrder) {
+			row += table.at(col).at(i);
+			if (col != colOrder.back()) {
+				row += " ";
+			}
+		}
+		rows.push_back(row);
+	}
+	return rows;
+}
+
+
+std::unordered_set<std::string> QueryUtils::stringifyRows(Table table) {
+	std::vector<std::string> headers;
+	for (const auto& col: table) {
+		headers.push_back(col.first);
+	}
+	std::sort(headers.begin(), headers.end());
+	std::list<std::string> rows = stringifyRows(table, headers);
+	return {rows.begin(), rows.end()};
 }

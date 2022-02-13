@@ -20,6 +20,16 @@ private:
 	static inline std::unordered_map<int, std::unordered_set<int>> parentToChildrenT;
 	static inline std::unordered_map<int, std::unordered_set<int>> childToParentsT;
 
+public:
+	ParentStore();
+
+	static void clear();
+
+	/* Setters called by SP and DE */
+	static bool addParent(int parent, int child);
+	static bool addParentT(int parent, int child);
+
+	/* Getters called by QE */
 	static bool hasParentRelationship();
 	static bool hasParentTRelationship();
 
@@ -31,7 +41,7 @@ private:
 	static bool isChildT(int child);
 
 	static std::unordered_set<int> getChildren(int parent);
-	static int getParent(int child);
+	static std::unordered_set<int> getParent(int child);
 	static std::unordered_set<int> getAllChildren();
 	static std::unordered_set<int> getAllParents();
 
@@ -42,25 +52,4 @@ private:
 
 	static std::tuple<std::vector<int>, std::vector<int>> getAllParentPairs();
 	static std::tuple<std::vector<int>, std::vector<int>> getAllParentTPairs();
-
-	static QueryClauseTable getParentByStatementNumber(const std::string& LHS, const std::string& RHS, EntityType RHSType);
-	static QueryClauseTable getParentByStatementVariable(const std::string& LHS, const std::string& RHS, EntityType RHSType);
-	static QueryClauseTable getParentByUnderscore(const std::string& RHS, EntityType RHSType);
-
-	static QueryClauseTable getParentTByStatementNumber(const std::string& LHS, const std::string& RHS, EntityType RHSType);
-	static QueryClauseTable getParentTByStatementVariable(const std::string& LHS, const std::string& RHS, EntityType RHSType);
-	static QueryClauseTable getParentTByUnderscore(const std::string& RHS, EntityType RHSType);
-
-public:
-	ParentStore();
-
-	static void clear();
-
-	/* Setters called by SP and DE */
-	static bool addParent(int parent, int child);
-	static bool addParentT(int parent, int child);
-
-	/* Getters called by QE */
-	static QueryClauseTable getParent(const std::string& LHS, const std::string& RHS, EntityType LHSType, EntityType RHSType, bool isBooleanResult);
-	static QueryClauseTable getParentT(const std::string& LHS, const std::string& RHS, EntityType LHSType, EntityType RHSType, bool isBooleanResult);
 };

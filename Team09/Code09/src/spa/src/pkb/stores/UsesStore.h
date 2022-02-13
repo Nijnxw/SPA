@@ -31,6 +31,11 @@ public:
 	static std::unordered_map<std::string, std::unordered_set<int>> getVariableToStatementNumbersUsedBy();
 	static std::unordered_map<std::string, std::unordered_set<std::string>> getProcedureToVariablesUsed();
 	static std::unordered_map<std::string, std::unordered_set<std::string>> getVariableToProceduresUsedBy();
+	static std::unordered_set<std::string> getVariablesUsedByStatement(int stmtNo);
+	static std::unordered_set<std::string> getVariablesUsedByProcedure(const std::string& procName);
+	static std::unordered_set<int> getStatementsUsingVariable(const std::string& variable);
+	static std::tuple<std::vector<std::string>, std::vector<std::string>>
+		getStmtsToUsedVariable(const std::unordered_set<int>& stmts);
 
 	/* Setters called by SP and DE */
 	static bool addUsesStatement(int statementNumber, const std::unordered_set<std::string>& variables);

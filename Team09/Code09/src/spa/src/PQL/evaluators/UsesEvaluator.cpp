@@ -17,44 +17,6 @@ UsesEvaluator::getUses(const std::string& LHS, const std::string& RHS, EntityTyp
 	}
 }
 
-// ============ HELPER METHODS ==============
-
-/* Get variables used by statement */
-std::unordered_set<std::string> UsesEvaluator::getVariablesUsedByStatement(int stmtNo) {
-	if (!PKB::getStatementNumberToVariablesUsed().count(stmtNo))
-		return {};
-	return PKB::getStatementNumberToVariablesUsed().at(stmtNo);
-}
-
-/* Get variables used by procedure */
-std::unordered_set<std::string> UsesEvaluator::getVariablesUsedByProcedure(const std::string& procName) {
-	if (!PKB::getProcedureToVariablesUsed().count(procName))
-		return {};
-	return PKB::getProcedureToVariablesUsed().at(procName);
-}
-
-/* Get statements using a particular variable */
-std::unordered_set<int> UsesEvaluator::getStatementsUsingVariable(const std::string& variable) {
-	if (!PKB::getVariableToStatementNumbersUsedBy().count(variable))
-		return {};
-	return PKB::getVariableToStatementNumbersUsedBy().at(variable);
-}
-
-/* Returns a mapping of each statement in the input statement set to the variables its using.
-	Mapping is represented as a tuple of vectors to preserve ordering */
-std::tuple<std::vector<std::string>, std::vector<std::string>>
-UsesEvaluator::getStmtsToUsedVariable(const std::unordered_set<int>& stmts) {
-	std::vector<std::string> resultStmts;
-	std::vector<std::string> resultVars;
-	for (int stmt : stmts) {
-		for (const std::string& var : getVariablesUsedByStatement(stmt)) {
-			resultStmts.push_back(std::to_string(stmt));
-			resultVars.push_back(var);
-		}
-	}
-	return { resultStmts, resultVars };
-}
-
 /* Get Uses relationship information for Uses(_, _) cases */
 QueryClauseTable UsesEvaluator::getUsesByUnderscore(const std::string& LHS, const std::string& RHS, EntityType LHSType) {
 	QueryClauseTable queryResult;
@@ -62,7 +24,7 @@ QueryClauseTable UsesEvaluator::getUsesByUnderscore(const std::string& LHS, cons
 	switch (LHSType) {
 	case EntityType::INT:
 		// e.g. Uses("9", _)
-		if (!getVariablesUsedByStatement(std::stoi(LHS)).empty())
+		if (!PKB::getVariablesUsedByStatement(std::stoi(LHS)).empty())
 			queryResult.setBooleanResult(true);
 		break;
 		/* Not used in iteration 1
@@ -112,11 +74,11 @@ QueryClauseTable UsesEvaluator::getUsesByUnderscore(const std::string& LHS, cons
 QueryClauseTable UsesEvaluator::getUsesByVariable(const std::string& LHS, const std::string& RHS, EntityType LHSType) {
 	QueryClauseTable queryResult;
 
-	std::unordered_set<int> stmtsUsingVar = getStatementsUsingVariable(RHS);
+	std::unordered_set<int> stmtsUsingVar = PKB::getStatementsUsingVariable(RHS);
 	switch (LHSType) {
 	case EntityType::INT:
 		// e.g. Uses("9", "x")
-		if (getVariablesUsedByStatement(std::stoi(LHS)).count(RHS))
+		if (PKB::getVariablesUsedByStatement(std::stoi(LHS)).count(RHS))
 			queryResult.setBooleanResult(true);
 		break;
 		/* Not used in iteration 1
@@ -128,7 +90,7 @@ QueryClauseTable UsesEvaluator::getUsesByVariable(const std::string& LHS, const 
 		*/
 	case EntityType::STMT:
 		// e.g. stmt s; Uses(s, "x")
-		queryResult.addColumn(LHS, getStatementsUsingVariable(RHS));
+		queryResult.addColumn(LHS, PKB::getStatementsUsingVariable(RHS));
 		break;
 	case EntityType::ASSIGN: {
 		// e.g. assign a; Uses(a, "x")
@@ -171,7 +133,7 @@ QueryClauseTable UsesEvaluator::getUsesBySynonym(const std::string& LHS, const s
 	switch (LHSType) {
 	case EntityType::INT:
 		// e.g. Uses("9", v)
-		queryResult.addColumn(RHS, getVariablesUsedByStatement(std::stoi(LHS)));
+		queryResult.addColumn(RHS, PKB::getVariablesUsedByStatement(std::stoi(LHS)));
 		return queryResult;
 		/* Not used in iteration 1
 	case EntityType::STRING:
@@ -181,7 +143,7 @@ QueryClauseTable UsesEvaluator::getUsesBySynonym(const std::string& LHS, const s
 		*/
 	case EntityType::STMT: {
 		// e.g. stmt s; Uses(s, v)
-		std::tie(stmts, vars) = getStmtsToUsedVariable(PKB::getUsesStatements());
+		std::tie(stmts, vars) = PKB::PKB::getStmtsToUsedVariable(PKB::getUsesStatements());
 		break;
 	}
 	case EntityType::ASSIGN: {
@@ -190,23 +152,23 @@ QueryClauseTable UsesEvaluator::getUsesBySynonym(const std::string& LHS, const s
 		for (auto kv : PKB::getAssignStatements()) {
 			assignStmts.insert(kv.first);
 		}
-		std::tie(stmts, vars) = getStmtsToUsedVariable(
+		std::tie(stmts, vars) = PKB::getStmtsToUsedVariable(
 			PKBUtil::unorderedSetIntersection(PKB::getUsesStatements(), assignStmts));
 		break;
 	}
 	case EntityType::PRINT: {
 		// e.g. print p; Uses(p, v)
-		std::tie(stmts, vars) = getStmtsToUsedVariable(PKB::getStatementsWithType(EntityType::PRINT));
+		std::tie(stmts, vars) = PKB::getStmtsToUsedVariable(PKB::getStatementsWithType(EntityType::PRINT));
 		break;
 	}
 	case EntityType::IF: {
 		// e.g. if ifs; Uses(ifs, v)
-		std::tie(stmts, vars) = getStmtsToUsedVariable(PKB::getStatementsWithType(EntityType::IF));
+		std::tie(stmts, vars) = PKB::getStmtsToUsedVariable(PKB::getStatementsWithType(EntityType::IF));
 		break;
 	}
 	case EntityType::WHILE: {
 		// e.g. while w; Uses(w, v)
-		std::tie(stmts, vars) = getStmtsToUsedVariable(PKB::getStatementsWithType(EntityType::WHILE));
+		std::tie(stmts, vars) = PKB::getStmtsToUsedVariable(PKB::getStatementsWithType(EntityType::WHILE));
 		break;
 	default:
 		return queryResult;

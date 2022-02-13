@@ -20,12 +20,6 @@ private:
 	static QueryClauseTable getUsesBySynonym(const std::string& LHS, const std::string& RHS, EntityType LHSType);
 	static QueryClauseTable getUsesByUnderscore(const std::string& LHS, const std::string& RHS, EntityType LHSType);
 
-	static std::unordered_set<std::string> getVariablesUsedByStatement(int stmtNo);
-	static std::unordered_set<std::string> getVariablesUsedByProcedure(const std::string& procName);
-	static std::unordered_set<int> getStatementsUsingVariable(const std::string& variable);
-	static std::tuple<std::vector<std::string>, std::vector<std::string>>
-	getStmtsToUsedVariable(const std::unordered_set<int>& stmts);
-
 public:
 	static QueryClauseTable
 	getUses(const std::string& LHS, const std::string& RHS, EntityType LHSType, EntityType RHSType,

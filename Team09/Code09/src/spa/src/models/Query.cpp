@@ -11,3 +11,7 @@ const std::vector<QueryArgument>& Query::getResultSynonyms() const {
 const std::vector<QueryClause>& Query::getClauses() const {
 	return clauses;
 }
+
+bool Query::isEmpty() {
+	return resultSynonyms.empty() && clauses.empty();
+}

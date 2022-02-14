@@ -15,11 +15,18 @@
 #include "StmtStmtRelationshipEvaluator.h";
 
 class ParentEvaluator : public StmtStmtRelationshipEvaluator {
+private:
+	QueryClauseTable getRelationship(RelationRef relationship, const std::string& LHS, const std::string& RHS, EntityType LHSType, EntityType RHSType,
+		bool isBooleanResult);
+	QueryClauseTable getTransitiveRelationship(RelationRef relationship, const std::string& LHS, const std::string& RHS, EntityType LHSType, EntityType RHSType,
+		bool isBooleanResult);
 public:
-	static QueryClauseTable
+	ParentEvaluator();
+
+	QueryClauseTable
 	getParent(const std::string& LHS, const std::string& RHS, EntityType LHSType, EntityType RHSType,
 			  bool isBooleanResult);
-	static QueryClauseTable
+	QueryClauseTable
 	getParentT(const std::string& LHS, const std::string& RHS, EntityType LHSType, EntityType RHSType,
 			bool isBooleanResult);
 };

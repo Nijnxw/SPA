@@ -407,6 +407,20 @@ std::unordered_map<std::string, std::unordered_set<std::string>> PKB::getVariabl
 	return UsesStore::getVariableToProceduresUsedBy();
 }
 
+std::unordered_set<std::string> PKB::getVariablesUsedByStatement(int stmtNo) {
+	return UsesStore::getVariablesUsedByStatement(stmtNo);
+}
+std::unordered_set<std::string> PKB::getVariablesUsedByProcedure(const std::string& procName) {
+	return UsesStore::getVariablesUsedByProcedure(procName);
+}
+std::unordered_set<int> PKB::getStatementsUsingVariable(const std::string& variable) {
+	return UsesStore::getStatementsUsingVariable(variable);
+}
+std::tuple<std::vector<std::string>, std::vector<std::string>>
+PKB::getStmtsToUsedVariable(const std::unordered_set<int>& stmts) {
+	return UsesStore::getStmtsToUsedVariable(stmts);
+}
+
 /* Modifies Getters */
 std::unordered_set<int> PKB::getModifiesStatements() {
 	return ModifiesStore::getModifiesStatements();
@@ -430,4 +444,21 @@ std::unordered_map<std::string, std::unordered_set<std::string>> PKB::getProcedu
 
 std::unordered_map<std::string, std::unordered_set<std::string>> PKB::getVariableToProceduresModifiedBy() {
 	return ModifiesStore::getVariableToProceduresModifiedBy();
+}
+
+std::unordered_set<std::string> PKB::getVariablesModifiedByStatement(int stmtNo) {
+	return ModifiesStore::getVariablesModifiedByStatement(stmtNo);
+}
+
+std::unordered_set<std::string> PKB::getVariablesModifiedByProcedure(const std::string& procName) {
+	return ModifiesStore::getVariablesModifiedByProcedure(procName);
+}
+
+std::unordered_set<int> PKB::getStatementsModifyingVariable(const std::string& variable) {
+	return ModifiesStore::getStatementsModifyingVariable(variable);
+}
+
+std::tuple<std::vector<std::string>, std::vector<std::string>>
+PKB::getStmtsToModifiedVariable(const std::unordered_set<int>& stmts) {
+	return ModifiesStore::getStmtsToModifiedVariable(stmts);
 }

@@ -27,8 +27,8 @@ TEST_CASE("Test EntityStager interaction with PKB") {
 
 	EntityStager::stageFollows(1, 2);
 	EntityStager::stageFollowsT(1, 2);
-	EntityStager::stageParent(1, 2);
-	EntityStager::stageParentT(1, 2);
+	EntityStager::stageParent(1, {2});
+	EntityStager::stageParentT(1, {2});
 
 	std::unordered_set<std::string> varList;
 	varList.insert("var1");

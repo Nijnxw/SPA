@@ -1,7 +1,12 @@
 #pragma once
 
-#include <string>
+#include "Lexer.h"
+#include "DesignExtractor.h"
 #include "models/simple_parser/AST.h"
+#include "simple_parser/SPParser.h"
+
+#include <string>
+#include <utility>
 
 class SPManager {
 public:

@@ -12,7 +12,7 @@
 #include "models/QueryClauseTable.h"
 #include "models/QueryClause.h"
 
-#include "StmtStmtRelationshipEvaluator.h";
+#include "StmtStmtRelationshipEvaluator.h"
 
 class ParentEvaluator : public StmtStmtRelationshipEvaluator {
 private:

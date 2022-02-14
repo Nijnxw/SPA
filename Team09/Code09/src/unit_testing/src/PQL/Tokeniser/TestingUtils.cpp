@@ -2,7 +2,7 @@
 #include "PQL/PQLToken.h"
 
 static bool tokenComparator(PQLToken* t1, PQLToken* t2) {
-	return t1->getTokenType() == t2->getTokenType() && t1->getValue() == t2->getValue();
+	return t1->getType() == t2->getType() && t1->getValue() == t2->getValue();
 }
 
 static bool compareVectors(const std::vector<PQLToken*> output, const std::vector<PQLToken*> expected) {

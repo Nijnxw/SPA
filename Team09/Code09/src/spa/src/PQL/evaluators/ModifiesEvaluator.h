@@ -12,20 +12,9 @@
 #include "models/QueryClauseTable.h"
 #include "models/QueryClause.h"
 
-class ModifiesEvaluator {
-private:
+#include "UMEvaluator.h"
 
-	// Internal helper methods
-	static QueryClauseTable getModifiesByVariable(const std::string& LHS, const std::string& RHS, EntityType LHSType);
-	static QueryClauseTable getModifiesBySynonym(const std::string& LHS, const std::string& RHS, EntityType LHSType);
-	static QueryClauseTable getModifiesByUnderscore(const std::string& LHS, const std::string& RHS, EntityType LHSType);
-
-	static std::unordered_set<std::string> getVariablesModifiedByStatement(int stmtNo);
-	static std::unordered_set<std::string> getVariablesModifiedByProcedure(const std::string& procName);
-	static std::unordered_set<int> getStatementsModifyingVariable(const std::string& variable);
-	static std::tuple<std::vector<std::string>, std::vector<std::string>>
-	getStmtsToModifiedVariable(const std::unordered_set<int>& stmts);
-
+class ModifiesEvaluator : public UMEvaluator {
 public:
 	static QueryClauseTable
 	getModifies(const std::string& LHS, const std::string& RHS, EntityType LHSType, EntityType RHSType,

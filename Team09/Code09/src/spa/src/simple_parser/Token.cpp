@@ -1,7 +1,5 @@
 #include "simple_parser/Token.h"
 
-#include <utility>
-
 Token::Token(ParserTokenType t, std::string v) : type(t), value(std::move(v)){}
 NameToken::NameToken(std::string v) : Token(ParserTokenType::NAME, std::move(v)){}
 IntegerToken::IntegerToken(std::string v) : Token(ParserTokenType::INTEGER, std::move(v)){}

@@ -9,6 +9,10 @@ std::shared_ptr<VariableNode> AssignNode::getAssignedVar() const {
 	return assignedVar;
 }
 
+std::string AssignNode::getAssignedVarName() const {
+	return assignedVar->getName();
+}
+
 ExprNode AssignNode::getExpression() const {
 	return expression;
 }

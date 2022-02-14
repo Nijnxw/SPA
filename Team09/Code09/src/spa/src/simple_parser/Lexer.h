@@ -2,6 +2,7 @@
 
 #include "simple_parser/Token.h"
 
+#include <cctype>
 #include <string>
 #include <fstream>
 #include <vector>

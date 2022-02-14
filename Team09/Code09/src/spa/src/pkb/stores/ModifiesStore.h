@@ -35,6 +35,11 @@ public:
 	static std::unordered_map<std::string, std::unordered_set<int>> getVariableToStatementNumbersModifiedBy();
 	static std::unordered_map<std::string, std::unordered_set<std::string>> getProcedureToVariablesModified();
 	static std::unordered_map<std::string, std::unordered_set<std::string>> getVariableToProceduresModifiedBy();
+	static std::unordered_set<std::string> getVariablesModifiedByStatement(int stmtNo);
+	static std::unordered_set<std::string> getVariablesModifiedByProcedure(const std::string& procName);
+	static std::unordered_set<int> getStatementsModifyingVariable(const std::string& variable);
+	static std::tuple<std::vector<std::string>, std::vector<std::string>>
+		getStmtsToModifiedVariable(const std::unordered_set<int>& stmts);
 
 	/* Setters called by SP and DE */
 	static bool addModifiesStatement(int statementNumber, const std::unordered_set<std::string>& variables);

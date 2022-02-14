@@ -29,4 +29,6 @@ public:
 	virtual bool isBinOpNode();
 	virtual bool isProcedureNode();
 	virtual bool isProgramNode();
+	virtual bool isPredicateNode();
+	virtual bool isRelExprNode();
 };

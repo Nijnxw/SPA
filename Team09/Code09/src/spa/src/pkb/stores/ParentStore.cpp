@@ -67,8 +67,10 @@ std::unordered_set<int> ParentStore::getChildren(int parent) {
 	return parentToChildren[parent];
 }
 
-int ParentStore::getParent(int child) {
-	return childToParent[child];
+std::unordered_set<int> ParentStore::getParent(int child) {
+	std::unordered_set<int> result;
+	result.insert(childToParent[child]);
+	return result;
 }
 
 std::unordered_set<int> ParentStore::getAllChildren() {

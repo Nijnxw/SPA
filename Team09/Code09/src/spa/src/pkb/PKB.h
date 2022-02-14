@@ -8,9 +8,10 @@
 #include <unordered_set>
 
 #include "../models/AssignStatement.h"
-#include "../models/entityType.h"
+#include "../models/EntityType.h"
 #include "../models/QueryClauseTable.h"
 #include "../models/QueryClause.h"
+#include "../models/RelationRef.h"
 
 #include "stores/EntityStore.h"
 #include "stores/FollowsStore.h"
@@ -51,6 +52,20 @@ public:
 	static std::unordered_map<int, AssignStatement> getAssignStatements();
 	static std::unordered_set<int> getStatementsWithType(EntityType statementType);
 
+	/* Follows and Parent Getters */
+	static bool hasRelationship(RelationRef relationship);
+	static bool isRelationship(RelationRef relationship, int statementOne, int statementTwo);
+	static bool isFirstEntity(RelationRef relationship, int statementOne);
+	static bool isSecondEntity(RelationRef relationship, int statementTwo);
+
+	static std::unordered_set<int> getFirstEntities(RelationRef relationship, int statementTwo);
+	static std::unordered_set<int> getSecondEntities(RelationRef relationship, int statementOne);
+
+	static std::unordered_set<int> getAllFirstEntities(RelationRef relationship);
+	static std::unordered_set<int> getAllSecondEntities(RelationRef relationship);
+
+	static std::tuple<std::vector<int>, std::vector<int>> getAllRelationshipPairs(RelationRef relationship);
+
 	/* Follows Getters */
 	static bool hasFollowsRelationship();
 	static bool hasFollowsTRelationship();
@@ -62,8 +77,8 @@ public:
 	static bool isFollowerT(int follower);
 	static bool isFolloweeT(int followee);
 
-	static int getFollowee(int follower);
-	static int getFollower(int followee);
+	static std::unordered_set<int> getFollowee(int follower);
+	static std::unordered_set<int> getFollower(int followee);
 	static std::unordered_set<int> getAllFollowees();
 	static std::unordered_set<int> getAllFollowers();
 
@@ -87,7 +102,7 @@ public:
 	static bool isChildT(int child);
 
 	static std::unordered_set<int> getChildren(int parent);
-	static int getParent(int child);
+	static std::unordered_set<int> getParent(int child);
 	static std::unordered_set<int> getAllChildren();
 	static std::unordered_set<int> getAllParents();
 
@@ -106,6 +121,11 @@ public:
 	static std::unordered_map<std::string, std::unordered_set<int>> getVariableToStatementNumbersUsedBy();
 	static std::unordered_map<std::string, std::unordered_set<std::string>> getProcedureToVariablesUsed();
 	static std::unordered_map<std::string, std::unordered_set<std::string>> getVariableToProceduresUsedBy();
+	static std::unordered_set<std::string> getVariablesUsedByStatement(int stmtNo);
+	static std::unordered_set<std::string> getVariablesUsedByProcedure(const std::string& procName);
+	static std::unordered_set<int> getStatementsUsingVariable(const std::string& variable);
+	static std::tuple<std::vector<std::string>, std::vector<std::string>>
+		getStmtsToUsedVariable(const std::unordered_set<int>& stmts);
 
 	/* Modifies Getters */
 	static std::unordered_set<int> getModifiesStatements();
@@ -114,4 +134,9 @@ public:
 	static std::unordered_map<std::string, std::unordered_set<int>> getVariableToStatementNumbersModifiedBy();
 	static std::unordered_map<std::string, std::unordered_set<std::string>> getProcedureToVariablesModified();
 	static std::unordered_map<std::string, std::unordered_set<std::string>> getVariableToProceduresModifiedBy();
+	static std::unordered_set<std::string> getVariablesModifiedByStatement(int stmtNo);
+	static std::unordered_set<std::string> getVariablesModifiedByProcedure(const std::string& procName);
+	static std::unordered_set<int> getStatementsModifyingVariable(const std::string& variable);
+	static std::tuple<std::vector<std::string>, std::vector<std::string>>
+		getStmtsToModifiedVariable(const std::unordered_set<int>& stmts);
 };

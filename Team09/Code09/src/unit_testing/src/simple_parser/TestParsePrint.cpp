@@ -1,4 +1,4 @@
-#include "simple_parser/Parser.h"
+#include "simple_parser/SPParser.h"
 #include "simple_parser/Token.h"
 
 #include "catch.hpp"
@@ -22,7 +22,7 @@ TEST_CASE ("Test parsing of valid print statements") {
 				new PunctuatorToken("}"),	new EndOfFileToken(),
 		};
 
-		Parser parser = Parser(input);
+		SPParser parser = SPParser(input);
 		AST output = parser.parseProgram();
 
 		std::shared_ptr<PrintNode> printNode = std::make_shared<PrintNode>(1, std::make_shared<VariableNode>("p"));
@@ -50,7 +50,7 @@ TEST_CASE ("Test parsing of valid print statements") {
 				new EndOfFileToken(),
 		};
 
-		Parser parser = Parser(input);
+		SPParser parser = SPParser(input);
 		AST output = parser.parseProgram();
 
 		std::shared_ptr<PrintNode> printNode1 = std::make_shared<PrintNode>(1, std::make_shared<VariableNode>("p"));
@@ -75,8 +75,8 @@ TEST_CASE ("Test parsing of invalid print statement") {
 				new NameToken("p"),        	new PunctuatorToken(";"),
 				new PunctuatorToken("}"),	new EndOfFileToken(),
 		};
-		Parser parser = Parser(input);
-		REQUIRE_THROWS_WITH(parser.parseProgram(), "Invalid statement! Expected '}' / 'read' / 'print' but got 'preen' instead.\n");
+		SPParser parser = SPParser(input);
+		REQUIRE_THROWS_WITH(parser.parseProgram(), "Expected '=' but got 'p' instead.\n");
 	}
 	SECTION ("'print' keyword is case sensitive") {
 		std::vector<Token*> input = {
@@ -85,8 +85,8 @@ TEST_CASE ("Test parsing of invalid print statement") {
 				new NameToken("p"),        	new PunctuatorToken(";"),
 				new PunctuatorToken("}"),	new EndOfFileToken(),
 		};
-		Parser parser = Parser(input);
-		REQUIRE_THROWS_WITH(parser.parseProgram(), "Invalid statement! Expected '}' / 'read' / 'print' but got 'Print' instead.\n");
+		SPParser parser = SPParser(input);
+		REQUIRE_THROWS_WITH(parser.parseProgram(), "Expected '=' but got 'p' instead.\n");
 	}
 	SECTION ("Constants as var_name") {
 		std::vector<Token*> input = {
@@ -95,8 +95,8 @@ TEST_CASE ("Test parsing of invalid print statement") {
 				new IntegerToken("123"),     new PunctuatorToken(";"),
 				new PunctuatorToken("}"),	new EndOfFileToken(),
 		};
-		Parser parser = Parser(input);
-		REQUIRE_THROWS_WITH(parser.parseProgram(), "Invalid variable name!\n");
+		SPParser parser = SPParser(input);
+		REQUIRE_THROWS_WITH(parser.parseProgram(), "Expected a variable name but got '123' instead.\n");
 	}
 	SECTION ("Missing var_name") {
 		std::vector<Token*> input = {
@@ -105,8 +105,8 @@ TEST_CASE ("Test parsing of invalid print statement") {
 				new PunctuatorToken(";"),
 				new PunctuatorToken("}"),	new EndOfFileToken(),
 		};
-		Parser parser = Parser(input);
-		REQUIRE_THROWS_WITH(parser.parseProgram(), "Invalid variable name!\n");
+		SPParser parser = SPParser(input);
+		REQUIRE_THROWS_WITH(parser.parseProgram(), "Expected a variable name but got ';' instead.\n");
 	}
 	SECTION ("Missing ';'") {
 		std::vector<Token*> input = {
@@ -115,7 +115,7 @@ TEST_CASE ("Test parsing of invalid print statement") {
 				new NameToken("p"),
 				new PunctuatorToken("}"),	new EndOfFileToken(),
 		};
-		Parser parser = Parser(input);
+		SPParser parser = SPParser(input);
 		REQUIRE_THROWS_WITH(parser.parseProgram(), "Expected ';' but got '}' instead.\n");
 	}
 }

@@ -72,3 +72,39 @@ std::unordered_map<std::string, std::unordered_set<std::string>> ModifiesStore::
 std::unordered_map<std::string, std::unordered_set<std::string>> ModifiesStore::getVariableToProceduresModifiedBy() {
 	return variableToProceduresModifiedBy;
 }
+
+/* Get variables modified by statement */
+std::unordered_set<std::string> ModifiesStore::getVariablesModifiedByStatement(int stmtNo) {
+	if (!getStatementNumberToVariablesModified().count(stmtNo))
+		return {};
+	return getStatementNumberToVariablesModified().at(stmtNo);
+}
+
+/* Get variables modified by procedure */
+std::unordered_set<std::string> ModifiesStore::getVariablesModifiedByProcedure(const std::string& procName) {
+	if (!getProcedureToVariablesModified().count(procName))
+		return {};
+	return getProcedureToVariablesModified().at(procName);
+}
+
+/* Get statements using a particular variable */
+std::unordered_set<int> ModifiesStore::getStatementsModifyingVariable(const std::string& variable) {
+	if (!getVariableToStatementNumbersModifiedBy().count(variable))
+		return {};
+	return getVariableToStatementNumbersModifiedBy().at(variable);
+}
+
+/* Returns a mapping of each statement in the input statement set to the variables its using.
+	Mapping is represented as a tuple of vectors to preserve ordering */
+std::tuple<std::vector<std::string>, std::vector<std::string>>
+ModifiesStore::getStmtsToModifiedVariable(const std::unordered_set<int>& stmts) {
+	std::vector<std::string> resultStmts;
+	std::vector<std::string> resultVars;
+	for (int stmt : stmts) {
+		for (const std::string& var : getVariablesModifiedByStatement(stmt)) {
+			resultStmts.push_back(std::to_string(stmt));
+			resultVars.push_back(var);
+		}
+	}
+	return { resultStmts, resultVars };
+}

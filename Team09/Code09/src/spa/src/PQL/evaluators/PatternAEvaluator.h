@@ -15,16 +15,16 @@
 
 class PatternAEvaluator : public PatternEvaluator {
 private:
-	static QueryClauseTable
+	QueryClauseTable
 		getPatternBySynonym(const std::string& LHS, const std::string& RHS, EntityType RHSType, 
 			const std::unordered_map<int, AssignStatement> assignStatements);
-	static QueryClauseTable
+	QueryClauseTable
 		getPatternByVariable(const std::string& LHS, const std::string& RHS, EntityType RHSType, 
 			const std::unordered_map<int, AssignStatement> assignStatements);
-	static QueryClauseTable getPatternByUnderscore(const std::string& RHS, EntityType RHSType, 
+	QueryClauseTable getPatternByUnderscore(const std::string& RHS, EntityType RHSType, 
 		const std::unordered_map<int, AssignStatement> assignStatements);
 
 public:
-	static QueryClauseTable getPattern(const std::string& LHS, const std::string& RHS, EntityType LHSType, EntityType RHSType,
+	QueryClauseTable getPattern(const std::string& LHS, const std::string& RHS, EntityType LHSType, EntityType RHSType,
 		bool isBooleanResult);
 };

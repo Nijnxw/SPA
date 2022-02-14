@@ -8,21 +8,25 @@
 QueryClauseTable ClauseEvaluator::evaluate(QueryClause& clause, bool isBooleanResult) {
 	QueryArgument firstArg = clause.getArguments().at(0);
 	QueryArgument secondArg = clause.getArguments().at(1);
+
+	FollowsEvaluator followsEvaluator = FollowsEvaluator();
+	ParentEvaluator parentEvaluator = ParentEvaluator();
+
 	switch (clause.getClauseType()) {
 		case RelationRef::FOLLOWS:
-			return FollowsEvaluator::getFollows(firstArg.getValue(), secondArg.getValue(), firstArg.getType(),
+			return followsEvaluator.getFollows(firstArg.getValue(), secondArg.getValue(), firstArg.getType(),
 												secondArg.getType(), isBooleanResult);
 		case RelationRef::FOLLOWS_T:
-			return FollowsEvaluator::getFollowsT(firstArg.getValue(), secondArg.getValue(), firstArg.getType(),
+			return followsEvaluator.getFollowsT(firstArg.getValue(), secondArg.getValue(), firstArg.getType(),
 												 secondArg.getType(), isBooleanResult);
 		case RelationRef::MODIFIES:
 			return ModifiesEvaluator::getModifies(firstArg.getValue(), secondArg.getValue(), firstArg.getType(),
 												  secondArg.getType(), isBooleanResult);
 		case RelationRef::PARENT:
-			return ParentEvaluator::getParent(firstArg.getValue(), secondArg.getValue(), firstArg.getType(),
+			return parentEvaluator.getParent(firstArg.getValue(), secondArg.getValue(), firstArg.getType(),
 											  secondArg.getType(), isBooleanResult);
 		case RelationRef::PARENT_T:
-			return ParentEvaluator::getParentT(firstArg.getValue(), secondArg.getValue(), firstArg.getType(),
+			return parentEvaluator.getParentT(firstArg.getValue(), secondArg.getValue(), firstArg.getType(),
 											   secondArg.getType(), isBooleanResult);
 		case RelationRef::USES:
 			return UsesEvaluator::getUses(firstArg.getValue(), secondArg.getValue(), firstArg.getType(),

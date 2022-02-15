@@ -136,7 +136,12 @@ void PQLParser::parseSuchThatClause() {
 }
 
 QueryArgument PQLParser::parsePatternLHS() {
-	return parseArgs(getNextToken());
+	auto nextToken = getNextToken();
+	auto arg = parseArgs(nextToken);
+	if (VarArgTypes.find(arg.getType()) == VarArgTypes.end()) {
+		throw "Invalid arguments for pattern clause.";
+	}
+	return arg;
 }
 
 QueryArgument PQLParser::parsePatternRHS() {
@@ -170,7 +175,7 @@ void PQLParser::parsePatternClause() {
 	usedSynonyms.insert(synonymToken->getValue());
 	getNextExpectedToken(TokenType::OPEN_PARAN);
 	QueryArgument LHS = parsePatternLHS();
-	if (LHS.getType() != EntityType::INT && LHS.getType() != EntityType::WILD) {
+	if (LHS.getType() != EntityType::STRING && LHS.getType() != EntityType::WILD) {
 		usedSynonyms.insert(LHS.getValue());
 	}
 	patternArgs.push_back(LHS);

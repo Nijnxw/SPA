@@ -44,15 +44,7 @@ static std::unordered_map<TokenType, EntityType> entityTypeMapping = {
 static std::unordered_set<EntityType> stmtRef = {
 	EntityType::STMT, EntityType::READ, EntityType::PRINT,
 	EntityType::WHILE, EntityType::IF, EntityType::ASSIGN,
-	EntityType::VAR, EntityType::CONST, EntityType::PROC,
 	EntityType::WILD, EntityType::INT
-};
-
-static std::unordered_set<EntityType> EntRef = {
-	EntityType::STMT, EntityType::READ, EntityType::PRINT,
-	EntityType::WHILE, EntityType::IF, EntityType::ASSIGN,
-	EntityType::VAR, EntityType::CONST, EntityType::PROC,
-	EntityType::WILD, EntityType::STRING
 };
 
 static std::unordered_set<EntityType> UsesFristArgTypes = {
@@ -61,7 +53,7 @@ static std::unordered_set<EntityType> UsesFristArgTypes = {
     EntityType::PROC,
 };
 
-static std::unordered_set<EntityType> VarSecondArgTypes = {
+static std::unordered_set<EntityType> VarArgTypes = {
 	EntityType::VAR, EntityType::WILD, EntityType::STRING, 
 };
 
@@ -73,8 +65,8 @@ static std::unordered_set<EntityType> ModifiesFristArgTypes = {
 
 
 static std::unordered_map < RelationRef, std::vector<std::unordered_set<EntityType>>> relationValidArgsTypeMap = {
-	{RelationRef::USES, {UsesFristArgTypes, VarSecondArgTypes}},
-	{RelationRef::MODIFIES, {ModifiesFristArgTypes, VarSecondArgTypes}},
+	{RelationRef::USES, {UsesFristArgTypes, VarArgTypes}},
+	{RelationRef::MODIFIES, {ModifiesFristArgTypes, VarArgTypes}},
 	{RelationRef::FOLLOWS, {stmtRef, stmtRef}},
 	{RelationRef::FOLLOWS_T, {stmtRef, stmtRef}},
 	{RelationRef::PARENT, {stmtRef, stmtRef}},

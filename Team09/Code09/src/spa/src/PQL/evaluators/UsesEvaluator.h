@@ -16,7 +16,9 @@
 
 class UsesEvaluator : public UMEvaluator {
 public:
-	static QueryClauseTable
+	UsesEvaluator();
+
+	QueryClauseTable
 	getUses(const std::string& LHS, const std::string& RHS, EntityType LHSType, EntityType RHSType,
 			bool isBooleanResult);
 };

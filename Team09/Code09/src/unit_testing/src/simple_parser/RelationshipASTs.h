@@ -30,6 +30,9 @@ private:
 
 	static std::shared_ptr<PredicateNode> predXLt1;
 	static std::shared_ptr<PredicateNode> predYLt1;
+	static std::shared_ptr<PredicateNode> predYLt2;
+	static std::shared_ptr<PredicateNode> predZLt3;
+	static std::shared_ptr<PredicateNode> predWLt3;
 public:
 	//AST getAST3_1();
 	//AST getAST3_2();
@@ -60,4 +63,8 @@ public:
 	static AST getAST3_27();
 	static AST getAST3_28();
 	static AST getAST3_29();
+	static AST getAST3_30();
+	static AST getAST3_31();
+	static AST getAST3_32();
+	static AST getAST3_33();
 };

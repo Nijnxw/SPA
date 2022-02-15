@@ -54,6 +54,16 @@ std::shared_ptr<PredicateNode> RelationshipASTs::predXLt1 = std::make_shared<Pre
 std::shared_ptr<PredicateNode> RelationshipASTs::predYLt1 = std::make_shared<PredicateNode>(
 	std::make_shared<RelExprNode>(y, ComparatorOperator::LT, one)
 );
+std::shared_ptr<PredicateNode> RelationshipASTs::predYLt2 = std::make_shared<PredicateNode>(
+	std::make_shared<RelExprNode>(y, ComparatorOperator::LT, two)
+);
+std::shared_ptr<PredicateNode> RelationshipASTs::predZLt3 = std::make_shared<PredicateNode>(
+	std::make_shared<RelExprNode>(z, ComparatorOperator::LT, three)
+);
+std::shared_ptr<PredicateNode> RelationshipASTs::predWLt3 = std::make_shared<PredicateNode>(
+	std::make_shared<RelExprNode>(w, ComparatorOperator::LT, three)
+	);
+
 
 AST RelationshipASTs::getAST3_5() {
 	/*
@@ -441,6 +451,7 @@ AST RelationshipASTs::getAST3_21() {
 	 * 8      read z;
 	 *      } else {
 	 * 9      print z;
+	 *      }
 	 *    }
 	 *  }
 	 */
@@ -465,7 +476,7 @@ AST RelationshipASTs::getAST3_21() {
 	};
 	std::vector<std::shared_ptr<StmtNode>> elseStmtList{
 		std::make_shared<ReadNode>(6, z),
-		std::make_shared<WhileNode>(7, predYLt1, elseThenStmtList, elseElseStmtList)
+		std::make_shared<IfNode>(7, predYLt1, elseThenStmtList, elseElseStmtList)
 	};
 
 	std::vector<std::shared_ptr<StmtNode>> stmtList{
@@ -807,3 +818,178 @@ AST RelationshipASTs::getAST3_29() {
 	return generateAST(stmtList, "testProgram");
 }
 
+AST RelationshipASTs::getAST3_30() {
+	/*
+	 * procedure testProgram {
+	 * 1   if (x < 1) then {
+	 * 2     if (y < 2) then {
+	 * 3       read y;
+	 *       } else {
+	 * 4       if (z < 3) then {
+	 * 5         read z;
+	 *         } else {
+	 * 6         print z;
+	 *         }
+	 * 7       print y;
+	 *       }
+	 * 8     read x;
+	 *     } else {
+	 * 9     print x;
+	 *     }
+	 *   }
+	 */
+
+	std::vector<std::shared_ptr<StmtNode>> thenThenThenStmtList{
+		std::make_shared<ReadNode>(5, z)
+	};
+	std::vector<std::shared_ptr<StmtNode>> thenThenElseStmtList{
+		std::make_shared<PrintNode>(6, z)
+	};
+
+	std::vector<std::shared_ptr<StmtNode>> thenThenStmtList{
+		std::make_shared<ReadNode>(3, y)
+	};
+	std::vector<std::shared_ptr<StmtNode>> thenElseStmtList{
+		std::make_shared<IfNode>(4, predZLt3, thenThenThenStmtList, thenThenElseStmtList),
+		std::make_shared<ReadNode>(7, y)
+	};
+
+	std::vector<std::shared_ptr<StmtNode>> thenStmtList{
+		std::make_shared<IfNode>(2, predYLt2, thenThenStmtList, thenElseStmtList),
+		std::make_shared<ReadNode>(8, x)
+	};	
+	std::vector<std::shared_ptr<StmtNode>> elseStmtList{
+		std::make_shared<PrintNode>(9, x)
+	};
+
+	std::vector<std::shared_ptr<StmtNode>> stmtList{
+		std::make_shared<IfNode>(1, predXLt1, thenStmtList, elseStmtList)
+	};
+	return generateAST(stmtList, "testProgram");
+}
+
+AST RelationshipASTs::getAST3_31() {
+	/*
+	 * procedure testProgram {
+	 * 1   while (x < 1)  {
+	 * 2     while (y < 2) {
+	 * 3       while (z < 3) {
+	 * 4         read z;
+	 *         }
+	 * 5       read y;
+	 *       }
+	 * 6     read x;
+	 *     }
+	 *   }
+	 */
+
+	std::vector<std::shared_ptr<StmtNode>> whileWhileWhileStmtList{
+		std::make_shared<ReadNode>(4, z)
+	};
+
+	std::vector<std::shared_ptr<StmtNode>> whileWhileStmtList{
+		std::make_shared<WhileNode>(3, predZLt3, whileWhileWhileStmtList),
+		std::make_shared<ReadNode>(5, y)
+	};
+
+	std::vector<std::shared_ptr<StmtNode>> whileStmtList{
+		std::make_shared<WhileNode>(2, predYLt2, whileStmtList),
+		std::make_shared<ReadNode>(6, x)
+	};
+
+	std::vector<std::shared_ptr<StmtNode>> stmtList{
+		std::make_shared<WhileNode>(1, predXLt1, whileStmtList)
+	};
+	return generateAST(stmtList, "testProgram");
+}
+
+AST RelationshipASTs::getAST3_32() {
+	/*
+	 * procedure testProgram {
+	 * 1   while (x < 1)  {
+	 * 2     if (y < 2) then {
+	 * 3       while (z < 3) {
+	 * 4         read z;
+	 *         }
+	 * 5       read y;
+	 *       } else {
+	 * 6       while (w < 3) {
+	 * 7         read w;
+	 *         }
+	 * 8       read w;
+	 *       }
+	 * 9     read x;
+	 *     }
+	 *   }
+	 */
+
+	std::vector<std::shared_ptr<StmtNode>> whileThenWhileStmtList{
+		std::make_shared<ReadNode>(4, z)
+	};
+	std::vector<std::shared_ptr<StmtNode>> whileThenStmtList{
+		std::make_shared<WhileNode>(3, predZLt3, whileThenWhileStmtList),
+		std::make_shared<ReadNode>(5, y)
+	};
+
+	std::vector<std::shared_ptr<StmtNode>> whileElseWhileStmtList{
+		std::make_shared<ReadNode>(7, w)
+	};
+	std::vector<std::shared_ptr<StmtNode>> whileElseStmtList{
+		std::make_shared<WhileNode>(6, predWLt3, whileElseWhileStmtList),
+		std::make_shared<ReadNode>(8, w)
+	};
+
+	std::vector<std::shared_ptr<StmtNode>> whileStmtList{
+		std::make_shared<IfNode>(2, predYLt2, whileThenStmtList, whileElseStmtList),
+		std::make_shared<ReadNode>(9, x)
+	};
+
+	std::vector<std::shared_ptr<StmtNode>> stmtList{
+		std::make_shared<WhileNode>(1, predXLt1, whileStmtList)
+	};
+	return generateAST(stmtList, "testProgram");
+}
+
+AST RelationshipASTs::getAST3_33() {
+	/*
+	 * procedure testProgram {
+	 * 1   if (x < 1) then {
+	 * 2     while (y < 2) {
+	 * 3       if (z < 3) then {
+	 * 4         read z;
+	 *         } else {
+	 * 5         print z;
+	 *         }
+	 * 6       print y;
+	 *       }
+	 * 7     read x;
+	 *     } else {
+	 * 8     print x;
+	 *     }
+	 *   }
+	 */
+
+	std::vector<std::shared_ptr<StmtNode>> thenWhileThenStmtList{
+		std::make_shared<ReadNode>(4, z)
+	};
+	std::vector<std::shared_ptr<StmtNode>> thenWhileElseStmtList{
+		std::make_shared<PrintNode>(5, z)
+	};
+	std::vector<std::shared_ptr<StmtNode>> thenWhileStmtList{
+		std::make_shared<IfNode>(3, predZLt3, thenWhileThenStmtList, thenWhileElseStmtList),
+		std::make_shared<ReadNode>(6, y)
+	};
+
+	std::vector<std::shared_ptr<StmtNode>> thenStmtList{
+		std::make_shared<WhileNode>(2, predYLt2, thenWhileStmtList),
+		std::make_shared<ReadNode>(7, x)
+	};
+	std::vector<std::shared_ptr<StmtNode>> elseStmtList{
+		std::make_shared<PrintNode>(8, x)
+	};
+
+	std::vector<std::shared_ptr<StmtNode>> stmtList{
+		std::make_shared<IfNode>(1, predXLt1, thenStmtList, elseStmtList)
+	};
+	return generateAST(stmtList, "testProgram");
+}

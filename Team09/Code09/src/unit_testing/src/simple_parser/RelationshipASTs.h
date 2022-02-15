@@ -19,5 +19,10 @@ public:
 	//AST getAST3_2();
 	//AST getAST3_3();
 	//AST getAST3_4();
-	static AST getAST3_5() const;
+	static AST getAST3_5();
+	static AST getAST3_6();
+	static AST getAST3_7();
+	static AST getAST3_8();
+	static AST getAST3_9();
+	static AST getAST3_10();
 };

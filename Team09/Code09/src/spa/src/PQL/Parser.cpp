@@ -55,6 +55,7 @@ void Parser::parseDeclaration() {
 
 void Parser::parseSelect() {
 	getNextExpectedToken(TokenType::SELECT);
+	parseResultSynonym();
 }
 
 void Parser::parseResultSynonym() {
@@ -186,12 +187,14 @@ void Parser::parseAfterSelect() {
 }
 
 Query Parser::parse() {
-
-	while (current != end && entityTypeMapping.find(tokens.at(current).getType()) != entityTypeMapping.end()) {
-		parseDeclaration();
+	try {
+		while (current != end && entityTypeMapping.find(tokens.at(current).getType()) != entityTypeMapping.end()) {
+			parseDeclaration();
+		}
+		parseSelect();
+		parseAfterSelect();
+		return Query(resultSynonyms, QueryClauses);
+	} catch (...) {
+		return Query();
 	}
-	parseSelect();
-	parseResultSynonym();
-	parseAfterSelect();
-	return Query(resultSynonyms, QueryClauses);
 }

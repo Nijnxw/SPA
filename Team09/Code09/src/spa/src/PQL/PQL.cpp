@@ -11,8 +11,5 @@ const std::vector<PQLToken> PQL::tokenise(std::string query) {
 
 Query PQL::parse(std::vector<PQLToken> tokens) {
 	auto parser = Parser(tokens);
-	Query q = parser.parse();
-
-	std::cout << q.getResultSynonyms().size();
-	return q;
+	return parser.parse();
 }

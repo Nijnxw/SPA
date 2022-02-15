@@ -13,7 +13,7 @@ static std::unordered_set<TokenType> keywords = {
 	TokenType::VARIABLE, TokenType::CONST, TokenType::PROC,
 	TokenType::SUCH, TokenType::THAT, TokenType::USES, 
 	TokenType::MODIFIES, TokenType::FOLLOWS, TokenType::PARENT,
-	TokenType::PATTERN
+	TokenType::PATTERN, TokenType::SELECT
 };
 
 static std::unordered_map<TokenType, RelationRef> relationTypeMapping = {

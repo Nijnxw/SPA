@@ -14,6 +14,19 @@
 #include <vector>
 
 class RelationshipASTs {
+private:
+	static std::shared_ptr<ConstantNode> one;
+	static std::shared_ptr<ConstantNode> two;
+	static std::shared_ptr<ConstantNode> three;
+
+	static std::shared_ptr<VariableNode> w;
+	static std::shared_ptr<VariableNode> x;
+	static std::shared_ptr<VariableNode> y;
+	static std::shared_ptr<VariableNode> z;
+
+	static ExprNode xPLus1;
+
+	static std::shared_ptr<PredicateNode> predXLt1;
 public:
 	//AST getAST3_1();
 	//AST getAST3_2();
@@ -25,4 +38,5 @@ public:
 	static AST getAST3_8();
 	static AST getAST3_9();
 	static AST getAST3_10();
+	static AST getAST3_11();
 };

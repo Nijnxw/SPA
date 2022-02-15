@@ -15,6 +15,11 @@ QueryClauseTable StmtStmtRelationshipEvaluator::getRelationship(RelationRef rela
 	}
 }
 
+QueryClauseTable StmtStmtRelationshipEvaluator::getTransitiveRelationship(RelationRef relationship, const std::string& LHS, const std::string& RHS, EntityType LHSType, EntityType RHSType,
+	bool isBooleanResult) {
+	return StmtStmtRelationshipEvaluator::getRelationship(relationship, LHS, RHS, LHSType, RHSType, isBooleanResult);
+}
+
 QueryClauseTable StmtStmtRelationshipEvaluator::getRelationshipByStatementNumber(RelationRef relationship, const std::string& LHS, const std::string& RHS, EntityType RHSType) {
 	QueryClauseTable queryResult;
 

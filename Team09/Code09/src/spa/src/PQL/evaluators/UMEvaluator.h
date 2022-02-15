@@ -16,14 +16,14 @@
 
 class UMEvaluator : public RelationshipEvaluator {
 public:
-	static QueryClauseTable
+	QueryClauseTable
 		getRelationship(RelationRef relationship, const std::string& LHS, const std::string& RHS, EntityType LHSType, EntityType RHSType, bool isBooleanResult);
 
 private:
-	static QueryClauseTable getRelationshipByUnderscore(
+	QueryClauseTable getRelationshipByUnderscore(
 		RelationRef relationship, const std::string& LHS, const std::string& RHS, EntityType LHSType);
-	static QueryClauseTable getRelationshipByVariable(
+	QueryClauseTable getRelationshipByVariable(
 		RelationRef relationship, const std::string& LHS, const std::string& RHS, EntityType LHSType);
-	static QueryClauseTable getRelationshipBySynonym(
+	QueryClauseTable getRelationshipBySynonym(
 		RelationRef relationship, const std::string& LHS, const std::string& RHS, EntityType LHSType);
 };

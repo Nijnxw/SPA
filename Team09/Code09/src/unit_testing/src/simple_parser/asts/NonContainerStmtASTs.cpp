@@ -1,7 +1,4 @@
 #include "NonContainerStmtASTs.h"
-#include "models/simple_parser/ExprNodes.h"
-#include "models/simple_parser/IoNodes.h"
-#include "models/simple_parser/AssignNode.h"
 
 AST generateAST(std::vector<std::shared_ptr<StmtNode>> stmts) {
 	std::shared_ptr<ProcedureNode> proc = std::make_shared<ProcedureNode>(stmts, "testProgram");

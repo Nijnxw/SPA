@@ -8,20 +8,6 @@ std::shared_ptr<VariableNode> generateVariable(std::string varName) {
 std::shared_ptr<ConstantNode> generateConstant(int conValue) {
 	return std::make_shared<ConstantNode>(std::to_string(conValue));
 }
-//
-//ExprNode generateExpr(std::string varName, BinaryOperator op, int constant) {
-//	return std::make_shared<BinaryOperatorNode>(
-//		op, generateVariable(varName), generateConstant(constant));
-//}
-//
-//ExprNode generateExpr(std::string var1, BinaryOperator op, std::string var2) {
-//	return std::make_shared<BinaryOperatorNode>(
-//		op, generateVariable(var1), generateVariable(var2));
-//}
-//
-//ExprNode generateExpr(ExprNode expr1, BinaryOperator op, ExprNode expr2) {
-//	return std::make_shared<BinaryOperatorNode>(op, expr1, expr2);
-//}
 
 AST generateAST(std::vector<std::shared_ptr<StmtNode>> stmts, std::string progName) {
 	std::shared_ptr<ProcedureNode> proc = std::make_shared<ProcedureNode>(stmts, progName);

@@ -309,7 +309,7 @@ AST RelationshipASTs::getAST3_17() {
 	 */
 
 	std::vector<std::shared_ptr<StmtNode>> whileStmtList{
-		std::make_shared<ReadNode>(1, x)
+		std::make_shared<ReadNode>(2, x)
 	};
 
 	std::vector<std::shared_ptr<StmtNode>> thenStmtList{
@@ -321,7 +321,7 @@ AST RelationshipASTs::getAST3_17() {
 
 	std::vector<std::shared_ptr<StmtNode>> stmtList{
 		std::make_shared<WhileNode>(1, predXLt1, whileStmtList),
-		std::make_shared<IfNode>(2, predXLt1, thenStmtList, elseStmtList)
+		std::make_shared<IfNode>(3, predXLt1, thenStmtList, elseStmtList)
 	};
 	return generateAST(stmtList, "testProgram");
 }
@@ -879,7 +879,7 @@ AST RelationshipASTs::getAST3_31() {
 	};
 
 	std::vector<std::shared_ptr<StmtNode>> whileStmtList{
-		std::make_shared<WhileNode>(2, predYLt2, whileStmtList),
+		std::make_shared<WhileNode>(2, predYLt2, whileWhileStmtList),
 		std::make_shared<ReadNode>(6, x)
 	};
 

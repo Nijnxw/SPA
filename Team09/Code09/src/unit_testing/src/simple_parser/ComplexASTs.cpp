@@ -12,8 +12,8 @@ AST ComplexASTs::getAST4_1() {
      * 5   if ((x >= 0) && (y >= 0)) then {
      * 6     while (x != 0) {
      * 7       tan = y / x;
-     * 8       sin = y / length * cos;;
-     * 9       cos = x / length * sin;;
+     * 8       sin = y / length * cos;
+     * 9       cos = x / length * sin;
      * 10      if (((sin * sin + cos * cos) == 1) || (!(tan != (sin / cos)))) then {
      * 11        x = y / 2;
      * 12        y = x / 2;

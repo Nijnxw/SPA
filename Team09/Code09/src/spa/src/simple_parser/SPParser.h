@@ -9,6 +9,7 @@
 #include "models/simple_parser/PredicateNodes.h"
 #include "models/simple_parser/WhileNode.h"
 #include "util/RPN.h"
+#include "models/simple_parser/IfNode.h"
 
 #include <vector>
 #include <string>
@@ -80,6 +81,7 @@ private:
 	std::shared_ptr<PrintNode> parsePrint();
 	std::shared_ptr<AssignNode> parseAssign();
 	std::shared_ptr<WhileNode> parseWhile();
+	std::shared_ptr<IfNode> parseIf();
 
 public:
 	explicit SPParser(std::vector<Token*> tokens);

@@ -25,8 +25,10 @@ private:
 	static std::shared_ptr<VariableNode> z;
 
 	static ExprNode xPLus1;
+	static ExprNode yPLus1;
 
 	static std::shared_ptr<PredicateNode> predXLt1;
+	static std::shared_ptr<PredicateNode> predYLt1;
 public:
 	//AST getAST3_1();
 	//AST getAST3_2();
@@ -39,4 +41,16 @@ public:
 	static AST getAST3_9();
 	static AST getAST3_10();
 	static AST getAST3_11();
+	static AST getAST3_12();
+	static AST getAST3_13();
+	static AST getAST3_14();
+	static AST getAST3_15();
+	static AST getAST3_16();
+	static AST getAST3_17();
+	static AST getAST3_18();
+	static AST getAST3_19();
+	static AST getAST3_20();
+	static AST getAST3_21();
+	static AST getAST3_22();
+	static AST getAST3_23();
 };

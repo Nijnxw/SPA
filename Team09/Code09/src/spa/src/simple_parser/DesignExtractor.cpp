@@ -53,7 +53,7 @@ NestableRelationships processPredicateNode(std::shared_ptr<PredicateNode> expr) 
 		rs.combine(processExprNode(expr->getRelLhs()));
 		rs.combine(processExprNode(expr->getRelRhs()));
 	} else {
-		rs.combine(processPredicateNode(expr->getLhs()));
+		if (!(expr->isNotPredicate())) rs.combine(processPredicateNode(expr->getLhs()));
 		rs.combine(processPredicateNode(expr->getRhs()));
 	}
 	return rs;

@@ -24,9 +24,10 @@ private:
 	static std::shared_ptr<VariableNode> y;
 	static std::shared_ptr<VariableNode> z;
 
-	static ExprNode xPLus1;
-	static ExprNode yPLus1;
-	static ExprNode zPLus1;
+	static ExprNode xPlus1;
+	static ExprNode xPlusY;
+	static ExprNode yPlus1;
+	static ExprNode zPlus1;
 
 	static std::shared_ptr<PredicateNode> predXLt1;
 	static std::shared_ptr<PredicateNode> predYLt1;

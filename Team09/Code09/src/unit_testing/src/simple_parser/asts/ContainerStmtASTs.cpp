@@ -1,5 +1,4 @@
 #include "ContainerStmtASTs.h"
-#include "models/simple_parser/IfNode.h"
 
 AST generateAST(std::vector<std::shared_ptr<StmtNode>> stmts) {
 	std::shared_ptr<ProcedureNode> proc = std::make_shared<ProcedureNode>(stmts, "testProgram");
@@ -42,6 +41,10 @@ std::shared_ptr<PredicateNode> predYGteC3 = std::make_shared<PredicateNode>(
 
 std::shared_ptr<PredicateNode> predYPlusC1LtX = std::make_shared<PredicateNode>(
 		std::make_shared<RelExprNode>(yPlusC1, ComparatorOperator::LT, x)
+);
+
+std::shared_ptr<PredicateNode> predZLtC1 = std::make_shared<PredicateNode>(
+		std::make_shared<RelExprNode>(z, ComparatorOperator::LT, c1)
 );
 
 std::vector<std::shared_ptr<StmtNode>> whileStmtListRead{
@@ -378,7 +381,7 @@ AST ContainerStmtASTs::getAST1_58() {
 	return generateAST(stmtLst);
 }
 
-// while statement - single statement
+// while statement - single statement in container
 
 AST ContainerStmtASTs::getAST1_60() {
 	/*
@@ -465,3 +468,344 @@ AST ContainerStmtASTs::getAST1_63() {
 	return generateAST(stmtLst);
 }
 
+// while statement - all statement types in container
+
+AST ContainerStmtASTs::getAST1_64() {
+	/*
+	 * procedure testProgram {
+	 * 1	while (x < 1) {
+	 * 2		read x;
+	 * 3		print x;
+	 * 4		a = x + 1;
+	 * 5		if (y < 1) then {
+	 * 6			read y;
+	 * 			} else {
+	 * 7			print y; }
+	 * 8		while (y < 1) {
+	 * 9			read y; }
+	 * 		}
+	 * 	}
+	 */
+
+	std::vector<std::shared_ptr<StmtNode>> thenStmtLst {
+			std::make_shared<ReadNode>(6, y)
+	};
+
+	std::vector<std::shared_ptr<StmtNode>> elseStmtLst {
+			std::make_shared<PrintNode>(7, y)
+	};
+
+	std::vector<std::shared_ptr<StmtNode>> innerWhileStmtLst {
+			std::make_shared<ReadNode>(9, y)
+	};
+
+	std::vector<std::shared_ptr<StmtNode>> whileStmtLst {
+			std::make_shared<ReadNode>(2, x),
+			std::make_shared<PrintNode>(3, x),
+			std::make_shared<AssignNode>(4, a, xPlusC1, "x 1 +"),
+			std::make_shared<IfNode>(5, predYLtC1, thenStmtLst, elseStmtLst),
+			std::make_shared<WhileNode>(8, predYLtC1, innerWhileStmtLst)
+	};
+
+	std::vector<std::shared_ptr<StmtNode>> stmtLst {
+			std::make_shared<WhileNode>(1, predXLtC1, whileStmtLst)
+	};
+
+	return generateAST(stmtLst);
+}
+
+// If statement - single statement in container
+
+AST ContainerStmtASTs::getAST1_65() {
+	/*
+	 * procedure testProgram {
+	 * 1	if (x < 1) then {
+	 * 2		read x;
+	 * 		} else {
+	 * 3		read y; } }
+	 */
+
+	std::vector<std::shared_ptr<StmtNode>> thenStmtLst {
+			std::make_shared<ReadNode>(2, x)
+	};
+
+	std::vector<std::shared_ptr<StmtNode>> elseStmtLst {
+			std::make_shared<ReadNode>(3, y)
+	};
+
+	std::vector<std::shared_ptr<StmtNode>> stmtLst {
+			std::make_shared<IfNode>(1, predXLtC1, thenStmtLst, elseStmtLst)
+	};
+
+	return generateAST(stmtLst);
+}
+
+AST ContainerStmtASTs::getAST1_66() {
+	/*
+	 * procedure testProgram {
+	 * 1	if (x < 1) then {
+	 * 2		print x;
+	 * 		} else {
+	 * 3		print y; } }
+	 */
+
+	std::vector<std::shared_ptr<StmtNode>> thenStmtLst {
+			std::make_shared<PrintNode>(2, x)
+	};
+
+	std::vector<std::shared_ptr<StmtNode>> elseStmtLst {
+			std::make_shared<PrintNode>(3, y)
+	};
+
+	std::vector<std::shared_ptr<StmtNode>> stmtLst {
+			std::make_shared<IfNode>(1, predXLtC1, thenStmtLst, elseStmtLst)
+	};
+
+	return generateAST(stmtLst);
+}
+
+AST ContainerStmtASTs::getAST1_67() {
+	/*
+	 * procedure testProgram {
+	 * 1	if (x < 1) then {
+	 * 2		a = x + 1;
+	 * 		} else {
+	 * 3		a = y + 1; } }
+	 */
+
+	std::vector<std::shared_ptr<StmtNode>> thenStmtLst {
+			std::make_shared<AssignNode>(2, a, xPlusC1, "x 1 +")
+	};
+
+	std::vector<std::shared_ptr<StmtNode>> elseStmtLst {
+			std::make_shared<AssignNode>(3, a, yPlusC1, "y 1 +")
+	};
+
+	std::vector<std::shared_ptr<StmtNode>> stmtLst {
+			std::make_shared<IfNode>(1, predXLtC1, thenStmtLst, elseStmtLst)
+	};
+
+	return generateAST(stmtLst);
+}
+
+AST ContainerStmtASTs::getAST1_68() {
+	/*
+	 * procedure testProgram {
+	 * 1	if (x < 1) then {
+	 * 2		if (y < 1) then {
+	 * 3			read y;
+	 * 			} else {
+	 * 4			print y; }
+	 * 		} else {
+	 * 5		print x; } }
+	 */
+	std::vector<std::shared_ptr<StmtNode>> innerThenStmtLst {
+			std::make_shared<ReadNode>(3, y)
+	};
+
+	std::vector<std::shared_ptr<StmtNode>> innerElseStmtLst {
+			std::make_shared<PrintNode>(4, y)
+	};
+
+	std::vector<std::shared_ptr<StmtNode>> thenStmtLst {
+			std::make_shared<IfNode>(2, predYLtC1, innerThenStmtLst, innerElseStmtLst)
+	};
+
+	std::vector<std::shared_ptr<StmtNode>> elseStmtLst {
+			std::make_shared<PrintNode>(5, x)
+	};
+
+	std::vector<std::shared_ptr<StmtNode>> stmtLst {
+			std::make_shared<IfNode>(1, predXLtC1, thenStmtLst, elseStmtLst)
+	};
+
+	return generateAST(stmtLst);
+}
+
+AST ContainerStmtASTs::getAST1_69() {
+	/*
+	 * procedure testProgram {
+	 * 1	if (x < 1) then {
+	 * 2		read x;
+	 * 		} else {
+	 * 3		if (y < 1) then {
+	 * 4			read y;
+	 * 			} else {
+	 * 5			print y; } } }
+	 */
+	std::vector<std::shared_ptr<StmtNode>> thenStmtLst {
+			std::make_shared<ReadNode>(2, x)
+	};
+
+	std::vector<std::shared_ptr<StmtNode>> innerThenStmtLst {
+			std::make_shared<ReadNode>(4, y)
+	};
+
+	std::vector<std::shared_ptr<StmtNode>> innerElseStmtLst {
+			std::make_shared<PrintNode>(5, y)
+	};
+
+	std::vector<std::shared_ptr<StmtNode>> elseStmtLst {
+			std::make_shared<IfNode>(3, predYLtC1, innerThenStmtLst, innerElseStmtLst)
+	};
+
+	std::vector<std::shared_ptr<StmtNode>> stmtLst {
+			std::make_shared<IfNode>(1, predXLtC1, thenStmtLst, elseStmtLst)
+	};
+
+	return generateAST(stmtLst);
+}
+
+AST ContainerStmtASTs::getAST1_70() {
+	/*
+	 * procedure testProgram {
+	 * 1	if (x < 1) then {
+	 * 2		while (y < 1) {
+	 * 3			read y; }
+	 * 		} else {
+	 * 4		print x; } }
+	 */
+	std::vector<std::shared_ptr<StmtNode>> whileStmtLst {
+			std::make_shared<ReadNode>(3, y)
+	};
+
+	std::vector<std::shared_ptr<StmtNode>> thenStmtLst {
+			std::make_shared<WhileNode>(2, predYLtC1, whileStmtLst)
+	};
+
+	std::vector<std::shared_ptr<StmtNode>> elseStmtLst {
+			std::make_shared<PrintNode>(4, y)
+	};
+
+	std::vector<std::shared_ptr<StmtNode>> stmtLst {
+			std::make_shared<IfNode>(1, predXLtC1, thenStmtLst, elseStmtLst)
+	};
+
+	return generateAST(stmtLst);
+}
+
+AST ContainerStmtASTs::getAST1_71() {
+	/*
+	 * procedure testProgram {
+	 * 1	if (x < 1) then {
+	 * 2		read x;
+	 * 		} else {
+	 * 3		while (y < 1) {
+	 * 4			read y; } } }
+	 */
+	std::vector<std::shared_ptr<StmtNode>> thenStmtLst {
+			std::make_shared<ReadNode>(2, x)
+	};
+
+	std::vector<std::shared_ptr<StmtNode>> whileStmtLst {
+			std::make_shared<ReadNode>(4, y)
+	};
+
+	std::vector<std::shared_ptr<StmtNode>> elseStmtLst {
+			std::make_shared<WhileNode>(3, predYLtC1, whileStmtLst)
+	};
+
+	std::vector<std::shared_ptr<StmtNode>> stmtLst {
+			std::make_shared<IfNode>(1, predXLtC1, thenStmtLst, elseStmtLst)
+	};
+
+	return generateAST(stmtLst);
+}
+
+// if statement - all statement types in container
+
+AST ContainerStmtASTs::getAST1_72() {
+	/*
+	 * procedure testProgram {
+	 * 1	if (x < 1) then {
+	 * 2		read x;
+	 * 3		print x;
+	 * 4		a = x + 1;
+	 * 5		if (y < 1) then {
+	 * 6			read y;
+	 * 			} else {
+	 * 7			print y; }
+	 * 8		while (z < 1) {
+	 * 9			read z; }
+	 * 		} else {
+	 * 10		print x; } }
+	 */
+
+	std::vector<std::shared_ptr<StmtNode>> innerThenStmtLst {
+			std::make_shared<ReadNode>(6, y)
+	};
+
+	std::vector<std::shared_ptr<StmtNode>> innerElseStmtLst {
+			std::make_shared<PrintNode>(7, y)
+	};
+
+	std::vector<std::shared_ptr<StmtNode>> whileStmtLst {
+			std::make_shared<ReadNode>(9, z)
+	};
+
+	std::vector<std::shared_ptr<StmtNode>> thenStmtLst {
+			std::make_shared<ReadNode>(2, x),
+			std::make_shared<PrintNode>(3, x),
+			std::make_shared<AssignNode>(4, a, xPlusC1, "x 1 +"),
+			std::make_shared<IfNode>(5, predYLtC1, innerThenStmtLst, innerElseStmtLst),
+			std::make_shared<WhileNode>(8, predZLtC1, whileStmtLst)
+	};
+
+	std::vector<std::shared_ptr<StmtNode>> elseStmtLst {
+			std::make_shared<PrintNode>(10, x)
+	};
+
+	std::vector<std::shared_ptr<StmtNode>> stmtLst {
+			std::make_shared<IfNode>(1, predXLtC1, thenStmtLst, elseStmtLst)
+	};
+
+	return generateAST(stmtLst);
+}
+
+AST ContainerStmtASTs::getAST1_73() {
+	/*
+	 * procedure testProgram {
+	 * 1	if (x < 1) then {
+	 * 2		read x;
+	 * 		} else {
+	 * 3		read x;
+	 * 4		print x;
+	 * 5		a = x + 1;
+	 * 6		if (y < 1) then {
+	 * 7			read y;
+	 * 			} else {
+	 * 8			print y; }
+	 * 9		while (z < 1) {
+	 * 10			read z; } } }
+	 */
+	std::vector<std::shared_ptr<StmtNode>> thenStmtLst {
+			std::make_shared<ReadNode>(2, x)
+	};
+
+	std::vector<std::shared_ptr<StmtNode>> innerThenStmtLst {
+			std::make_shared<ReadNode>(7, y)
+	};
+
+	std::vector<std::shared_ptr<StmtNode>> innerElseStmtLst {
+			std::make_shared<PrintNode>(8, y)
+	};
+
+	std::vector<std::shared_ptr<StmtNode>> whileStmtLst {
+			std::make_shared<ReadNode>(10, z)
+	};
+
+
+	std::vector<std::shared_ptr<StmtNode>> elseStmtLst {
+			std::make_shared<ReadNode>(3, x),
+			std::make_shared<PrintNode>(4, x),
+			std::make_shared<AssignNode>(5, a, xPlusC1, "x 1 +"),
+			std::make_shared<IfNode>(6, predYLtC1, innerThenStmtLst, innerElseStmtLst),
+			std::make_shared<WhileNode>(9, predZLtC1, whileStmtLst)
+	};
+
+	std::vector<std::shared_ptr<StmtNode>> stmtLst {
+			std::make_shared<IfNode>(1, predXLtC1, thenStmtLst, elseStmtLst)
+	};
+
+	return generateAST(stmtLst);
+}

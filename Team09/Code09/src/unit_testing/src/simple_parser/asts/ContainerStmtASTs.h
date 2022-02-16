@@ -3,6 +3,7 @@
 #include "models/simple_parser/AST.h"
 #include "models/simple_parser/AssignNode.h"
 #include "models/simple_parser/ExprNodes.h"
+#include "models/simple_parser/IfNode.h"
 #include "models/simple_parser/IoNodes.h"
 #include "models/simple_parser/PredicateNodes.h"
 #include "models/simple_parser/WhileNode.h"
@@ -34,11 +35,27 @@ public:
 	static AST getAST1_57();
 	static AST getAST1_58();
 
-	// while statements - single statement
+	// while statements - single statement in container
 	static AST getAST1_60();
 	static AST getAST1_61();
 	static AST getAST1_62();
 	static AST getAST1_63();
+
+	// while statement - all statement types in container
+	static AST getAST1_64();
+
+	// If statement - single statement in container
+	static AST getAST1_65();
+	static AST getAST1_66();
+	static AST getAST1_67();
+	static AST getAST1_68();
+	static AST getAST1_69();
+	static AST getAST1_70();
+	static AST getAST1_71();
+
+	// if statement - all statement types in container
+	static AST getAST1_72();
+	static AST getAST1_73();
 
 };
 

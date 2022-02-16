@@ -2,6 +2,7 @@
 #include "simple_parser/EntityStager.h"
 #include "simple_parser/DesignExtractor.h"
 #include "asts/RelationshipASTs.h"
+#include "asts/ComplexASTs.h"
 
 #include <memory>
 #include <vector>
@@ -476,6 +477,24 @@ TEST_CASE("Parents 3.33 - 3 levels of nesting - 1 stmt per nest level - if-while
 		{1, 2}, {1, 7}, {1, 8},
 		{2, 3}, {2, 6},
 		{3, 4}, {3, 5}
+	};
+	std::sort(expectedParents.begin(), expectedParents.end());
+
+	std::vector<std::pair<int, int>> actualParents = EntityStager::getStagedParent();
+	std::sort(actualParents.begin(), actualParents.end());
+
+	REQUIRE(actualParents == expectedParents);
+	EntityStager::clear();
+}
+
+TEST_CASE("Parents 4.1 - Complex AST") {
+	EntityStager::clear();
+	DesignExtractor::extractDesignElements(ComplexASTs::getAST4_1());
+
+	std::vector<std::pair<int, int>> expectedParents{
+		{5, 6}, {5, 15}, {5, 16}, {5, 17},
+		{6, 7}, {6, 8}, {6, 9}, {6, 10}, {6, 14},
+		{10, 11}, {10, 12}, {10, 13}
 	};
 	std::sort(expectedParents.begin(), expectedParents.end());
 

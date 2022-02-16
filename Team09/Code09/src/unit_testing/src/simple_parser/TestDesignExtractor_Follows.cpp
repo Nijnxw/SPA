@@ -1,6 +1,7 @@
 #include "catch.hpp"
 #include "simple_parser/EntityStager.h"
 #include "simple_parser/DesignExtractor.h"
+#include "asts/ComplexASTs.h"
 #include "asts/RelationshipASTs.h"
 
 #include <memory>
@@ -454,6 +455,23 @@ TEST_CASE("Follows 3.33 - 3 levels of nesting - 1 stmt per nest level - if-while
 
 	std::vector<std::pair<int, int>> expectedFollows{
 		{3, 6}, {2, 7}
+	};
+	std::sort(expectedFollows.begin(), expectedFollows.end());
+
+	std::vector<std::pair<int, int>> actualFollows = EntityStager::getStagedFollows();
+	std::sort(actualFollows.begin(), actualFollows.end());
+
+	REQUIRE(actualFollows == expectedFollows);
+	EntityStager::clear();
+}
+
+TEST_CASE("Follows 4.1 - Complex AST") {
+	EntityStager::clear();
+	DesignExtractor::extractDesignElements(ComplexASTs::getAST4_1());
+
+	std::vector<std::pair<int, int>> expectedFollows{
+		{1, 2}, {2, 3}, {3, 4}, {4, 5}, {5, 18},
+		{7, 8}, {8, 9}, {9, 10}, {10, 14}, {11, 12}, {15, 16}, {16, 17}
 	};
 	std::sort(expectedFollows.begin(), expectedFollows.end());
 

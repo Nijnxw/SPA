@@ -2,6 +2,7 @@
 #include "simple_parser/EntityStager.h"
 #include "simple_parser/DesignExtractor.h"
 #include "asts/RelationshipASTs.h"
+#include "asts/ComplexASTs.h"
 
 #include <string>
 #include <unordered_set>
@@ -594,6 +595,29 @@ TEST_CASE("Uses 3.33 - 3 levels of nesting - 1 stmt per nest level - if-while-if
 	std::vector<std::pair<int, std::unordered_set<std::string>>> expectedUses{
 		{1, {"x", "y", "z"}}, {2, {"y", "z"}}, {3, {"z"}}, {5, {"z"}}, {6, {"y"}},
 		{8, {"x"}}
+	};
+	std::sort(expectedUses.begin(), expectedUses.end(),
+		[](auto& left, auto& right) {return left.first < right.first; });
+
+	std::vector<std::pair<int, std::unordered_set<std::string>>> actualUses = EntityStager::getStagedUsesStatement();
+	std::sort(actualUses.begin(), actualUses.end(),
+		[](auto& left, auto& right) {return left.first < right.first; });
+
+	REQUIRE(actualUses == expectedUses);
+	EntityStager::clear();
+}
+
+TEST_CASE("Uses 4.1 - Complex AST") {
+	EntityStager::clear();
+	DesignExtractor::extractDesignElements(ComplexASTs::getAST4_1());
+
+	std::vector<std::pair<int, std::unordered_set<std::string>>> expectedUses{
+		{3, {"x", "y"}},
+		{5, {"tan", "sin", "cos", "x", "y", "length"}},
+		{6, {"tan", "sin", "cos", "x", "y", "length"}},
+		{7, {"x", "y"}}, {8, {"y", "length", "cos"}}, {9, {"x", "length", "sin"}},
+		{10, {"sin", "cos", "tan", "x", "y"}},
+		{11, {"y"}}, {12, {"x"}}, {14, {"x", "y"}}, {17, {"x", "y"}}, {18, {"length"}}
 	};
 	std::sort(expectedUses.begin(), expectedUses.end(),
 		[](auto& left, auto& right) {return left.first < right.first; });

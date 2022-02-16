@@ -1,6 +1,7 @@
 #include "catch.hpp"
 #include "simple_parser/EntityStager.h"
 #include "simple_parser/DesignExtractor.h"
+#include "asts/ComplexASTs.h"
 #include "asts/RelationshipASTs.h"
 
 #include <memory>
@@ -45,10 +46,10 @@ TEST_CASE("FollowsT 3.5 - 2 basic statements") {
 	std::vector<std::pair<int, int>> expectedFollowsT{ {1, 2} };
 	std::sort(expectedFollowsT.begin(), expectedFollowsT.end());
 
-	std::vector<std::pair<int, int>> actualFollows = EntityStager::getStagedFollowsT();
-	std::sort(actualFollows.begin(), actualFollows.end());
+	std::vector<std::pair<int, int>> actualFollowsT = EntityStager::getStagedFollowsT();
+	std::sort(actualFollowsT.begin(), actualFollowsT.end());
 
-	REQUIRE(actualFollows == expectedFollowsT);
+	REQUIRE(actualFollowsT == expectedFollowsT);
 	EntityStager::clear();
 }
 
@@ -59,10 +60,10 @@ TEST_CASE("FollowsT 3.6 - 2 basic statements") {
 	std::vector<std::pair<int, int>> expectedFollowsT{ {1, 2} };
 	std::sort(expectedFollowsT.begin(), expectedFollowsT.end());
 
-	std::vector<std::pair<int, int>> actualFollows = EntityStager::getStagedFollowsT();
-	std::sort(actualFollows.begin(), actualFollows.end());
+	std::vector<std::pair<int, int>> actualFollowsT = EntityStager::getStagedFollowsT();
+	std::sort(actualFollowsT.begin(), actualFollowsT.end());
 
-	REQUIRE(actualFollows == expectedFollowsT);
+	REQUIRE(actualFollowsT == expectedFollowsT);
 	EntityStager::clear();
 }
 
@@ -73,10 +74,10 @@ TEST_CASE("FollowsT 3.7 - 2 basic statements") {
 	std::vector<std::pair<int, int>> expectedFollowsT{ {1, 2} };
 	std::sort(expectedFollowsT.begin(), expectedFollowsT.end());
 
-	std::vector<std::pair<int, int>> actualFollows = EntityStager::getStagedFollowsT();
-	std::sort(actualFollows.begin(), actualFollows.end());
+	std::vector<std::pair<int, int>> actualFollowsT = EntityStager::getStagedFollowsT();
+	std::sort(actualFollowsT.begin(), actualFollowsT.end());
 
-	REQUIRE(actualFollows == expectedFollowsT);
+	REQUIRE(actualFollowsT == expectedFollowsT);
 	EntityStager::clear();
 }
 
@@ -87,10 +88,10 @@ TEST_CASE("FollowsT 3.8 - 3 basic statements") {
 	std::vector<std::pair<int, int>> expectedFollowsT{ {1, 2}, {2, 3}, {1, 3} };
 	std::sort(expectedFollowsT.begin(), expectedFollowsT.end());
 
-	std::vector<std::pair<int, int>> actualFollows = EntityStager::getStagedFollowsT();
-	std::sort(actualFollows.begin(), actualFollows.end());
+	std::vector<std::pair<int, int>> actualFollowsT = EntityStager::getStagedFollowsT();
+	std::sort(actualFollowsT.begin(), actualFollowsT.end());
 
-	REQUIRE(actualFollows == expectedFollowsT);
+	REQUIRE(actualFollowsT == expectedFollowsT);
 	EntityStager::clear();
 }
 
@@ -101,10 +102,10 @@ TEST_CASE("FollowsT 3.9 - 3 basic statements") {
 	std::vector<std::pair<int, int>> expectedFollowsT{ {1, 2}, {2, 3}, {1, 3} };
 	std::sort(expectedFollowsT.begin(), expectedFollowsT.end());
 
-	std::vector<std::pair<int, int>> actualFollows = EntityStager::getStagedFollowsT();
-	std::sort(actualFollows.begin(), actualFollows.end());
+	std::vector<std::pair<int, int>> actualFollowsT = EntityStager::getStagedFollowsT();
+	std::sort(actualFollowsT.begin(), actualFollowsT.end());
 
-	REQUIRE(actualFollows == expectedFollowsT);
+	REQUIRE(actualFollowsT == expectedFollowsT);
 	EntityStager::clear();
 }
 
@@ -115,10 +116,10 @@ TEST_CASE("FollowsT 3.10 - 3 basic statements") {
 	std::vector<std::pair<int, int>> expectedFollowsT{ {1, 2}, {2, 3}, {1, 3} };
 	std::sort(expectedFollowsT.begin(), expectedFollowsT.end());
 
-	std::vector<std::pair<int, int>> actualFollows = EntityStager::getStagedFollowsT();
-	std::sort(actualFollows.begin(), actualFollows.end());
+	std::vector<std::pair<int, int>> actualFollowsT = EntityStager::getStagedFollowsT();
+	std::sort(actualFollowsT.begin(), actualFollowsT.end());
 
-	REQUIRE(actualFollows == expectedFollowsT);
+	REQUIRE(actualFollowsT == expectedFollowsT);
 	EntityStager::clear();
 }
 
@@ -129,10 +130,10 @@ TEST_CASE("FollowsT 3.11 - 2 basic statements + 1 container - while at end of pr
 	std::vector<std::pair<int, int>> expectedFollowsT{ {1, 2}, {2, 3}, {1, 3} };
 	std::sort(expectedFollowsT.begin(), expectedFollowsT.end());
 
-	std::vector<std::pair<int, int>> actualFollows = EntityStager::getStagedFollowsT();
-	std::sort(actualFollows.begin(), actualFollows.end());
+	std::vector<std::pair<int, int>> actualFollowsT = EntityStager::getStagedFollowsT();
+	std::sort(actualFollowsT.begin(), actualFollowsT.end());
 
-	REQUIRE(actualFollows == expectedFollowsT);
+	REQUIRE(actualFollowsT == expectedFollowsT);
 	EntityStager::clear();
 }
 
@@ -143,10 +144,10 @@ TEST_CASE("FollowsT 3.12 - 2 basic statements + 1 container - while at start of 
 	std::vector<std::pair<int, int>> expectedFollowsT{ {1, 3}, {3, 4}, {1, 4} };
 	std::sort(expectedFollowsT.begin(), expectedFollowsT.end());
 
-	std::vector<std::pair<int, int>> actualFollows = EntityStager::getStagedFollowsT();
-	std::sort(actualFollows.begin(), actualFollows.end());
+	std::vector<std::pair<int, int>> actualFollowsT = EntityStager::getStagedFollowsT();
+	std::sort(actualFollowsT.begin(), actualFollowsT.end());
 
-	REQUIRE(actualFollows == expectedFollowsT);
+	REQUIRE(actualFollowsT == expectedFollowsT);
 	EntityStager::clear();
 }
 
@@ -157,10 +158,10 @@ TEST_CASE("FollowsT 3.13 - 2 basic statements + 1 container - while at middle of
 	std::vector<std::pair<int, int>> expectedFollowsT{ {1, 2}, {2, 4}, {1, 4} };
 	std::sort(expectedFollowsT.begin(), expectedFollowsT.end());
 
-	std::vector<std::pair<int, int>> actualFollows = EntityStager::getStagedFollowsT();
-	std::sort(actualFollows.begin(), actualFollows.end());
+	std::vector<std::pair<int, int>> actualFollowsT = EntityStager::getStagedFollowsT();
+	std::sort(actualFollowsT.begin(), actualFollowsT.end());
 
-	REQUIRE(actualFollows == expectedFollowsT);
+	REQUIRE(actualFollowsT == expectedFollowsT);
 	EntityStager::clear();
 }
 
@@ -171,10 +172,10 @@ TEST_CASE("FollowsT 3.14 - 2 basic statements + 1 container - if at end of proce
 	std::vector<std::pair<int, int>> expectedFollowsT{ {1, 2}, {2, 3}, {1, 3} };
 	std::sort(expectedFollowsT.begin(), expectedFollowsT.end());
 
-	std::vector<std::pair<int, int>> actualFollows = EntityStager::getStagedFollowsT();
-	std::sort(actualFollows.begin(), actualFollows.end());
+	std::vector<std::pair<int, int>> actualFollowsT = EntityStager::getStagedFollowsT();
+	std::sort(actualFollowsT.begin(), actualFollowsT.end());
 
-	REQUIRE(actualFollows == expectedFollowsT);
+	REQUIRE(actualFollowsT == expectedFollowsT);
 	EntityStager::clear();
 }
 
@@ -185,10 +186,10 @@ TEST_CASE("FollowsT 3.15 - 2 basic statements + 1 container - if at start of pro
 	std::vector<std::pair<int, int>> expectedFollowsT{ {1, 4}, {4, 5}, {1, 5} };
 	std::sort(expectedFollowsT.begin(), expectedFollowsT.end());
 
-	std::vector<std::pair<int, int>> actualFollows = EntityStager::getStagedFollowsT();
-	std::sort(actualFollows.begin(), actualFollows.end());
+	std::vector<std::pair<int, int>> actualFollowsT = EntityStager::getStagedFollowsT();
+	std::sort(actualFollowsT.begin(), actualFollowsT.end());
 
-	REQUIRE(actualFollows == expectedFollowsT);
+	REQUIRE(actualFollowsT == expectedFollowsT);
 	EntityStager::clear();
 }
 
@@ -199,10 +200,10 @@ TEST_CASE("FollowsT 3.16 - 2 basic statements + 1 container - if at middle of pr
 	std::vector<std::pair<int, int>> expectedFollowsT{ {1, 2}, {2, 5}, {1, 5} };
 	std::sort(expectedFollowsT.begin(), expectedFollowsT.end());
 
-	std::vector<std::pair<int, int>> actualFollows = EntityStager::getStagedFollowsT();
-	std::sort(actualFollows.begin(), actualFollows.end());
+	std::vector<std::pair<int, int>> actualFollowsT = EntityStager::getStagedFollowsT();
+	std::sort(actualFollowsT.begin(), actualFollowsT.end());
 
-	REQUIRE(actualFollows == expectedFollowsT);
+	REQUIRE(actualFollowsT == expectedFollowsT);
 	EntityStager::clear();
 }
 
@@ -213,10 +214,10 @@ TEST_CASE("FollowsT 3.17 - 2 container statements same nesting level") {
 	std::vector<std::pair<int, int>> expectedFollowsT{ {1, 3} };
 	std::sort(expectedFollowsT.begin(), expectedFollowsT.end());
 
-	std::vector<std::pair<int, int>> actualFollows = EntityStager::getStagedFollowsT();
-	std::sort(actualFollows.begin(), actualFollows.end());
+	std::vector<std::pair<int, int>> actualFollowsT = EntityStager::getStagedFollowsT();
+	std::sort(actualFollowsT.begin(), actualFollowsT.end());
 
-	REQUIRE(actualFollows == expectedFollowsT);
+	REQUIRE(actualFollowsT == expectedFollowsT);
 	EntityStager::clear();
 }
 
@@ -227,10 +228,10 @@ TEST_CASE("FollowsT 3.18 - 1 container - 3 basic statements - while") {
 	std::vector<std::pair<int, int>> expectedFollowsT{ {2, 3}, {3, 4}, {2, 4} };
 	std::sort(expectedFollowsT.begin(), expectedFollowsT.end());
 
-	std::vector<std::pair<int, int>> actualFollows = EntityStager::getStagedFollowsT();
-	std::sort(actualFollows.begin(), actualFollows.end());
+	std::vector<std::pair<int, int>> actualFollowsT = EntityStager::getStagedFollowsT();
+	std::sort(actualFollowsT.begin(), actualFollowsT.end());
 
-	REQUIRE(actualFollows == expectedFollowsT);
+	REQUIRE(actualFollowsT == expectedFollowsT);
 	EntityStager::clear();
 }
 
@@ -243,10 +244,10 @@ TEST_CASE("FollowsT 3.19 - 1 container - 3 basic statements - if") {
 	};
 	std::sort(expectedFollowsT.begin(), expectedFollowsT.end());
 
-	std::vector<std::pair<int, int>> actualFollows = EntityStager::getStagedFollowsT();
-	std::sort(actualFollows.begin(), actualFollows.end());
+	std::vector<std::pair<int, int>> actualFollowsT = EntityStager::getStagedFollowsT();
+	std::sort(actualFollowsT.begin(), actualFollowsT.end());
 
-	REQUIRE(actualFollows == expectedFollowsT);
+	REQUIRE(actualFollowsT == expectedFollowsT);
 	EntityStager::clear();
 }
 
@@ -257,10 +258,10 @@ TEST_CASE("FollowsT 3.20 - 2 nesting levels; 1 basic statement per level - if-wh
 	std::vector<std::pair<int, int>> expectedFollowsT{ {2, 3}, {5, 6} };
 	std::sort(expectedFollowsT.begin(), expectedFollowsT.end());
 
-	std::vector<std::pair<int, int>> actualFollows = EntityStager::getStagedFollowsT();
-	std::sort(actualFollows.begin(), actualFollows.end());
+	std::vector<std::pair<int, int>> actualFollowsT = EntityStager::getStagedFollowsT();
+	std::sort(actualFollowsT.begin(), actualFollowsT.end());
 
-	REQUIRE(actualFollows == expectedFollowsT);
+	REQUIRE(actualFollowsT == expectedFollowsT);
 	EntityStager::clear();
 }
 
@@ -271,10 +272,10 @@ TEST_CASE("FollowsT 3.21 - 2 nesting levels; 1 basic statement per level - if-if
 	std::vector<std::pair<int, int>> expectedFollowsT{ {2, 3}, {6, 7} };
 	std::sort(expectedFollowsT.begin(), expectedFollowsT.end());
 
-	std::vector<std::pair<int, int>> actualFollows = EntityStager::getStagedFollowsT();
-	std::sort(actualFollows.begin(), actualFollows.end());
+	std::vector<std::pair<int, int>> actualFollowsT = EntityStager::getStagedFollowsT();
+	std::sort(actualFollowsT.begin(), actualFollowsT.end());
 
-	REQUIRE(actualFollows == expectedFollowsT);
+	REQUIRE(actualFollowsT == expectedFollowsT);
 	EntityStager::clear();
 }
 
@@ -285,10 +286,10 @@ TEST_CASE("FollowsT 3.22 - 2 nesting levels; 1 basic statement per level - while
 	std::vector<std::pair<int, int>> expectedFollowsT{ {2, 5} };
 	std::sort(expectedFollowsT.begin(), expectedFollowsT.end());
 
-	std::vector<std::pair<int, int>> actualFollows = EntityStager::getStagedFollowsT();
-	std::sort(actualFollows.begin(), actualFollows.end());
+	std::vector<std::pair<int, int>> actualFollowsT = EntityStager::getStagedFollowsT();
+	std::sort(actualFollowsT.begin(), actualFollowsT.end());
 
-	REQUIRE(actualFollows == expectedFollowsT);
+	REQUIRE(actualFollowsT == expectedFollowsT);
 	EntityStager::clear();
 }
 
@@ -299,10 +300,10 @@ TEST_CASE("FollowsT 3.23 - 2 nesting levels; 1 basic statement per level - while
 	std::vector<std::pair<int, int>> expectedFollowsT{ {2, 4} };
 	std::sort(expectedFollowsT.begin(), expectedFollowsT.end());
 
-	std::vector<std::pair<int, int>> actualFollows = EntityStager::getStagedFollowsT();
-	std::sort(actualFollows.begin(), actualFollows.end());
+	std::vector<std::pair<int, int>> actualFollowsT = EntityStager::getStagedFollowsT();
+	std::sort(actualFollowsT.begin(), actualFollowsT.end());
 
-	REQUIRE(actualFollows == expectedFollowsT);
+	REQUIRE(actualFollowsT == expectedFollowsT);
 	EntityStager::clear();
 }
 
@@ -315,10 +316,10 @@ TEST_CASE("FollowsT 3.24 - 2 nest levels; 3 statements per nest level - if-while
 	};
 	std::sort(expectedFollowsT.begin(), expectedFollowsT.end());
 
-	std::vector<std::pair<int, int>> actualFollows = EntityStager::getStagedFollowsT();
-	std::sort(actualFollows.begin(), actualFollows.end());
+	std::vector<std::pair<int, int>> actualFollowsT = EntityStager::getStagedFollowsT();
+	std::sort(actualFollowsT.begin(), actualFollowsT.end());
 
-	REQUIRE(actualFollows == expectedFollowsT);
+	REQUIRE(actualFollowsT == expectedFollowsT);
 	EntityStager::clear();
 }
 
@@ -331,10 +332,10 @@ TEST_CASE("FollowsT 3.25 - 2 nest levels; 3 statements per nest level - if-while
 	};
 	std::sort(expectedFollowsT.begin(), expectedFollowsT.end());
 
-	std::vector<std::pair<int, int>> actualFollows = EntityStager::getStagedFollowsT();
-	std::sort(actualFollows.begin(), actualFollows.end());
+	std::vector<std::pair<int, int>> actualFollowsT = EntityStager::getStagedFollowsT();
+	std::sort(actualFollowsT.begin(), actualFollowsT.end());
 
-	REQUIRE(actualFollows == expectedFollowsT);
+	REQUIRE(actualFollowsT == expectedFollowsT);
 	EntityStager::clear();
 }
 
@@ -347,10 +348,10 @@ TEST_CASE("FollowsT 3.26 - 2 nest levels; 3 statements per nest level - if-while
 	};
 	std::sort(expectedFollowsT.begin(), expectedFollowsT.end());
 
-	std::vector<std::pair<int, int>> actualFollows = EntityStager::getStagedFollowsT();
-	std::sort(actualFollows.begin(), actualFollows.end());
+	std::vector<std::pair<int, int>> actualFollowsT = EntityStager::getStagedFollowsT();
+	std::sort(actualFollowsT.begin(), actualFollowsT.end());
 
-	REQUIRE(actualFollows == expectedFollowsT);
+	REQUIRE(actualFollowsT == expectedFollowsT);
 	EntityStager::clear();
 }
 
@@ -363,10 +364,10 @@ TEST_CASE("FollowsT 3.27 - 2 nest levels; 3 statements per nest level - while-if
 	};
 	std::sort(expectedFollowsT.begin(), expectedFollowsT.end());
 
-	std::vector<std::pair<int, int>> actualFollows = EntityStager::getStagedFollowsT();
-	std::sort(actualFollows.begin(), actualFollows.end());
+	std::vector<std::pair<int, int>> actualFollowsT = EntityStager::getStagedFollowsT();
+	std::sort(actualFollowsT.begin(), actualFollowsT.end());
 
-	REQUIRE(actualFollows == expectedFollowsT);
+	REQUIRE(actualFollowsT == expectedFollowsT);
 	EntityStager::clear();
 }
 
@@ -379,10 +380,10 @@ TEST_CASE("FollowsT 3.28 - 2 nest levels; 3 statements per nest level - while-if
 	};
 	std::sort(expectedFollowsT.begin(), expectedFollowsT.end());
 
-	std::vector<std::pair<int, int>> actualFollows = EntityStager::getStagedFollowsT();
-	std::sort(actualFollows.begin(), actualFollows.end());
+	std::vector<std::pair<int, int>> actualFollowsT = EntityStager::getStagedFollowsT();
+	std::sort(actualFollowsT.begin(), actualFollowsT.end());
 
-	REQUIRE(actualFollows == expectedFollowsT);
+	REQUIRE(actualFollowsT == expectedFollowsT);
 	EntityStager::clear();
 }
 
@@ -395,10 +396,10 @@ TEST_CASE("FollowsT 3.29 - 2 nest levels; 3 statements per nest level - while-if
 	};
 	std::sort(expectedFollowsT.begin(), expectedFollowsT.end());
 
-	std::vector<std::pair<int, int>> actualFollows = EntityStager::getStagedFollowsT();
-	std::sort(actualFollows.begin(), actualFollows.end());
+	std::vector<std::pair<int, int>> actualFollowsT = EntityStager::getStagedFollowsT();
+	std::sort(actualFollowsT.begin(), actualFollowsT.end());
 
-	REQUIRE(actualFollows == expectedFollowsT);
+	REQUIRE(actualFollowsT == expectedFollowsT);
 	EntityStager::clear();
 }
 
@@ -411,10 +412,10 @@ TEST_CASE("FollowsT 3.30 - 3 levels of nesting - 1 stmt per nest level - if-if-i
 	};
 	std::sort(expectedFollowsT.begin(), expectedFollowsT.end());
 
-	std::vector<std::pair<int, int>> actualFollows = EntityStager::getStagedFollowsT();
-	std::sort(actualFollows.begin(), actualFollows.end());
+	std::vector<std::pair<int, int>> actualFollowsT = EntityStager::getStagedFollowsT();
+	std::sort(actualFollowsT.begin(), actualFollowsT.end());
 
-	REQUIRE(actualFollows == expectedFollowsT);
+	REQUIRE(actualFollowsT == expectedFollowsT);
 	EntityStager::clear();
 }
 
@@ -427,10 +428,10 @@ TEST_CASE("FollowsT 3.31 - 3 levels of nesting - 1 stmt per nest level - while-w
 	};
 	std::sort(expectedFollowsT.begin(), expectedFollowsT.end());
 
-	std::vector<std::pair<int, int>> actualFollows = EntityStager::getStagedFollowsT();
-	std::sort(actualFollows.begin(), actualFollows.end());
+	std::vector<std::pair<int, int>> actualFollowsT = EntityStager::getStagedFollowsT();
+	std::sort(actualFollowsT.begin(), actualFollowsT.end());
 
-	REQUIRE(actualFollows == expectedFollowsT);
+	REQUIRE(actualFollowsT == expectedFollowsT);
 	EntityStager::clear();
 }
 
@@ -443,10 +444,10 @@ TEST_CASE("FollowsT 3.32 - 3 levels of nesting - 1 stmt per nest level - while-i
 	};
 	std::sort(expectedFollowsT.begin(), expectedFollowsT.end());
 
-	std::vector<std::pair<int, int>> actualFollows = EntityStager::getStagedFollowsT();
-	std::sort(actualFollows.begin(), actualFollows.end());
+	std::vector<std::pair<int, int>> actualFollowsT = EntityStager::getStagedFollowsT();
+	std::sort(actualFollowsT.begin(), actualFollowsT.end());
 
-	REQUIRE(actualFollows == expectedFollowsT);
+	REQUIRE(actualFollowsT == expectedFollowsT);
 	EntityStager::clear();
 }
 
@@ -459,9 +460,32 @@ TEST_CASE("FollowsT 3.33 - 3 levels of nesting - 1 stmt per nest level - if-whil
 	};
 	std::sort(expectedFollowsT.begin(), expectedFollowsT.end());
 
-	std::vector<std::pair<int, int>> actualFollows = EntityStager::getStagedFollowsT();
-	std::sort(actualFollows.begin(), actualFollows.end());
+	std::vector<std::pair<int, int>> actualFollowsT = EntityStager::getStagedFollowsT();
+	std::sort(actualFollowsT.begin(), actualFollowsT.end());
 
-	REQUIRE(actualFollows == expectedFollowsT);
+	REQUIRE(actualFollowsT == expectedFollowsT);
+	EntityStager::clear();
+}
+
+TEST_CASE("FollowsT 4.1 - Complex AST") {
+	EntityStager::clear();
+	DesignExtractor::extractDesignElements(ComplexASTs::getAST4_1());
+
+	std::vector<std::pair<int, int>> expectedFollowsT{
+		{1, 2}, {2, 3}, {3, 4}, {4, 5}, 
+		{1, 3}, {1, 4}, {1, 5},
+		{2, 4}, {2, 5}, {3, 5},
+		{5, 18}, {1, 18}, {2, 18}, {3, 18}, {4, 18},
+		{7, 8}, {8, 9}, {9, 10}, {10, 14},
+		{7, 9}, {7, 10}, {7, 14},
+		{8, 10}, {8, 14}, {9, 14},
+		{11, 12}, {15, 16}, {16, 17}, {15, 17}
+	};
+	std::sort(expectedFollowsT.begin(), expectedFollowsT.end());
+
+	std::vector<std::pair<int, int>> actualFollowsT = EntityStager::getStagedFollowsT();
+	std::sort(actualFollowsT.begin(), actualFollowsT.end());
+
+	REQUIRE(actualFollowsT == expectedFollowsT);
 	EntityStager::clear();
 }

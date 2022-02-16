@@ -1,11 +1,7 @@
 #include "catch.hpp"
-//#include "models/EntityType.h"
-//#include "models/simple_parser/AST.h"
-//#include "models/simple_parser/ExprNodes.h"
-//#include "models/simple_parser/IoNodes.h"
-//#include "models/simple_parser/ProcedureNode.h"
 #include "simple_parser/EntityStager.h"
 #include "simple_parser/DesignExtractor.h"
+#include "asts/ComplexASTs.h"
 #include "asts/EntityASTs.h"
 
 //#include <memory>
@@ -1335,6 +1331,60 @@ TEST_CASE("Entity 2.32 - If stmt - Every stmt in else") {
 
 	std::vector<std::tuple<int, std::string, std::string>> expectedAssignTable{
 		{5, "a", "x 1 +"}
+	};
+	std::sort(expectedAssignTable.begin(), expectedAssignTable.end(),
+		[](auto& left, auto& right) { return std::get<0>(left) < std::get<0>(right); });
+
+	std::vector<std::tuple<int, std::string, std::string>> actualAssignTable = EntityStager::getStagedAssignStatements();
+	std::sort(actualAssignTable.begin(), actualAssignTable.end(),
+		[](auto& left, auto& right) { return std::get<0>(left) < std::get<0>(right); });
+
+	REQUIRE(actualAssignTable == expectedAssignTable);
+
+	EntityStager::clear();
+}
+
+TEST_CASE("Entity 4.1 - Complex AST") {
+	EntityStager::clear();
+	DesignExtractor::extractDesignElements(ComplexASTs::getAST4_1());
+
+	std::unordered_set<std::string> expectedProcedureTable{ "testProgram" };
+	REQUIRE(EntityStager::getStagedProcedures() == expectedProcedureTable);
+
+	std::unordered_set<std::string> expectedVarTable{ "x", "y", "length", "t", "tan", "sin", "cos"};
+	REQUIRE(EntityStager::getStagedVariables() == expectedVarTable);
+
+	std::unordered_set<std::string> expectedConstTable{ "30", "0", "1", "2", "10"};
+	REQUIRE(EntityStager::getStagedConstants() == expectedConstTable);
+
+	std::unordered_set<int> expectedStmtTable{ 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18 };
+	REQUIRE(EntityStager::getStagedStatements() == expectedStmtTable);
+
+	std::unordered_set<int> expectedPrintTable{ 18 };
+	REQUIRE(EntityStager::getStagedPrintStatements() == expectedPrintTable);
+
+	std::unordered_set<int> expectedReadTable{ 1, 2 };
+	REQUIRE(EntityStager::getStagedReadStatements() == expectedReadTable);
+
+	std::unordered_set<int> expectedWhileTable{ 6 };
+	REQUIRE(EntityStager::getStagedWhileStatements() == expectedWhileTable);
+
+	std::unordered_set<int> expectedIfTable{ 5, 10 };
+	REQUIRE(EntityStager::getStagedIfStatements() == expectedIfTable);
+
+	std::vector<std::tuple<int, std::string, std::string>> expectedAssignTable{
+		{3, "length", "x x * y y * +"},
+		{4, "t", "30"},
+		{7, "tan", "y x /"},
+		{8, "sin", "y length / cos *"},
+		{9, "cos", "x length / sin *"},
+		{11, "x", "y 2 /"},
+		{12, "y", "x 2 /"},
+		{13, "x", "0"},
+		{14, "length", "x x * y y * +"},
+		{15, "x", "10"},
+		{16, "y", "10"},
+		{17, "length", "x x * y y * +"}
 	};
 	std::sort(expectedAssignTable.begin(), expectedAssignTable.end(),
 		[](auto& left, auto& right) { return std::get<0>(left) < std::get<0>(right); });

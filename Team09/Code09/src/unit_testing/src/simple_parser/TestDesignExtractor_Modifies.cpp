@@ -2,6 +2,7 @@
 #include "simple_parser/EntityStager.h"
 #include "simple_parser/DesignExtractor.h"
 #include "asts/RelationshipASTs.h"
+#include "asts/ComplexASTs.h"
 
 #include <string>
 #include <unordered_set>
@@ -595,6 +596,29 @@ TEST_CASE("Modifies 3.33 - 3 levels of nesting - 1 stmt per nest level - if-whil
 	std::vector<std::pair<int, std::unordered_set<std::string>>> expectedModifies{
 		{1, {"x", "z"}}, {2, {"z"}}, {3, {"z"}}, {4, {"z"}},
 		{7, {"x"}}
+	};
+	std::sort(expectedModifies.begin(), expectedModifies.end(),
+		[](auto& left, auto& right) {return left.first < right.first; });
+
+	std::vector<std::pair<int, std::unordered_set<std::string>>> actualModifies = EntityStager::getStagedModifiesStatement();
+	std::sort(actualModifies.begin(), actualModifies.end(),
+		[](auto& left, auto& right) {return left.first < right.first; });
+
+	REQUIRE(actualModifies == expectedModifies);
+	EntityStager::clear();
+}
+
+TEST_CASE("Modifies 4.1 - Complex AST") {
+	EntityStager::clear();
+	DesignExtractor::extractDesignElements(ComplexASTs::getAST4_1());
+
+	std::vector<std::pair<int, std::unordered_set<std::string>>> expectedModifies{
+		{1, {"x"}}, {2, {"y"}}, {3, {"length"}}, {4, {"t"}},
+		{5, {"tan", "sin", "cos", "x", "y", "length"}},
+		{6, {"tan", "sin", "cos", "x", "y", "length"}},
+		{7, {"tan"}}, {8, {"sin"}}, {9, {"cos"}}, {10, {"x", "y"}},
+		{11, {"x"}}, {12, {"y"}}, {13, {"x"}}, {14, {"length"}},
+		{15, {"x"}}, {16, {"y"}}, {17, {"length"}}
 	};
 	std::sort(expectedModifies.begin(), expectedModifies.end(),
 		[](auto& left, auto& right) {return left.first < right.first; });

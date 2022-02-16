@@ -496,7 +496,7 @@ AST RelationshipASTs::getAST3_22() {
 	};
 	std::vector<std::shared_ptr<StmtNode>> whileStmtList{
 		std::make_shared<IfNode>(2, predYLt1, whileThenStmtList, whileElseStmtList),
-		std::make_shared<ReadNode>(5, x)
+		std::make_shared<ReadNode>(5, y)
 	};
 
 	std::vector<std::shared_ptr<StmtNode>> stmtList{
@@ -572,7 +572,7 @@ AST RelationshipASTs::getAST3_24() {
 	};
 	std::vector<std::shared_ptr<StmtNode>> elseStmtList{
 		std::make_shared<WhileNode>(8, predYLt1, elseWhileStmtList),
-		std::make_shared<ReadNode>(12, x),
+		std::make_shared<ReadNode>(12, z),
 		std::make_shared<PrintNode>(13, y)
 	};
 	std::vector<std::shared_ptr<StmtNode>> stmtList{
@@ -621,7 +621,7 @@ AST RelationshipASTs::getAST3_25() {
 		std::make_shared<AssignNode>(13, x, xPlus1, "x 1 +")
 	};
 	std::vector<std::shared_ptr<StmtNode>> elseStmtList{
-		std::make_shared<ReadNode>(8, x),
+		std::make_shared<ReadNode>(8, z),
 		std::make_shared<PrintNode>(9, y),
 		std::make_shared<WhileNode>(10, predYLt1, elseWhileStmtList)
 	};
@@ -671,7 +671,7 @@ AST RelationshipASTs::getAST3_26() {
 		std::make_shared<AssignNode>(12, x, xPlus1, "x 1 +")
 	};
 	std::vector<std::shared_ptr<StmtNode>> elseStmtList{
-		std::make_shared<ReadNode>(8, x),
+		std::make_shared<ReadNode>(8, z),
 		std::make_shared<WhileNode>(9, predYLt1, elseWhileStmtList),
 		std::make_shared<PrintNode>(13, y)
 	};
@@ -701,14 +701,14 @@ AST RelationshipASTs::getAST3_27() {
 	 */
 
 	std::vector<std::shared_ptr<StmtNode>> whileThenStmtList{
-		std::make_shared<ReadNode>(3, x),
+		std::make_shared<ReadNode>(3, y),
 		std::make_shared<PrintNode>(4, x),
 		std::make_shared<AssignNode>(5, x, xPlus1, "x 1 +")
 	};
 	std::vector<std::shared_ptr<StmtNode>> whileElseStmtList{
 		std::make_shared<ReadNode>(6, z),
 		std::make_shared<PrintNode>(7, z),
-		std::make_shared<AssignNode>(8, x, zPlus1, "z 1 +")
+		std::make_shared<AssignNode>(8, z, zPlus1, "z 1 +")
 	};
 	std::vector<std::shared_ptr<StmtNode>> whileStmtList{
 		std::make_shared<IfNode>(2, predYLt1, whileThenStmtList, whileElseStmtList),
@@ -743,14 +743,14 @@ AST RelationshipASTs::getAST3_28() {
 	 */
 
 	std::vector<std::shared_ptr<StmtNode>> whileThenStmtList{
-		std::make_shared<ReadNode>(4, x),
+		std::make_shared<ReadNode>(4, y),
 		std::make_shared<PrintNode>(5, x),
 		std::make_shared<AssignNode>(6, x, xPlus1, "x 1 +")
 	};
 	std::vector<std::shared_ptr<StmtNode>> whileElseStmtList{
 		std::make_shared<ReadNode>(7, z),
 		std::make_shared<PrintNode>(8, z),
-		std::make_shared<AssignNode>(9, x, zPlus1, "z 1 +")
+		std::make_shared<AssignNode>(9, z, zPlus1, "z 1 +")
 	};
 	std::vector<std::shared_ptr<StmtNode>> whileStmtList{
 		std::make_shared<ReadNode>(2, x),
@@ -785,14 +785,14 @@ AST RelationshipASTs::getAST3_29() {
 	 */
 
 	std::vector<std::shared_ptr<StmtNode>> whileThenStmtList{
-		std::make_shared<ReadNode>(5, x),
+		std::make_shared<ReadNode>(5, y),
 		std::make_shared<PrintNode>(6, x),
 		std::make_shared<AssignNode>(7, x, xPlus1, "x 1 +")
 	};
 	std::vector<std::shared_ptr<StmtNode>> whileElseStmtList{
 		std::make_shared<ReadNode>(8, z),
 		std::make_shared<PrintNode>(9, z),
-		std::make_shared<AssignNode>(10, x, zPlus1, "z 1 +")
+		std::make_shared<AssignNode>(10, z, zPlus1, "z 1 +")
 	};
 	std::vector<std::shared_ptr<StmtNode>> whileStmtList{
 		std::make_shared<ReadNode>(2, x),
@@ -966,7 +966,7 @@ AST RelationshipASTs::getAST3_33() {
 	};
 	std::vector<std::shared_ptr<StmtNode>> thenWhileStmtList{
 		std::make_shared<IfNode>(3, predZLt3, thenWhileThenStmtList, thenWhileElseStmtList),
-		std::make_shared<ReadNode>(6, y)
+		std::make_shared<PrintNode>(6, y)
 	};
 
 	std::vector<std::shared_ptr<StmtNode>> thenStmtList{

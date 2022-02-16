@@ -1,647 +1,578 @@
 #include "catch.hpp"
-#include "models/simple_parser/AST.h"
-#include "models/simple_parser/ExprNodes.h"
-#include "models/simple_parser/IoNodes.h"
-#include "models/simple_parser/ProcedureNode.h"
 #include "simple_parser/EntityStager.h"
 #include "simple_parser/DesignExtractor.h"
+#include "RelationshipASTs.h"
 
-#include <memory>
+#include <string>
 #include <unordered_set>
 #include <vector>
 
-TEST_CASE("Modifies - Read Statement") {
+//TODO
+//TEST_CASE("Modifies 3.1 - Single Read") {
+//	EntityStager::clear();
+//	std::vector<std::pair<int, std::unordered_set<std::string>>> expectedModifies{
+//		{2, {"x"}}
+//	};
+//	std::sort(expectedModifies.begin(), expectedModifies.end(),
+//		[](auto& left, auto& right) {return left.first < right.first; });
+//
+//	std::vector<std::pair<int, std::unordered_set<std::string>>> actualModifies = EntityStager::getStagedModifiesStatement();
+//	std::sort(actualModifies.begin(), actualModifies.end(),
+//		[](auto& left, auto& right) {return left.first < right.first; });
+//
+//	REQUIRE(actualModifies == expectedModifies);
+//	EntityStager::clear();
+//}
+//
+//TEST_CASE("Modifies 3.2 - Single Read") {
+//	EntityStager::clear();
+//	std::vector<std::pair<int, std::unordered_set<std::string>>> expectedModifies{
+//		{2, {"x"}}
+//	};
+//	std::sort(expectedModifies.begin(), expectedModifies.end(),
+//		[](auto& left, auto& right) {return left.first < right.first; });
+//
+//	std::vector<std::pair<int, std::unordered_set<std::string>>> actualModifies = EntityStager::getStagedModifiesStatement();
+//	std::sort(actualModifies.begin(), actualModifies.end(),
+//		[](auto& left, auto& right) {return left.first < right.first; });
+//
+//	REQUIRE(actualModifies == expectedModifies);
+//	EntityStager::clear();
+//}
+//
+//TEST_CASE("Modifies 3.3 - Single Advanced Assign") {
+//	EntityStager::clear();
+//	std::vector<std::pair<int, std::unordered_set<std::string>>> expectedModifies{
+//		{2, {"x"}}
+//	};
+//	std::sort(expectedModifies.begin(), expectedModifies.end(),
+//		[](auto& left, auto& right) {return left.first < right.first; });
+//
+//	std::vector<std::pair<int, std::unordered_set<std::string>>> actualModifies = EntityStager::getStagedModifiesStatement();
+//	std::sort(actualModifies.begin(), actualModifies.end(),
+//		[](auto& left, auto& right) {return left.first < right.first; });
+//
+//	REQUIRE(actualModifies == expectedModifies);
+//	EntityStager::clear();
+//}
+//
+//TEST_CASE("Modifies 3.4 - Single Advanced Assign") {
+//	EntityStager::clear();
+//	std::vector<std::pair<int, std::unordered_set<std::string>>> expectedModifies{
+//		{2, {"x"}}
+//	};
+//	std::sort(expectedModifies.begin(), expectedModifies.end(),
+//		[](auto& left, auto& right) {return left.first < right.first; });
+//
+//	std::vector<std::pair<int, std::unordered_set<std::string>>> actualModifies = EntityStager::getStagedModifiesStatement();
+//	std::sort(actualModifies.begin(), actualModifies.end(),
+//		[](auto& left, auto& right) {return left.first < right.first; });
+//
+//	REQUIRE(actualModifies == expectedModifies);
+//	EntityStager::clear();
+//}
+
+TEST_CASE("Modifies 3.5 - 2 basic statements") {
+	DesignExtractor::extractDesignElements(RelationshipASTs::getAST3_5());
+
+	std::vector<std::pair<int, std::unordered_set<std::string>>> expectedModifies{
+		{1, {"x"}}
+	};
+	std::sort(expectedModifies.begin(), expectedModifies.end(),
+		[](auto& left, auto& right) {return left.first < right.first; });
+
+	std::vector<std::pair<int, std::unordered_set<std::string>>> actualModifies = EntityStager::getStagedModifiesStatement();
+	std::sort(actualModifies.begin(), actualModifies.end(),
+		[](auto& left, auto& right) {return left.first < right.first; });
+
+	REQUIRE(actualModifies == expectedModifies);
 	EntityStager::clear();
+}
 
-	/*
-	 * Test Simple Program
-	 * procedure testProgram {
-	 * 1	read x;
-	 * }
-	 */
+TEST_CASE("Modifies 3.6 - 2 basic statements") {
+	DesignExtractor::extractDesignElements(RelationshipASTs::getAST3_6());
 
-	// building AST
-	std::shared_ptr<VariableNode> x = std::make_shared<VariableNode>("x");
+	std::vector<std::pair<int, std::unordered_set<std::string>>> expectedModifies{
+		{1, {"x"}}, {2, {"x"}}
+	};
+	std::sort(expectedModifies.begin(), expectedModifies.end(),
+		[](auto& left, auto& right) {return left.first < right.first; });
 
-	std::shared_ptr<ReadNode> stmt = std::make_shared<ReadNode>(1, x);
+	std::vector<std::pair<int, std::unordered_set<std::string>>> actualModifies = EntityStager::getStagedModifiesStatement();
+	std::sort(actualModifies.begin(), actualModifies.end(),
+		[](auto& left, auto& right) {return left.first < right.first; });
 
-	std::vector<std::shared_ptr<StmtNode>> stmtList{stmt};
-
-	std::shared_ptr<ProcedureNode> proc = std::make_shared<ProcedureNode>(stmtList, "testProgram");
-	std::vector<std::shared_ptr<ProcedureNode>> procList{proc};
-
-	AST ast = std::make_shared<ProgramNode>(procList);
-
-	DesignExtractor::extractDesignElements(ast);
-
-	std::unordered_set<std::string> vars{"x"};
-	std::vector<std::pair<int, std::unordered_set<std::string>>> expectedModifies{{1, vars}};
-
-	std::vector<std::pair<int, std::unordered_set<std::string>>> test = EntityStager::getStagedModifiesStatement();
-
-	REQUIRE(EntityStager::getStagedModifiesStatement() == expectedModifies);
-
+	REQUIRE(actualModifies == expectedModifies);
 	EntityStager::clear();
 }
 
-TEST_CASE("Modifies - Assign Statement") {
-	std::shared_ptr<VariableNode> x = std::make_shared<VariableNode>("x");
-	ExprNode y = std::make_shared<VariableNode>("y");
-	ExprNode one = std::make_shared<ConstantNode>("1");
+TEST_CASE("Modifies 3.7 - 2 basic statements") {
+	DesignExtractor::extractDesignElements(RelationshipASTs::getAST3_7());
 
-	SECTION("Assign Statement with variables one sides") {
-		EntityStager::clear();
+	std::vector<std::pair<int, std::unordered_set<std::string>>> expectedModifies{
+		{2, {"x"}}
+	};
+	std::sort(expectedModifies.begin(), expectedModifies.end(),
+		[](auto& left, auto& right) {return left.first < right.first; });
 
-		/*
-		 * Test Simple Program
-		 * procedure testProgram {
-		 * 1	x = 1;
-		 * }
-		 */
+	std::vector<std::pair<int, std::unordered_set<std::string>>> actualModifies = EntityStager::getStagedModifiesStatement();
+	std::sort(actualModifies.begin(), actualModifies.end(),
+		[](auto& left, auto& right) {return left.first < right.first; });
 
-		std::shared_ptr<AssignNode> stmt = std::make_shared<AssignNode>(1, x, one, "x 1 +");
-		std::vector<std::shared_ptr<StmtNode>> stmtList{stmt};
-
-		// set up procedure
-		std::shared_ptr<ProcedureNode> proc = std::make_shared<ProcedureNode>(stmtList, "testProgram");
-		// set up program
-		std::vector<std::shared_ptr<ProcedureNode>> procList{proc};
-
-		AST ast = std::make_shared<ProgramNode>(procList);
-
-		DesignExtractor::extractDesignElements(ast);
-
-		std::unordered_set<std::string> assign{"x"};
-		std::vector<std::pair<int, std::unordered_set<std::string>>> expectedModifies{{1, assign}};
-
-		std::vector<std::pair<int, std::unordered_set<std::string>>> test = EntityStager::getStagedModifiesStatement();
-
-		REQUIRE(EntityStager::getStagedModifiesStatement() == expectedModifies);
-
-		EntityStager::clear();
-	}
-
-	SECTION("Assign Statement with variables both sides") {
-		EntityStager::clear();
-
-		/*
-		 * Test Simple Program
-		 * procedure testProgram {
-		 * 1	x = y + 1;
-		 * }
-		 */
-
-		ExprNode expression = std::make_shared<BinaryOperatorNode>(BinaryOperator::PLUS, y, one);
-		std::shared_ptr<AssignNode> stmt = std::make_shared<AssignNode>(1, x, expression, "y 1 +");
-		std::vector<std::shared_ptr<StmtNode>> stmtList{stmt};
-
-		// set up procedure
-		std::shared_ptr<ProcedureNode> proc = std::make_shared<ProcedureNode>(stmtList, "testProgram");
-		// set up program
-		std::vector<std::shared_ptr<ProcedureNode>> procList{proc};
-
-		AST ast = std::make_shared<ProgramNode>(procList);
-
-		DesignExtractor::extractDesignElements(ast);
-
-		std::unordered_set<std::string> vars{"x"};
-		std::vector<std::pair<int, std::unordered_set<std::string>>> expectedModifies{{1, vars}};
-
-		std::vector<std::pair<int, std::unordered_set<std::string>>> test = EntityStager::getStagedModifiesStatement();
-
-		REQUIRE(EntityStager::getStagedModifiesStatement() == expectedModifies);
-
-		EntityStager::clear();
-	}
+	REQUIRE(actualModifies == expectedModifies);
+	EntityStager::clear();
 }
 
-TEST_CASE("Modifies - While Statement") {
-	std::shared_ptr<VariableNode> a = std::make_shared<VariableNode>("a");
-	std::shared_ptr<VariableNode> b = std::make_shared<VariableNode>("b");
-	std::shared_ptr<VariableNode> c = std::make_shared<VariableNode>("c");
-	std::shared_ptr<VariableNode> d = std::make_shared<VariableNode>("d");
-	std::shared_ptr<VariableNode> x = std::make_shared<VariableNode>("x");
-	std::shared_ptr<VariableNode> y = std::make_shared<VariableNode>("y");
-	std::shared_ptr<VariableNode> z = std::make_shared<VariableNode>("z");
-	std::shared_ptr<ConstantNode> one = std::make_shared<ConstantNode>("1");
-	std::shared_ptr<ConstantNode> two = std::make_shared<ConstantNode>("2");
-	std::shared_ptr<ConstantNode> onetwothree = std::make_shared<ConstantNode>("123");
+TEST_CASE("Modifies 3.8 - 3 basic statements") {
+	DesignExtractor::extractDesignElements(RelationshipASTs::getAST3_8());
 
-	// cond expression
-	std::shared_ptr<RelExprNode> yGTOne = std::make_shared<RelExprNode>(y, ComparatorOperator::GT, one);
-	std::shared_ptr<RelExprNode> xGTOne = std::make_shared<RelExprNode>(x, ComparatorOperator::GT, one);
+	std::vector<std::pair<int, std::unordered_set<std::string>>> expectedModifies{
+		{1, {"x"}}, {3, {"x"}}
+	};
+	std::sort(expectedModifies.begin(), expectedModifies.end(),
+		[](auto& left, auto& right) {return left.first < right.first; });
 
-	// assignment rhs
-	ExprNode xPlusOne = std::make_shared<BinaryOperatorNode>(BinaryOperator::PLUS, x, one);
+	std::vector<std::pair<int, std::unordered_set<std::string>>> actualModifies = EntityStager::getStagedModifiesStatement();
+	std::sort(actualModifies.begin(), actualModifies.end(),
+		[](auto& left, auto& right) {return left.first < right.first; });
 
-	SECTION("Single While loop - simple predicate") {
-		EntityStager::clear();
-
-		/*
-		 * Test Simple Program
-		 * procedure testProgram {
-		 * 1	while (y > 1) {
-		 *      }
-		 * }
-		 */
-
-		// set up while block
-		std::shared_ptr<PredicateNode> pred = std::make_shared<PredicateNode>(yGTOne);
-		std::vector<std::shared_ptr<StmtNode>> whileStmtList;
-		std::shared_ptr<WhileNode> whiles = std::make_shared<WhileNode>(1, pred, whileStmtList);
-
-		// set up procedure
-		std::vector<std::shared_ptr<StmtNode>> stmtList{whiles};
-		std::shared_ptr<ProcedureNode> proc = std::make_shared<ProcedureNode>(stmtList, "testProgram");
-		//set up program
-		std::vector<std::shared_ptr<ProcedureNode>> procList{proc};
-
-		AST ast = std::make_shared<ProgramNode>(procList);
-
-		DesignExtractor::extractDesignElements(ast);
-
-		std::vector<std::pair<int, std::unordered_set<std::string>>> test = EntityStager::getStagedModifiesStatement();
-
-		REQUIRE(EntityStager::getStagedModifiesStatement().empty());
-
-		EntityStager::clear();
-	}
-
-	SECTION("Single While loop - simple predicate - read statement") {
-		EntityStager::clear();
-
-		/*
-		 * Test Simple Program
-		 * procedure testProgram {
-		 * 1	while (y > 1) {
-		 * 2        read x;
-		 *      }
-		 * }
-		 */
-
-		// set up while block
-		std::shared_ptr<PredicateNode> pred = std::make_shared<PredicateNode>(yGTOne);
-		std::shared_ptr<ReadNode> read = std::make_shared<ReadNode>(2, x);
-		std::vector<std::shared_ptr<StmtNode>> whileStmtList{read};
-		std::shared_ptr<WhileNode> whiles = std::make_shared<WhileNode>(1, pred, whileStmtList);
-
-		// set up procedure
-		std::vector<std::shared_ptr<StmtNode>> stmtList{whiles};
-		std::shared_ptr<ProcedureNode> proc = std::make_shared<ProcedureNode>(stmtList, "testProgram");
-		// set up program
-		std::vector<std::shared_ptr<ProcedureNode>> procList{proc};
-
-		AST ast = std::make_shared<ProgramNode>(procList);
-
-		DesignExtractor::extractDesignElements(ast);
-
-		std::unordered_set<std::string> whileModifies{"x"};
-		std::unordered_set<std::string> readModifies{"x"};
-		std::vector<std::pair<int, std::unordered_set<std::string>>> expectedModifies{
-			{2, readModifies},
-			{1, whileModifies}
-		};
-
-		std::vector<std::pair<int, std::unordered_set<std::string>>> test = EntityStager::getStagedModifiesStatement();
-
-		REQUIRE(EntityStager::getStagedModifiesStatement() == expectedModifies);
-
-		EntityStager::clear();
-	}
-
-	SECTION("Single While loop - simple predicate - assign statement") {
-		EntityStager::clear();
-
-		/*
-		 * Test Simple Program
-		 * procedure testProgram {
-		 * 1	while (y > 1) {
-		 * 2    	y = x + 1;
-		 *      }
-		 * }
-		 */
-
-		// set up while block
-		std::shared_ptr<PredicateNode> pred = std::make_shared<PredicateNode>(yGTOne);
-		std::shared_ptr<AssignNode> assign = std::make_shared<AssignNode>(2, y, xPlusOne, "y 1 +");
-		std::vector<std::shared_ptr<StmtNode>> whileStmtList{assign};
-		std::shared_ptr<WhileNode> whiles = std::make_shared<WhileNode>(1, pred, whileStmtList);
-
-		// set up procedure
-		std::vector<std::shared_ptr<StmtNode>> stmtList{whiles};
-		std::shared_ptr<ProcedureNode> proc = std::make_shared<ProcedureNode>(stmtList, "testProgram");
-		// set up program
-		std::vector<std::shared_ptr<ProcedureNode>> procList{proc};
-
-		AST ast = std::make_shared<ProgramNode>(procList);
-
-		DesignExtractor::extractDesignElements(ast);
-
-		std::unordered_set<std::string> whileModifies{"y"};
-		std::unordered_set<std::string> assignModifies{"y"};
-		std::vector<std::pair<int, std::unordered_set<std::string>>> expectedModifies{
-			{2, assignModifies},
-			{1, whileModifies}
-		};
-
-		std::vector<std::pair<int, std::unordered_set<std::string>>> test = EntityStager::getStagedModifiesStatement();
-
-		REQUIRE(EntityStager::getStagedModifiesStatement() == expectedModifies);
-
-		EntityStager::clear();
-	}
-
-		//todo: everything in between
-	SECTION("Single While loop - complex predicate - multiple lines") {
-		EntityStager::clear();
-
-		/*
-		 * Test Simple Program
-		 * procedure testProgram {
-		 * 1	while (y + 2 > z - 1 && a == 123) {
-		 * 2    	d = d + 1;
-		 * 3        print c;
-		 * 4        read b;
-		 *      }
-		 * }
-		 */
-
-		std::shared_ptr<BinaryOperatorNode> leftRelLhs = std::make_shared<BinaryOperatorNode>(BinaryOperator::PLUS, y,
-																							  two);
-		std::shared_ptr<BinaryOperatorNode> leftRelRhs = std::make_shared<BinaryOperatorNode>(BinaryOperator::MINUS, z,
-																							  one);
-
-		std::shared_ptr<RelExprNode> leftRel = std::make_shared<RelExprNode>(leftRelLhs, ComparatorOperator::GT,
-																			 leftRelRhs);
-		std::shared_ptr<RelExprNode> rightRel = std::make_shared<RelExprNode>(a, ComparatorOperator::EQ, onetwothree);
-
-		std::shared_ptr<PredicateNode> leftPred = std::make_shared<PredicateNode>(leftRel);
-		std::shared_ptr<PredicateNode> rightPred = std::make_shared<PredicateNode>(rightRel);
-
-		std::shared_ptr<PredicateNode> pred = std::make_shared<PredicateNode>(leftPred, ConditionalOperator::AND,
-																			  rightPred);
-
-		// set up while block
-		ExprNode expression = std::make_shared<BinaryOperatorNode>(BinaryOperator::PLUS, d, one);
-		std::shared_ptr<AssignNode> assign = std::make_shared<AssignNode>(2, d, expression, "d 1 +");
-		std::shared_ptr<PrintNode> print = std::make_shared<PrintNode>(3, c);
-		std::shared_ptr<ReadNode> read = std::make_shared<ReadNode>(4, b);
-		std::vector<std::shared_ptr<StmtNode>> whileStmtList{assign, print, read};
-		std::shared_ptr<WhileNode> whiles = std::make_shared<WhileNode>(1, pred, whileStmtList);
-
-		// set up procedure
-		std::vector<std::shared_ptr<StmtNode>> stmtList{whiles};
-		std::shared_ptr<ProcedureNode> proc = std::make_shared<ProcedureNode>(stmtList, "testProgram");
-		// set up program
-		std::vector<std::shared_ptr<ProcedureNode>> procList{proc};
-
-		AST ast = std::make_shared<ProgramNode>(procList);
-
-		DesignExtractor::extractDesignElements(ast);
-
-		std::unordered_set<std::string> whileModifies{"d", "b"};
-		std::unordered_set<std::string> assignModifies{"d"};
-		std::unordered_set<std::string> readModifies{"b"};
-		std::vector<std::pair<int, std::unordered_set<std::string>>> expectedModifies{
-			{2, assignModifies},
-			{4, readModifies},
-			{1, whileModifies}
-		};
-
-		std::vector<std::pair<int, std::unordered_set<std::string>>> test = EntityStager::getStagedModifiesStatement();
-
-		REQUIRE(EntityStager::getStagedModifiesStatement() == expectedModifies);
-
-		EntityStager::clear();
-	}
-
-	SECTION("Double Nested While loop - simple predicate") {
-		EntityStager::clear();
-
-		/*
-		 * Test Simple Program
-		 * procedure testProgram {
-		 * 1	while (y > 1) {
-		 * 2        while (x > 1) {
-		 * 3            d = d + 1;
-		 *          }
-		 * 4        read z;
-		 *      }
-		 * }
-		 */
-
-		std::shared_ptr<PredicateNode> outerPred = std::make_shared<PredicateNode>(yGTOne);
-		std::shared_ptr<PredicateNode> innerPred = std::make_shared<PredicateNode>(xGTOne);
-
-		ExprNode expression = std::make_shared<BinaryOperatorNode>(BinaryOperator::PLUS, d, one);
-		std::shared_ptr<AssignNode> assign = std::make_shared<AssignNode>(3, d, expression, "d 1 +");
-		std::vector<std::shared_ptr<StmtNode>> innerWhileStmtList{assign};
-
-		std::shared_ptr<WhileNode> innerWhile = std::make_shared<WhileNode>(2, innerPred, innerWhileStmtList);
-		std::shared_ptr<ReadNode> read = std::make_shared<ReadNode>(4, z);
-		std::vector<std::shared_ptr<StmtNode>> outerWhileStmtList{innerWhile, read};
-
-		std::shared_ptr<WhileNode> outerWhile = std::make_shared<WhileNode>(1, outerPred, outerWhileStmtList);
-
-		// set up procedure
-		std::vector<std::shared_ptr<StmtNode>> stmtList{outerWhile};
-		std::shared_ptr<ProcedureNode> proc = std::make_shared<ProcedureNode>(stmtList, "testProgram");
-		// set up program
-		std::vector<std::shared_ptr<ProcedureNode>> procList{proc};
-
-		AST ast = std::make_shared<ProgramNode>(procList);
-
-		DesignExtractor::extractDesignElements(ast);
-
-		std::unordered_set<std::string> assignModifies{"d"};
-		std::unordered_set<std::string> readModifies{"z"};
-		std::unordered_set<std::string> innerWhileModifies{"d"};
-		std::unordered_set<std::string> outerWhileModifies{"d", "z"};
-		std::vector<std::pair<int, std::unordered_set<std::string>>> expectedModifies{
-			{3, assignModifies},
-			{2, innerWhileModifies},
-			{4, readModifies},
-			{1, outerWhileModifies}
-		};
-
-		std::vector<std::pair<int, std::unordered_set<std::string>>> test = EntityStager::getStagedModifiesStatement();
-
-		REQUIRE(EntityStager::getStagedModifiesStatement() == expectedModifies);
-
-		EntityStager::clear();
-	}
+	REQUIRE(actualModifies == expectedModifies);
+	EntityStager::clear();
 }
 
-TEST_CASE("Modifies - If Statement") {
-	std::shared_ptr<VariableNode> a = std::make_shared<VariableNode>("a");
-	std::shared_ptr<VariableNode> b = std::make_shared<VariableNode>("b");
-	std::shared_ptr<VariableNode> c = std::make_shared<VariableNode>("c");
-	std::shared_ptr<VariableNode> d = std::make_shared<VariableNode>("d");
-	std::shared_ptr<VariableNode> x = std::make_shared<VariableNode>("x");
-	std::shared_ptr<VariableNode> y = std::make_shared<VariableNode>("y");
-	std::shared_ptr<VariableNode> z = std::make_shared<VariableNode>("z");
-	std::shared_ptr<ConstantNode> one = std::make_shared<ConstantNode>("1");
-	std::shared_ptr<ConstantNode> two = std::make_shared<ConstantNode>("2");
-	std::shared_ptr<ConstantNode> onetwothree = std::make_shared<ConstantNode>("123");
+TEST_CASE("Modifies 3.9 - 3 basic statements") {
+	DesignExtractor::extractDesignElements(RelationshipASTs::getAST3_9());
 
-	// cond expression
-	std::shared_ptr<RelExprNode> yGTOne = std::make_shared<RelExprNode>(y, ComparatorOperator::GT, one);
+	std::vector<std::pair<int, std::unordered_set<std::string>>> expectedModifies{
+		{1, {"x"}}, {2, {"y"}}, {3, {"z"}}
+	};
+	std::sort(expectedModifies.begin(), expectedModifies.end(),
+		[](auto& left, auto& right) {return left.first < right.first; });
 
-	// assignment rhs
-	ExprNode xPlusOne = std::make_shared<BinaryOperatorNode>(BinaryOperator::PLUS, x, one);
+	std::vector<std::pair<int, std::unordered_set<std::string>>> actualModifies = EntityStager::getStagedModifiesStatement();
+	std::sort(actualModifies.begin(), actualModifies.end(),
+		[](auto& left, auto& right) {return left.first < right.first; });
 
-	SECTION("Single If - simple predicate") {
-		EntityStager::clear();
+	REQUIRE(actualModifies == expectedModifies);
+	EntityStager::clear();
+}
 
-		/*
-		 * Test Simple Program
-		 * procedure testProgram {
-		 * 1	if (y > 1) then {} else {}
-		 *      }
-		 * }
-		 */
+TEST_CASE("Modifies 3.10 - 3 basic statements") {
+	DesignExtractor::extractDesignElements(RelationshipASTs::getAST3_10());
 
-		// set up if block
-		std::shared_ptr<PredicateNode> pred = std::make_shared<PredicateNode>(yGTOne);
-		std::vector<std::shared_ptr<StmtNode>> thenStmtList;
-		std::vector<std::shared_ptr<StmtNode>> elseStmtList;
-		std::shared_ptr<IfNode> ifs = std::make_shared<IfNode>(1, pred, thenStmtList, elseStmtList);
+	std::vector<std::pair<int, std::unordered_set<std::string>>> expectedModifies{
+		{1, {"x"}}, {3, {"x"}},
+	};
+	std::sort(expectedModifies.begin(), expectedModifies.end(),
+		[](auto& left, auto& right) {return left.first < right.first; });
 
-		// set up procedure
-		std::vector<std::shared_ptr<StmtNode>> stmtList{ifs};
-		std::shared_ptr<ProcedureNode> proc = std::make_shared<ProcedureNode>(stmtList, "testProgram");
-		// set up program
-		std::vector<std::shared_ptr<ProcedureNode>> procList{proc};
+	std::vector<std::pair<int, std::unordered_set<std::string>>> actualModifies = EntityStager::getStagedModifiesStatement();
+	std::sort(actualModifies.begin(), actualModifies.end(),
+		[](auto& left, auto& right) {return left.first < right.first; });
 
-		AST ast = std::make_shared<ProgramNode>(procList);
+	REQUIRE(actualModifies == expectedModifies);
+	EntityStager::clear();
+}
 
-		DesignExtractor::extractDesignElements(ast);
+TEST_CASE("Modifies 3.11 - 2 basic statements + 1 container - while at end of procedure") {
+	DesignExtractor::extractDesignElements(RelationshipASTs::getAST3_11());
 
-		std::vector<std::pair<int, std::unordered_set<std::string>>> test = EntityStager::getStagedModifiesStatement();
+	std::vector<std::pair<int, std::unordered_set<std::string>>> expectedModifies{
+		{1, {"x"}}, {3, {"x"}}, {4, {"x"}}
+	};
+	std::sort(expectedModifies.begin(), expectedModifies.end(),
+		[](auto& left, auto& right) {return left.first < right.first; });
 
-		REQUIRE(EntityStager::getStagedModifiesStatement().empty());
+	std::vector<std::pair<int, std::unordered_set<std::string>>> actualModifies = EntityStager::getStagedModifiesStatement();
+	std::sort(actualModifies.begin(), actualModifies.end(),
+		[](auto& left, auto& right) {return left.first < right.first; });
 
-		EntityStager::clear();
-	}
+	REQUIRE(actualModifies == expectedModifies);
+	EntityStager::clear();
+}
 
-	SECTION("Single if - simple predicate - read statement") {
-		EntityStager::clear();
+TEST_CASE("Modifies 3.12 - 2 basic statements + 1 container - while at start of procedure") {
+	DesignExtractor::extractDesignElements(RelationshipASTs::getAST3_12());
 
-		/*
-		 * Test Simple Program
-		 * procedure testProgram {
-		 * 1	if (y > 1) then {
-		 * 2        read z;
-		 *      } else {}
-		 * }
-		 */
+	std::vector<std::pair<int, std::unordered_set<std::string>>> expectedModifies{
+		{1, {"x"}}, {2, {"x"}}, {3, {"x"}}
+	};
+	std::sort(expectedModifies.begin(), expectedModifies.end(),
+		[](auto& left, auto& right) {return left.first < right.first; });
 
-		// set up if block
-		std::shared_ptr<PredicateNode> pred = std::make_shared<PredicateNode>(yGTOne);
-		std::shared_ptr<ReadNode> read = std::make_shared<ReadNode>(2, z);
-		std::vector<std::shared_ptr<StmtNode>> thenStmtList{read};
-		std::vector<std::shared_ptr<StmtNode>> elseStmtList;
-		std::shared_ptr<IfNode> ifs = std::make_shared<IfNode>(1, pred, thenStmtList, elseStmtList);
+	std::vector<std::pair<int, std::unordered_set<std::string>>> actualModifies = EntityStager::getStagedModifiesStatement();
+	std::sort(actualModifies.begin(), actualModifies.end(),
+		[](auto& left, auto& right) {return left.first < right.first; });
 
-		// set up procedure
-		std::vector<std::shared_ptr<StmtNode>> stmtList{ifs};
-		std::shared_ptr<ProcedureNode> proc = std::make_shared<ProcedureNode>(stmtList, "testProgram");
-		// set up program
-		std::vector<std::shared_ptr<ProcedureNode>> procList{proc};
+	REQUIRE(actualModifies == expectedModifies);
+	EntityStager::clear();
+}
 
-		AST ast = std::make_shared<ProgramNode>(procList);
+TEST_CASE("Modifies 3.13 - 2 basic statements + 1 container - while at middle of procedure") {
+	DesignExtractor::extractDesignElements(RelationshipASTs::getAST3_13());
 
-		DesignExtractor::extractDesignElements(ast);
+	std::vector<std::pair<int, std::unordered_set<std::string>>> expectedModifies{
+		{1, {"x"}}, {2, {"x"}}, {3, {"x"}}
+	};
+	std::sort(expectedModifies.begin(), expectedModifies.end(),
+		[](auto& left, auto& right) {return left.first < right.first; });
 
-		std::unordered_set<std::string> readModifies{"z"};
-		std::unordered_set<std::string> ifModifies{"z"};
-		std::vector<std::pair<int, std::unordered_set<std::string>>> expectedModifies{
-			{2, readModifies},
-			{1, ifModifies}
-		};
+	std::vector<std::pair<int, std::unordered_set<std::string>>> actualModifies = EntityStager::getStagedModifiesStatement();
+	std::sort(actualModifies.begin(), actualModifies.end(),
+		[](auto& left, auto& right) {return left.first < right.first; });
 
-		std::vector<std::pair<int, std::unordered_set<std::string>>> test = EntityStager::getStagedModifiesStatement();
+	REQUIRE(actualModifies == expectedModifies);
+	EntityStager::clear();
+}
 
-		REQUIRE(EntityStager::getStagedModifiesStatement() == expectedModifies);
+TEST_CASE("Modifies 3.14 - 2 basic statements + 1 container - if at end of procedure") {
+	DesignExtractor::extractDesignElements(RelationshipASTs::getAST3_14());
 
-		EntityStager::clear();
-	}
+	std::vector<std::pair<int, std::unordered_set<std::string>>> expectedModifies{
+		{1, {"x"}}, {3, {"x"}}, {4, {"x"}}
+	};
+	std::sort(expectedModifies.begin(), expectedModifies.end(),
+		[](auto& left, auto& right) {return left.first < right.first; });
 
-	SECTION("Single If - simple predicate - assign statement") {
-		EntityStager::clear();
+	std::vector<std::pair<int, std::unordered_set<std::string>>> actualModifies = EntityStager::getStagedModifiesStatement();
+	std::sort(actualModifies.begin(), actualModifies.end(),
+		[](auto& left, auto& right) {return left.first < right.first; });
 
-		/*
-		 * Test Simple Program
-		 * procedure testProgram {
-		 * 1	if (y > 1) then {
-		 * 2        z = z + 1
-		 *      } else {}
-		 * 3    x = x + 1;
-		 * }
-		 */
+	REQUIRE(actualModifies == expectedModifies);
+	EntityStager::clear();
+}
 
-		std::shared_ptr<PredicateNode> pred = std::make_shared<PredicateNode>(yGTOne);
+TEST_CASE("Modifies 3.15 - 2 basic statements + 1 container - if at start of procedure") {
+	DesignExtractor::extractDesignElements(RelationshipASTs::getAST3_15());
 
-		// set up if block
-		std::vector<std::shared_ptr<StmtNode>> elseStmtList;
-		ExprNode expressionZ = std::make_shared<BinaryOperatorNode>(BinaryOperator::PLUS, z, one);
-		std::shared_ptr<AssignNode> assignZ = std::make_shared<AssignNode>(2, z, expressionZ, "z 1 +");
-		std::vector<std::shared_ptr<StmtNode>> thenStmtList{assignZ};
-		std::shared_ptr<IfNode> ifs = std::make_shared<IfNode>(1, pred, thenStmtList, elseStmtList);
+	std::vector<std::pair<int, std::unordered_set<std::string>>> expectedModifies{
+		{1, {"x"}}, {2, {"x"}}, {4, {"x"}}
+	};
+	std::sort(expectedModifies.begin(), expectedModifies.end(),
+		[](auto& left, auto& right) {return left.first < right.first; });
 
-		// set up procedure
-		std::shared_ptr<AssignNode> assignX = std::make_shared<AssignNode>(3, x, xPlusOne, "x 1 +");
-		std::vector<std::shared_ptr<StmtNode>> stmtList{ifs, assignX};
-		std::shared_ptr<ProcedureNode> proc = std::make_shared<ProcedureNode>(stmtList, "testProgram");
-		// set up program
-		std::vector<std::shared_ptr<ProcedureNode>> procList{proc};
+	std::vector<std::pair<int, std::unordered_set<std::string>>> actualModifies = EntityStager::getStagedModifiesStatement();
+	std::sort(actualModifies.begin(), actualModifies.end(),
+		[](auto& left, auto& right) {return left.first < right.first; });
 
-		AST ast = std::make_shared<ProgramNode>(procList);
+	REQUIRE(actualModifies == expectedModifies);
+	EntityStager::clear();
+}
 
-		DesignExtractor::extractDesignElements(ast);
+TEST_CASE("Modifies 3.16 - 2 basic statements + 1 container - if at middle of procedure") {
+	DesignExtractor::extractDesignElements(RelationshipASTs::getAST3_16());
 
-		std::unordered_set<std::string> innerAssignModifies{"z"};
-		std::unordered_set<std::string> outsideAssignModifies{"x"};
-		std::unordered_set<std::string> ifModifies{"z"};
-		std::vector<std::pair<int, std::unordered_set<std::string>>> expectedModifies{
-			{2, innerAssignModifies},
-			{1, ifModifies},
-			{3, outsideAssignModifies}
-		};
+	std::vector<std::pair<int, std::unordered_set<std::string>>> expectedModifies{
+		{1, {"x"}}, {2, {"x"}}, {3, {"x"}}
+	};
+	std::sort(expectedModifies.begin(), expectedModifies.end(),
+		[](auto& left, auto& right) {return left.first < right.first; });
 
-		std::vector<std::pair<int, std::unordered_set<std::string>>> test = EntityStager::getStagedModifiesStatement();
+	std::vector<std::pair<int, std::unordered_set<std::string>>> actualModifies = EntityStager::getStagedModifiesStatement();
+	std::sort(actualModifies.begin(), actualModifies.end(),
+		[](auto& left, auto& right) {return left.first < right.first; });
 
-		REQUIRE(EntityStager::getStagedModifiesStatement() == expectedModifies);
+	REQUIRE(actualModifies == expectedModifies);
+	EntityStager::clear();
+}
 
-		EntityStager::clear();
-	}
+TEST_CASE("Modifies 3.17 - 2 container statements same nesting level") {
+	DesignExtractor::extractDesignElements(RelationshipASTs::getAST3_17());
 
-		//todo: everything in between
-	SECTION("Single If - complex predicate - multiple lines") {
-		EntityStager::clear();
+	std::vector<std::pair<int, std::unordered_set<std::string>>> expectedModifies{
+		{1, {"x"}}, {2, {"x"}}, {3, {"x"}}, {4, {"x"}}
+	};
+	std::sort(expectedModifies.begin(), expectedModifies.end(),
+		[](auto& left, auto& right) {return left.first < right.first; });
 
-		/*
-		* Test Simple Program
-		* procedure testProgram {
-		* 1    if (y + 2 > z - 1 && a == 123) then {
-		*      } else {
-		* 2        d = d + 1;
-		* 3        print c;
-		* 4        read b;
-		*      }
-		* }
-		*/
+	std::vector<std::pair<int, std::unordered_set<std::string>>> actualModifies = EntityStager::getStagedModifiesStatement();
+	std::sort(actualModifies.begin(), actualModifies.end(),
+		[](auto& left, auto& right) {return left.first < right.first; });
 
+	REQUIRE(actualModifies == expectedModifies);
+	EntityStager::clear();
+}
 
+TEST_CASE("Modifies 3.18 - 1 container - 3 basic statements - while") {
+	DesignExtractor::extractDesignElements(RelationshipASTs::getAST3_18());
 
-		std::shared_ptr<BinaryOperatorNode> leftRelLhs = std::make_shared<BinaryOperatorNode>(BinaryOperator::PLUS, y,
-																							  two);
-		std::shared_ptr<BinaryOperatorNode> leftRelRhs = std::make_shared<BinaryOperatorNode>(BinaryOperator::MINUS, z,
-																							  one);
+	std::vector<std::pair<int, std::unordered_set<std::string>>> expectedModifies{
+		{1, {"x"}}, {2, {"x"}}, {4, {"x"}},
+	};
+	std::sort(expectedModifies.begin(), expectedModifies.end(),
+		[](auto& left, auto& right) {return left.first < right.first; });
 
-		std::shared_ptr<RelExprNode> leftRel = std::make_shared<RelExprNode>(leftRelLhs, ComparatorOperator::GT,
-																			 leftRelRhs);
-		std::shared_ptr<RelExprNode> rightRel = std::make_shared<RelExprNode>(a, ComparatorOperator::EQ, onetwothree);
+	std::vector<std::pair<int, std::unordered_set<std::string>>> actualModifies = EntityStager::getStagedModifiesStatement();
+	std::sort(actualModifies.begin(), actualModifies.end(),
+		[](auto& left, auto& right) {return left.first < right.first; });
 
-		std::shared_ptr<PredicateNode> leftPred = std::make_shared<PredicateNode>(leftRel);
-		std::shared_ptr<PredicateNode> rightPred = std::make_shared<PredicateNode>(rightRel);
+	REQUIRE(actualModifies == expectedModifies);
+	EntityStager::clear();
+}
 
-		std::shared_ptr<PredicateNode> pred = std::make_shared<PredicateNode>(leftPred, ConditionalOperator::AND,
-																			  rightPred);
+TEST_CASE("Modifies 3.19 - 1 container - 3 basic statements - if") {
+	DesignExtractor::extractDesignElements(RelationshipASTs::getAST3_19());
 
-		std::vector<std::shared_ptr<StmtNode>> thenStmtList;
-		ExprNode expression = std::make_shared<BinaryOperatorNode>(BinaryOperator::PLUS, d, one);
-		std::shared_ptr<AssignNode> assign = std::make_shared<AssignNode>(2, d, expression, "d 1 +");
-		std::shared_ptr<PrintNode> print = std::make_shared<PrintNode>(3, c);
-		std::shared_ptr<ReadNode> read = std::make_shared<ReadNode>(4, b);
-		std::vector<std::shared_ptr<StmtNode>> elseStmtList{assign, print, read};
+	std::vector<std::pair<int, std::unordered_set<std::string>>> expectedModifies{
+		{1, {"x", "y"}}, {2, {"x"}}, {4, {"x"}}, {5, {"y"}}, {7, {"y"}}
+	};
+	std::sort(expectedModifies.begin(), expectedModifies.end(),
+		[](auto& left, auto& right) {return left.first < right.first; });
 
-		std::shared_ptr<IfNode> ifs = std::make_shared<IfNode>(1, pred, thenStmtList, elseStmtList);
+	std::vector<std::pair<int, std::unordered_set<std::string>>> actualModifies = EntityStager::getStagedModifiesStatement();
+	std::sort(actualModifies.begin(), actualModifies.end(),
+		[](auto& left, auto& right) {return left.first < right.first; });
 
-		// set up procedure
-		std::vector<std::shared_ptr<StmtNode>> stmtList{ifs};
-		std::shared_ptr<ProcedureNode> proc = std::make_shared<ProcedureNode>(stmtList, "testProgram");
-		// set up program
-		std::vector<std::shared_ptr<ProcedureNode>> procList{proc};
+	REQUIRE(actualModifies == expectedModifies);
+	EntityStager::clear();
+}
 
-		AST ast = std::make_shared<ProgramNode>(procList);
+TEST_CASE("Modifies 3.20 - 2 nesting levels; 1 basic statement per level - if-while") {
+	DesignExtractor::extractDesignElements(RelationshipASTs::getAST3_20());
 
-		DesignExtractor::extractDesignElements(ast);
+	std::vector<std::pair<int, std::unordered_set<std::string>>> expectedModifies{
+		{1, {"x", "y", "z"}}, {2, {"x"}}, {3, {"y"}}, {4, {"y"}},
+		{5, {"z"}}, {6, {"y"}},{7, {"y"}},
+	};
+	std::sort(expectedModifies.begin(), expectedModifies.end(),
+		[](auto& left, auto& right) {return left.first < right.first; });
 
-		std::unordered_set<std::string> ifModifies{"d", "b"};
-		std::unordered_set<std::string> assignModifies{"d"};
-		std::unordered_set<std::string> readModifies{"b"};
-		std::vector<std::pair<int, std::unordered_set<std::string>>> expectedModifies{
-			{2, assignModifies},
-			{4, readModifies},
-			{1, ifModifies}
-		};
+	std::vector<std::pair<int, std::unordered_set<std::string>>> actualModifies = EntityStager::getStagedModifiesStatement();
+	std::sort(actualModifies.begin(), actualModifies.end(),
+		[](auto& left, auto& right) {return left.first < right.first; });
 
-		std::vector<std::pair<int, std::unordered_set<std::string>>> test = EntityStager::getStagedModifiesStatement();
+	REQUIRE(actualModifies == expectedModifies);
+	EntityStager::clear();
+}
 
-		REQUIRE(EntityStager::getStagedModifiesStatement() == expectedModifies);
+TEST_CASE("Modifies 3.21 - 2 nesting levels; 1 basic statement per level - if-if") {
+	DesignExtractor::extractDesignElements(RelationshipASTs::getAST3_21());
 
-		EntityStager::clear();
-	}
+	std::vector<std::pair<int, std::unordered_set<std::string>>> expectedModifies{
+		{1, {"x", "y", "z"}}, {2, {"x"}}, {3, {"y"}}, {4, {"y"}},
+		{6, {"z"}}, {7, {"z"}}, {8, {"z"}}
+	};
+	std::sort(expectedModifies.begin(), expectedModifies.end(),
+		[](auto& left, auto& right) {return left.first < right.first; });
 
-	SECTION("Double Nested if - simple predicate") {
-		EntityStager::clear();
+	std::vector<std::pair<int, std::unordered_set<std::string>>> actualModifies = EntityStager::getStagedModifiesStatement();
+	std::sort(actualModifies.begin(), actualModifies.end(),
+		[](auto& left, auto& right) {return left.first < right.first; });
 
-		/*
-		 * Test Simple Program
-		 * procedure testProgram {
-		 * 1	if (y > 1) then {
-		 * 2        if (x > 1) then {
-		 * 3            d = d + 1;
-		 *          } else {}
-		 * 4        read z;
-		 *      } else {}
-		 * }
-		 */
+	REQUIRE(actualModifies == expectedModifies);
+	EntityStager::clear();
+}
 
-		std::shared_ptr<RelExprNode> outerRel = std::make_shared<RelExprNode>(y, ComparatorOperator::GT, one);
-		std::shared_ptr<PredicateNode> outerPred = std::make_shared<PredicateNode>(outerRel);
-		std::shared_ptr<RelExprNode> innerRel = std::make_shared<RelExprNode>(x, ComparatorOperator::GT, one);
-		std::shared_ptr<PredicateNode> innerPred = std::make_shared<PredicateNode>(innerRel);
+TEST_CASE("Modifies 3.22 - 2 nesting levels; 1 basic statement per level - while-if") {
+	DesignExtractor::extractDesignElements(RelationshipASTs::getAST3_22());
 
-		std::vector<std::shared_ptr<StmtNode>> innerElseStmtList;
-		ExprNode expression = std::make_shared<BinaryOperatorNode>(BinaryOperator::PLUS, d, one);
-		std::shared_ptr<AssignNode> assign = std::make_shared<AssignNode>(3, d, expression, "d 1 +");
-		std::vector<std::shared_ptr<StmtNode>> innerThenStmtList{assign};
+	std::vector<std::pair<int, std::unordered_set<std::string>>> expectedModifies{
+		{1, {"x", "y", "z"}}, {2, {"x", "z"}}, {3, {"x"}}, {4, {"z"}}, {5, {"y"}},
+	};
+	std::sort(expectedModifies.begin(), expectedModifies.end(),
+		[](auto& left, auto& right) {return left.first < right.first; });
 
-		std::vector<std::shared_ptr<StmtNode>> outerElseStmtList;
-		std::shared_ptr<IfNode> innerIf = std::make_shared<IfNode>(2, innerPred, innerThenStmtList, innerElseStmtList);
-		std::shared_ptr<ReadNode> read = std::make_shared<ReadNode>(4, z);
-		std::vector<std::shared_ptr<StmtNode>> outerThenStmtList{innerIf, read};
+	std::vector<std::pair<int, std::unordered_set<std::string>>> actualModifies = EntityStager::getStagedModifiesStatement();
+	std::sort(actualModifies.begin(), actualModifies.end(),
+		[](auto& left, auto& right) {return left.first < right.first; });
 
-		std::shared_ptr<IfNode> outerWhile = std::make_shared<IfNode>(1, outerPred, outerThenStmtList,
-																	  outerElseStmtList);
+	REQUIRE(actualModifies == expectedModifies);
+	EntityStager::clear();
+}
 
-		// set up procedure
-		std::vector<std::shared_ptr<StmtNode>> stmtList{outerWhile};
-		std::shared_ptr<ProcedureNode> proc = std::make_shared<ProcedureNode>(stmtList, "testProgram");
-		// set up program
-		std::vector<std::shared_ptr<ProcedureNode>> procList{proc};
+TEST_CASE("Modifies 3.23 - 2 nesting levels; 1 basic statement per level - while-while") {
+	DesignExtractor::extractDesignElements(RelationshipASTs::getAST3_23());
 
-		AST ast = std::make_shared<ProgramNode>(procList);
+	std::vector<std::pair<int, std::unordered_set<std::string>>> expectedModifies{
+		{1, {"x", "y"}}, {2, {"x"}}, {3, {"x"}}, {4, {"y"}}
+	};
+	std::sort(expectedModifies.begin(), expectedModifies.end(),
+		[](auto& left, auto& right) {return left.first < right.first; });
 
-		DesignExtractor::extractDesignElements(ast);
+	std::vector<std::pair<int, std::unordered_set<std::string>>> actualModifies = EntityStager::getStagedModifiesStatement();
+	std::sort(actualModifies.begin(), actualModifies.end(),
+		[](auto& left, auto& right) {return left.first < right.first; });
 
-		std::unordered_set<std::string> assignModifies{"d"};
-		std::unordered_set<std::string> readModifies{"z"};
-		std::unordered_set<std::string> innerIfModifies{"d"};
-		std::unordered_set<std::string> outerIfModifies{"d", "z"};
-		std::vector<std::pair<int, std::unordered_set<std::string>>> expectedModifies{
-			{3, assignModifies},
-			{2, innerIfModifies},
-			{4, readModifies},
-			{1, outerIfModifies}
-		};
+	REQUIRE(actualModifies == expectedModifies);
+	EntityStager::clear();
+}
 
-		std::vector<std::pair<int, std::unordered_set<std::string>>> test = EntityStager::getStagedModifiesStatement();
+TEST_CASE("Modifies 3.24 - 2 nest levels; 3 statements per nest level - if-while perm 1") {
+	DesignExtractor::extractDesignElements(RelationshipASTs::getAST3_24());
 
-		REQUIRE(EntityStager::getStagedModifiesStatement() == expectedModifies);
+	std::vector<std::pair<int, std::unordered_set<std::string>>> expectedModifies{
+		{1, {"x", "y", "z"}}, {2, {"x"}}, {3, {"x", "y"}}, {4, {"y"}}, {6, {"x"}}, {7, {"x"}},
+		{8, {"x", "y"}}, {9, {"y"}}, {11, {"x"}}, {12, {"z"}}
+	};
+	std::sort(expectedModifies.begin(), expectedModifies.end(),
+		[](auto& left, auto& right) {return left.first < right.first; });
 
-		EntityStager::clear();
-	}
+	std::vector<std::pair<int, std::unordered_set<std::string>>> actualModifies = EntityStager::getStagedModifiesStatement();
+	std::sort(actualModifies.begin(), actualModifies.end(),
+		[](auto& left, auto& right) {return left.first < right.first; });
+
+	REQUIRE(actualModifies == expectedModifies);
+	EntityStager::clear();
+}
+
+TEST_CASE("Modifies 3.25 - 2 nest levels; 3 statements per nest level - if-while perm 2") {
+	DesignExtractor::extractDesignElements(RelationshipASTs::getAST3_25());
+
+	std::vector<std::pair<int, std::unordered_set<std::string>>> expectedModifies{
+		{1, {"x", "y", "z"}}, {2, {"x", "y"}}, {3, {"y"}}, {5, {"x"}}, {6, {"x"}}, {7, {"x"}},
+		{8, {"z"}}, {10, {"x", "y"}}, {11, {"y"}}, {13, {"x"}}
+	};
+	std::sort(expectedModifies.begin(), expectedModifies.end(),
+		[](auto& left, auto& right) {return left.first < right.first; });
+
+	std::vector<std::pair<int, std::unordered_set<std::string>>> actualModifies = EntityStager::getStagedModifiesStatement();
+	std::sort(actualModifies.begin(), actualModifies.end(),
+		[](auto& left, auto& right) {return left.first < right.first; });
+
+	REQUIRE(actualModifies == expectedModifies);
+	EntityStager::clear();
+}
+
+TEST_CASE("Modifies 3.26 - 2 nest levels; 3 statements per nest level - if-while perm 3") {
+	DesignExtractor::extractDesignElements(RelationshipASTs::getAST3_26());
+
+	std::vector<std::pair<int, std::unordered_set<std::string>>> expectedModifies{
+		{1, {"x", "y", "z"}}, {2, {"x"}}, {3, {"x"}}, {4, {"x", "y"}}, {5, {"y"}}, {7, {"x"}},
+		{8, {"z"}}, {9, {"x", "y"}}, {10, {"y"}}, {12, {"x"}}
+	};
+	std::sort(expectedModifies.begin(), expectedModifies.end(),
+		[](auto& left, auto& right) {return left.first < right.first; });
+
+	std::vector<std::pair<int, std::unordered_set<std::string>>> actualModifies = EntityStager::getStagedModifiesStatement();
+	std::sort(actualModifies.begin(), actualModifies.end(),
+		[](auto& left, auto& right) {return left.first < right.first; });
+
+	REQUIRE(actualModifies == expectedModifies);
+	EntityStager::clear();
+}
+
+TEST_CASE("Modifies 3.27 - 2 nest levels; 3 statements per nest level - while-if loc 1") {
+	DesignExtractor::extractDesignElements(RelationshipASTs::getAST3_27());
+
+	std::vector<std::pair<int, std::unordered_set<std::string>>> expectedModifies{
+		{1, {"x", "y", "z"}}, {2, {"x", "y", "z"}}, {3, {"y"}}, {5, {"x"}},
+		{6, {"z"}}, {8, {"z"}}, {9, {"x"}}, {10, {"x"}}
+	};
+	std::sort(expectedModifies.begin(), expectedModifies.end(),
+		[](auto& left, auto& right) {return left.first < right.first; });
+
+	std::vector<std::pair<int, std::unordered_set<std::string>>> actualModifies = EntityStager::getStagedModifiesStatement();
+	std::sort(actualModifies.begin(), actualModifies.end(),
+		[](auto& left, auto& right) {return left.first < right.first; });
+
+	REQUIRE(actualModifies == expectedModifies);
+	EntityStager::clear();
+}
+
+TEST_CASE("Modifies 3.28 - 2 nest levels; 3 statements per nest level - while-if loc 2") {
+	DesignExtractor::extractDesignElements(RelationshipASTs::getAST3_28());
+
+	std::vector<std::pair<int, std::unordered_set<std::string>>> expectedModifies{
+		{1, {"x", "y", "z"}}, {2, {"x"}}, {3, {"x", "y", "z"}}, {4, {"y"}}, {6, {"x"}},
+		{7, {"z"}}, {9, {"z"}}, {10, {"x"}}
+	};
+	std::sort(expectedModifies.begin(), expectedModifies.end(),
+		[](auto& left, auto& right) {return left.first < right.first; });
+
+	std::vector<std::pair<int, std::unordered_set<std::string>>> actualModifies = EntityStager::getStagedModifiesStatement();
+	std::sort(actualModifies.begin(), actualModifies.end(),
+		[](auto& left, auto& right) {return left.first < right.first; });
+
+	REQUIRE(actualModifies == expectedModifies);
+	EntityStager::clear();
+}
+
+TEST_CASE("Modifies 3.29 - 2 nest levels; 3 statements per nest level - while-if loc 3") {
+	DesignExtractor::extractDesignElements(RelationshipASTs::getAST3_29());
+
+	std::vector<std::pair<int, std::unordered_set<std::string>>> expectedModifies{
+		{1, {"x", "y", "z"}}, {2, {"x"}}, {3, {"x"}}, {4, {"x", "y", "z"}}, {5, {"y"}}, {7, {"x"}},
+		{8, {"z"}}, {10, {"z"}},
+	};
+	std::sort(expectedModifies.begin(), expectedModifies.end(),
+		[](auto& left, auto& right) {return left.first < right.first; });
+
+	std::vector<std::pair<int, std::unordered_set<std::string>>> actualModifies = EntityStager::getStagedModifiesStatement();
+	std::sort(actualModifies.begin(), actualModifies.end(),
+		[](auto& left, auto& right) {return left.first < right.first; });
+
+	REQUIRE(actualModifies == expectedModifies);
+	EntityStager::clear();
+}
+
+TEST_CASE("Modifies 3.30 - 3 levels of nesting - 1 stmt per nest level - if-if-if") {
+	DesignExtractor::extractDesignElements(RelationshipASTs::getAST3_30());
+
+	std::vector<std::pair<int, std::unordered_set<std::string>>> expectedModifies{
+		{1, {"x", "y", "z"}}, {2, {"y", "z"}}, {3, {"y"}}, {4, {"z"}}, {5, {"z"}},
+		{8, {"x"}}
+	};
+	std::sort(expectedModifies.begin(), expectedModifies.end(),
+		[](auto& left, auto& right) {return left.first < right.first; });
+
+	std::vector<std::pair<int, std::unordered_set<std::string>>> actualModifies = EntityStager::getStagedModifiesStatement();
+	std::sort(actualModifies.begin(), actualModifies.end(),
+		[](auto& left, auto& right) {return left.first < right.first; });
+
+	REQUIRE(actualModifies == expectedModifies);
+	EntityStager::clear();
+}
+
+TEST_CASE("Modifies 3.31 - 3 levels of nesting - 1 stmt per nest level - while-while-while") {
+	DesignExtractor::extractDesignElements(RelationshipASTs::getAST3_31());
+
+	std::vector<std::pair<int, std::unordered_set<std::string>>> expectedModifies{
+		{1, {"x", "y", "z"}}, {2, {"y", "z"}}, {3, {"z"}},
+		{4, {"z"}}, {5, {"y"}}, {6, {"x"}}
+	};
+	std::sort(expectedModifies.begin(), expectedModifies.end(),
+		[](auto& left, auto& right) {return left.first < right.first; });
+
+	std::vector<std::pair<int, std::unordered_set<std::string>>> actualModifies = EntityStager::getStagedModifiesStatement();
+	std::sort(actualModifies.begin(), actualModifies.end(),
+		[](auto& left, auto& right) {return left.first < right.first; });
+
+	REQUIRE(actualModifies == expectedModifies);
+	EntityStager::clear();
+}
+
+TEST_CASE("Modifies 3.32 - 3 levels of nesting - 1 stmt per nest level - while-if-while") {
+	DesignExtractor::extractDesignElements(RelationshipASTs::getAST3_32());
+
+	std::vector<std::pair<int, std::unordered_set<std::string>>> expectedModifies{
+		{1, {"w", "x", "y", "z"}}, {2, {"w", "y", "z"}}, {3, {"z"}}, {4, {"z"}},
+		{5, {"y"}}, {6, {"w"}}, {7, {"w"}}, {8, {"w"}}, {9, {"x"}}
+	};
+	std::sort(expectedModifies.begin(), expectedModifies.end(),
+		[](auto& left, auto& right) {return left.first < right.first; });
+
+	std::vector<std::pair<int, std::unordered_set<std::string>>> actualModifies = EntityStager::getStagedModifiesStatement();
+	std::sort(actualModifies.begin(), actualModifies.end(),
+		[](auto& left, auto& right) {return left.first < right.first; });
+
+	REQUIRE(actualModifies == expectedModifies);
+	EntityStager::clear();
+}
+
+TEST_CASE("Modifies 3.33 - 3 levels of nesting - 1 stmt per nest level - if-while-if") {
+	DesignExtractor::extractDesignElements(RelationshipASTs::getAST3_33());
+
+	std::vector<std::pair<int, std::unordered_set<std::string>>> expectedModifies{
+		{1, {"x", "z"}}, {2, {"z"}}, {3, {"z"}}, {4, {"z"}},
+		{7, {"x"}}
+	};
+	std::sort(expectedModifies.begin(), expectedModifies.end(),
+		[](auto& left, auto& right) {return left.first < right.first; });
+
+	std::vector<std::pair<int, std::unordered_set<std::string>>> actualModifies = EntityStager::getStagedModifiesStatement();
+	std::sort(actualModifies.begin(), actualModifies.end(),
+		[](auto& left, auto& right) {return left.first < right.first; });
+
+	REQUIRE(actualModifies == expectedModifies);
+	EntityStager::clear();
 }

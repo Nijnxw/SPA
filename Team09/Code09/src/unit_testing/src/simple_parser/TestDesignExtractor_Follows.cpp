@@ -39,6 +39,7 @@ TEST_CASE("Follows 3.4 - Single Advanced Assign") {
 }
 
 TEST_CASE("Follows 3.5 - 2 basic statements") {
+	EntityStager::clear();
 	DesignExtractor::extractDesignElements(RelationshipASTs::getAST3_5());
 
 	std::vector<std::pair<int, int>> expectedFollows{ {1, 2} };
@@ -52,6 +53,7 @@ TEST_CASE("Follows 3.5 - 2 basic statements") {
 }
 
 TEST_CASE("Follows 3.6 - 2 basic statements") {
+	EntityStager::clear();
 	DesignExtractor::extractDesignElements(RelationshipASTs::getAST3_6());
 
 	std::vector<std::pair<int, int>> expectedFollows{ {1, 2} };
@@ -65,6 +67,7 @@ TEST_CASE("Follows 3.6 - 2 basic statements") {
 }
 
 TEST_CASE("Follows 3.7 - 2 basic statements") {
+	EntityStager::clear();
 	DesignExtractor::extractDesignElements(RelationshipASTs::getAST3_7());
 
 	std::vector<std::pair<int, int>> expectedFollows{ {1, 2} };
@@ -78,6 +81,7 @@ TEST_CASE("Follows 3.7 - 2 basic statements") {
 }
 
 TEST_CASE("Follows 3.8 - 3 basic statements") {
+	EntityStager::clear();
 	DesignExtractor::extractDesignElements(RelationshipASTs::getAST3_8());
 
 	std::vector<std::pair<int, int>> expectedFollows{ {1, 2}, {2, 3} };
@@ -91,6 +95,7 @@ TEST_CASE("Follows 3.8 - 3 basic statements") {
 }
 
 TEST_CASE("Follows 3.9 - 3 basic statements") {
+	EntityStager::clear();
 	DesignExtractor::extractDesignElements(RelationshipASTs::getAST3_9());
 
 	std::vector<std::pair<int, int>> expectedFollows{ {1, 2}, {2, 3} };
@@ -104,6 +109,7 @@ TEST_CASE("Follows 3.9 - 3 basic statements") {
 }
 
 TEST_CASE("Follows 3.10 - 3 basic statements") {
+	EntityStager::clear();
 	DesignExtractor::extractDesignElements(RelationshipASTs::getAST3_10());
 
 	std::vector<std::pair<int, int>> expectedFollows{ {1, 2}, {2, 3} };
@@ -117,6 +123,7 @@ TEST_CASE("Follows 3.10 - 3 basic statements") {
 }
 
 TEST_CASE("Follows 3.11 - 2 basic statements + 1 container - while at end of procedure") {
+	EntityStager::clear();
 	DesignExtractor::extractDesignElements(RelationshipASTs::getAST3_11());
 
 	std::vector<std::pair<int, int>> expectedFollows{ {1, 2}, {2, 3} };
@@ -130,6 +137,7 @@ TEST_CASE("Follows 3.11 - 2 basic statements + 1 container - while at end of pro
 }
 
 TEST_CASE("Follows 3.12 - 2 basic statements + 1 container - while at start of procedure") {
+	EntityStager::clear();
 	DesignExtractor::extractDesignElements(RelationshipASTs::getAST3_12());
 
 	std::vector<std::pair<int, int>> expectedFollows{ {1, 3}, {3, 4} };
@@ -143,6 +151,7 @@ TEST_CASE("Follows 3.12 - 2 basic statements + 1 container - while at start of p
 }
 
 TEST_CASE("Follows 3.13 - 2 basic statements + 1 container - while at middle of procedure") {
+	EntityStager::clear();
 	DesignExtractor::extractDesignElements(RelationshipASTs::getAST3_13());
 
 	std::vector<std::pair<int, int>> expectedFollows{ {1, 2}, {2, 4} };
@@ -156,6 +165,7 @@ TEST_CASE("Follows 3.13 - 2 basic statements + 1 container - while at middle of 
 }
 
 TEST_CASE("Follows 3.14 - 2 basic statements + 1 container - if at end of procedure") {
+	EntityStager::clear();
 	DesignExtractor::extractDesignElements(RelationshipASTs::getAST3_14());
 
 	std::vector<std::pair<int, int>> expectedFollows{ {1, 2}, {2, 3} };
@@ -169,6 +179,7 @@ TEST_CASE("Follows 3.14 - 2 basic statements + 1 container - if at end of proced
 }
 
 TEST_CASE("Follows 3.15 - 2 basic statements + 1 container - if at start of procedure") {
+	EntityStager::clear();
 	DesignExtractor::extractDesignElements(RelationshipASTs::getAST3_15());
 
 	std::vector<std::pair<int, int>> expectedFollows{ {1, 4}, {4, 5} };
@@ -182,6 +193,7 @@ TEST_CASE("Follows 3.15 - 2 basic statements + 1 container - if at start of proc
 }
 
 TEST_CASE("Follows 3.16 - 2 basic statements + 1 container - if at middle of procedure") {
+	EntityStager::clear();
 	DesignExtractor::extractDesignElements(RelationshipASTs::getAST3_16());
 
 	std::vector<std::pair<int, int>> expectedFollows{ {1, 2}, {2, 5} };
@@ -195,6 +207,7 @@ TEST_CASE("Follows 3.16 - 2 basic statements + 1 container - if at middle of pro
 }
 
 TEST_CASE("Follows 3.17 - 2 container statements same nesting level") {
+	EntityStager::clear();
 	DesignExtractor::extractDesignElements(RelationshipASTs::getAST3_17());
 
 	std::vector<std::pair<int, int>> expectedFollows{ {1, 3} };
@@ -208,6 +221,7 @@ TEST_CASE("Follows 3.17 - 2 container statements same nesting level") {
 }
 
 TEST_CASE("Follows 3.18 - 1 container - 3 basic statements - while") {
+	EntityStager::clear();
 	DesignExtractor::extractDesignElements(RelationshipASTs::getAST3_18());
 
 	std::vector<std::pair<int, int>> expectedFollows{ {2, 3}, {3, 4} };
@@ -221,6 +235,7 @@ TEST_CASE("Follows 3.18 - 1 container - 3 basic statements - while") {
 }
 
 TEST_CASE("Follows 3.19 - 1 container - 3 basic statements - if") {
+	EntityStager::clear();
 	DesignExtractor::extractDesignElements(RelationshipASTs::getAST3_19());
 
 	std::vector<std::pair<int, int>> expectedFollows{ {2, 3}, {3, 4}, {5, 6}, {6, 7} };
@@ -234,6 +249,7 @@ TEST_CASE("Follows 3.19 - 1 container - 3 basic statements - if") {
 }
 
 TEST_CASE("Follows 3.20 - 2 nesting levels; 1 basic statement per level - if-while") {
+	EntityStager::clear();
 	DesignExtractor::extractDesignElements(RelationshipASTs::getAST3_20());
 
 	std::vector<std::pair<int, int>> expectedFollows{ {2, 3}, {5, 6} };
@@ -247,6 +263,7 @@ TEST_CASE("Follows 3.20 - 2 nesting levels; 1 basic statement per level - if-whi
 }
 
 TEST_CASE("Follows 3.21 - 2 nesting levels; 1 basic statement per level - if-if") {
+	EntityStager::clear();
 	DesignExtractor::extractDesignElements(RelationshipASTs::getAST3_21());
 
 	std::vector<std::pair<int, int>> expectedFollows{ {2, 3}, {6, 7} };
@@ -260,6 +277,7 @@ TEST_CASE("Follows 3.21 - 2 nesting levels; 1 basic statement per level - if-if"
 }
 
 TEST_CASE("Follows 3.22 - 2 nesting levels; 1 basic statement per level - while-if") {
+	EntityStager::clear();
 	DesignExtractor::extractDesignElements(RelationshipASTs::getAST3_22());
 
 	std::vector<std::pair<int, int>> expectedFollows{ {2, 5} };
@@ -273,6 +291,7 @@ TEST_CASE("Follows 3.22 - 2 nesting levels; 1 basic statement per level - while-
 }
 
 TEST_CASE("Follows 3.23 - 2 nesting levels; 1 basic statement per level - while-while") {
+	EntityStager::clear();
 	DesignExtractor::extractDesignElements(RelationshipASTs::getAST3_23());
 
 	std::vector<std::pair<int, int>> expectedFollows{ {2, 4} };
@@ -286,6 +305,7 @@ TEST_CASE("Follows 3.23 - 2 nesting levels; 1 basic statement per level - while-
 }
 
 TEST_CASE("Follows 3.24 - 2 nest levels; 3 statements per nest level - if-while perm 1") {
+	EntityStager::clear();
 	DesignExtractor::extractDesignElements(RelationshipASTs::getAST3_24());
 
 	std::vector<std::pair<int, int>> expectedFollows{ 
@@ -301,6 +321,7 @@ TEST_CASE("Follows 3.24 - 2 nest levels; 3 statements per nest level - if-while 
 }
 
 TEST_CASE("Follows 3.25 - 2 nest levels; 3 statements per nest level - if-while perm 2") {
+	EntityStager::clear();
 	DesignExtractor::extractDesignElements(RelationshipASTs::getAST3_25());
 
 	std::vector<std::pair<int, int>> expectedFollows{
@@ -316,6 +337,7 @@ TEST_CASE("Follows 3.25 - 2 nest levels; 3 statements per nest level - if-while 
 }
 
 TEST_CASE("Follows 3.26 - 2 nest levels; 3 statements per nest level - if-while perm 3") {
+	EntityStager::clear();
 	DesignExtractor::extractDesignElements(RelationshipASTs::getAST3_26());
 
 	std::vector<std::pair<int, int>> expectedFollows{
@@ -331,6 +353,7 @@ TEST_CASE("Follows 3.26 - 2 nest levels; 3 statements per nest level - if-while 
 }
 
 TEST_CASE("Follows 3.27 - 2 nest levels; 3 statements per nest level - while-if loc 1") {
+	EntityStager::clear();
 	DesignExtractor::extractDesignElements(RelationshipASTs::getAST3_27());
 
 	std::vector<std::pair<int, int>> expectedFollows{
@@ -346,6 +369,7 @@ TEST_CASE("Follows 3.27 - 2 nest levels; 3 statements per nest level - while-if 
 }
 
 TEST_CASE("Follows 3.28 - 2 nest levels; 3 statements per nest level - while-if loc 2") {
+	EntityStager::clear();
 	DesignExtractor::extractDesignElements(RelationshipASTs::getAST3_28());
 
 	std::vector<std::pair<int, int>> expectedFollows{
@@ -361,6 +385,7 @@ TEST_CASE("Follows 3.28 - 2 nest levels; 3 statements per nest level - while-if 
 }
 
 TEST_CASE("Follows 3.29 - 2 nest levels; 3 statements per nest level - while-if loc 3") {
+	EntityStager::clear();
 	DesignExtractor::extractDesignElements(RelationshipASTs::getAST3_29());
 
 	std::vector<std::pair<int, int>> expectedFollows{
@@ -376,6 +401,7 @@ TEST_CASE("Follows 3.29 - 2 nest levels; 3 statements per nest level - while-if 
 }
 
 TEST_CASE("Follows 3.30 - 3 levels of nesting - 1 stmt per nest level - if-if-if") {
+	EntityStager::clear();
 	DesignExtractor::extractDesignElements(RelationshipASTs::getAST3_30());
 
 	std::vector<std::pair<int, int>> expectedFollows{
@@ -391,6 +417,7 @@ TEST_CASE("Follows 3.30 - 3 levels of nesting - 1 stmt per nest level - if-if-if
 }
 
 TEST_CASE("Follows 3.31 - 3 levels of nesting - 1 stmt per nest level - while-while-while") {
+	EntityStager::clear();
 	DesignExtractor::extractDesignElements(RelationshipASTs::getAST3_31());
 
 	std::vector<std::pair<int, int>> expectedFollows{
@@ -406,6 +433,7 @@ TEST_CASE("Follows 3.31 - 3 levels of nesting - 1 stmt per nest level - while-wh
 }
 
 TEST_CASE("Follows 3.32 - 3 levels of nesting - 1 stmt per nest level - while-if-while") {
+	EntityStager::clear();
 	DesignExtractor::extractDesignElements(RelationshipASTs::getAST3_32());
 
 	std::vector<std::pair<int, int>> expectedFollows{
@@ -421,6 +449,7 @@ TEST_CASE("Follows 3.32 - 3 levels of nesting - 1 stmt per nest level - while-if
 }
 
 TEST_CASE("Follows 3.33 - 3 levels of nesting - 1 stmt per nest level - if-while-if") {
+	EntityStager::clear();
 	DesignExtractor::extractDesignElements(RelationshipASTs::getAST3_33());
 
 	std::vector<std::pair<int, int>> expectedFollows{

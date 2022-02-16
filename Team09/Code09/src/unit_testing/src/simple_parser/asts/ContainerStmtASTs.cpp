@@ -49,7 +49,7 @@ AST ContainerStmtASTs::getAST1_39() {
 	);
 
 	std::vector<std::shared_ptr<StmtNode>> stmtLst{
-			std::make_shared<WhileNode>(3, predC1EqC1, whileStmtListRead)
+			std::make_shared<WhileNode>(1, predC1EqC1, whileStmtListRead)
 	};
 
 	return generateAST(stmtLst);
@@ -78,10 +78,6 @@ AST ContainerStmtASTs::getAST1_41() {
 	 * 1	while (x < 1) {
 	 * 2		read x; } }
 	 */
-	std::vector<std::shared_ptr<StmtNode>> whileStmtList{
-			std::make_shared<ReadNode>(2, x)
-	};
-
 	std::vector<std::shared_ptr<StmtNode>> stmtLst{
 			std::make_shared<WhileNode>(1, predXLtC1, whileStmtListRead),
 	};
@@ -94,7 +90,7 @@ AST ContainerStmtASTs::getAST1_41() {
 AST ContainerStmtASTs::getAST1_43() {
 	/*
 	 * procedure testProgram {
-	 * 1	while (x <= 1) {
+	 * 1	while (x <= y) {
 	 * 2		read x; } }
 	 */
 	std::shared_ptr<PredicateNode> predXLtY = std::make_shared<PredicateNode>(

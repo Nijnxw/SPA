@@ -20,6 +20,7 @@ public:
 	static AST getAST1_7();
 	static AST getAST1_8();
 	// single operator parsing
+	static AST getAST1_9();
 	static AST getAST1_10();
 	static AST getAST1_11();
 	static AST getAST1_12();

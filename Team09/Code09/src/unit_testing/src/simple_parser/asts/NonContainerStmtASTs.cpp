@@ -113,6 +113,10 @@ AST NonContainerStmtASTs::getAST1_8() {
 
 // Single operator parsing
 
+AST NonContainerStmtASTs::getAST1_9() {
+	return getAST1_7();
+}
+
 AST NonContainerStmtASTs::getAST1_10() {
 	/*
 	 * procedure testProgram {
@@ -212,7 +216,7 @@ AST NonContainerStmtASTs::getAST1_16() {
 	auto c1TimesY = std::make_shared<BinaryOperatorNode>(BinaryOperator::TIMES, c1, y);
 	std::vector<std::shared_ptr<StmtNode>> stmtList{
 			std::make_shared<AssignNode>(1, a,
-										 std::make_shared<BinaryOperatorNode>(BinaryOperator::PLUS, c1TimesY, x),
+										 std::make_shared<BinaryOperatorNode>(BinaryOperator::PLUS, x, c1TimesY),
 										 "x 1 y * +"),
 	};
 	return generateAST(stmtList);
@@ -227,7 +231,7 @@ AST NonContainerStmtASTs::getAST1_17() {
 	auto c1DivY = std::make_shared<BinaryOperatorNode>(BinaryOperator::DIVIDE, c1, y);
 	std::vector<std::shared_ptr<StmtNode>> stmtList{
 			std::make_shared<AssignNode>(1, a,
-										 std::make_shared<BinaryOperatorNode>(BinaryOperator::PLUS, c1DivY, x),
+										 std::make_shared<BinaryOperatorNode>(BinaryOperator::PLUS, x, c1DivY),
 										 "x 1 y / +"),
 	};
 	return generateAST(stmtList);
@@ -242,7 +246,7 @@ AST NonContainerStmtASTs::getAST1_18() {
 	auto c1ModY = std::make_shared<BinaryOperatorNode>(BinaryOperator::MODULO, c1, y);
 	std::vector<std::shared_ptr<StmtNode>> stmtList{
 			std::make_shared<AssignNode>(1, a,
-										 std::make_shared<BinaryOperatorNode>(BinaryOperator::PLUS, c1ModY, x),
+										 std::make_shared<BinaryOperatorNode>(BinaryOperator::PLUS, x, c1ModY),
 										 "x 1 y % +"),
 	};
 	return generateAST(stmtList);
@@ -257,7 +261,7 @@ AST NonContainerStmtASTs::getAST1_19() {
 	auto c1TimesY = std::make_shared<BinaryOperatorNode>(BinaryOperator::TIMES, c1, y);
 	std::vector<std::shared_ptr<StmtNode>> stmtList{
 			std::make_shared<AssignNode>(1, a,
-										 std::make_shared<BinaryOperatorNode>(BinaryOperator::MINUS, c1TimesY, x),
+										 std::make_shared<BinaryOperatorNode>(BinaryOperator::MINUS, x,c1TimesY),
 										 "x 1 y / -"),
 	};
 	return generateAST(stmtList);
@@ -272,7 +276,7 @@ AST NonContainerStmtASTs::getAST1_20() {
 	auto c1DivY = std::make_shared<BinaryOperatorNode>(BinaryOperator::DIVIDE, c1, y);
 	std::vector<std::shared_ptr<StmtNode>> stmtList{
 			std::make_shared<AssignNode>(1, a,
-										 std::make_shared<BinaryOperatorNode>(BinaryOperator::MINUS, c1DivY, x),
+										 std::make_shared<BinaryOperatorNode>(BinaryOperator::MINUS, x, c1DivY),
 										 "x 1 y / -"),
 	};
 	return generateAST(stmtList);
@@ -287,7 +291,7 @@ AST NonContainerStmtASTs::getAST1_21() {
 	auto c1ModY = std::make_shared<BinaryOperatorNode>(BinaryOperator::MODULO, c1, y);
 	std::vector<std::shared_ptr<StmtNode>> stmtList{
 			std::make_shared<AssignNode>(1, a,
-										 std::make_shared<BinaryOperatorNode>(BinaryOperator::MINUS, c1ModY, x),
+										 std::make_shared<BinaryOperatorNode>(BinaryOperator::MINUS, x, c1ModY),
 										 "x 1 y % -"),
 	};
 	return generateAST(stmtList);
@@ -523,7 +527,7 @@ AST NonContainerStmtASTs::getAST1_36() {
 	auto xTimesY = std::make_shared<BinaryOperatorNode>(BinaryOperator::TIMES, x, y);
 	auto c1PlusXTimesY = std::make_shared<BinaryOperatorNode>(BinaryOperator::PLUS, c1, xTimesY);
 	auto c2DivZ = std::make_shared<BinaryOperatorNode>(BinaryOperator::DIVIDE, c2, z);
-	auto c2DivZModC3 = std::make_shared<BinaryOperatorNode>(BinaryOperator::DIVIDE, c2DivZ, c3);
+	auto c2DivZModC3 = std::make_shared<BinaryOperatorNode>(BinaryOperator::MODULO, c2DivZ, c3);
 
 	std::vector<std::shared_ptr<StmtNode>> stmtList{
 			std::make_shared<AssignNode>(1, a,
@@ -540,7 +544,7 @@ AST NonContainerStmtASTs::getAST1_37() {
 	 * }
 	 */
 	auto c2DivZ = std::make_shared<BinaryOperatorNode>(BinaryOperator::DIVIDE, c2, z);
-	auto c2DivZModC3 = std::make_shared<BinaryOperatorNode>(BinaryOperator::DIVIDE, c2DivZ, c3);
+	auto c2DivZModC3 = std::make_shared<BinaryOperatorNode>(BinaryOperator::MODULO, c2DivZ, c3);
 
 	auto yMinusC2DivZModC3 = std::make_shared<BinaryOperatorNode>(BinaryOperator::MINUS, y, c2DivZModC3);
 	auto xTimesYMinusC2DivZModC3 = std::make_shared<BinaryOperatorNode>(BinaryOperator::TIMES, x, yMinusC2DivZModC3);

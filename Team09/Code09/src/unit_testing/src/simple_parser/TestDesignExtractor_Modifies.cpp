@@ -7,70 +7,71 @@
 #include <unordered_set>
 #include <vector>
 
-//TODO
-//TEST_CASE("Modifies 3.1 - Single Read") {
-//	EntityStager::clear();
-//	std::vector<std::pair<int, std::unordered_set<std::string>>> expectedModifies{
-//		{2, {"x"}}
-//	};
-//	std::sort(expectedModifies.begin(), expectedModifies.end(),
-//		[](auto& left, auto& right) {return left.first < right.first; });
-//
-//	std::vector<std::pair<int, std::unordered_set<std::string>>> actualModifies = EntityStager::getStagedModifiesStatement();
-//	std::sort(actualModifies.begin(), actualModifies.end(),
-//		[](auto& left, auto& right) {return left.first < right.first; });
-//
-//	REQUIRE(actualModifies == expectedModifies);
-//	EntityStager::clear();
-//}
-//
-//TEST_CASE("Modifies 3.2 - Single Read") {
-//	EntityStager::clear();
-//	std::vector<std::pair<int, std::unordered_set<std::string>>> expectedModifies{
-//		{2, {"x"}}
-//	};
-//	std::sort(expectedModifies.begin(), expectedModifies.end(),
-//		[](auto& left, auto& right) {return left.first < right.first; });
-//
-//	std::vector<std::pair<int, std::unordered_set<std::string>>> actualModifies = EntityStager::getStagedModifiesStatement();
-//	std::sort(actualModifies.begin(), actualModifies.end(),
-//		[](auto& left, auto& right) {return left.first < right.first; });
-//
-//	REQUIRE(actualModifies == expectedModifies);
-//	EntityStager::clear();
-//}
-//
-//TEST_CASE("Modifies 3.3 - Single Advanced Assign") {
-//	EntityStager::clear();
-//	std::vector<std::pair<int, std::unordered_set<std::string>>> expectedModifies{
-//		{2, {"x"}}
-//	};
-//	std::sort(expectedModifies.begin(), expectedModifies.end(),
-//		[](auto& left, auto& right) {return left.first < right.first; });
-//
-//	std::vector<std::pair<int, std::unordered_set<std::string>>> actualModifies = EntityStager::getStagedModifiesStatement();
-//	std::sort(actualModifies.begin(), actualModifies.end(),
-//		[](auto& left, auto& right) {return left.first < right.first; });
-//
-//	REQUIRE(actualModifies == expectedModifies);
-//	EntityStager::clear();
-//}
-//
-//TEST_CASE("Modifies 3.4 - Single Advanced Assign") {
-//	EntityStager::clear();
-//	std::vector<std::pair<int, std::unordered_set<std::string>>> expectedModifies{
-//		{2, {"x"}}
-//	};
-//	std::sort(expectedModifies.begin(), expectedModifies.end(),
-//		[](auto& left, auto& right) {return left.first < right.first; });
-//
-//	std::vector<std::pair<int, std::unordered_set<std::string>>> actualModifies = EntityStager::getStagedModifiesStatement();
-//	std::sort(actualModifies.begin(), actualModifies.end(),
-//		[](auto& left, auto& right) {return left.first < right.first; });
-//
-//	REQUIRE(actualModifies == expectedModifies);
-//	EntityStager::clear();
-//}
+TEST_CASE("Modifies 3.1 - Single Read") {
+	EntityStager::clear();
+	DesignExtractor::extractDesignElements(RelationshipASTs::getAST3_1());
+	std::vector<std::pair<int, std::unordered_set<std::string>>> expectedModifies{
+		{1, {"x"}}
+	};
+	std::sort(expectedModifies.begin(), expectedModifies.end(),
+		[](auto& left, auto& right) {return left.first < right.first; });
+
+	std::vector<std::pair<int, std::unordered_set<std::string>>> actualModifies = EntityStager::getStagedModifiesStatement();
+	std::sort(actualModifies.begin(), actualModifies.end(),
+		[](auto& left, auto& right) {return left.first < right.first; });
+
+	REQUIRE(actualModifies == expectedModifies);
+	EntityStager::clear();
+}
+
+TEST_CASE("Modifies 3.2 - Single Read") {
+	EntityStager::clear();
+	DesignExtractor::extractDesignElements(RelationshipASTs::getAST3_2());
+	std::vector<std::pair<int, std::unordered_set<std::string>>> expectedModifies{ };
+	std::sort(expectedModifies.begin(), expectedModifies.end(),
+		[](auto& left, auto& right) {return left.first < right.first; });
+
+	std::vector<std::pair<int, std::unordered_set<std::string>>> actualModifies = EntityStager::getStagedModifiesStatement();
+	std::sort(actualModifies.begin(), actualModifies.end(),
+		[](auto& left, auto& right) {return left.first < right.first; });
+
+	REQUIRE(actualModifies == expectedModifies);
+	EntityStager::clear();
+}
+
+TEST_CASE("Modifies 3.3 - Single Advanced Assign") {
+	EntityStager::clear();
+	DesignExtractor::extractDesignElements(RelationshipASTs::getAST3_3());
+	std::vector<std::pair<int, std::unordered_set<std::string>>> expectedModifies{
+		{1, {"a"}}
+	};
+	std::sort(expectedModifies.begin(), expectedModifies.end(),
+		[](auto& left, auto& right) {return left.first < right.first; });
+
+	std::vector<std::pair<int, std::unordered_set<std::string>>> actualModifies = EntityStager::getStagedModifiesStatement();
+	std::sort(actualModifies.begin(), actualModifies.end(),
+		[](auto& left, auto& right) {return left.first < right.first; });
+
+	REQUIRE(actualModifies == expectedModifies);
+	EntityStager::clear();
+}
+
+TEST_CASE("Modifies 3.4 - Single Advanced Assign") {
+	EntityStager::clear();
+	DesignExtractor::extractDesignElements(RelationshipASTs::getAST3_4());
+	std::vector<std::pair<int, std::unordered_set<std::string>>> expectedModifies{
+		{1, {"a"}}
+	};
+	std::sort(expectedModifies.begin(), expectedModifies.end(),
+		[](auto& left, auto& right) {return left.first < right.first; });
+
+	std::vector<std::pair<int, std::unordered_set<std::string>>> actualModifies = EntityStager::getStagedModifiesStatement();
+	std::sort(actualModifies.begin(), actualModifies.end(),
+		[](auto& left, auto& right) {return left.first < right.first; });
+
+	REQUIRE(actualModifies == expectedModifies);
+	EntityStager::clear();
+}
 
 TEST_CASE("Modifies 3.5 - 2 basic statements") {
 	DesignExtractor::extractDesignElements(RelationshipASTs::getAST3_5());

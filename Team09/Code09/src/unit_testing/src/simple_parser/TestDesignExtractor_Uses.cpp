@@ -7,70 +7,75 @@
 #include <unordered_set>
 #include <vector>
 
-//TODO
-//TEST_CASE("Uses 3.1 - Single Read") {
-//	EntityStager::clear();
-//	std::vector<std::pair<int, std::unordered_set<std::string>>> expectedUses{
-//		{2, {"x"}}
-//	};
-//	std::sort(expectedUses.begin(), expectedUses.end(),
-//		[](auto& left, auto& right) {return left.first < right.first; });
-//
-//	std::vector<std::pair<int, std::unordered_set<std::string>>> actualUses = EntityStager::getStagedUsesStatement();
-//	std::sort(actualUses.begin(), actualUses.end(),
-//		[](auto& left, auto& right) {return left.first < right.first; });
-//
-//	REQUIRE(actualUses == expectedUses);
-//	EntityStager::clear();
-//}
-//
-//TEST_CASE("Uses 3.2 - Single Read") {
-//	EntityStager::clear();
-//	std::vector<std::pair<int, std::unordered_set<std::string>>> expectedUses{
-//		{2, {"x"}}
-//	};
-//	std::sort(expectedUses.begin(), expectedUses.end(),
-//		[](auto& left, auto& right) {return left.first < right.first; });
-//
-//	std::vector<std::pair<int, std::unordered_set<std::string>>> actualUses = EntityStager::getStagedUsesStatement();
-//	std::sort(actualUses.begin(), actualUses.end(),
-//		[](auto& left, auto& right) {return left.first < right.first; });
-//
-//	REQUIRE(actualUses == expectedUses);
-//	EntityStager::clear();
-//}
-//
-//TEST_CASE("Uses 3.3 - Single Advanced Assign") {
-//	EntityStager::clear();
-//	std::vector<std::pair<int, std::unordered_set<std::string>>> expectedUses{
-//		{2, {"x"}}
-//	};
-//	std::sort(expectedUses.begin(), expectedUses.end(),
-//		[](auto& left, auto& right) {return left.first < right.first; });
-//
-//	std::vector<std::pair<int, std::unordered_set<std::string>>> actualUses = EntityStager::getStagedUsesStatement();
-//	std::sort(actualUses.begin(), actualUses.end(),
-//		[](auto& left, auto& right) {return left.first < right.first; });
-//
-//	REQUIRE(actualUses == expectedUses);
-//	EntityStager::clear();
-//}
-//
-//TEST_CASE("Uses 3.4 - Single Advanced Assign") {
-//	EntityStager::clear();
-//	std::vector<std::pair<int, std::unordered_set<std::string>>> expectedUses{
-//		{2, {"x"}}
-//	};
-//	std::sort(expectedUses.begin(), expectedUses.end(),
-//		[](auto& left, auto& right) {return left.first < right.first; });
-//
-//	std::vector<std::pair<int, std::unordered_set<std::string>>> actualUses = EntityStager::getStagedUsesStatement();
-//	std::sort(actualUses.begin(), actualUses.end(),
-//		[](auto& left, auto& right) {return left.first < right.first; });
-//
-//	REQUIRE(actualUses == expectedUses);
-//	EntityStager::clear();
-//}
+TEST_CASE("Uses 3.1 - Single Read") {
+	EntityStager::clear();
+	DesignExtractor::extractDesignElements(RelationshipASTs::getAST3_1());
+
+	std::vector<std::pair<int, std::unordered_set<std::string>>> expectedUses{ };
+	std::sort(expectedUses.begin(), expectedUses.end(),
+		[](auto& left, auto& right) {return left.first < right.first; });
+
+	std::vector<std::pair<int, std::unordered_set<std::string>>> actualUses = EntityStager::getStagedUsesStatement();
+	std::sort(actualUses.begin(), actualUses.end(),
+		[](auto& left, auto& right) {return left.first < right.first; });
+
+	REQUIRE(actualUses == expectedUses);
+	EntityStager::clear();
+}
+
+TEST_CASE("Uses 3.2 - Single Read") {
+	EntityStager::clear();
+	DesignExtractor::extractDesignElements(RelationshipASTs::getAST3_2());
+
+	std::vector<std::pair<int, std::unordered_set<std::string>>> expectedUses{
+		{1, {"x"}}
+	};
+	std::sort(expectedUses.begin(), expectedUses.end(),
+		[](auto& left, auto& right) {return left.first < right.first; });
+
+	std::vector<std::pair<int, std::unordered_set<std::string>>> actualUses = EntityStager::getStagedUsesStatement();
+	std::sort(actualUses.begin(), actualUses.end(),
+		[](auto& left, auto& right) {return left.first < right.first; });
+
+	REQUIRE(actualUses == expectedUses);
+	EntityStager::clear();
+}
+
+TEST_CASE("Uses 3.3 - Single Advanced Assign") {
+	EntityStager::clear();
+	DesignExtractor::extractDesignElements(RelationshipASTs::getAST3_3());
+
+	std::vector<std::pair<int, std::unordered_set<std::string>>> expectedUses{
+		{1, {"x", "y", "z"}}
+	};
+	std::sort(expectedUses.begin(), expectedUses.end(),
+		[](auto& left, auto& right) {return left.first < right.first; });
+
+	std::vector<std::pair<int, std::unordered_set<std::string>>> actualUses = EntityStager::getStagedUsesStatement();
+	std::sort(actualUses.begin(), actualUses.end(),
+		[](auto& left, auto& right) {return left.first < right.first; });
+
+	REQUIRE(actualUses == expectedUses);
+	EntityStager::clear();
+}
+
+TEST_CASE("Uses 3.4 - Single Advanced Assign") {
+	EntityStager::clear();
+	DesignExtractor::extractDesignElements(RelationshipASTs::getAST3_4());
+
+	std::vector<std::pair<int, std::unordered_set<std::string>>> expectedUses{
+		{1, {"x", "y", "z"}}
+	};
+	std::sort(expectedUses.begin(), expectedUses.end(),
+		[](auto& left, auto& right) {return left.first < right.first; });
+
+	std::vector<std::pair<int, std::unordered_set<std::string>>> actualUses = EntityStager::getStagedUsesStatement();
+	std::sort(actualUses.begin(), actualUses.end(),
+		[](auto& left, auto& right) {return left.first < right.first; });
+
+	REQUIRE(actualUses == expectedUses);
+	EntityStager::clear();
+}
 
 TEST_CASE("Uses 3.5 - 2 basic statements") {
 	DesignExtractor::extractDesignElements(RelationshipASTs::getAST3_5());

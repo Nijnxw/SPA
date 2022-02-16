@@ -6,37 +6,37 @@
 #include <memory>
 #include <vector>
 
-//TEST_CASE("FollowsT 3.1 - Single Read") {
-//	EntityStager::clear();
-//	DesignExtractor::extractDesignElements(RelationshipASTs::getAST3_1());
-//	std::vector<std::pair<int, int>> expectedFollowsT{};
-//	REQUIRE(EntityStager::getStagedFollowsT() == expectedFollowsT);
-//	EntityStager::clear();
-//}
-//
-//TEST_CASE("FollowsT 3.2 - Single Read") {
-//	EntityStager::clear();
-//	DesignExtractor::extractDesignElements(RelationshipASTs::getAST3_2());
-//	std::vector<std::pair<int, int>> expectedFollowsT{};
-//	REQUIRE(EntityStager::getStagedFollowsT() == expectedFollowsT);
-//	EntityStager::clear();
-//}
-//
-//TEST_CASE("FollowsT 3.3 - Single Advanced Assign") {
-//	EntityStager::clear();
-//	DesignExtractor::extractDesignElements(RelationshipASTs::getAST3_3());
-//	std::vector<std::pair<int, int>> expectedFollowsT{};
-//	REQUIRE(EntityStager::getStagedFollowsT() == expectedFollowsT);
-//	EntityStager::clear();
-//}
-//
-//TEST_CASE("FollowsT 3.4 - Single Advanced Assign") {
-//	EntityStager::clear();
-//	DesignExtractor::extractDesignElements(RelationshipASTs::getAST3_4());
-//	std::vector<std::pair<int, int>> expectedFollowsT{};
-//	REQUIRE(EntityStager::getStagedFollowsT() == expectedFollowsT);
-//	EntityStager::clear();
-//}
+TEST_CASE("FollowsT 3.1 - Single Read") {
+	EntityStager::clear();
+	DesignExtractor::extractDesignElements(RelationshipASTs::getAST3_1());
+	std::vector<std::pair<int, int>> expectedFollowsT{ };
+	REQUIRE(EntityStager::getStagedFollowsT() == expectedFollowsT);
+	EntityStager::clear();
+}
+
+TEST_CASE("FollowsT 3.2 - Single Read") {
+	EntityStager::clear();
+	DesignExtractor::extractDesignElements(RelationshipASTs::getAST3_2());
+	std::vector<std::pair<int, int>> expectedFollowsT{ };
+	REQUIRE(EntityStager::getStagedFollowsT() == expectedFollowsT);
+	EntityStager::clear();
+}
+
+TEST_CASE("FollowsT 3.3 - Single Advanced Assign") {
+	EntityStager::clear();
+	DesignExtractor::extractDesignElements(RelationshipASTs::getAST3_3());
+	std::vector<std::pair<int, int>> expectedFollowsT{ };
+	REQUIRE(EntityStager::getStagedFollowsT() == expectedFollowsT);
+	EntityStager::clear();
+}
+
+TEST_CASE("FollowsT 3.4 - Single Advanced Assign") {
+	EntityStager::clear();
+	DesignExtractor::extractDesignElements(RelationshipASTs::getAST3_4());
+	std::vector<std::pair<int, int>> expectedFollowsT{ };
+	REQUIRE(EntityStager::getStagedFollowsT() == expectedFollowsT);
+	EntityStager::clear();
+}
 
 TEST_CASE("FollowsT 3.5 - 2 basic statements") {
 	DesignExtractor::extractDesignElements(RelationshipASTs::getAST3_5());

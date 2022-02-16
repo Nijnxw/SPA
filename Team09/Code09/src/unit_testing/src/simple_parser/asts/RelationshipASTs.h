@@ -8,7 +8,7 @@
 #include "models/simple_parser/PredicateNodes.h"
 #include "models/simple_parser/ProcedureNode.h"
 #include "models/simple_parser/WhileNode.h"
-#include "asts/NonContainerStmtASTs.h"
+#include "NonContainerStmtASTs.h"
 
 #include <memory>
 #include <string>

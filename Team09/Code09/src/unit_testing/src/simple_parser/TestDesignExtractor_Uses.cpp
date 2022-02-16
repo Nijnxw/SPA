@@ -1,7 +1,7 @@
 #include "catch.hpp"
 #include "simple_parser/EntityStager.h"
 #include "simple_parser/DesignExtractor.h"
-#include "RelationshipASTs.h"
+#include "asts/RelationshipASTs.h"
 
 #include <string>
 #include <unordered_set>

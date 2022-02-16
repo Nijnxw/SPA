@@ -58,7 +58,7 @@ std::shared_ptr<RelExprNode> PredicateNode::getRelExprNode() const {
 }
 
 std::shared_ptr<PredicateNode> PredicateNode::getLhs() const {
-	if (!isFullPredicate()) throw std::runtime_error("Predicate is does not contain a left predicate (Not terminal or a NOT predicate)");
+	if (!isFullPredicate()) throw std::runtime_error("Predicate does not contain a left predicate (Not terminal or a NOT predicate)");
 	return lhs;
 }
 

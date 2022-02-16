@@ -117,11 +117,11 @@ std::string RPN::convertToRpn(std::string infix) {
 		} else {
 			bool matched = false;
 			while (!stack.empty() && !matched) {
-				rpn.push_back(stack.top().getContents());
-				stack.pop();
-
 				if (!stack.empty() && stack.top().isLeftParenthesis()) {
 					matched = true;
+					stack.pop();
+				} else {
+					rpn.push_back(stack.top().getContents());
 					stack.pop();
 				}
 			}

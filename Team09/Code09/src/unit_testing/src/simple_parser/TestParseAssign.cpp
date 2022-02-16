@@ -8,28 +8,54 @@
 //                  HAPPY PATHS
 // --------------------------------------------------
 TEST_CASE ("Test parsing of valid assign - variable") {
-	// a = x;
-	std::vector<Token*> input = {
-			new NameToken("procedure"), 	new NameToken("testProgram"),
-			new PunctuatorToken("{"),   	new NameToken("a"),
-			new OperatorToken("="),		new NameToken("x"),
-			new PunctuatorToken(";"),	new PunctuatorToken("}"),
-			new EndOfFileToken(),
-	};
+	SECTION ("any variable name") {
+		// a = x;
+		std::vector<Token*> input = {
+				new NameToken("procedure"), 	new NameToken("testProgram"),
+				new PunctuatorToken("{"),   	new NameToken("a"),
+				new OperatorToken("="),		new NameToken("x"),
+				new PunctuatorToken(";"),	new PunctuatorToken("}"),
+				new EndOfFileToken(),
+		};
 
-	SPParser parser = SPParser(input);
-	AST output = parser.parseProgram();
+		SPParser parser = SPParser(input);
+		AST output = parser.parseProgram();
 
-	std::shared_ptr<VariableNode> variableNode = std::make_shared<VariableNode>("a");
-	ExprNode exprNode = std::make_shared<VariableNode>("x");
-	std::string postfix = "x";
-	std::shared_ptr<AssignNode> assignNode = std::make_shared<AssignNode>(1, variableNode, exprNode, postfix);
-	std::vector<std::shared_ptr<StmtNode>> stmtLst{move(assignNode)};
-	std::shared_ptr<ProcedureNode> procedureNode = std::make_shared<ProcedureNode>(stmtLst, "testProgram");
-	std::vector<std::shared_ptr<ProcedureNode>> procLst{move(procedureNode)};
-	AST expected = std::make_shared<ProgramNode>(procLst);
+		std::shared_ptr<VariableNode> variableNode = std::make_shared<VariableNode>("a");
+		ExprNode exprNode = std::make_shared<VariableNode>("x");
+		std::string postfix = "x";
+		std::shared_ptr<AssignNode> assignNode = std::make_shared<AssignNode>(1, variableNode, exprNode, postfix);
+		std::vector<std::shared_ptr<StmtNode>> stmtLst{move(assignNode)};
+		std::shared_ptr<ProcedureNode> procedureNode = std::make_shared<ProcedureNode>(stmtLst, "testProgram");
+		std::vector<std::shared_ptr<ProcedureNode>> procLst{move(procedureNode)};
+		AST expected = std::make_shared<ProgramNode>(procLst);
 
-	REQUIRE(*output == *expected);
+		REQUIRE(*output == *expected);
+	}
+	SECTION ("keyword as variable name") {
+		// while = x;
+		std::vector<Token*> input = {
+				new NameToken("procedure"), 	new NameToken("testProgram"),
+				new PunctuatorToken("{"),   	new NameToken("while"),
+				new OperatorToken("="),		new NameToken("x"),
+				new PunctuatorToken(";"),	new PunctuatorToken("}"),
+				new EndOfFileToken(),
+		};
+
+		SPParser parser = SPParser(input);
+		AST output = parser.parseProgram();
+
+		std::shared_ptr<VariableNode> variableNode = std::make_shared<VariableNode>("while");
+		ExprNode exprNode = std::make_shared<VariableNode>("x");
+		std::string postfix = "x";
+		std::shared_ptr<AssignNode> assignNode = std::make_shared<AssignNode>(1, variableNode, exprNode, postfix);
+		std::vector<std::shared_ptr<StmtNode>> stmtLst{move(assignNode)};
+		std::shared_ptr<ProcedureNode> procedureNode = std::make_shared<ProcedureNode>(stmtLst, "testProgram");
+		std::vector<std::shared_ptr<ProcedureNode>> procLst{move(procedureNode)};
+		AST expected = std::make_shared<ProgramNode>(procLst);
+
+		REQUIRE(*output == *expected);
+	}
 }
 
 TEST_CASE ("Test parsing of valid assign - constant") {

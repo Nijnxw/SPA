@@ -231,6 +231,9 @@ std::vector<std::shared_ptr<StmtNode>> SPParser::parseStmtLst() {
 std::shared_ptr<StmtNode> SPParser::parseStatement() {
 	if (check("}")) return nullptr;
 
+	std::shared_ptr<AssignNode> assignNode = parseAssign();
+	if (assignNode) return assignNode;
+
 	std::shared_ptr<ReadNode> readNode = parseRead();
 	if (readNode) return readNode;
 
@@ -242,9 +245,6 @@ std::shared_ptr<StmtNode> SPParser::parseStatement() {
 
 	std::shared_ptr<IfNode> ifNode = parseIf();
 	if (ifNode) return ifNode;
-
-	std::shared_ptr<AssignNode> assignNode = parseAssign();
-	if (assignNode) return assignNode;
 
 	throw std::runtime_error("Invalid statement syntax at statement " + std::to_string(getStmtNo()) + ".\n");
 }
@@ -275,8 +275,16 @@ std::shared_ptr<PrintNode> SPParser::parsePrint() {
 
 // assign: var_name '=' expr ';'
 std::shared_ptr<AssignNode> SPParser::parseAssign() {
+	int storedCurrIdx = currentIdx;
 	std::shared_ptr<VariableNode> varNode = parseVariable();
 	if (!varNode) return nullptr;
+	if (!check("=")) {
+		// var_name could be a keyword (read, print, if, while)
+		// if next token is not '-', restore token pointer and return nullptr
+		// for parseStmt to parse other types of stmts
+		currentIdx = storedCurrIdx;
+		return nullptr;
+	}
 	expect("=");
 	ExprNode exprNode = parseExpr();
 	expect(";");

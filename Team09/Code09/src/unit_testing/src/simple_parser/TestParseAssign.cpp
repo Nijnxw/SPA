@@ -15,8 +15,8 @@ TEST_CASE ("Assign 1.3 - Variable-Constant Interaction - Single constant") {
 			new PunctuatorToken(";"),	new PunctuatorToken("}"),		new EndOfFileToken(),
 	};
 
-	SPParser parser = SPParser(input);
-	AST output = parser.parseProgram();
+		SPParser parser = SPParser(input);
+		AST output = parser.parseProgram();
 
 	REQUIRE(*output == *NonContainerStmtASTs::getAST1_3());
 }
@@ -32,6 +32,7 @@ TEST_CASE ("Assign 1.4 - Variable-Constant Interaction - Single variable") {
 	AST output = parser.parseProgram();
 
 	REQUIRE(*output == *NonContainerStmtASTs::getAST1_4());
+
 }
 
 TEST_CASE ("Assign 1.5 - Variable-Constant Interaction - Two variables") {

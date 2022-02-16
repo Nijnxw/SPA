@@ -54,7 +54,7 @@ TEST_CASE ("Test parsing of invalid read statement") {
 				new PunctuatorToken("}"),	new EndOfFileToken(),
 		};
 		SPParser parser = SPParser(input);
-		REQUIRE_THROWS_WITH(parser.parseProgram(), "Expected '=' but got 'p' instead.\n");
+		REQUIRE_THROWS_WITH(parser.parseProgram(), "Invalid statement syntax at statement 1.\n");
 	}
 	SECTION ("'read' keyword is case sensitive") {
 		std::vector<Token*> input = {
@@ -64,7 +64,7 @@ TEST_CASE ("Test parsing of invalid read statement") {
 				new PunctuatorToken("}"),	new EndOfFileToken(),
 		};
 		SPParser parser = SPParser(input);
-		REQUIRE_THROWS_WITH(parser.parseProgram(), "Expected '=' but got 'p' instead.\n");
+		REQUIRE_THROWS_WITH(parser.parseProgram(), "Invalid statement syntax at statement 1.\n");
 	}
 	SECTION ("Constants as var_name") {
 		std::vector<Token*> input = {

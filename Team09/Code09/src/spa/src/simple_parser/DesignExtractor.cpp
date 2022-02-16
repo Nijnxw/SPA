@@ -50,10 +50,8 @@ NestableRelationships processExprNode(ExprNode expr) {
 NestableRelationships processPredicateNode(std::shared_ptr<PredicateNode> expr) {
 	NestableRelationships rs = NestableRelationships::createEmpty();
 	if (expr->isTerminalPredicate()) {
-		//todo: violates law of dememter
-		std::shared_ptr<RelExprNode> relExpr = expr->getRelExprNode();
-		rs.combine(processExprNode(relExpr->getLhs()));
-		rs.combine(processExprNode(relExpr->getRhs()));
+		rs.combine(processExprNode(expr->getRelLhs()));
+		rs.combine(processExprNode(expr->getRelRhs()));
 	} else {
 		rs.combine(processPredicateNode(expr->getLhs()));
 		rs.combine(processPredicateNode(expr->getRhs()));

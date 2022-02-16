@@ -1,5 +1,6 @@
 #pragma once
 
+#include "CommonNodes.h"
 #include "models/simple_parser/AST.h"
 #include "models/simple_parser/AssignNode.h"
 #include "models/simple_parser/ExprNodes.h"
@@ -8,7 +9,23 @@
 #include "models/simple_parser/PredicateNodes.h"
 #include "models/simple_parser/WhileNode.h"
 
-class ContainerStmtASTs {
+class ContainerStmtASTs : public CommonNodes {
+private:
+	static ExprNode xPlusC1;
+	static ExprNode yPlusC1;
+	static ExprNode yMinusC2;
+
+	static std::shared_ptr<PredicateNode> predC1NeqC1;
+	static std::shared_ptr<PredicateNode> predXLtC1;
+	static std::shared_ptr<PredicateNode> predXEqC2;
+
+	static std::shared_ptr<PredicateNode> predYLtC1;
+	static std::shared_ptr<PredicateNode> predYGteC3;
+	static std::shared_ptr<PredicateNode> predYPlusC1LtX;
+	static std::shared_ptr<PredicateNode> predZLtC1;
+
+	static std::vector<std::shared_ptr<StmtNode>> whileStmtListRead;
+
 public:
 	// while statements
 	// basic predicate

@@ -1,53 +1,38 @@
 #include "ContainerStmtASTs.h"
 
-AST generateAST(std::vector<std::shared_ptr<StmtNode>> stmts) {
-	std::shared_ptr<ProcedureNode> proc = std::make_shared<ProcedureNode>(stmts, "testProgram");
-	std::vector<std::shared_ptr<ProcedureNode>> procList{ proc };
-	return std::make_shared<ProgramNode>(procList);
-}
+ExprNode ContainerStmtASTs::xPlusC1 = std::make_shared<BinaryOperatorNode>(BinaryOperator::PLUS, x, c1);
+ExprNode ContainerStmtASTs::yPlusC1 = std::make_shared<BinaryOperatorNode>(BinaryOperator::PLUS, y, c1);
+ExprNode ContainerStmtASTs::yMinusC2 = std::make_shared<BinaryOperatorNode>(BinaryOperator::MINUS, y, c2);
 
-std::shared_ptr<ConstantNode> c1 = std::make_shared<ConstantNode>("1");
-std::shared_ptr<ConstantNode> c2 = std::make_shared<ConstantNode>("2");
-std::shared_ptr<ConstantNode> c3 = std::make_shared<ConstantNode>("3");
-
-std::shared_ptr<VariableNode> a = std::make_shared<VariableNode>("a");
-std::shared_ptr<VariableNode> x = std::make_shared<VariableNode>("x");
-std::shared_ptr<VariableNode> y = std::make_shared<VariableNode>("y");
-std::shared_ptr<VariableNode> z = std::make_shared<VariableNode>("z");
-
-ExprNode xPlusC1 = std::make_shared<BinaryOperatorNode>(BinaryOperator::PLUS, x, c1);
-ExprNode yPlusC1 = std::make_shared<BinaryOperatorNode>(BinaryOperator::PLUS, y, c1);
-ExprNode yMinusC2 = std::make_shared<BinaryOperatorNode>(BinaryOperator::MINUS, y, c2);
-
-std::shared_ptr<PredicateNode> predC1NeqC1 = std::make_shared<PredicateNode>(
+std::shared_ptr<PredicateNode> ContainerStmtASTs::predC1NeqC1 = std::make_shared<PredicateNode>(
 		std::make_shared<RelExprNode>(c1, ComparatorOperator::NEQ, c1)
 );
 
-std::shared_ptr<PredicateNode> predXLtC1 = std::make_shared<PredicateNode>(
+std::shared_ptr<PredicateNode> ContainerStmtASTs::predXLtC1 = std::make_shared<PredicateNode>(
 		std::make_shared<RelExprNode>(x, ComparatorOperator::LT, c1)
 );
 
-std::shared_ptr<PredicateNode> predXEqC2 = std::make_shared<PredicateNode>(
+std::shared_ptr<PredicateNode> ContainerStmtASTs::predXEqC2 = std::make_shared<PredicateNode>(
 		std::make_shared<RelExprNode>(x, ComparatorOperator::EQ, c2)
 );
 
-std::shared_ptr<PredicateNode> predYLtC1 = std::make_shared<PredicateNode>(
+std::shared_ptr<PredicateNode> ContainerStmtASTs::predYLtC1 = std::make_shared<PredicateNode>(
 		std::make_shared<RelExprNode>(y, ComparatorOperator::LT, c1)
 );
 
-std::shared_ptr<PredicateNode> predYGteC3 = std::make_shared<PredicateNode>(
+std::shared_ptr<PredicateNode> ContainerStmtASTs::predYGteC3 = std::make_shared<PredicateNode>(
 		std::make_shared<RelExprNode>(y, ComparatorOperator::GTE, c3)
 );
 
-std::shared_ptr<PredicateNode> predYPlusC1LtX = std::make_shared<PredicateNode>(
+std::shared_ptr<PredicateNode> ContainerStmtASTs::predYPlusC1LtX = std::make_shared<PredicateNode>(
 		std::make_shared<RelExprNode>(yPlusC1, ComparatorOperator::LT, x)
 );
 
-std::shared_ptr<PredicateNode> predZLtC1 = std::make_shared<PredicateNode>(
+std::shared_ptr<PredicateNode> ContainerStmtASTs::predZLtC1 = std::make_shared<PredicateNode>(
 		std::make_shared<RelExprNode>(z, ComparatorOperator::LT, c1)
 );
 
-std::vector<std::shared_ptr<StmtNode>> whileStmtListRead{
+std::vector<std::shared_ptr<StmtNode>> ContainerStmtASTs::whileStmtListRead {
 		std::make_shared<ReadNode>(2, x)
 };
 

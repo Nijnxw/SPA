@@ -1,11 +1,12 @@
 #pragma once
 
+#include "CommonNodes.h"
 #include "models/simple_parser/AST.h"
 #include "models/simple_parser/AssignNode.h"
 #include "models/simple_parser/ExprNodes.h"
 #include "models/simple_parser/IoNodes.h"
 
-class NonContainerStmtASTs {
+class NonContainerStmtASTs : public CommonNodes {
 public:
 	// ast for read & print stmts
 	static AST getAST1_1();

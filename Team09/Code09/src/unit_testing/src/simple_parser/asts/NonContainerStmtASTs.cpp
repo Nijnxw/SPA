@@ -1,19 +1,6 @@
 #include "NonContainerStmtASTs.h"
 
-AST generateAST(std::vector<std::shared_ptr<StmtNode>> stmts) {
-	std::shared_ptr<ProcedureNode> proc = std::make_shared<ProcedureNode>(stmts, "testProgram");
-	std::vector<std::shared_ptr<ProcedureNode>> procList{ proc };
-	return std::make_shared<ProgramNode>(procList);
-}
-
-std::shared_ptr<ConstantNode> c1 = std::make_shared<ConstantNode>("1");
-std::shared_ptr<ConstantNode> c2 = std::make_shared<ConstantNode>("2");
-std::shared_ptr<ConstantNode> c3 = std::make_shared<ConstantNode>("3");
-
-std::shared_ptr<VariableNode> a = std::make_shared<VariableNode>("a");
-std::shared_ptr<VariableNode> x = std::make_shared<VariableNode>("x");
-std::shared_ptr<VariableNode> y = std::make_shared<VariableNode>("y");
-std::shared_ptr<VariableNode> z = std::make_shared<VariableNode>("z");
+// read and print ASTs
 
 AST NonContainerStmtASTs::getAST1_1() {
 	/*

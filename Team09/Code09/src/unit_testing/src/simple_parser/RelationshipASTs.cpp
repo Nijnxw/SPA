@@ -54,6 +54,22 @@ std::shared_ptr<PredicateNode> RelationshipASTs::predWLt3 = std::make_shared<Pre
 	);
 
 
+AST RelationshipASTs::getAST3_1() {
+	return NonContainerStmtASTs::getAST1_1();
+}
+
+AST RelationshipASTs::getAST3_2() {
+	return NonContainerStmtASTs::getAST1_2();
+}
+
+AST RelationshipASTs::getAST3_3() {
+	return NonContainerStmtASTs::getAST1_37();
+}
+
+AST RelationshipASTs::getAST3_4() {
+	return NonContainerStmtASTs::getAST1_37();
+}
+
 AST RelationshipASTs::getAST3_5() {
 	/*
 	 * procedure testProgram {

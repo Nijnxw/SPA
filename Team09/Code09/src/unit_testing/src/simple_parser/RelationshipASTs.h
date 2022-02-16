@@ -8,6 +8,7 @@
 #include "models/simple_parser/PredicateNodes.h"
 #include "models/simple_parser/ProcedureNode.h"
 #include "models/simple_parser/WhileNode.h"
+#include "asts/NonContainerStmtASTs.h"
 
 #include <memory>
 #include <string>
@@ -35,10 +36,10 @@ private:
 	static std::shared_ptr<PredicateNode> predZLt3;
 	static std::shared_ptr<PredicateNode> predWLt3;
 public:
-	//AST getAST3_1();
-	//AST getAST3_2();
-	//AST getAST3_3();
-	//AST getAST3_4();
+	static AST getAST3_1();
+	static AST getAST3_2();
+	static AST getAST3_3();
+	static AST getAST3_4();
 	static AST getAST3_5();
 	static AST getAST3_6();
 	static AST getAST3_7();

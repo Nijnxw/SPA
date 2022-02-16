@@ -35,9 +35,14 @@ TEST_CASE("Correct Handling of Terms") {
 }
 
 TEST_CASE("Correct Handling of Parentheses") {
+    REQUIRE(RPN::convertToRpn("(1)") == "1");
+    REQUIRE(RPN::convertToRpn("((((1))))") == "1");
+    REQUIRE(RPN::convertToRpn("(x)") == "x");
     REQUIRE(RPN::convertToRpn("(1 - 5)") == "1 5 -");
+    REQUIRE(RPN::convertToRpn("(((1 - 6)))") == "1 6 -");
     REQUIRE(RPN::convertToRpn("3 + 44 * 2 / ( 1 - 5 )") == "3 44 2 * 1 5 - / +");
     REQUIRE(RPN::convertToRpn("3+4*2/(1-5)+1*22") == "3 4 2 * 1 5 - / + 1 22 * +");
+    REQUIRE(RPN::convertToRpn("3+4*2/(((((1-5)))))+1*22") == "3 4 2 * 1 5 - / + 1 22 * +");
 }
 
 TEST_CASE("Correct Handling of Contains") {

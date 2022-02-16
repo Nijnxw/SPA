@@ -457,8 +457,8 @@ TEST_CASE ("Assign 1.33 - Operator Precedence Intermediate - (1 + (x) - 3 % y)")
 			new NameToken("procedure"), 	new NameToken("testProgram"),	new PunctuatorToken("{"),
 			new NameToken("a"),			new OperatorToken("="),			new PunctuatorToken("("),
 			new IntegerToken("1"),		new OperatorToken("+"), 			new PunctuatorToken("("),
-			new NameToken("x"),			new PunctuatorToken(")"),	new OperatorToken("-"),
-			new NameToken("y"),			new OperatorToken("%"),			new IntegerToken("3"),
+			new NameToken("x"),			new PunctuatorToken(")"),		new OperatorToken("-"),
+			new IntegerToken("3"),		new OperatorToken("%"),			new NameToken("y"),
 			new PunctuatorToken(")"),
 			new PunctuatorToken(";"),	new PunctuatorToken("}"),		new EndOfFileToken(),
 	};

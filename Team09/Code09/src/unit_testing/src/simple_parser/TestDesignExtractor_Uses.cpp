@@ -558,7 +558,7 @@ TEST_CASE("Uses 3.33 - 3 levels of nesting - 1 stmt per nest level - if-while-if
 	DesignExtractor::extractDesignElements(RelationshipASTs::getAST3_33());
 
 	std::vector<std::pair<int, std::unordered_set<std::string>>> expectedUses{
-		{1, {"x", "y", "z"}}, {2, {"y", "z"}}, {3, {"z"}}, {5, {"z"}},
+		{1, {"x", "y", "z"}}, {2, {"y", "z"}}, {3, {"z"}}, {5, {"z"}}, {6, {"y"}},
 		{8, {"x"}}
 	};
 	std::sort(expectedUses.begin(), expectedUses.end(),

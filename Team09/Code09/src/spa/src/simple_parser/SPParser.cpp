@@ -240,6 +240,9 @@ std::shared_ptr<StmtNode> SPParser::parseStatement() {
 	std::shared_ptr<WhileNode> whileNode = parseWhile();
 	if (whileNode) return whileNode;
 
+	std::shared_ptr<IfNode> ifNode = parseIf();
+	if (ifNode) return ifNode;
+
 	std::shared_ptr<AssignNode> assignNode = parseAssign();
 	if (assignNode) return assignNode;
 
@@ -294,6 +297,25 @@ std::shared_ptr<WhileNode> SPParser::parseWhile() {
 	std::vector<std::shared_ptr<StmtNode>> stmtLst = parseStmtLst();
 	expect("}");
 	return std::make_shared<WhileNode>(currStmtNo, predicateNode, stmtLst);
+}
+
+// if: 'if' '(' cond_expr ')' 'then' '{' stmtLst '}' 'else' '{' stmtLst '}'
+std::shared_ptr<IfNode> SPParser::parseIf() {
+	if (!check("if")) return nullptr;
+	int currStmtNo = getStmtNo();
+	expect("if");
+	expect("(");
+	std::shared_ptr<PredicateNode> predicateNode = parsePredicate();
+	expect(")");
+	expect("then");
+	expect("{");
+	std::vector<std::shared_ptr<StmtNode>> thenStmtLst = parseStmtLst();
+	expect("}");
+	expect("else");
+	expect("{");
+	std::vector<std::shared_ptr<StmtNode>> elseStmtLst = parseStmtLst();
+	expect("}");
+	return std::make_shared<IfNode>(currStmtNo, predicateNode, thenStmtLst, elseStmtLst);
 }
 
 // Main function driving SPParser class (exposed API)

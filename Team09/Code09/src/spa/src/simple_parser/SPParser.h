@@ -58,6 +58,7 @@ private:
 	};
 
 	bool isEndOfExpr();
+	void clearExprStr();
 	int getLeftBindingPower();
 	BinaryOperator getBinaryOperatorEnum();
 	ExprNode parseOperand();
@@ -65,8 +66,8 @@ private:
 	ExprNode parseExpression(int rightBindingPower);
 	ExprNode parseExpr();
 
+	bool isTerminalPredicate();
 	ComparatorOperator getComparatorOperatorEnum();
-	ConditionalOperator getPrefixConditionalOperatorEnum();
 	ConditionalOperator getInfixConditionalOperatorEnum();
 	std::shared_ptr<RelExprNode> parseRelExpr();
 	std::shared_ptr<PredicateNode> parsePredicate();

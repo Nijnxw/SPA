@@ -23,6 +23,7 @@ private:
 	int stmtNo = 0;
 	std::vector<Token*> tokens;
 	std::string exprStr;
+	int parenthesesStack = 0;
 
 	std::unordered_map<std::string, BinaryOperator> strBinaryOpMap = {
 		{"+", BinaryOperator::PLUS},
@@ -65,8 +66,8 @@ private:
 	ExprNode parseExpression(int rightBindingPower);
 	ExprNode parseExpr();
 
+	bool isTerminalPredicate();
 	ComparatorOperator getComparatorOperatorEnum();
-	ConditionalOperator getPrefixConditionalOperatorEnum();
 	ConditionalOperator getInfixConditionalOperatorEnum();
 	std::shared_ptr<RelExprNode> parseRelExpr();
 	std::shared_ptr<PredicateNode> parsePredicate();

@@ -122,6 +122,29 @@ ExprNode SPParser::parseExpr() {
 	return parseExpression(BindingPower::OPERAND);
 }
 
+bool SPParser::isTerminalPredicate() {
+	// check if future token do not have '&&' or '||' tokens
+	int storeCurrIdx = currentIdx;
+	int parenthesesStack = 0;
+	if (check("(")) {
+		parenthesesStack++;
+		get();
+	} else {
+		return true;
+	}
+	while (parenthesesStack != 0) {
+		// is end of program or predicate but parentheses do not match
+		if (isEndOfFile() or check("{"))
+			throw std::runtime_error("Unmatched parentheses at line " + std::to_string(getStmtNo()));
+		if (check("(")) parenthesesStack++;
+		if (check(")")) parenthesesStack--;
+		get();
+	}
+	bool rtv = !(check("&&") or check("||"));
+	currentIdx = storeCurrIdx;
+	return rtv;
+}
+
 ComparatorOperator SPParser::getComparatorOperatorEnum() {
 	if (!check(ParserTokenType::OPERATOR) ||
 		strComparatorOpMap.find(peek()->getValue()) == strComparatorOpMap.end()) {
@@ -129,13 +152,6 @@ ComparatorOperator SPParser::getComparatorOperatorEnum() {
 	}
 	std::string op = peek()->getValue();
 	return strComparatorOpMap[op];
-}
-
-ConditionalOperator SPParser::getPrefixConditionalOperatorEnum() {
-	if (!check("!")) {
-		throw std::runtime_error("Expected '!' but got '" + peek()->getValue() + "' instead.\n");
-	}
-	return ConditionalOperator::NOT;
 }
 
 ConditionalOperator SPParser::getInfixConditionalOperatorEnum() {
@@ -169,13 +185,12 @@ std::shared_ptr<RelExprNode> SPParser::parseRelExpr() {
 //			| '(' cond_expr ')' '||' '(' cond_expr ')'
 std::shared_ptr<PredicateNode> SPParser::parsePredicate() {
 	if (check("!")) {
-		ConditionalOperator notOperator = getPrefixConditionalOperatorEnum();
 		expect("!");
 		expect("(");
 		std::shared_ptr<PredicateNode> predicateNode = parsePredicate();
 		expect(")");
-		return std::make_shared<PredicateNode>(notOperator, predicateNode);
-	} else if (check("(")) {
+		return std::make_shared<PredicateNode>(ConditionalOperator::NOT, predicateNode);
+	} else if (!isTerminalPredicate()) {
 		expect("(");
 		std::shared_ptr<PredicateNode> lhs = parsePredicate();
 		expect(")");

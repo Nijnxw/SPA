@@ -197,6 +197,51 @@ TEST_CASE("Test parsing of valid while statements") {
 	}
 }
 
+TEST_CASE ("Test parentheses in predicate") {
+	/*
+		 * Test Simple Program
+		 * procedure testProgram {
+		 * 1	while ((x + 1) < 1) {
+		 * 2		read x;
+		 * 		}
+		 * }
+		 */
+	std::vector<Token*> input = {
+			new NameToken("procedure"), 	new NameToken("testProgram"),
+			new PunctuatorToken("{"),   	new NameToken("while"),
+			new PunctuatorToken("("),	new PunctuatorToken("("), 	new NameToken("x"),
+			new OperatorToken("+"),		new IntegerToken("1"),		new PunctuatorToken(")"),
+			new OperatorToken("<"),		new IntegerToken("1"),
+			new PunctuatorToken(")"),	new PunctuatorToken("{"),
+			new NameToken("read"),		new NameToken("x"),
+			new PunctuatorToken(";"),	new PunctuatorToken("}"),
+			new PunctuatorToken("}"),	new EndOfFileToken(),
+	};
+
+	SPParser parser = SPParser(input);
+	AST output = parser.parseProgram();
+
+	std::shared_ptr<VariableNode> x = std::make_shared<VariableNode>("x");
+	std::shared_ptr<ConstantNode> c1 = std::make_shared<ConstantNode>("1");
+	ExprNode xPlus1 = std::make_shared<BinaryOperatorNode>(BinaryOperator::PLUS, x, c1);
+
+	std::shared_ptr<PredicateNode> ltNode = std::make_shared<PredicateNode>(
+			std::make_shared<RelExprNode>(xPlus1, ComparatorOperator::LT, c1)
+	);
+
+	std::vector<std::shared_ptr<StmtNode>> whileStmtLst {
+		std::make_shared<ReadNode>(2, x)
+	};
+
+	std::shared_ptr<WhileNode> whileNode = std::make_shared<WhileNode>(1, ltNode, whileStmtLst);
+	std::vector<std::shared_ptr<StmtNode>> stmtLst1{whileNode};
+	std::shared_ptr<ProcedureNode> procedureNode = std::make_shared<ProcedureNode>(stmtLst1, "testProgram");
+	std::vector<std::shared_ptr<ProcedureNode>> procLst{move(procedureNode)};
+	AST expected = std::make_shared<ProgramNode>(procLst);
+
+	REQUIRE(*output == *expected);
+}
+
 // --------------------------------------------------
 //                 UNHAPPY PATHS
 // --------------------------------------------------
@@ -279,7 +324,7 @@ TEST_CASE("Invalid while stmt - invalid predicate") {
 		SPParser parser = SPParser(input);
 		REQUIRE_THROWS_WITH(parser.parseProgram(), "Expected '(' but got 'x' instead.\n");
 	}
-	SECTION ("Missing conditional") {
+	SECTION ("Invalid rel_expr") {
 		/*
 		 * procedure testProgram {
 		 * 1	while ((x < 1)) {
@@ -297,6 +342,6 @@ TEST_CASE("Invalid while stmt - invalid predicate") {
 		};
 
 		SPParser parser = SPParser(input);
-		REQUIRE_THROWS_WITH(parser.parseProgram(), "Expected '&&' or '||' but got ')' instead.\n");
+		REQUIRE_THROWS_WITH(parser.parseProgram(), "Expected ')' but got '<' instead.\n");
 	}
 }

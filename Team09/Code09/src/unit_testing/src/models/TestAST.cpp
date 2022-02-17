@@ -206,6 +206,17 @@ TEST_CASE("Test Predicate Nodes") {
 		
 		REQUIRE(pred1 == pred2);
 		REQUIRE(pred1.isTerminalPredicate() == true);
+		REQUIRE(pred1.isNotPredicate() == false);
+		REQUIRE(pred1.isFullPredicate() == false);
+
+		//legal accesses
+		REQUIRE_NOTHROW(pred1.getRelExprNode());
+		REQUIRE_NOTHROW(pred1.getRelLhs());
+		REQUIRE_NOTHROW(pred1.getRelRhs());
+
+		//illegal accesses
+		REQUIRE_THROWS_WITH(pred1.getLhs(), "Predicate does not contain a left predicate (Not terminal or a NOT predicate)");
+		REQUIRE_THROWS_WITH(pred1.getRhs(), "Predicate is a terminal predicate");
 	}
 
 	SECTION("Predicate with binary operators") {
@@ -229,6 +240,17 @@ TEST_CASE("Test Predicate Nodes") {
 		REQUIRE(pred != pred4);
 
 		REQUIRE(pred.isTerminalPredicate() == true);
+		REQUIRE(pred.isNotPredicate() == false);
+		REQUIRE(pred.isFullPredicate() == false);
+
+		//legal accesses
+		REQUIRE_NOTHROW(pred.getRelExprNode());
+		REQUIRE_NOTHROW(pred.getRelLhs());
+		REQUIRE_NOTHROW(pred.getRelRhs());
+
+		//illegal accesses
+		REQUIRE_THROWS_WITH(pred.getLhs(), "Predicate does not contain a left predicate (Not terminal or a NOT predicate)");
+		REQUIRE_THROWS_WITH(pred.getRhs(), "Predicate is a terminal predicate");
 	}
 
 	SECTION("Simple Predicate with NOT") {
@@ -243,6 +265,22 @@ TEST_CASE("Test Predicate Nodes") {
 
 		REQUIRE(*pred != pred2);
 		REQUIRE(pred2.isTerminalPredicate() == false);
+		REQUIRE(pred2.isNotPredicate() == true);
+		REQUIRE(pred2.isFullPredicate() == false);
+		
+		//legal accesses
+		REQUIRE_NOTHROW(pred->getRelExprNode());
+		REQUIRE_NOTHROW(pred->getRelLhs());
+		REQUIRE_NOTHROW(pred->getRelRhs());
+		REQUIRE_NOTHROW(pred2.getRhs());
+
+		//illegal accesses
+		REQUIRE_THROWS_WITH(pred->getLhs(), "Predicate does not contain a left predicate (Not terminal or a NOT predicate)");
+		REQUIRE_THROWS_WITH(pred->getRhs(), "Predicate is a terminal predicate");
+		REQUIRE_THROWS_WITH(pred2.getRelExprNode(), "Predicate is not a terminal predicate");
+		REQUIRE_THROWS_WITH(pred2.getRelLhs(), "Predicate is not a terminal predicate");
+		REQUIRE_THROWS_WITH(pred2.getRelRhs(), "Predicate is not a terminal predicate");
+		REQUIRE_THROWS_WITH(pred2.getLhs(), "Predicate does not contain a left predicate (Not terminal or a NOT predicate)");
 	}
 
 	SECTION("Predicate with multiple comparisons") {
@@ -268,6 +306,17 @@ TEST_CASE("Test Predicate Nodes") {
 		REQUIRE(pred1 != pred4);
 
 		REQUIRE(pred1.isTerminalPredicate() == false);
+		REQUIRE(pred1.isNotPredicate() == false);
+		REQUIRE(pred1.isFullPredicate() == true);
+
+		//legal accesses
+		REQUIRE_NOTHROW(pred1.getLhs());
+		REQUIRE_NOTHROW(pred1.getRhs());
+
+		//illegal accesses
+		REQUIRE_THROWS_WITH(pred1.getRelExprNode(), "Predicate is not a terminal predicate");
+		REQUIRE_THROWS_WITH(pred1.getRelLhs(), "Predicate is not a terminal predicate");
+		REQUIRE_THROWS_WITH(pred1.getRelRhs(), "Predicate is not a terminal predicate");
 	}
 }
 

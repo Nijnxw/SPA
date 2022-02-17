@@ -5,6 +5,7 @@
 #include "ExprNodes.h"
 
 #include <memory>
+#include <stdexcept>
 #include <variant>
 
 using RelFactorNode = ExprNode;
@@ -39,9 +40,13 @@ public:
 	std::shared_ptr<RelExprNode> getRelExprNode() const;
 	std::shared_ptr<PredicateNode> getLhs() const;
 	std::shared_ptr<PredicateNode> getRhs() const;
+	RelFactorNode getRelLhs() const;
+	RelFactorNode getRelRhs() const;
 	ConditionalOperator getOperator() const;
 
 	bool isTerminalPredicate() const;
+	bool isNotPredicate() const;
+	bool isFullPredicate() const;
 
 	bool operator==(const Node& other) const override;
 };

@@ -16,11 +16,11 @@ Query PQL::parse(std::vector<PQLToken*> tokens) {
 	return parser.parse();
 }
 
-Table evaluate(Query& query) {
+Table PQL::evaluate(Query& query) {
 	return QueryEvaluator::evaluate(query);
 }
 
-std::list<std::string> getResults(Table& res, std::vector<QueryArgument>& selectSyn) {
+std::list<std::string> PQL::getResults(Table& res, std::vector<QueryArgument>& selectSyn) {
 	return QueryResultProjector::formatResult(res, selectSyn);
 }
 

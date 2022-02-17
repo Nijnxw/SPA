@@ -1,8 +1,9 @@
 #pragma once 
 
 #include <vector>
+#include <list>
 #include "models/Query.h"
-#include "models/QueryClauseTable.h""
+#include "models/QueryClauseTable.h"
 #include "PQL/PQLToken.h"
 
 namespace PQL {

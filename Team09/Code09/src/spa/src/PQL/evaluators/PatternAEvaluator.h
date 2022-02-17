@@ -9,7 +9,7 @@
 #include "models/EntityType.h"
 #include "models/AssignStatement.h"
 #include "models/QueryClauseTable.h"
-#include "util/RPN.h";
+#include "util/RPN.h"
 
 #include "PatternEvaluator.h"
 

@@ -59,6 +59,7 @@ private:
 	};
 
 	bool isEndOfExpr();
+	void clearExprStr();
 	int getLeftBindingPower();
 	BinaryOperator getBinaryOperatorEnum();
 	ExprNode parseOperand();

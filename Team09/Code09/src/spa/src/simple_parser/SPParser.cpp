@@ -43,6 +43,10 @@ bool SPParser::isEndOfExpr() {
 		   val == "<=" || val == "==" || val == "!=";
 }
 
+void SPParser::clearExprStr() {
+	exprStr = "";
+}
+
 int SPParser::getLeftBindingPower() {
 	std::string op = peek()->getValue();
 	if (op == "+" || op == "-") {
@@ -173,9 +177,11 @@ ConditionalOperator SPParser::getInfixConditionalOperatorEnum() {
 //		   | rel_factor '!=' rel_factor
 std::shared_ptr<RelExprNode> SPParser::parseRelExpr() {
 	ExprNode lhs = parseExpr();
+	clearExprStr();
 	ComparatorOperator op = getComparatorOperatorEnum();
 	get(); // advance to the next token
 	ExprNode rhs = parseExpr();
+	clearExprStr();
 	return std::make_shared<RelExprNode>(lhs, op, rhs);
 }
 
@@ -304,7 +310,7 @@ std::shared_ptr<AssignNode> SPParser::parseAssign() {
 	ExprNode exprNode = parseExpr();
 	expect(";");
 	std::string postfix = RPN::convertToRpn(exprStr);
-	exprStr = "";
+	clearExprStr();
 	return std::make_shared<AssignNode>(getStmtNo(), varNode, exprNode, postfix);
 }
 

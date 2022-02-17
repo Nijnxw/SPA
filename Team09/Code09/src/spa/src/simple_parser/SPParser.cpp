@@ -138,13 +138,13 @@ bool SPParser::isTerminalPredicate() {
 	}
 	while (parenthesesStack != 0) {
 		// is end of program or predicate but parentheses do not match
-		if (isEndOfFile() or check("{"))
+		if (isEndOfFile() || check("{"))
 			throw std::runtime_error("Unmatched parentheses at line " + std::to_string(getStmtNo()));
 		if (check("(")) parenthesesStack++;
 		if (check(")")) parenthesesStack--;
 		get();
 	}
-	bool rtv = !(check("&&") or check("||"));
+	bool rtv = !(check("&&") || check("||"));
 	currentIdx = storeCurrIdx;
 	return rtv;
 }

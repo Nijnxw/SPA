@@ -23,7 +23,6 @@ private:
 	int stmtNo = 0;
 	std::vector<Token*> tokens;
 	std::string exprStr;
-	int parenthesesStack = 0;
 
 	std::unordered_map<std::string, BinaryOperator> strBinaryOpMap = {
 		{"+", BinaryOperator::PLUS},

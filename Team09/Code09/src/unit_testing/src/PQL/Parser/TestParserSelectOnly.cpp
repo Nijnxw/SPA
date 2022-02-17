@@ -427,92 +427,83 @@ TEST_CASE("Parsing of multiple declarations") {
 //---------------------------------//
 
 TEST_CASE("invalid synonym") {
-	std::vector<QueryArgument> expectedResultSynonms;
-	std::vector<QueryClause> expectedClauses;
-	std::vector<QueryArgument> clauseArgs;
-	std::unordered_set<std::string> usedSynonyms;
 	std::string queryString = "while 1w; Select 1w ";
 	Tokeniser tokeniser = Tokeniser(queryString);
 	std::vector<PQLToken*> PQLTokens = tokeniser.tokenise();
 	PQLParser parser = PQLParser(PQLTokens);
-
 	Query actualQuery = parser.parse();
-	std::vector<QueryArgument> actualResultSynonms = actualQuery.getResultSynonyms();
-	std::vector<QueryClause> actualClauses = actualQuery.getClauses();
-	bool isClausesEqual = std::equal(expectedClauses.begin(), expectedClauses.end(), actualClauses.begin());
-	bool isResultSynonymEqual = std::equal(expectedResultSynonms.begin(), expectedResultSynonms.end(), actualResultSynonms.begin());
-	REQUIRE((isClausesEqual && isResultSynonymEqual));
+
+	REQUIRE(actualQuery.isEmpty());
 }
 
 TEST_CASE("integer as synonym") {
-	std::vector<QueryArgument> expectedResultSynonms;
-	std::vector<QueryClause> expectedClauses;
-	std::vector<QueryArgument> clauseArgs;
-	std::unordered_set<std::string> usedSynonyms;
 	std::string queryString = "variable 1; Select 1 ";
 	Tokeniser tokeniser = Tokeniser(queryString);
 	std::vector<PQLToken*> PQLTokens = tokeniser.tokenise();
 	PQLParser parser = PQLParser(PQLTokens);
-
 	Query actualQuery = parser.parse();
-	std::vector<QueryArgument> actualResultSynonms = actualQuery.getResultSynonyms();
-	std::vector<QueryClause> actualClauses = actualQuery.getClauses();
-	bool isClausesEqual = std::equal(expectedClauses.begin(), expectedClauses.end(), actualClauses.begin());
-	bool isResultSynonymEqual = std::equal(expectedResultSynonms.begin(), expectedResultSynonms.end(), actualResultSynonms.begin());
-	REQUIRE((isClausesEqual && isResultSynonymEqual));
+
+	REQUIRE(actualQuery.isEmpty());
 }
 
 TEST_CASE("result synonym does not exist") {
-	std::vector<QueryArgument> expectedResultSynonms;
-	std::vector<QueryClause> expectedClauses;
-	std::vector<QueryArgument> clauseArgs;
-	std::unordered_set<std::string> usedSynonyms;
 	std::string queryString = "constant c; Select c1 ";
 	Tokeniser tokeniser = Tokeniser(queryString);
 	std::vector<PQLToken*> PQLTokens = tokeniser.tokenise();
 	PQLParser parser = PQLParser(PQLTokens);
-
 	Query actualQuery = parser.parse();
-	std::vector<QueryArgument> actualResultSynonms = actualQuery.getResultSynonyms();
-	std::vector<QueryClause> actualClauses = actualQuery.getClauses();
-	bool isClausesEqual = std::equal(expectedClauses.begin(), expectedClauses.end(), actualClauses.begin());
-	bool isResultSynonymEqual = std::equal(expectedResultSynonms.begin(), expectedResultSynonms.end(), actualResultSynonms.begin());
-	REQUIRE((isClausesEqual && isResultSynonymEqual));
+
+	REQUIRE(actualQuery.isEmpty());
 }
 
-TEST_CASE("PQL parser Select only test case 13 : no declarations") {
-	std::vector<QueryArgument> expectedResultSynonms;
-	std::vector<QueryClause> expectedClauses;
-	std::vector<QueryArgument> clauseArgs;
-	std::unordered_set<std::string> usedSynonyms;
+TEST_CASE("missing declarations") {
 	std::string queryString = "read ; Select r1 ";
 	Tokeniser tokeniser = Tokeniser(queryString);
 	std::vector<PQLToken*> PQLTokens = tokeniser.tokenise();
 	PQLParser parser = PQLParser(PQLTokens);
-
 	Query actualQuery = parser.parse();
-	std::vector<QueryArgument> actualResultSynonms = actualQuery.getResultSynonyms();
-	std::vector<QueryClause> actualClauses = actualQuery.getClauses();
-	bool isClausesEqual = std::equal(expectedClauses.begin(), expectedClauses.end(), actualClauses.begin());
-	bool isResultSynonymEqual = std::equal(expectedResultSynonms.begin(), expectedResultSynonms.end(), actualResultSynonms.begin());
-	REQUIRE((isClausesEqual && isResultSynonymEqual));
+
+	REQUIRE(actualQuery.isEmpty());
 }
 
-TEST_CASE("PQL parser Select only test case 14 : no result synonym") {
-	std::vector<QueryArgument> expectedResultSynonms;
-	std::vector<QueryClause> expectedClauses;
-	std::vector<QueryArgument> clauseArgs;
-	std::unordered_set<std::string> usedSynonyms;
+TEST_CASE("missing semi colon") {
+	std::string queryString = "constant c Select c";
+	Tokeniser tokeniser = Tokeniser(queryString);
+	std::vector<PQLToken*> PQLTokens = tokeniser.tokenise();
+	PQLParser parser = PQLParser(PQLTokens);
+	Query actualQuery = parser.parse();
+
+	REQUIRE(actualQuery.isEmpty());
+}
+
+TEST_CASE("no result synonym after select") {
 	std::string queryString = "assign a; Select  ";
 	Tokeniser tokeniser = Tokeniser(queryString);
 	std::vector<PQLToken*> PQLTokens = tokeniser.tokenise();
 	PQLParser parser = PQLParser(PQLTokens);
-
 	Query actualQuery = parser.parse();
-	std::vector<QueryArgument> actualResultSynonms = actualQuery.getResultSynonyms();
-	std::vector<QueryClause> actualClauses = actualQuery.getClauses();
-	bool isClausesEqual = std::equal(expectedClauses.begin(), expectedClauses.end(), actualClauses.begin());
-	bool isResultSynonymEqual = std::equal(expectedResultSynonms.begin(), expectedResultSynonms.end(), actualResultSynonms.begin());
-	REQUIRE((isClausesEqual && isResultSynonymEqual));
+
+	REQUIRE(actualQuery.isEmpty());
 }
+
+TEST_CASE("missing declaration statement") {
+	std::string queryString = "a; Select  a";
+	Tokeniser tokeniser = Tokeniser(queryString);
+	std::vector<PQLToken*> PQLTokens = tokeniser.tokenise();
+	PQLParser parser = PQLParser(PQLTokens);
+	Query actualQuery = parser.parse();
+
+	REQUIRE(actualQuery.isEmpty());
+}
+
+TEST_CASE("missing Select statement") {
+	std::string queryString = "assign a;  a";
+	Tokeniser tokeniser = Tokeniser(queryString);
+	std::vector<PQLToken*> PQLTokens = tokeniser.tokenise();
+	PQLParser parser = PQLParser(PQLTokens);
+	Query actualQuery = parser.parse();
+
+	REQUIRE(actualQuery.isEmpty());
+}
+
 

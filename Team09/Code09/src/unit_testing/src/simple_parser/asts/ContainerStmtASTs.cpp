@@ -87,6 +87,10 @@ AST ContainerStmtASTs::getAST1_41() {
 
 // basic predicate - single comparator operator
 
+AST ContainerStmtASTs::getAST1_42() {
+	return getAST1_40();
+}
+
 AST ContainerStmtASTs::getAST1_43() {
 	/*
 	 * procedure testProgram {
@@ -220,6 +224,10 @@ AST ContainerStmtASTs::getAST1_50() {
 }
 
 // predicate : term-expr interactions
+
+AST ContainerStmtASTs::getAST1_51() {
+	return getAST1_39();
+}
 
 AST ContainerStmtASTs::getAST1_52() {
 	/*

@@ -43,6 +43,10 @@ bool SPParser::isEndOfExpr() {
 		   val == "<=" || val == "==" || val == "!=";
 }
 
+void SPParser::clearExprStr() {
+	exprStr = "";
+}
+
 int SPParser::getLeftBindingPower() {
 	std::string op = peek()->getValue();
 	if (op == "+" || op == "-") {
@@ -122,6 +126,29 @@ ExprNode SPParser::parseExpr() {
 	return parseExpression(BindingPower::OPERAND);
 }
 
+bool SPParser::isTerminalPredicate() {
+	// check if future token do not have '&&' or '||' tokens
+	int storeCurrIdx = currentIdx;
+	int parenthesesStack = 0;
+	if (check("(")) {
+		parenthesesStack++;
+		get();
+	} else {
+		return true;
+	}
+	while (parenthesesStack != 0) {
+		// is end of program or predicate but parentheses do not match
+		if (isEndOfFile() || check("{"))
+			throw std::runtime_error("Unmatched parentheses at line " + std::to_string(getStmtNo()));
+		if (check("(")) parenthesesStack++;
+		if (check(")")) parenthesesStack--;
+		get();
+	}
+	bool rtv = !(check("&&") || check("||"));
+	currentIdx = storeCurrIdx;
+	return rtv;
+}
+
 ComparatorOperator SPParser::getComparatorOperatorEnum() {
 	if (!check(ParserTokenType::OPERATOR) ||
 		strComparatorOpMap.find(peek()->getValue()) == strComparatorOpMap.end()) {
@@ -129,13 +156,6 @@ ComparatorOperator SPParser::getComparatorOperatorEnum() {
 	}
 	std::string op = peek()->getValue();
 	return strComparatorOpMap[op];
-}
-
-ConditionalOperator SPParser::getPrefixConditionalOperatorEnum() {
-	if (!check("!")) {
-		throw std::runtime_error("Expected '!' but got '" + peek()->getValue() + "' instead.\n");
-	}
-	return ConditionalOperator::NOT;
 }
 
 ConditionalOperator SPParser::getInfixConditionalOperatorEnum() {
@@ -157,9 +177,11 @@ ConditionalOperator SPParser::getInfixConditionalOperatorEnum() {
 //		   | rel_factor '!=' rel_factor
 std::shared_ptr<RelExprNode> SPParser::parseRelExpr() {
 	ExprNode lhs = parseExpr();
+	clearExprStr();
 	ComparatorOperator op = getComparatorOperatorEnum();
 	get(); // advance to the next token
 	ExprNode rhs = parseExpr();
+	clearExprStr();
 	return std::make_shared<RelExprNode>(lhs, op, rhs);
 }
 
@@ -169,13 +191,12 @@ std::shared_ptr<RelExprNode> SPParser::parseRelExpr() {
 //			| '(' cond_expr ')' '||' '(' cond_expr ')'
 std::shared_ptr<PredicateNode> SPParser::parsePredicate() {
 	if (check("!")) {
-		ConditionalOperator notOperator = getPrefixConditionalOperatorEnum();
 		expect("!");
 		expect("(");
 		std::shared_ptr<PredicateNode> predicateNode = parsePredicate();
 		expect(")");
-		return std::make_shared<PredicateNode>(notOperator, predicateNode);
-	} else if (check("(")) {
+		return std::make_shared<PredicateNode>(ConditionalOperator::NOT, predicateNode);
+	} else if (!isTerminalPredicate()) {
 		expect("(");
 		std::shared_ptr<PredicateNode> lhs = parsePredicate();
 		expect(")");
@@ -231,6 +252,9 @@ std::vector<std::shared_ptr<StmtNode>> SPParser::parseStmtLst() {
 std::shared_ptr<StmtNode> SPParser::parseStatement() {
 	if (check("}")) return nullptr;
 
+	std::shared_ptr<AssignNode> assignNode = parseAssign();
+	if (assignNode) return assignNode;
+
 	std::shared_ptr<ReadNode> readNode = parseRead();
 	if (readNode) return readNode;
 
@@ -242,9 +266,6 @@ std::shared_ptr<StmtNode> SPParser::parseStatement() {
 
 	std::shared_ptr<IfNode> ifNode = parseIf();
 	if (ifNode) return ifNode;
-
-	std::shared_ptr<AssignNode> assignNode = parseAssign();
-	if (assignNode) return assignNode;
 
 	throw std::runtime_error("Invalid statement syntax at statement " + std::to_string(getStmtNo()) + ".\n");
 }
@@ -275,13 +296,21 @@ std::shared_ptr<PrintNode> SPParser::parsePrint() {
 
 // assign: var_name '=' expr ';'
 std::shared_ptr<AssignNode> SPParser::parseAssign() {
+	int storedCurrIdx = currentIdx;
 	std::shared_ptr<VariableNode> varNode = parseVariable();
 	if (!varNode) return nullptr;
+	if (!check("=")) {
+		// var_name could be a keyword (read, print, if, while)
+		// if next token is not '-', restore token pointer and return nullptr
+		// for parseStmt to parse other types of stmts
+		currentIdx = storedCurrIdx;
+		return nullptr;
+	}
 	expect("=");
 	ExprNode exprNode = parseExpr();
 	expect(";");
 	std::string postfix = RPN::convertToRpn(exprStr);
-	exprStr = "";
+	clearExprStr();
 	return std::make_shared<AssignNode>(getStmtNo(), varNode, exprNode, postfix);
 }
 

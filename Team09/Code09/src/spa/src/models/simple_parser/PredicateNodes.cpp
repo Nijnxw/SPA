@@ -53,15 +53,28 @@ PredicateNode::PredicateNode(std::shared_ptr<PredicateNode> left, ConditionalOpe
 }
 
 std::shared_ptr<RelExprNode> PredicateNode::getRelExprNode() const {
+	if (!isTerminalPredicate()) throw std::runtime_error("Predicate is not a terminal predicate");
 	return relExpr;
 }
 
 std::shared_ptr<PredicateNode> PredicateNode::getLhs() const {
+	if (!isFullPredicate()) throw std::runtime_error("Predicate does not contain a left predicate (Not terminal or a NOT predicate)");
 	return lhs;
 }
 
 std::shared_ptr<PredicateNode> PredicateNode::getRhs() const {
+	if (isTerminalPredicate()) throw std::runtime_error("Predicate is a terminal predicate");
 	return rhs;
+}
+
+RelFactorNode PredicateNode::getRelLhs() const {
+	if (!isTerminalPredicate()) throw std::runtime_error("Predicate is not a terminal predicate");
+	return relExpr->getLhs();
+}
+
+RelFactorNode PredicateNode::getRelRhs() const {
+	if (!isTerminalPredicate()) throw std::runtime_error("Predicate is not a terminal predicate");
+	return relExpr->getRhs();
 }
 
 ConditionalOperator PredicateNode::getOperator() const {
@@ -72,12 +85,26 @@ bool PredicateNode::isTerminalPredicate() const {
 	return relExpr != nullptr;
 }
 
+bool PredicateNode::isNotPredicate() const {
+	return !isTerminalPredicate() && lhs == nullptr;
+}
+
+bool PredicateNode::isFullPredicate() const {
+	return lhs != nullptr && rhs != nullptr;
+}
+
 bool PredicateNode::operator==(const Node& other) const {
 	const PredicateNode* cast = dynamic_cast<const PredicateNode*>(&other);
-	return cast != nullptr && 
-		cast->isTerminalPredicate() == this->isTerminalPredicate() &&
-		(lhs == cast->getLhs() || *lhs == *(cast->getLhs())) &&
-		(rhs == cast->getRhs() || *rhs == *(cast->getRhs())) &&
-		(relExpr == cast->getRelExprNode() || *relExpr == *(cast->getRelExprNode())) &&
-		op == cast->getOperator();	
+	if (cast == nullptr) return false;
+	// case where both are terminal pred
+	if (this->isTerminalPredicate() && cast->isTerminalPredicate() == this->isTerminalPredicate()) {
+		return *relExpr == *(cast->getRelExprNode()) && op == cast->getOperator();
+	// case where both are NOT pred
+	} else if (this->isNotPredicate() && cast->isNotPredicate() == this->isNotPredicate()) {
+		return *rhs == *(cast->getRhs()) && op == cast->getOperator();
+	// case where both are pred with 2 children
+	} else if (this->isFullPredicate() && cast->isFullPredicate() == this->isFullPredicate()) {
+		return *lhs == *(cast->getLhs()) && *rhs == *(cast->getRhs()) && op == cast->getOperator();
+	} 
+	return false;
 }

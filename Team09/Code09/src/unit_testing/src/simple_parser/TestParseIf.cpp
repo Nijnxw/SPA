@@ -335,7 +335,7 @@ TEST_CASE("Invalid if stmt - invalid predicate") {
 		SPParser parser = SPParser(input);
 		REQUIRE_THROWS_WITH(parser.parseProgram(), "Expected '(' but got 'x' instead.\n");
 	}
-	SECTION ("Missing conditional") {
+	SECTION ("Invalid rel_expr") {
 		/*
 		 * procedure testProgram {
 		 * 1	if ((x < 1)) then {
@@ -358,7 +358,7 @@ TEST_CASE("Invalid if stmt - invalid predicate") {
 		};
 
 		SPParser parser = SPParser(input);
-		REQUIRE_THROWS_WITH(parser.parseProgram(), "Expected '&&' or '||' but got ')' instead.\n");
+		REQUIRE_THROWS_WITH(parser.parseProgram(), "Expected ')' but got '<' instead.\n");
 	}
 }
 

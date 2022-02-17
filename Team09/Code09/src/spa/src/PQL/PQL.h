@@ -1,8 +1,9 @@
 #pragma once 
 
 #include <vector>
-#include <models/Query.h>
-#include <PQL/PQLToken.h>
+#include "models/Query.h"
+#include "models/QueryClauseTable.h""
+#include "PQL/PQLToken.h"
 
 namespace PQL {
 	/**
@@ -20,5 +21,9 @@ namespace PQL {
 	 * @return	Query object to be passed to the evaluator
 	 */
 	Query parse(std::vector<PQLToken*> tokens);
+
+	Table evaluate(Query& query);
+
+	std::list<std::string> getResults(Table& res, std::vector<QueryArgument>& selectSyn);
 
 }

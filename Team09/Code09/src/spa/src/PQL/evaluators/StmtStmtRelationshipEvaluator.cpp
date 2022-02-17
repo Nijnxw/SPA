@@ -213,7 +213,7 @@ std::tuple<std::vector<int>, std::vector<int>> StmtStmtRelationshipEvaluator::fi
 
 	std::unordered_set<std::pair<int, int>, PKBUtil::hashFunction> secondFilteredStatementPairs;
 	for (const auto& statement : secondTypeStatements) {
-		for (const auto& pair : statementPairs) {
+		for (const auto& pair : firstFilteredStatementPairs) {
 			if (pair.second == statement) {
 				secondFilteredStatementPairs.insert(pair);
 			}

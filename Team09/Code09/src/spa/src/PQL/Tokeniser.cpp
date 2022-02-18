@@ -3,102 +3,72 @@
 #include <vector>
 #include <unordered_map>
 #include <stdexcept>
+#include <sstream>
+#include <iostream>
 
 #include "PQL/Tokeniser.h"
+#include "PQL/PQLUtils.cpp"
+
+Tokeniser::Tokeniser(std::string rawQueryString) : rawQuery(new std::stringstream(rawQueryString)) {}
+
+void Tokeniser::processRawToken(std::string rawToken) {
+	if (stringTokenMap.find(rawToken) != stringTokenMap.end()) {
+		PQLTokens.push_back(new PQLToken(stringTokenMap[rawToken], rawToken));
+	}
+	else if (isValidString(rawToken)) {
+		const std::string ident = rawToken.substr(1, rawToken.size() - 2);
+		PQLTokens.push_back(new PQLToken(TokenType::STRING, ident));
+	}
+	else if (isIdent(rawToken)) {
+		PQLTokens.push_back(new PQLToken(TokenType::SYNONYM, rawToken));
+	}
+	else if (isInt(rawToken)) {
+		PQLTokens.push_back(new PQLToken(TokenType::INTEGER, rawToken));
+	}
+	else {
+		throw "Unknown syntax : " + rawToken + "\n";
+	}
+}
+
+void Tokeniser::pushToken() {
+	if (rawToken.size() > 0) {
+		processRawToken(rawToken);
+	}
+	rawToken = "";
+}
 
 
-//Checkers to check if each token follows the grammer rules of the PQL
+std::vector<PQLToken*> Tokeniser::tokenise() {
+	try {
+		char nextChar = rawQuery->get();
+		while (!rawQuery->eof()) {
+			switch (nextChar) {
+			case ' ':
+			case '\t':
+			case '\n':
+				pushToken();
+				break;
 
-bool isAlphaNum(std::string str) {
-	for (const char c : str) {
-		if (!isalnum(c)) {
-			return false;
+			case '_':
+			case ',':
+			case '(':
+			case ')':
+			case ';':
+				pushToken();
+				rawToken += nextChar;
+				pushToken();
+				break;
+
+			default:
+				rawToken += nextChar;
+				break;
+			}
+			nextChar = rawQuery->get();
 		}
+		pushToken();
 	}
-	return true;
-}
-
-bool startsWithAlpha(std::string str) {
-	if (str.empty()) {
-		return false;
-	}
-	return isalpha(str[0]);
-}
-
-bool isInt(std::string str) {
-	for (const char c : str) {
-		if (!isdigit(c)) {
-			return false;
-		}
-	}
-	return true;
-}
-
-bool isIdent(std::string str) {
-	return startsWithAlpha(str) && isAlphaNum(str);
-}
-
-bool isValidString(std::string str) {
-	const std::string content = str.substr(1, str.size() - 2);
-	bool isInStringLiterals = str.size() >= 2 && str[0] == '"' && str[str.size() - 1] == '"';
-	bool isEitherIdentOrIntButNotBoth = (isIdent(content) && !isInt(content)) || (!isIdent(content) && isInt(content));
-	return isInStringLiterals && isEitherIdentOrIntButNotBoth;
-}
-
-Tokeniser::Tokeniser(std::string rawQueryString) { this->rawQuery = rawQueryString; }
-
-void Tokeniser::pushRawToken() {
-	if (currentRawToken.size() > 0) {
-		rawTokens.push_back(currentRawToken);
-		currentRawToken = "";
-	}
-}
-
-void Tokeniser::split() {
-	for (const char c : rawQuery) {
-		switch (c) {
-
-		//Case 1 - whitespace detected 
-		case ' ':
-		case '\n':
-		case '\t':
-			Tokeniser::pushRawToken();
-			continue;
-
-		//Case 2 - special characters 
-		case '_':
-		case ',':
-		case '(':
-		case ')':
-		case ';':
-			Tokeniser::pushRawToken();
-			rawTokens.push_back(std::string(1,c));
-			continue;
-
-		default:
-			break;
-		}
-		currentRawToken.push_back(c);
-	}
-	Tokeniser::pushRawToken();
-}
-
-std::vector<PQLToken> Tokeniser::tokenise() {
-	Tokeniser::split();
-	std::vector<PQLToken> PQLTokens;
-	for (const auto token : rawTokens) {
-		if (stringTokenMap.find(token) != stringTokenMap.end()) {
-			PQLTokens.push_back(PQLToken(stringTokenMap[token])); 
-		} else if (isValidString(token)) {
-			const std::string ident = token.substr(1, token.size() - 2);
-			PQLTokens.push_back(PQLToken(TokenType::STRING, ident));
-		} else if (isIdent(token)) {
-			PQLTokens.push_back(PQLToken(TokenType::SYNONYM, token));
-		} else if (isInt(token)) {
-			PQLTokens.push_back(PQLToken(TokenType::INTEGER, token));
-		} else {
-			throw std::runtime_error("Unknown syntax : " + token + "\n");
-		}
+	catch (...) {
+		PQLTokens.clear();
 	}
 	return PQLTokens;
 }

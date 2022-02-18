@@ -7,21 +7,14 @@
 class Tokeniser {
 public:
 	Tokeniser(std::string);
-	
-	std::vector<PQLToken> tokenise();
+	std::vector<PQLToken*> tokenise();
 
 private:
-	std::string rawQuery;
-	std::string currentRawToken = "";
-	std::vector<std::string> rawTokens;
+	std::istream* rawQuery;
+	std::string rawToken = "";
+	std::vector<PQLToken*> PQLTokens;
 	
-	/**
-	 * @brief Split string into raw tokens
-	 * @return vector of strings 
-	*/
-	void split();
-
-	void pushRawToken();
-
+	void processRawToken(std::string rawToken);
+	void pushToken();
 };
 

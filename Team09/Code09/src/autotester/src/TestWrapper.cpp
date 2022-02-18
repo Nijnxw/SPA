@@ -33,11 +33,11 @@ void TestWrapper::evaluate(std::string query, std::list<std::string>& results) {
 
     // store the answers to the query in the results list (it is initially empty)
     // each result must be a string.
-    std::vector<PQLToken> tokens = PQL::tokenise(query);
+    std::vector<PQLToken*> tokens = PQL::tokenise(query);
     Query queryObject = PQL::parse(tokens);
-    Table queryTable = QueryEvaluator::evaluate(queryObject);
+    Table queryTable = PQL::evaluate(queryObject);
     std::vector<QueryArgument> resultSynonyms = queryObject.getResultSynonyms();
-    std::list<std::string> queryResult = QueryResultProjector::formatResult(queryTable, resultSynonyms);
+    std::list<std::string> queryResult = PQL::getResults(queryTable, resultSynonyms);
     
     results = queryResult;
 }

@@ -97,4 +97,30 @@ TEST_CASE("QueryEvaluator evaluate") {
 
 		REQUIRE(actual == expected);
 	}
+
+	SECTION("evaluate one pattern clause contains select returns table corresponding to synonym") {
+		PKB::clearAllStores();
+
+		PKB::addAssignStatement(1, "x", "x 2 +");
+		PKB::addAssignStatement(2, "y", "y 2 * x 2 + +");
+		PKB::addAssignStatement(3, "x", "y z +");
+
+		std::vector<QueryArgument> selectSynonyms = { {"a", EntityType::ASSIGN} };
+
+		std::vector<QueryArgument> clauseArguments = {
+			{"x", EntityType::STRING},
+			{"_x 2 +_", EntityType::STRING}
+		};
+
+		std::unordered_set<std::string> usedSynonyms = { "a" };
+		QueryClause pAClause = QueryClause(RelationRef::PATTERN, clauseArguments, usedSynonyms, "a");
+	
+		std::vector<QueryClause> clauses = { pAClause };
+		Query query = Query(selectSynonyms, clauses);
+
+		QueryClauseTable expected = { {{"a", {"1", "2"}}} };
+		QueryClauseTable actual = { QueryEvaluator::evaluate(query) };
+
+		REQUIRE(actual == expected);
+	}
 }

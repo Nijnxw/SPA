@@ -37,9 +37,9 @@ void TestWrapper::evaluate(std::string query, std::list<std::string>& results) {
     Query queryObject = PQL::parse(tokens);
     Table queryTable = PQL::evaluate(queryObject);
     std::vector<QueryArgument> resultSynonyms = queryObject.getResultSynonyms();
-    std::list<std::string> queryResult = PQL::getResults(queryTable, resultSynonyms);
+    std::unordered_set<std::string> queryResult = PQL::getResults(queryTable, resultSynonyms);
     
-    results = queryResult;
+    results.insert(results.end(), queryResult.begin(), queryResult.end());
 }
 
 /*=== DESTRUCTOR ===*/

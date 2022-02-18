@@ -19,13 +19,14 @@ TEST_CASE("pattern - variable synonym as first arg") {
 		clauseArgs.push_back(QueryArgument(std::string("_"), EntityType::WILD));
 		usedSynonyms.insert("a");
 		usedSynonyms.insert("v");
-		expectedClauses.push_back(QueryClause(RelationRef::PATTERN, clauseArgs, usedSynonyms, "a"));
+		expectedClauses.push_back(QueryClause(RelationRef::PATTERN_A, clauseArgs, usedSynonyms, "a"));
 
 		Query actualQuery = parser.parse();
 		std::vector<QueryArgument> actualResultSynonms = actualQuery.getResultSynonyms();
 		std::vector<QueryClause> actualClauses = actualQuery.getClauses();
 		bool isClausesEqual = std::equal(expectedClauses.begin(), expectedClauses.end(), actualClauses.begin());
-		bool isResultSynonymEqual = std::equal(expectedResultSynonms.begin(), expectedResultSynonms.end(), actualResultSynonms.begin());
+		bool isResultSynonymEqual = std::equal(expectedResultSynonms.begin(), expectedResultSynonms.end(),
+											   actualResultSynonms.begin());
 		REQUIRE((isClausesEqual && isResultSynonymEqual));
 	}
 
@@ -40,13 +41,14 @@ TEST_CASE("pattern - variable synonym as first arg") {
 		clauseArgs.push_back(QueryArgument(std::string("_x_"), EntityType::STRING));
 		usedSynonyms.insert("a2");
 		usedSynonyms.insert("v1");
-		expectedClauses.push_back(QueryClause(RelationRef::PATTERN, clauseArgs, usedSynonyms, "a2"));
+		expectedClauses.push_back(QueryClause(RelationRef::PATTERN_A, clauseArgs, usedSynonyms, "a2"));
 
 		Query actualQuery = parser.parse();
 		std::vector<QueryArgument> actualResultSynonms = actualQuery.getResultSynonyms();
 		std::vector<QueryClause> actualClauses = actualQuery.getClauses();
 		bool isClausesEqual = std::equal(expectedClauses.begin(), expectedClauses.end(), actualClauses.begin());
-		bool isResultSynonymEqual = std::equal(expectedResultSynonms.begin(), expectedResultSynonms.end(), actualResultSynonms.begin());
+		bool isResultSynonymEqual = std::equal(expectedResultSynonms.begin(), expectedResultSynonms.end(),
+											   actualResultSynonms.begin());
 		REQUIRE((isClausesEqual && isResultSynonymEqual));
 	}
 
@@ -61,13 +63,14 @@ TEST_CASE("pattern - variable synonym as first arg") {
 		clauseArgs.push_back(QueryArgument(std::string("_1_"), EntityType::STRING));
 		usedSynonyms.insert("a1");
 		usedSynonyms.insert("v2");
-		expectedClauses.push_back(QueryClause(RelationRef::PATTERN, clauseArgs, usedSynonyms, "a1"));
+		expectedClauses.push_back(QueryClause(RelationRef::PATTERN_A, clauseArgs, usedSynonyms, "a1"));
 
 		Query actualQuery = parser.parse();
 		std::vector<QueryArgument> actualResultSynonms = actualQuery.getResultSynonyms();
 		std::vector<QueryClause> actualClauses = actualQuery.getClauses();
 		bool isClausesEqual = std::equal(expectedClauses.begin(), expectedClauses.end(), actualClauses.begin());
-		bool isResultSynonymEqual = std::equal(expectedResultSynonms.begin(), expectedResultSynonms.end(), actualResultSynonms.begin());
+		bool isResultSynonymEqual = std::equal(expectedResultSynonms.begin(), expectedResultSynonms.end(),
+											   actualResultSynonms.begin());
 		REQUIRE((isClausesEqual && isResultSynonymEqual));
 	}
 }
@@ -88,13 +91,14 @@ TEST_CASE("pattern - string (which represents a variable in SIMPLE) as first arg
 		clauseArgs.push_back(QueryArgument(std::string("var"), EntityType::STRING));
 		clauseArgs.push_back(QueryArgument(std::string("_"), EntityType::WILD));
 		usedSynonyms.insert("a");
-		expectedClauses.push_back(QueryClause(RelationRef::PATTERN, clauseArgs, usedSynonyms, "a"));
+		expectedClauses.push_back(QueryClause(RelationRef::PATTERN_A, clauseArgs, usedSynonyms, "a"));
 
 		Query actualQuery = parser.parse();
 		std::vector<QueryArgument> actualResultSynonms = actualQuery.getResultSynonyms();
 		std::vector<QueryClause> actualClauses = actualQuery.getClauses();
 		bool isClausesEqual = std::equal(expectedClauses.begin(), expectedClauses.end(), actualClauses.begin());
-		bool isResultSynonymEqual = std::equal(expectedResultSynonms.begin(), expectedResultSynonms.end(), actualResultSynonms.begin());
+		bool isResultSynonymEqual = std::equal(expectedResultSynonms.begin(), expectedResultSynonms.end(),
+											   actualResultSynonms.begin());
 		REQUIRE((isClausesEqual && isResultSynonymEqual));
 	}
 
@@ -108,13 +112,14 @@ TEST_CASE("pattern - string (which represents a variable in SIMPLE) as first arg
 		clauseArgs.push_back(QueryArgument(std::string("y"), EntityType::STRING));
 		clauseArgs.push_back(QueryArgument(std::string("_z_"), EntityType::STRING));
 		usedSynonyms.insert("a");
-		expectedClauses.push_back(QueryClause(RelationRef::PATTERN, clauseArgs, usedSynonyms, "a"));
+		expectedClauses.push_back(QueryClause(RelationRef::PATTERN_A, clauseArgs, usedSynonyms, "a"));
 
 		Query actualQuery = parser.parse();
 		std::vector<QueryArgument> actualResultSynonms = actualQuery.getResultSynonyms();
 		std::vector<QueryClause> actualClauses = actualQuery.getClauses();
 		bool isClausesEqual = std::equal(expectedClauses.begin(), expectedClauses.end(), actualClauses.begin());
-		bool isResultSynonymEqual = std::equal(expectedResultSynonms.begin(), expectedResultSynonms.end(), actualResultSynonms.begin());
+		bool isResultSynonymEqual = std::equal(expectedResultSynonms.begin(), expectedResultSynonms.end(),
+											   actualResultSynonms.begin());
 		REQUIRE((isClausesEqual && isResultSynonymEqual));
 	}
 
@@ -128,13 +133,14 @@ TEST_CASE("pattern - string (which represents a variable in SIMPLE) as first arg
 		clauseArgs.push_back(QueryArgument(std::string("z"), EntityType::STRING));
 		clauseArgs.push_back(QueryArgument(std::string("_123_"), EntityType::STRING));
 		usedSynonyms.insert("a");
-		expectedClauses.push_back(QueryClause(RelationRef::PATTERN, clauseArgs, usedSynonyms, "a"));
+		expectedClauses.push_back(QueryClause(RelationRef::PATTERN_A, clauseArgs, usedSynonyms, "a"));
 
 		Query actualQuery = parser.parse();
 		std::vector<QueryArgument> actualResultSynonms = actualQuery.getResultSynonyms();
 		std::vector<QueryClause> actualClauses = actualQuery.getClauses();
 		bool isClausesEqual = std::equal(expectedClauses.begin(), expectedClauses.end(), actualClauses.begin());
-		bool isResultSynonymEqual = std::equal(expectedResultSynonms.begin(), expectedResultSynonms.end(), actualResultSynonms.begin());
+		bool isResultSynonymEqual = std::equal(expectedResultSynonms.begin(), expectedResultSynonms.end(),
+											   actualResultSynonms.begin());
 		REQUIRE((isClausesEqual && isResultSynonymEqual));
 	}
 }
@@ -155,13 +161,14 @@ TEST_CASE("pattern - wildcard as first arg") {
 		clauseArgs.push_back(QueryArgument(std::string("_"), EntityType::WILD));
 		clauseArgs.push_back(QueryArgument(std::string("_"), EntityType::WILD));
 		usedSynonyms.insert("a");
-		expectedClauses.push_back(QueryClause(RelationRef::PATTERN, clauseArgs, usedSynonyms, "a"));
+		expectedClauses.push_back(QueryClause(RelationRef::PATTERN_A, clauseArgs, usedSynonyms, "a"));
 
 		Query actualQuery = parser.parse();
 		std::vector<QueryArgument> actualResultSynonms = actualQuery.getResultSynonyms();
 		std::vector<QueryClause> actualClauses = actualQuery.getClauses();
 		bool isClausesEqual = std::equal(expectedClauses.begin(), expectedClauses.end(), actualClauses.begin());
-		bool isResultSynonymEqual = std::equal(expectedResultSynonms.begin(), expectedResultSynonms.end(), actualResultSynonms.begin());
+		bool isResultSynonymEqual = std::equal(expectedResultSynonms.begin(), expectedResultSynonms.end(),
+											   actualResultSynonms.begin());
 		REQUIRE((isClausesEqual && isResultSynonymEqual));
 	}
 
@@ -175,13 +182,14 @@ TEST_CASE("pattern - wildcard as first arg") {
 		clauseArgs.push_back(QueryArgument(std::string("_"), EntityType::WILD));
 		clauseArgs.push_back(QueryArgument(std::string("_abc_"), EntityType::STRING));
 		usedSynonyms.insert("a");
-		expectedClauses.push_back(QueryClause(RelationRef::PATTERN, clauseArgs, usedSynonyms, "a"));
+		expectedClauses.push_back(QueryClause(RelationRef::PATTERN_A, clauseArgs, usedSynonyms, "a"));
 
 		Query actualQuery = parser.parse();
 		std::vector<QueryArgument> actualResultSynonms = actualQuery.getResultSynonyms();
 		std::vector<QueryClause> actualClauses = actualQuery.getClauses();
 		bool isClausesEqual = std::equal(expectedClauses.begin(), expectedClauses.end(), actualClauses.begin());
-		bool isResultSynonymEqual = std::equal(expectedResultSynonms.begin(), expectedResultSynonms.end(), actualResultSynonms.begin());
+		bool isResultSynonymEqual = std::equal(expectedResultSynonms.begin(), expectedResultSynonms.end(),
+											   actualResultSynonms.begin());
 		REQUIRE((isClausesEqual && isResultSynonymEqual));
 	}
 
@@ -195,13 +203,14 @@ TEST_CASE("pattern - wildcard as first arg") {
 		clauseArgs.push_back(QueryArgument(std::string("_"), EntityType::WILD));
 		clauseArgs.push_back(QueryArgument(std::string("_456_"), EntityType::STRING));
 		usedSynonyms.insert("a");
-		expectedClauses.push_back(QueryClause(RelationRef::PATTERN, clauseArgs, usedSynonyms, "a"));
+		expectedClauses.push_back(QueryClause(RelationRef::PATTERN_A, clauseArgs, usedSynonyms, "a"));
 
 		Query actualQuery = parser.parse();
 		std::vector<QueryArgument> actualResultSynonms = actualQuery.getResultSynonyms();
 		std::vector<QueryClause> actualClauses = actualQuery.getClauses();
 		bool isClausesEqual = std::equal(expectedClauses.begin(), expectedClauses.end(), actualClauses.begin());
-		bool isResultSynonymEqual = std::equal(expectedResultSynonms.begin(), expectedResultSynonms.end(), actualResultSynonms.begin());
+		bool isResultSynonymEqual = std::equal(expectedResultSynonms.begin(), expectedResultSynonms.end(),
+											   actualResultSynonms.begin());
 		REQUIRE((isClausesEqual && isResultSynonymEqual));
 	}
 }
@@ -222,13 +231,14 @@ TEST_CASE("pattern - different assign-syn") {
 	clauseArgs.push_back(QueryArgument(std::string("_879_"), EntityType::STRING));
 	usedSynonyms.insert("a1");
 	usedSynonyms.insert("v");
-	expectedClauses.push_back(QueryClause(RelationRef::PATTERN, clauseArgs, usedSynonyms, "a1"));
+	expectedClauses.push_back(QueryClause(RelationRef::PATTERN_A, clauseArgs, usedSynonyms, "a1"));
 
 	Query actualQuery = parser.parse();
 	std::vector<QueryArgument> actualResultSynonms = actualQuery.getResultSynonyms();
 	std::vector<QueryClause> actualClauses = actualQuery.getClauses();
 	bool isClausesEqual = std::equal(expectedClauses.begin(), expectedClauses.end(), actualClauses.begin());
-	bool isResultSynonymEqual = std::equal(expectedResultSynonms.begin(), expectedResultSynonms.end(), actualResultSynonms.begin());
+	bool isResultSynonymEqual = std::equal(expectedResultSynonms.begin(), expectedResultSynonms.end(),
+										   actualResultSynonms.begin());
 	REQUIRE((isClausesEqual && isResultSynonymEqual));
 }
 

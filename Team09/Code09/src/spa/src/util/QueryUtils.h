@@ -19,7 +19,7 @@ class QueryUtils {
 public:
 	static Table hashJoin(const Table& firstResult, const Table& secondResult);
 
-	static std::list<std::string> stringifyRows(Table table, std::vector<std::string> colOrder);
+	static std::unordered_set<std::string> stringifyRows(Table table, std::vector<std::string> colOrder);
 	// always order the headers in ascending order before converting each row value to space separated string
 	static std::unordered_set<std::string> stringifyRows(Table table);
 

@@ -77,17 +77,17 @@ void PQLParser::parseResultSynonym() {
 
 QueryArgument PQLParser::parseArgs(PQLToken* token) {
 	switch (token->getType()) {
-	case TokenType::STRING:
-	case TokenType::UNDERSCORE:
-	case TokenType::INTEGER:
-		return QueryArgument(std::string(token->getValue()), entityTypeMapping[token->getType()]);
-		break;
-	default:
-		if (Declarations.find(token->getValue()) != Declarations.end()) {
-			return QueryArgument(std::string(token->getValue()), Declarations[token->getValue()]);
+		case TokenType::STRING:
+		case TokenType::UNDERSCORE:
+		case TokenType::INTEGER:
+			return QueryArgument(std::string(token->getValue()), entityTypeMapping[token->getType()]);
 			break;
-		}
-		throw "Invalid argument";
+		default:
+			if (Declarations.find(token->getValue()) != Declarations.end()) {
+				return QueryArgument(std::string(token->getValue()), Declarations[token->getValue()]);
+				break;
+			}
+			throw "Invalid argument";
 	}
 }
 
@@ -147,22 +147,23 @@ QueryArgument PQLParser::parsePatternLHS() {
 QueryArgument PQLParser::parsePatternRHS() {
 	auto nextToken = getNextToken();
 	switch (nextToken->getType()) {
-	case TokenType::UNDERSCORE: {
-		auto followingToken = getNextToken();
-		switch (followingToken->getType()) {
-		case TokenType::STRING:
-			getNextExpectedToken(TokenType::UNDERSCORE);
-			getNextExpectedToken(TokenType::CLOSE_PARAN);
-			return QueryArgument(std::string("_" + followingToken->getValue() + "_"), entityTypeMapping[TokenType::STRING]);
-		case TokenType::CLOSE_PARAN:
-			return QueryArgument(std::string("_"), entityTypeMapping[TokenType::UNDERSCORE]);
+		case TokenType::UNDERSCORE: {
+			auto followingToken = getNextToken();
+			switch (followingToken->getType()) {
+				case TokenType::STRING:
+					getNextExpectedToken(TokenType::UNDERSCORE);
+					getNextExpectedToken(TokenType::CLOSE_PARAN);
+					return QueryArgument(std::string("_" + followingToken->getValue() + "_"),
+										 entityTypeMapping[TokenType::STRING]);
+				case TokenType::CLOSE_PARAN:
+					return QueryArgument(std::string("_"), entityTypeMapping[TokenType::UNDERSCORE]);
+			}
 		}
-	}
-	case TokenType::STRING:
-		getNextExpectedToken(TokenType::CLOSE_PARAN);
-		return QueryArgument(std::string(nextToken->getValue()), entityTypeMapping[TokenType::STRING]);
-	default:
-		throw "Invalid Argument.";
+		case TokenType::STRING:
+			getNextExpectedToken(TokenType::CLOSE_PARAN);
+			return QueryArgument(std::string(nextToken->getValue()), entityTypeMapping[TokenType::STRING]);
+		default:
+			throw "Invalid Argument.";
 	};
 }
 
@@ -182,20 +183,20 @@ void PQLParser::parsePatternClause() {
 	getNextExpectedToken(TokenType::COMMA);
 	patternArgs.push_back(parsePatternRHS());
 
-	QueryClauses.push_back(QueryClause(RelationRef::PATTERN, patternArgs, usedSynonyms, synonymToken->getValue()));
+	QueryClauses.push_back(QueryClause(RelationRef::PATTERN_A, patternArgs, usedSynonyms, synonymToken->getValue()));
 }
 
 void PQLParser::parseAfterSelect() {
 	while (current != end) {
 		switch (tokens.at(current)->getType()) {
-		case TokenType::SUCH:
-			parseSuchThatClause();
-			break;
-		case TokenType::PATTERN:
-			parsePatternClause();
-			break;
-		default:
-			throw "Expected such that or pattern";
+			case TokenType::SUCH:
+				parseSuchThatClause();
+				break;
+			case TokenType::PATTERN:
+				parsePatternClause();
+				break;
+			default:
+				throw "Expected such that or pattern";
 		}
 	}
 }

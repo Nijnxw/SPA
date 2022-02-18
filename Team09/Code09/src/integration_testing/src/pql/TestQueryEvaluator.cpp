@@ -91,7 +91,7 @@ TEST_CASE("QueryEvaluator evaluate") {
 		std::vector<QueryArgument> selectSynonyms = {{"pn", EntityType::PRINT}};
 
 		std::vector<QueryArgument> clauseArguments = {
-			{"x", EntityType::STRING},
+			{"x",   EntityType::STRING},
 			{"_x_", EntityType::STRING},
 		};
 		std::unordered_set<std::string> usedSynonyms = {"a"};
@@ -116,7 +116,7 @@ TEST_CASE("QueryEvaluator evaluate") {
 		std::vector<QueryArgument> selectSynonyms = {{"a", EntityType::ASSIGN}};
 
 		std::vector<QueryArgument> clauseArguments = {
-			{"x", EntityType::STRING},
+			{"x",       EntityType::STRING},
 			{"_x 2 +_", EntityType::STRING}
 		};
 
@@ -151,27 +151,27 @@ TEST_CASE("QueryEvaluator evaluate") {
 
 		PKB::addAssignStatement(6, "x", "5");
 
-		std::vector<QueryArgument> selectSynonyms = { {"ifs", EntityType::IF} };
+		std::vector<QueryArgument> selectSynonyms = {{"ifs", EntityType::IF}};
 
 		std::vector<QueryArgument> stClauseArguments = {
-			{"4", EntityType::STRING},
+			{"4", EntityType::INT},
 			{"s", EntityType::STMT}
 		};
-		std::unordered_set<std::string> stUsedSynonyms = { "s" };
+		std::unordered_set<std::string> stUsedSynonyms = {"s"};
 		QueryClause stClause = QueryClause(RelationRef::PARENT, stClauseArguments, stUsedSynonyms);
 
 		std::vector<QueryArgument> pAClauseArguments = {
-			{"x", EntityType::STRING},
+			{"x",   EntityType::STRING},
 			{"_5_", EntityType::STRING}
 		};
-		std::unordered_set<std::string> pAUsedSynonyms = { "a" };
-		QueryClause pAClause = QueryClause(RelationRef::PATTERN_A, pAClauseArguments, pAUsedSynonyms);
+		std::unordered_set<std::string> pAUsedSynonyms = {"a"};
+		QueryClause pAClause = QueryClause(RelationRef::PATTERN_A, pAClauseArguments, pAUsedSynonyms, "a");
 
-		std::vector<QueryClause> clauses = { stClause, pAClause };
+		std::vector<QueryClause> clauses = {stClause, pAClause};
 		Query query = Query(selectSynonyms, clauses);
 
-		QueryClauseTable expected = { {{"ifs", {"4", "9"}}} };
-		QueryClauseTable actual = { QueryEvaluator::evaluate(query) };
+		QueryClauseTable expected = {{{"ifs", {"4", "9"}}}};
+		QueryClauseTable actual = {QueryEvaluator::evaluate(query)};
 
 		REQUIRE(actual == expected);
 	}
@@ -181,7 +181,7 @@ TEST_CASE("QueryEvaluator evaluate") {
 
 		/*
 			stmt s; if ifs; assign a;
-			Select ifs such that Follows*(ifs, s) pattern a("x", _"5"_)
+			Select ifs such that Follows*(ifs, s) pattern a("y", _"y + 1"_)
 		*/
 
 		PKB::addStatementWithType(EntityType::IF, 1);
@@ -193,27 +193,27 @@ TEST_CASE("QueryEvaluator evaluate") {
 		PKB::addAssignStatement(3, "x", "y 2 +");
 		PKB::addAssignStatement(4, "y", "y 1 +");
 
-		std::vector<QueryArgument> selectSynonyms = { {"ifs", EntityType::IF} };
+		std::vector<QueryArgument> selectSynonyms = {{"ifs", EntityType::IF}};
 
 		std::vector<QueryArgument> stClauseArguments = {
 			{"ifs", EntityType::IF},
-			{"s", EntityType::STMT}
+			{"s",   EntityType::STMT}
 		};
-		std::unordered_set<std::string> stUsedSynonyms = { "ifs", "s"};
+		std::unordered_set<std::string> stUsedSynonyms = {"ifs", "s"};
 		QueryClause stClause = QueryClause(RelationRef::FOLLOWS_T, stClauseArguments, stUsedSynonyms);
 
 		std::vector<QueryArgument> pAClauseArguments = {
-			{"y", EntityType::STRING},
+			{"y",       EntityType::STRING},
 			{"_y 1 +_", EntityType::STRING}
 		};
-		std::unordered_set<std::string> pAUsedSynonyms = { "a" };
-		QueryClause pAClause = QueryClause(RelationRef::PATTERN_A, pAClauseArguments, pAUsedSynonyms);
+		std::unordered_set<std::string> pAUsedSynonyms = {"a"};
+		QueryClause pAClause = QueryClause(RelationRef::PATTERN_A, pAClauseArguments, pAUsedSynonyms, "a");
 
-		std::vector<QueryClause> clauses = { stClause, pAClause };
+		std::vector<QueryClause> clauses = {stClause, pAClause};
 		Query query = Query(selectSynonyms, clauses);
 
-		QueryClauseTable expected = { {{"ifs", {"1", "1", "1"}}, {"s", {"5", "6", "7"}}} };
-		QueryClauseTable actual = { QueryEvaluator::evaluate(query) };
+		QueryClauseTable expected = {{{"ifs", {"1", "1", "1"}}, {"s", {"5", "6", "7"}}}};
+		QueryClauseTable actual = {QueryEvaluator::evaluate(query)};
 
 		REQUIRE(actual == expected);
 	}
@@ -223,38 +223,38 @@ TEST_CASE("QueryEvaluator evaluate") {
 
 		/*
 			assign a; stmt s;
-			Select a such that Modifies(s, “x”) pattern a(“x”, _”x”_)
+			Select a such that Modifies(s, "x") pattern a("x", _"x"_)
 		*/
 
-		PKB::addModifiesStatement(1, { "y", "z" });
-		PKB::addModifiesStatement(2, { "x", "y" });
-		PKB::addModifiesStatement(3, { "x", "z" });
+		PKB::addModifiesStatement(1, {"y", "z"});
+		PKB::addModifiesStatement(2, {"x", "y"});
+		PKB::addModifiesStatement(3, {"x", "z"});
 
 		PKB::addAssignStatement(1, "x", "y z *");
 		PKB::addAssignStatement(2, "x", "x y +");
 		PKB::addAssignStatement(3, "y", "x z /");
 
-		std::vector<QueryArgument> selectSynonyms = { {"a", EntityType::ASSIGN} };
+		std::vector<QueryArgument> selectSynonyms = {{"a", EntityType::ASSIGN}};
 
 		std::vector<QueryArgument> stClauseArguments = {
 			{"s", EntityType::STMT},
 			{"x", EntityType::STRING}
 		};
-		std::unordered_set<std::string> stUsedSynonyms = { "s" };
+		std::unordered_set<std::string> stUsedSynonyms = {"s"};
 		QueryClause stClause = QueryClause(RelationRef::MODIFIES, stClauseArguments, stUsedSynonyms);
 
 		std::vector<QueryArgument> pAClauseArguments = {
-			{"x", EntityType::STRING},
+			{"x",   EntityType::STRING},
 			{"_x_", EntityType::STRING}
 		};
-		std::unordered_set<std::string> pAUsedSynonyms = { "a" };
-		QueryClause pAClause = QueryClause(RelationRef::PATTERN_A, pAClauseArguments, pAUsedSynonyms);
+		std::unordered_set<std::string> pAUsedSynonyms = {"a"};
+		QueryClause pAClause = QueryClause(RelationRef::PATTERN_A, pAClauseArguments, pAUsedSynonyms, "a");
 
-		std::vector<QueryClause> clauses = { stClause, pAClause };
+		std::vector<QueryClause> clauses = {stClause, pAClause};
 		Query query = Query(selectSynonyms, clauses);
 
-		QueryClauseTable expected = { {{"a", {"2"}}}};
-		QueryClauseTable actual = { QueryEvaluator::evaluate(query) };
+		QueryClauseTable expected = {{{"a", {"2"}}}};
+		QueryClauseTable actual = {QueryEvaluator::evaluate(query)};
 
 		REQUIRE(actual == expected);
 	}
@@ -267,32 +267,33 @@ TEST_CASE("QueryEvaluator evaluate") {
 			Select s such that Follows(a,2) pattern a ("x", _"x"_) 
 		*/
 
+		PKB::addFollows(1, 2);
 		PKB::addAssignStatement(1, "x", "x + y");
 		PKB::addStatementNumber(1);
 		PKB::addStatementNumber(2);
 		PKB::addStatementNumber(3);
 
-		std::vector<QueryArgument> selectSynonyms = { {"s", EntityType::STMT} };
+		std::vector<QueryArgument> selectSynonyms = {{"s", EntityType::STMT}};
 
 		std::vector<QueryArgument> stClauseArguments = {
 			{"a", EntityType::ASSIGN},
-			{"2", EntityType::STRING}
+			{"2", EntityType::INT}
 		};
-		std::unordered_set<std::string> stUsedSynonyms = { "a" };
+		std::unordered_set<std::string> stUsedSynonyms = {"a"};
 		QueryClause stClause = QueryClause(RelationRef::FOLLOWS, stClauseArguments, stUsedSynonyms);
 
 		std::vector<QueryArgument> pAClauseArguments = {
-			{"x", EntityType::STRING},
+			{"x",   EntityType::STRING},
 			{"_x_", EntityType::STRING}
 		};
-		std::unordered_set<std::string> pAUsedSynonyms = { "a" };
-		QueryClause pAClause = QueryClause(RelationRef::PATTERN_A, pAClauseArguments, pAUsedSynonyms);
+		std::unordered_set<std::string> pAUsedSynonyms = {"a"};
+		QueryClause pAClause = QueryClause(RelationRef::PATTERN_A, pAClauseArguments, pAUsedSynonyms, "a");
 
-		std::vector<QueryClause> clauses = { stClause, pAClause };
+		std::vector<QueryClause> clauses = {stClause, pAClause};
 		Query query = Query(selectSynonyms, clauses);
 
-		QueryClauseTable expected = { {{"s", {"1", "2", "3"}}} };
-		QueryClauseTable actual = { QueryEvaluator::evaluate(query) };
+		QueryClauseTable expected = {{{"s", {"1", "2", "3"}}}};
+		QueryClauseTable actual = {QueryEvaluator::evaluate(query)};
 
 		REQUIRE(actual == expected);
 	}
@@ -322,27 +323,27 @@ TEST_CASE("QueryEvaluator evaluate") {
 		PKB::addParentT(1, 5);
 		PKB::addParentT(1, 6);
 
-		std::vector<QueryArgument> selectSynonyms = { {"s", EntityType::STMT} };
+		std::vector<QueryArgument> selectSynonyms = {{"s", EntityType::STMT}};
 
 		std::vector<QueryArgument> stClauseArguments = {
 			{"s", EntityType::STMT},
 			{"a", EntityType::ASSIGN}
 		};
-		std::unordered_set<std::string> stUsedSynonyms = { "s", "a"};
+		std::unordered_set<std::string> stUsedSynonyms = {"s", "a"};
 		QueryClause stClause = QueryClause(RelationRef::PARENT_T, stClauseArguments, stUsedSynonyms);
 
 		std::vector<QueryArgument> pAClauseArguments = {
-			{"x", EntityType::STRING},
+			{"x",   EntityType::STRING},
 			{"_x_", EntityType::STRING}
 		};
-		std::unordered_set<std::string> pAUsedSynonyms = { "a" };
-		QueryClause pAClause = QueryClause(RelationRef::PATTERN_A, pAClauseArguments, pAUsedSynonyms);
+		std::unordered_set<std::string> pAUsedSynonyms = {"a"};
+		QueryClause pAClause = QueryClause(RelationRef::PATTERN_A, pAClauseArguments, pAUsedSynonyms, "a");
 
-		std::vector<QueryClause> clauses = { stClause, pAClause };
+		std::vector<QueryClause> clauses = {stClause, pAClause};
 		Query query = Query(selectSynonyms, clauses);
 
-		QueryClauseTable expected = { {{"s", {"1", "1"}}, {"a", {"4", "6"}}} };
-		QueryClauseTable actual = { QueryEvaluator::evaluate(query) };
+		QueryClauseTable expected = {{{"s", {"1", "1"}}, {"a", {"4", "6"}}}};
+		QueryClauseTable actual = {QueryEvaluator::evaluate(query)};
 
 		REQUIRE(actual == expected);
 	}
@@ -355,37 +356,41 @@ TEST_CASE("QueryEvaluator evaluate") {
 			Select a such that Uses(s,v) pattern a (v, _"x"_)
 		*/
 
-		PKB::addUsesStatement(1, { "x" });
-		PKB::addUsesStatement(2, { "x", "x", "y" });
-		PKB::addUsesStatement(3, { "y", "z" });
-		PKB::addUsesStatement(4, { "w", "x", "y", "z" });
+		PKB::addUsesStatement(1, {"x"});
+		PKB::addUsesStatement(2, {"x", "x", "y"});
+		PKB::addUsesStatement(3, {"y", "z"});
+		PKB::addUsesStatement(4, {"w", "x", "y", "z"});
 
 		PKB::addAssignStatement(1, "z", "x");
 		PKB::addAssignStatement(2, "x", "y x +");
 		PKB::addAssignStatement(3, "y", "z");
 		PKB::addAssignStatement(4, "x", "w x * y z / +");
 
-		std::vector<QueryArgument> selectSynonyms = { {"a", EntityType::ASSIGN} };
+		std::vector<QueryArgument> selectSynonyms = {{"a", EntityType::ASSIGN}};
 
 		std::vector<QueryArgument> stClauseArguments = {
 			{"s", EntityType::STMT},
 			{"v", EntityType::VAR}
 		};
-		std::unordered_set<std::string> stUsedSynonyms = { "s", "v" };
+		std::unordered_set<std::string> stUsedSynonyms = {"s", "v"};
 		QueryClause stClause = QueryClause(RelationRef::USES, stClauseArguments, stUsedSynonyms);
 
 		std::vector<QueryArgument> pAClauseArguments = {
-			{"v", EntityType::VAR},
+			{"v",   EntityType::VAR},
 			{"_x_", EntityType::STRING}
 		};
-		std::unordered_set<std::string> pAUsedSynonyms = { "a", "v" };
-		QueryClause pAClause = QueryClause(RelationRef::PATTERN_A, pAClauseArguments, pAUsedSynonyms);
+		std::unordered_set<std::string> pAUsedSynonyms = {"a", "v"};
+		QueryClause pAClause = QueryClause(RelationRef::PATTERN_A, pAClauseArguments, pAUsedSynonyms, "a");
 
-		std::vector<QueryClause> clauses = { stClause, pAClause };
+		std::vector<QueryClause> clauses = {stClause, pAClause};
 		Query query = Query(selectSynonyms, clauses);
 
-		QueryClauseTable expected = { {{"s", {"1", "2", "4"}}, {"v", {"z", "x", "x"}},  {"a", {"1", "2", "4"}}}};
-		QueryClauseTable actual = { QueryEvaluator::evaluate(query) };
+		QueryClauseTable expected = {
+			{{"s", {"2", "2", "4", "4", "1", "1", "4", "3"}},
+			 {"v", {"x", "x", "x", "x", "x", "x", "z", "z"}},
+			 {"a", {"2", "4", "2", "4", "2", "4", "1", "1"}}
+			}};
+		QueryClauseTable actual = {QueryEvaluator::evaluate(query)};
 
 		REQUIRE(actual == expected);
 	}
@@ -395,7 +400,7 @@ TEST_CASE("QueryEvaluator evaluate") {
 
 		/*
 			assign a; variable v;
-			Select a such that Modifies(a, v) pattern a(v, _”x”_)
+			Select a such that Modifies(a, v) pattern a(v, _"x"_)
 		*/
 
 		PKB::addAssignStatement(1, "y", "x");
@@ -403,32 +408,32 @@ TEST_CASE("QueryEvaluator evaluate") {
 		PKB::addAssignStatement(3, "x", "x");
 		PKB::addAssignStatement(4, "y", "x");
 
-		PKB::addModifiesStatement(1, { "y" });
-		PKB::addModifiesStatement(2, { "z" });
-		PKB::addModifiesStatement(3, { "x" });
-		PKB::addModifiesStatement(4, { "y" });
+		PKB::addModifiesStatement(1, {"y"});
+		PKB::addModifiesStatement(2, {"z"});
+		PKB::addModifiesStatement(3, {"x"});
+		PKB::addModifiesStatement(4, {"y"});
 
-		std::vector<QueryArgument> selectSynonyms = { {"a", EntityType::ASSIGN} };
+		std::vector<QueryArgument> selectSynonyms = {{"a", EntityType::ASSIGN}};
 
 		std::vector<QueryArgument> stClauseArguments = {
 			{"a", EntityType::ASSIGN},
 			{"v", EntityType::VAR}
 		};
-		std::unordered_set<std::string> stUsedSynonyms = { "a", "v" };
+		std::unordered_set<std::string> stUsedSynonyms = {"a", "v"};
 		QueryClause stClause = QueryClause(RelationRef::MODIFIES, stClauseArguments, stUsedSynonyms);
 
 		std::vector<QueryArgument> pAClauseArguments = {
-			{"v", EntityType::VAR},
+			{"v",   EntityType::VAR},
 			{"_x_", EntityType::STRING}
 		};
-		std::unordered_set<std::string> pAUsedSynonyms = { "a", "v" };
-		QueryClause pAClause = QueryClause(RelationRef::PATTERN_A, pAClauseArguments, pAUsedSynonyms);
+		std::unordered_set<std::string> pAUsedSynonyms = {"a", "v"};
+		QueryClause pAClause = QueryClause(RelationRef::PATTERN_A, pAClauseArguments, pAUsedSynonyms, "a");
 
-		std::vector<QueryClause> clauses = { stClause, pAClause };
+		std::vector<QueryClause> clauses = {stClause, pAClause};
 		Query query = Query(selectSynonyms, clauses);
 
-		QueryClauseTable expected = { {{"a", {"1", "3", "4"}}, {"v", {"y", "x", "y"}}} };
-		QueryClauseTable actual = { QueryEvaluator::evaluate(query) };
+		QueryClauseTable expected = {{{"a", {"1", "3", "4"}}, {"v", {"y", "x", "y"}}}};
+		QueryClauseTable actual = {QueryEvaluator::evaluate(query)};
 
 		REQUIRE(actual == expected);
 	}

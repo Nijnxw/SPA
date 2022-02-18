@@ -1,4 +1,5 @@
 #pragma once
+
 #include <unordered_map>
 #include "models/EntityType.h"
 #include "models/RelationRef.h"
@@ -40,44 +41,44 @@ enum class TokenType {
 	FOLLOWS,
 	FOLLOWS_T,
 
-	//PATTERN clause tokens
+	//PATTERN_A clause tokens
 	PATTERN
 };
 
 //unordered map to map raw string tokens to the appropriate token type
 static std::unordered_map<std::string, TokenType> stringTokenMap = {
 	//puncuation token mapping
-	{";", TokenType::SEMICOLON},
-	{"(", TokenType::OPEN_PARAN},
-	{")", TokenType::CLOSE_PARAN},
-	{",", TokenType::COMMA},
-	{"_", TokenType::UNDERSCORE},
+	{";",         TokenType::SEMICOLON},
+	{"(",         TokenType::OPEN_PARAN},
+	{")",         TokenType::CLOSE_PARAN},
+	{",",         TokenType::COMMA},
+	{"_",         TokenType::UNDERSCORE},
 
 	//Design-entity token mapping
-	{"stmt", TokenType::STMT},
-	{"read", TokenType::READ},
-	{"print", TokenType::PRINT},
-	{"while", TokenType::WHILE},
-	{"if", TokenType::IF},
-	{"assign", TokenType::ASSIGN},
-	{"variable", TokenType::VARIABLE},
-	{"constant", TokenType::CONST},
+	{"stmt",      TokenType::STMT},
+	{"read",      TokenType::READ},
+	{"print",     TokenType::PRINT},
+	{"while",     TokenType::WHILE},
+	{"if",        TokenType::IF},
+	{"assign",    TokenType::ASSIGN},
+	{"variable",  TokenType::VARIABLE},
+	{"constant",  TokenType::CONST},
 	{"procedure", TokenType::PROC},
 
-	{"Select", TokenType::SELECT},
-	
+	{"Select",    TokenType::SELECT},
+
 	//such that clauses token mapping
-	{"such", TokenType::SUCH},
-	{"that", TokenType::THAT},
+	{"such",      TokenType::SUCH},
+	{"that",      TokenType::THAT},
 
 	//Relationship clause token mapping 
-	{"Modifies", TokenType::MODIFIES},
-	{"Uses", TokenType::USES},
-	{"Parent", TokenType::PARENT},
-	{"Parent*", TokenType::PARENT_T},
-	{"Follows", TokenType::FOLLOWS},
-	{"Follows*", TokenType::FOLLOWS_T},
+	{"Modifies",  TokenType::MODIFIES},
+	{"Uses",      TokenType::USES},
+	{"Parent",    TokenType::PARENT},
+	{"Parent*",   TokenType::PARENT_T},
+	{"Follows",   TokenType::FOLLOWS},
+	{"Follows*",  TokenType::FOLLOWS_T},
 
 	//Pattern clause token mapping 
-	{"pattern", TokenType::PATTERN},
+	{"pattern",   TokenType::PATTERN},
 };

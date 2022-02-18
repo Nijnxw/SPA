@@ -1,6 +1,7 @@
-#pragma once 
+#pragma once
 
 #include <vector>
+#include <list>
 #include "models/Query.h"
 #include "models/QueryClauseTable.h""
 #include "PQL/PQLToken.h"
@@ -24,6 +25,6 @@ namespace PQL {
 
 	Table evaluate(Query& query);
 
-	std::list<std::string> getResults(Table& res, std::vector<QueryArgument>& selectSyn);
+	std::unordered_set<std::string> getResults(Table& res, std::vector<QueryArgument>& selectSyn);
 
 }

@@ -25,10 +25,14 @@ TEST_CASE("QueryEvaluator evaluate") {
 	SECTION("evaluate one st clause don't contain select returns table corresponding to synonym type") {
 		PKB::clearAllStores();
 
-		PKB::addModifiesStatement(1, { "a" });
-		PKB::addModifiesStatement(2, { "a" });
-		PKB::addModifiesStatement(3, { "a" });
-		PKB::addModifiesStatement(4, { "a" });
+		PKB::addModifiesStatement(1, {"a"});
+		PKB::addModifiesStatement(2, {"a"});
+		PKB::addModifiesStatement(3, {"a"});
+		PKB::addModifiesStatement(4, {"a"});
+
+		PKB::addStatementNumber(1);
+		PKB::addStatementNumber(2);
+		PKB::addStatementNumber(3);
 
 		std::vector<QueryArgument> selectSynonyms = {{"s", EntityType::STMT}};
 
@@ -42,7 +46,7 @@ TEST_CASE("QueryEvaluator evaluate") {
 		std::vector<QueryClause> clauses = {stClause};
 		Query query = Query(selectSynonyms, clauses);
 
-		QueryClauseTable expected = {{{"s", {"1", "2", "3", "4"}}}};
+		QueryClauseTable expected = {{{"s", {"1", "2", "3"}}}};
 		QueryClauseTable actual = {QueryEvaluator::evaluate(query)};
 
 		REQUIRE(actual == expected);
@@ -50,9 +54,9 @@ TEST_CASE("QueryEvaluator evaluate") {
 
 	SECTION("evaluate one st clause contains select returns table projection from clause result") {
 		PKB::clearAllStores();
-		
-		PKB::addUsesStatement(1, { "a" });
-		PKB::addUsesStatement(2, { "a", "c" });
+
+		PKB::addUsesStatement(1, {"a"});
+		PKB::addUsesStatement(2, {"a", "c"});
 
 		std::vector<QueryArgument> selectSynonyms = {{"v", EntityType::VAR}};
 
@@ -74,26 +78,29 @@ TEST_CASE("QueryEvaluator evaluate") {
 
 	SECTION("evaluate one pattern clause don't contain select returns table corresponding to synonym type") {
 		PKB::clearAllStores();
-	
+
 		PKB::addStatementWithType(EntityType::PRINT, 1);
 		PKB::addStatementWithType(EntityType::PRINT, 2);
 		PKB::addStatementWithType(EntityType::PRINT, 3);
 		PKB::addStatementWithType(EntityType::PRINT, 4);
 
+		PKB::addAssignStatement(5, "x", "y");
+		PKB::addAssignStatement(6, "x", "x y +");
+
 		std::vector<QueryArgument> selectSynonyms = {{"pn", EntityType::PRINT}};
 
 		std::vector<QueryArgument> clauseArguments = {
-			{"x", EntityType::STRING},
+			{"x",   EntityType::STRING},
 			{"_x_", EntityType::STRING},
 		};
-		std::unordered_set<std::string> usedSynonyms = { "a" };
-		QueryClause pAClause = QueryClause(RelationRef::PATTERN, clauseArguments, usedSynonyms, "a");
-	
-		std::vector<QueryClause> clauses = { pAClause };
+		std::unordered_set<std::string> usedSynonyms = {"a"};
+		QueryClause pAClause = QueryClause(RelationRef::PATTERN_A, clauseArguments, usedSynonyms, "a");
+
+		std::vector<QueryClause> clauses = {pAClause};
 		Query query = Query(selectSynonyms, clauses);
 
-		QueryClauseTable expected = { {{"pn", {"1", "2", "3", "4"}}} };
-		QueryClauseTable actual = { QueryEvaluator::evaluate(query) };
+		QueryClauseTable expected = {{{"pn", {"1", "2", "3", "4"}}}};
+		QueryClauseTable actual = {QueryEvaluator::evaluate(query)};
 
 		REQUIRE(actual == expected);
 	}
@@ -105,21 +112,21 @@ TEST_CASE("QueryEvaluator evaluate") {
 		PKB::addAssignStatement(2, "y", "y 2 * x 2 + +");
 		PKB::addAssignStatement(3, "x", "y z +");
 
-		std::vector<QueryArgument> selectSynonyms = { {"a", EntityType::ASSIGN} };
+		std::vector<QueryArgument> selectSynonyms = {{"a", EntityType::ASSIGN}};
 
 		std::vector<QueryArgument> clauseArguments = {
-			{"x", EntityType::STRING},
+			{"x",       EntityType::STRING},
 			{"_x 2 +_", EntityType::STRING}
 		};
 
-		std::unordered_set<std::string> usedSynonyms = { "a" };
-		QueryClause pAClause = QueryClause(RelationRef::PATTERN, clauseArguments, usedSynonyms, "a");
-	
-		std::vector<QueryClause> clauses = { pAClause };
+		std::unordered_set<std::string> usedSynonyms = {"a"};
+		QueryClause pAClause = QueryClause(RelationRef::PATTERN_A, clauseArguments, usedSynonyms, "a");
+
+		std::vector<QueryClause> clauses = {pAClause};
 		Query query = Query(selectSynonyms, clauses);
 
-		QueryClauseTable expected = { {{"a", {"1", "2"}}} };
-		QueryClauseTable actual = { QueryEvaluator::evaluate(query) };
+		QueryClauseTable expected = {{{"a", {"1"}}}};
+		QueryClauseTable actual = {QueryEvaluator::evaluate(query)};
 
 		REQUIRE(actual == expected);
 	}

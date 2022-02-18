@@ -7,5 +7,5 @@ enum class RelationRef {
 	PARENT_T,
 	FOLLOWS,
 	FOLLOWS_T,
-	PATTERN
+	PATTERN_A
 };

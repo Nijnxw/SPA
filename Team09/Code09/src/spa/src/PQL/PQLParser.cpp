@@ -172,6 +172,9 @@ void PQLParser::parsePatternClause() {
 
 	getNextExpectedToken(TokenType::PATTERN);
 	auto synonymToken = getValidSynonymToken();
+	if (Declarations.find(synonymToken->getValue()) == Declarations.end()) {
+		throw "invalid syn-assign";
+	}
 	usedSynonyms.insert(synonymToken->getValue());
 	getNextExpectedToken(TokenType::OPEN_PARAN);
 	QueryArgument LHS = parsePatternLHS();

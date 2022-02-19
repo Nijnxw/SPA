@@ -4,6 +4,7 @@
 #include "UsesEvaluator.h"
 #include "ParentEvaluator.h"
 #include "ModifiesEvaluator.h"
+#include "PatternAEvaluator.h"
 
 QueryClauseTable ClauseEvaluator::evaluate(QueryClause& clause, bool isBooleanResult) {
 	QueryArgument firstArg = clause.getArguments().at(0);
@@ -13,26 +14,30 @@ QueryClauseTable ClauseEvaluator::evaluate(QueryClause& clause, bool isBooleanRe
 	ParentEvaluator parentEvaluator = ParentEvaluator();
 	UsesEvaluator usesEvaluator = UsesEvaluator();
 	ModifiesEvaluator modifiesEvaluator = ModifiesEvaluator();
+	PatternAEvaluator patternAEvaluator = PatternAEvaluator();
 
 	switch (clause.getClauseType()) {
 		case RelationRef::FOLLOWS:
 			return followsEvaluator.getFollows(firstArg.getValue(), secondArg.getValue(), firstArg.getType(),
-												secondArg.getType(), isBooleanResult);
+											   secondArg.getType(), isBooleanResult);
 		case RelationRef::FOLLOWS_T:
 			return followsEvaluator.getFollowsT(firstArg.getValue(), secondArg.getValue(), firstArg.getType(),
-												 secondArg.getType(), isBooleanResult);
+												secondArg.getType(), isBooleanResult);
 		case RelationRef::MODIFIES:
 			return modifiesEvaluator.getModifies(firstArg.getValue(), secondArg.getValue(), firstArg.getType(),
-												  secondArg.getType(), isBooleanResult);
+												 secondArg.getType(), isBooleanResult);
 		case RelationRef::PARENT:
 			return parentEvaluator.getParent(firstArg.getValue(), secondArg.getValue(), firstArg.getType(),
-											  secondArg.getType(), isBooleanResult);
+											 secondArg.getType(), isBooleanResult);
 		case RelationRef::PARENT_T:
 			return parentEvaluator.getParentT(firstArg.getValue(), secondArg.getValue(), firstArg.getType(),
-											   secondArg.getType(), isBooleanResult);
+											  secondArg.getType(), isBooleanResult);
 		case RelationRef::USES:
 			return usesEvaluator.getUses(firstArg.getValue(), secondArg.getValue(), firstArg.getType(),
-										  secondArg.getType(), isBooleanResult);
+										 secondArg.getType(), isBooleanResult);
+		case RelationRef::PATTERN_A:
+			return patternAEvaluator.getPattern(firstArg.getValue(), secondArg.getValue(), firstArg.getType(),
+												secondArg.getType(), isBooleanResult);
 		default:
 			return {};
 	}

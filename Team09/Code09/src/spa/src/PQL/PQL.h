@@ -1,4 +1,4 @@
-#pragma once 
+#pragma once
 
 #include <vector>
 #include <list>
@@ -25,6 +25,6 @@ namespace PQL {
 
 	Table evaluate(Query& query);
 
-	std::list<std::string> getResults(Table& res, std::vector<QueryArgument>& selectSyn);
+	std::unordered_set<std::string> getResults(Table& res, std::vector<QueryArgument>& selectSyn);
 
 }

@@ -2,6 +2,7 @@
 
 #include <cctype>
 #include <stack>
+#include <sstream>
 #include <string>
 #include <vector>
 

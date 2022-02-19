@@ -36,7 +36,7 @@ QueryClauseResult ClauseEvaluator::evaluate(QueryClause& clause, bool isBooleanR
 			return usesEvaluator.getUses(firstArg.getValue(), secondArg.getValue(), firstArg.getType(),
 										 secondArg.getType(), isBooleanResult);
 		case RelationRef::PATTERN_A:
-			return patternAEvaluator.getPattern(firstArg.getValue(), secondArg.getValue(), firstArg.getType(),
+			return patternAEvaluator.getPattern(firstArg.getValue(), secondArg.getValue(), clause.getClauseSynonym(), firstArg.getType(),
 												secondArg.getType(), isBooleanResult);
 		default:
 			return {};

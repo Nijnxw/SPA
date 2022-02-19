@@ -142,7 +142,8 @@ none
 constant c;
 Select c1
 none
-5000 30 - Invalid design entity (case sensitive) - graceful failure
+5000 
+30 - Invalid design entity (case sensitive) - graceful failure
 Constant c;
 Select c
 none

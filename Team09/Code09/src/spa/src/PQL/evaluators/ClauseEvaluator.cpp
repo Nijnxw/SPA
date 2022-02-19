@@ -9,7 +9,7 @@
 QueryClauseResult ClauseEvaluator::evaluate(QueryClause& clause, bool isBooleanResult) {
 	QueryArgument firstArg = clause.getArguments().at(0);
 	QueryArgument secondArg = clause.getArguments().at(1);
-
+	
 	FollowsEvaluator followsEvaluator = FollowsEvaluator();
 	ParentEvaluator parentEvaluator = ParentEvaluator();
 	UsesEvaluator usesEvaluator = UsesEvaluator();

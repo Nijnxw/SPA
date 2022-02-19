@@ -1,0 +1,16 @@
+procedure simplestSIMPLE {
+	a = a + 1 / b * 2 / c - d;
+	read r;
+	print pn;
+
+	if (true == true) then {
+		such = that + team9;
+	}
+	else {
+		pattern = nice;
+}
+	while (a == false) {
+		aPlus = true;
+	}
+	d = 34 * 235 + c;
+}

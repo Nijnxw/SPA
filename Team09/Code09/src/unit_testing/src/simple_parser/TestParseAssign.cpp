@@ -563,9 +563,320 @@ TEST_CASE ("Assign 1.38 - Operator Precedence Intermediate - 1 + (x * (y - 2) / 
 	REQUIRE(*output == *NonContainerStmtASTs::getAST1_38());
 }
 
+TEST_CASE ("Expression validity 8.1") {
+	// a = (1);
+	std::vector<Token*> input {
+			new NameToken("procedure"), 	new NameToken("testProgram"),new PunctuatorToken("{"),
+			new NameToken("a"),			new OperatorToken("="),
+			new PunctuatorToken("("),  	new IntegerToken("1"),		new PunctuatorToken(")"),
+			new PunctuatorToken(";"),	new PunctuatorToken("}"),	new EndOfFileToken(),
+	};
+
+	SPParser parser = SPParser(input);
+	AST output = parser.parseProgram();
+	REQUIRE(*output == *NonContainerStmtASTs::getAST1_3());
+}
+
+TEST_CASE ("Expression validity 8.2") {
+	// a = (x);
+	std::vector<Token*> input {
+			new NameToken("procedure"), 	new NameToken("testProgram"),		new PunctuatorToken("{"),
+			new NameToken("a"),			new OperatorToken("="),
+			new PunctuatorToken("("),  	new NameToken("x"),		new PunctuatorToken(")"),
+			new PunctuatorToken(";"),	new PunctuatorToken("}"),	new EndOfFileToken(),
+	};
+
+	SPParser parser = SPParser(input);
+	AST output = parser.parseProgram();
+	REQUIRE(*output == *NonContainerStmtASTs::getAST1_4());
+}
+
+TEST_CASE ("Expression validity 8.3") {
+	// a = (x + 1);
+	std::vector<Token*> input {
+			new NameToken("procedure"), 	new NameToken("testProgram"),		new PunctuatorToken("{"),
+			new NameToken("a"),			new OperatorToken("="),
+			new PunctuatorToken("("),	new NameToken("x"),			new OperatorToken("+"),
+			new IntegerToken("1"),		new PunctuatorToken(")"),
+			new PunctuatorToken(";"),	new PunctuatorToken("}"),	new EndOfFileToken(),
+	};
+
+	SPParser parser = SPParser(input);
+	AST output = parser.parseProgram();
+	REQUIRE(*output == *NonContainerStmtASTs::getAST1_7());
+}
+
+TEST_CASE ("Expression validity 8.4") {
+	// a = (((1)));
+	std::vector<Token*> input {
+			new NameToken("procedure"), 	new NameToken("testProgram"),		new PunctuatorToken("{"),
+			new NameToken("a"),			new OperatorToken("="),
+			new PunctuatorToken("("),  	new PunctuatorToken("("),	new PunctuatorToken("("),
+			new IntegerToken("1"),
+			new PunctuatorToken(")"),	new PunctuatorToken(")"),	new PunctuatorToken(")"),
+			new PunctuatorToken(";"),	new PunctuatorToken("}"),	new EndOfFileToken(),
+	};
+
+	SPParser parser = SPParser(input);
+	AST output = parser.parseProgram();
+	REQUIRE(*output == *NonContainerStmtASTs::getAST1_3());
+}
+
+TEST_CASE ("Expression validity 8.5") {
+	// a = (((x)));
+	std::vector<Token*> input {
+			new NameToken("procedure"), 	new NameToken("testProgram"),		new PunctuatorToken("{"),
+			new NameToken("a"),			new OperatorToken("="),
+			new PunctuatorToken("("),	new PunctuatorToken("("),	new PunctuatorToken("("),
+			new NameToken("x"),
+			new PunctuatorToken(")"),	new PunctuatorToken(")"),	new PunctuatorToken(")"),
+			new PunctuatorToken(";"),	new PunctuatorToken("}"),	new EndOfFileToken(),
+	};
+
+	SPParser parser = SPParser(input);
+	AST output = parser.parseProgram();
+	REQUIRE(*output == *NonContainerStmtASTs::getAST1_4());
+}
+
+TEST_CASE ("Expression validity 8.6") {
+	// a = (((x + 1)));
+	std::vector<Token*> input {
+			new NameToken("procedure"), 	new NameToken("testProgram"),	new PunctuatorToken("{"),
+			new NameToken("a"),			new OperatorToken("="),
+			new PunctuatorToken("("),	new PunctuatorToken("("), 		new PunctuatorToken("("),
+			new NameToken("x"),			new OperatorToken("+"),  		new IntegerToken("1"),
+			new PunctuatorToken(")"),	new PunctuatorToken(")"),		new PunctuatorToken(")"),
+			new PunctuatorToken(";"),	new PunctuatorToken("}"),		new EndOfFileToken(),
+	};
+
+	SPParser parser = SPParser(input);
+	AST output = parser.parseProgram();
+	REQUIRE(*output == *NonContainerStmtASTs::getAST1_7());
+}
+
+TEST_CASE ("Expression validity 8.7") {
+	// a = (((x) + 1));
+	std::vector<Token*> input {
+			new NameToken("procedure"), 	new NameToken("testProgram"),	new PunctuatorToken("{"),
+			new NameToken("a"),			new OperatorToken("="),
+			new PunctuatorToken("("),	new PunctuatorToken("("), 		new PunctuatorToken("("),
+			new NameToken("x"),			new PunctuatorToken(")"),
+			new OperatorToken("+"),  	new IntegerToken("1"),
+			new PunctuatorToken(")"),	new PunctuatorToken(")"),
+			new PunctuatorToken(";"),	new PunctuatorToken("}"),		new EndOfFileToken(),
+	};
+
+	SPParser parser = SPParser(input);
+	AST output = parser.parseProgram();
+	REQUIRE(*output == *NonContainerStmtASTs::getAST1_7());
+}
+
+TEST_CASE ("Expression validity 8.8") {
+	// a = (x) + (( (1) + y ));
+	std::vector<Token*> input {
+			new NameToken("procedure"), 	new NameToken("testProgram"),	new PunctuatorToken("{"),
+			new NameToken("a"),			new OperatorToken("="),
+			new PunctuatorToken("("),	new NameToken("x"),				new PunctuatorToken(")"),
+			new OperatorToken("+"),
+			new PunctuatorToken("("),	new PunctuatorToken("("),
+			new PunctuatorToken("("),  	new IntegerToken("1"),			new PunctuatorToken(")"),
+			new OperatorToken("+"),		new NameToken("y"),
+			new PunctuatorToken(")"),	new PunctuatorToken(")"),
+			new PunctuatorToken(";"),	new PunctuatorToken("}"),		new EndOfFileToken(),
+	};
+
+	SPParser parser = SPParser(input);
+	AST output = parser.parseProgram();
+	REQUIRE(*output == *NonContainerStmtASTs::getAST1_26());
+}
+
+TEST_CASE ("Expression validity 8.9") {
+	// a = ((1 + (x * ((y) - 2)) / (z % 3)));
+	std::vector<Token*> input {
+			new NameToken("procedure"), 	new NameToken("testProgram"),	new PunctuatorToken("{"),
+			new NameToken("a"),			new OperatorToken("="),
+			new PunctuatorToken("("),	new PunctuatorToken("("),
+			new IntegerToken("1"),		new OperatorToken("+"),
+			new PunctuatorToken("("),	new NameToken("x"),				new OperatorToken("*"),
+			new PunctuatorToken("("),
+			new PunctuatorToken("("),  	new NameToken("y"),				new PunctuatorToken(")"),
+			new OperatorToken("-"),		new IntegerToken("2"),
+			new PunctuatorToken(")"),	new PunctuatorToken(")"),
+			new OperatorToken("/"),
+			new PunctuatorToken("("),
+			new NameToken("z"),	 		new OperatorToken("%"), 			new IntegerToken("3"),
+			new PunctuatorToken(")"),	new PunctuatorToken(")"),		new PunctuatorToken(")"),
+			new PunctuatorToken(";"),	new PunctuatorToken("}"),		new EndOfFileToken(),
+	};
+
+	SPParser parser = SPParser(input);
+	AST output = parser.parseProgram();
+	REQUIRE(*output == *NonContainerStmtASTs::getAST1_35());
+}
+
+
 // --------------------------------------------------
 //                  UNHAPPY PATHS
 // --------------------------------------------------
+TEST_CASE ("Expression validity 8.10 - Missing ‘)’") {
+	// a = (x;
+	std::vector<Token*> input {
+			new NameToken("procedure"), 	new NameToken("testProgram"),	new PunctuatorToken("{"),
+			new NameToken("a"),			new OperatorToken("="),
+			new PunctuatorToken("("),  	new NameToken("x"),
+			new PunctuatorToken(";"),	new PunctuatorToken("}"),		new EndOfFileToken(),
+	};
+
+	SPParser parser = SPParser(input);
+	REQUIRE_THROWS_WITH(parser.parseProgram(), "Expected ')' but got ';' instead.\n");
+}
+
+TEST_CASE ("Expression validity 8.11 - Missing ‘(’") {
+	// a = x);
+	std::vector<Token*> input {
+			new NameToken("procedure"), 	new NameToken("testProgram"),	new PunctuatorToken("{"),
+			new NameToken("a"),			new OperatorToken("="),
+			new NameToken("x"),		new PunctuatorToken(")"),
+			new PunctuatorToken(";"),	new PunctuatorToken("}"),		new EndOfFileToken(),
+	};
+
+	SPParser parser = SPParser(input);
+	REQUIRE_THROWS_WITH(parser.parseProgram(), "Expected ';' but got ')' instead.\n");
+}
+
+TEST_CASE ("Expression validity 8.12 - Invalid pairing") {
+	// a = )x(;
+	std::vector<Token*> input {
+			new NameToken("procedure"), 	new NameToken("testProgram"),	new PunctuatorToken("{"),
+			new NameToken("a"),			new OperatorToken("="),
+			new PunctuatorToken(")"),  	new NameToken("x"),				new PunctuatorToken("("),
+			new PunctuatorToken(";"),	new PunctuatorToken("}"),		new EndOfFileToken(),
+	};
+
+	SPParser parser = SPParser(input);
+	REQUIRE_THROWS_WITH(parser.parseProgram(), "Expected an expression but got ')' instead.\n");
+}
+
+TEST_CASE ("Expression validity 8.13 - Invalid wrapping of parentheses around expr") {
+	// a = (x + ) 1;
+	std::vector<Token*> input {
+			new NameToken("procedure"), 	new NameToken("testProgram"),	new PunctuatorToken("{"),
+			new NameToken("a"),			new OperatorToken("="),
+			new PunctuatorToken("("),  	new NameToken("x"),				new OperatorToken("+"),
+			new PunctuatorToken(")"),	new IntegerToken("1"),
+			new PunctuatorToken(";"),	new PunctuatorToken("}"),		new EndOfFileToken(),
+	};
+
+	SPParser parser = SPParser(input);
+	REQUIRE_THROWS_WITH(parser.parseProgram(), "Expected an expression but got ')' instead.\n");
+}
+
+TEST_CASE ("Expression validity 8.14 - Invalid wrapping of parentheses around expr") {
+	// a = x ( + 1);
+	std::vector<Token*> input {
+			new NameToken("procedure"), 	new NameToken("testProgram"),	new PunctuatorToken("{"),
+			new NameToken("a"),			new OperatorToken("="),
+			new NameToken("x"),			new PunctuatorToken("("),  		new OperatorToken("+"),
+			new IntegerToken("1"),		new PunctuatorToken(")"),
+			new PunctuatorToken(";"),	new PunctuatorToken("}"),		new EndOfFileToken(),
+	};
+
+	SPParser parser = SPParser(input);
+	REQUIRE_THROWS_WITH(parser.parseProgram(), "Expected arithmetic operator but got '(' instead.\n");
+}
+
+TEST_CASE ("Expression validity 8.15 - Invalid wrapping of parentheses around expr") {
+	// a = x (+) 1;
+	std::vector<Token*> input {
+			new NameToken("procedure"), 	new NameToken("testProgram"),	new PunctuatorToken("{"),
+			new NameToken("a"),			new OperatorToken("="),
+			new NameToken("x"),			new PunctuatorToken("("),  		new OperatorToken("+"),
+			new PunctuatorToken(")"),	new IntegerToken("1"),
+			new PunctuatorToken(";"),	new PunctuatorToken("}"),		new EndOfFileToken(),
+	};
+
+	SPParser parser = SPParser(input);
+	REQUIRE_THROWS_WITH(parser.parseProgram(), "Expected arithmetic operator but got '(' instead.\n");
+}
+
+TEST_CASE ("Expression validity 8.16 - No operator") {
+	// a = 1x;
+	std::vector<Token*> input {
+			new NameToken("procedure"), 	new NameToken("testProgram"),	new PunctuatorToken("{"),
+			new NameToken("a"),			new OperatorToken("="),
+			new IntegerToken("1"),		new NameToken("x"),
+			new PunctuatorToken(";"),	new PunctuatorToken("}"),		new EndOfFileToken(),
+	};
+
+	SPParser parser = SPParser(input);
+	REQUIRE_THROWS_WITH(parser.parseProgram(), "Expected arithmetic operator but got 'x' instead.\n");
+}
+
+TEST_CASE ("Expression validity 8.17 - Invalid operator") {
+	// a = x < 1;
+	std::vector<Token*> input {
+			new NameToken("procedure"), 	new NameToken("testProgram"),	new PunctuatorToken("{"),
+			new NameToken("a"),			new OperatorToken("="),
+			new NameToken("x"),			new OperatorToken("<"),			new IntegerToken("1"),
+			new PunctuatorToken(";"),	new PunctuatorToken("}"),		new EndOfFileToken(),
+	};
+
+	SPParser parser = SPParser(input);
+	REQUIRE_THROWS_WITH(parser.parseProgram(), "Expected ';' but got '<' instead.\n");
+}
+
+TEST_CASE ("Expression validity 8.18 - Invalid operator") {
+	// a = x && 1;
+	std::vector<Token*> input {
+			new NameToken("procedure"), 	new NameToken("testProgram"),	new PunctuatorToken("{"),
+			new NameToken("a"),			new OperatorToken("="),
+			new NameToken("x"),			new OperatorToken("&&"),			new IntegerToken("1"),
+			new PunctuatorToken(";"),	new PunctuatorToken("}"),		new EndOfFileToken(),
+	};
+
+	SPParser parser = SPParser(input);
+	REQUIRE_THROWS_WITH(parser.parseProgram(), "Expected arithmetic operator but got '&&' instead.\n");
+}
+
+TEST_CASE ("Expression validity 8.19 - Invalid operator") {
+	// a = x ! 1;
+	std::vector<Token*> input {
+			new NameToken("procedure"), 	new NameToken("testProgram"),	new PunctuatorToken("{"),
+			new NameToken("a"),			new OperatorToken("="),
+			new NameToken("x"),			new OperatorToken("!"),			new IntegerToken("1"),
+			new PunctuatorToken(";"),	new PunctuatorToken("}"),		new EndOfFileToken(),
+	};
+
+	SPParser parser = SPParser(input);
+	REQUIRE_THROWS_WITH(parser.parseProgram(), "Expected arithmetic operator but got '!' instead.\n");
+}
+
+TEST_CASE ("Expression validity 8.20 - Invalid operator") {
+	// a = !x;
+	std::vector<Token*> input {
+			new NameToken("procedure"), 	new NameToken("testProgram"),	new PunctuatorToken("{"),
+			new NameToken("a"),			new OperatorToken("="),
+			new OperatorToken("!"),		new NameToken("x"),
+			new PunctuatorToken(";"),	new PunctuatorToken("}"),		new EndOfFileToken(),
+	};
+
+	SPParser parser = SPParser(input);
+	REQUIRE_THROWS_WITH(parser.parseProgram(), "Expected an expression but got '!' instead.\n");
+}
+
+TEST_CASE ("Expression validity 8.21 - Negative integers not supported") {
+	// a = -1;
+	std::vector<Token*> input {
+			new NameToken("procedure"), 	new NameToken("testProgram"),	new PunctuatorToken("{"),
+			new NameToken("a"),			new OperatorToken("="),
+			new OperatorToken("-"),		new IntegerToken("1"),
+			new PunctuatorToken(";"),	new PunctuatorToken("}"),		new EndOfFileToken(),
+	};
+
+	SPParser parser = SPParser(input);
+	REQUIRE_THROWS_WITH(parser.parseProgram(), "Expected an expression but got '-' instead.\n");
+}
+
 TEST_CASE ("Test parsing of invalid assign statements") {
 	SECTION ("Constants as var_name") {
 		// 123 = x;

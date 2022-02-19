@@ -690,7 +690,7 @@ TEST_CASE ("Predicate 9.29 - Missing cond_expr - ConditionalOperator::NOT") {
 	REQUIRE_THROWS_WITH(parser.parseProgram(), "Expected an expression but got ')' instead.\n");
 }
 
-TEST_CASE ("Predicate 9.30 - Missing RHS for cond_expr") {
+TEST_CASE ("Predicate 9.30 - Missing LHS for cond_expr") {
 	// () && (y >= 3)
 	std::vector<Token*> input = {
 			new NameToken("procedure"), 	new NameToken("testProgram"),	new PunctuatorToken("{"),
@@ -706,7 +706,7 @@ TEST_CASE ("Predicate 9.30 - Missing RHS for cond_expr") {
 	REQUIRE_THROWS_WITH(parser.parseProgram(), "Expected an expression but got ')' instead.\n");
 }
 
-TEST_CASE ("Predicate 9.31 - Missing LHS for cond_expr") {
+TEST_CASE ("Predicate 9.31 - Missing RHS for cond_expr") {
 	// (x < 1) && ()
 	std::vector<Token*> input = {
 			new NameToken("procedure"), 	new NameToken("testProgram"),	new PunctuatorToken("{"),

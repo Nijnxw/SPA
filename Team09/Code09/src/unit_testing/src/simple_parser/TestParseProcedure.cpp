@@ -146,7 +146,7 @@ TEST_CASE("Proc_name validity 5.8 - proc_name cannot be an integer") {
 			new NameToken("procedure"), 	new IntegerToken("123"),	new PunctuatorToken("{"),
 			new NameToken("read"),		new NameToken("x"),		new PunctuatorToken(";"),
 			new PunctuatorToken("}"),	new EndOfFileToken(),
-	};;
+	};
 	SPParser parser = SPParser(input);
 	REQUIRE_THROWS_WITH(parser.parseProgram(), "Expected a valid procedure name but got '123' instead.\n");
 }
@@ -158,7 +158,7 @@ TEST_CASE("Proc_name validity 5.9 - proc_name cannot start with a digit") {
 			new PunctuatorToken("{"),
 			new NameToken("read"),		new NameToken("x"),		new PunctuatorToken(";"),
 			new PunctuatorToken("}"),	new EndOfFileToken(),
-	};;
+	};
 	SPParser parser = SPParser(input);
 	REQUIRE_THROWS_WITH(parser.parseProgram(), "Expected a valid procedure name but got '1' instead.\n");
 }
@@ -171,7 +171,7 @@ TEST_CASE("Proc_name validity 5.10 - proc_name cannot have symbols") {
 			new PunctuatorToken("{"),
 			new NameToken("read"),		new NameToken("x"),		new PunctuatorToken(";"),
 			new PunctuatorToken("}"),	new EndOfFileToken(),
-	};;
+	};
 	SPParser parser = SPParser(input);
 	REQUIRE_THROWS_WITH(parser.parseProgram(), "Expected '{' but got '*' instead.\n");
 }

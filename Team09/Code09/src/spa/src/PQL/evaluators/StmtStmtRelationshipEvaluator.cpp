@@ -73,8 +73,8 @@ QueryClauseResult StmtStmtRelationshipEvaluator::getRelationshipByStatementVaria
 		RHSType == EntityType::CALL) { // Follows(s1, s2)
 		auto [firstEntities, secondEntities] = PKB::getAllRelationshipPairs(relationship);
 		auto [filteredFirst, filteredSecond] = StmtStmtRelationshipEvaluator::filterStatementPairsByType(firstEntities, secondEntities, LHSType, RHSType);
-		queryResult.addColumn(LHS, firstEntities);
-		queryResult.addColumn(RHS, secondEntities);
+		queryResult.addColumn(LHS, filteredFirst);
+		queryResult.addColumn(RHS, filteredSecond);
 	}
 	else if (RHSType == EntityType::WILD) { // Follows(s, _)
 		std::unordered_set<int> statements = PKB::getAllFirstEntities(relationship);
@@ -185,7 +185,7 @@ std::tuple<std::vector<int>, std::vector<int>> StmtStmtRelationshipEvaluator::fi
 
 	switch (RHSType) {
 	case EntityType::STMT:
-		for (const auto& statement : firstEntities) {
+		for (const auto& statement : secondEntities) {
 			secondTypeStatements.insert(statement);
 		}
 		break;

@@ -1,11 +1,11 @@
 #pragma once
 
-#include "models/QueryClauseTable.h"
+#include "models/QueryClauseResult.h"
 #include "models/QueryArgument.h"
 
 class EntityEvaluator {
 public:
-	static QueryClauseTable evaluate(QueryArgument& entity);
+	static QueryClauseResult evaluate(QueryArgument& entity);
 
 private:
 	template<typename T>

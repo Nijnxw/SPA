@@ -9,7 +9,7 @@
 
 #include "../models/AssignStatement.h"
 #include "../models/EntityType.h"
-#include "../models/QueryClauseTable.h"
+#include "../models/QueryClauseResult.h"
 #include "../models/QueryClause.h"
 #include "../models/RelationRef.h"
 

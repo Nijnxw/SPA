@@ -9,24 +9,24 @@
 #include "pkb/PKB.h"
 #include "pkb/util/PKBUtil.cpp"
 #include "models/EntityType.h"
-#include "models/QueryClauseTable.h"
+#include "models/QueryClauseResult.h"
 #include "models/QueryClause.h"
 
 #include "StmtStmtRelationshipEvaluator.h"
 
 class FollowsEvaluator : public StmtStmtRelationshipEvaluator {
 private: 
-	QueryClauseTable getRelationship(RelationRef relationship, const std::string& LHS, const std::string& RHS, EntityType LHSType, EntityType RHSType,
+	QueryClauseResult getRelationship(RelationRef relationship, const std::string& LHS, const std::string& RHS, EntityType LHSType, EntityType RHSType,
 		bool isBooleanResult);
-	QueryClauseTable getTransitiveRelationship(RelationRef relationship, const std::string& LHS, const std::string& RHS, EntityType LHSType, EntityType RHSType,
+	QueryClauseResult getTransitiveRelationship(RelationRef relationship, const std::string& LHS, const std::string& RHS, EntityType LHSType, EntityType RHSType,
 		bool isBooleanResult);
 public:
 	FollowsEvaluator();
 
-	QueryClauseTable
+	QueryClauseResult
 		getFollows(const std::string& LHS, const std::string& RHS, EntityType LHSType, EntityType RHSType,
 			bool isBooleanResult);
-	QueryClauseTable
+	QueryClauseResult
 		getFollowsT(const std::string& LHS, const std::string& RHS, EntityType LHSType, EntityType RHSType,
 			bool isBooleanResult);
 };

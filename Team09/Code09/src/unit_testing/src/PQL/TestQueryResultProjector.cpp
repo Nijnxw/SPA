@@ -1,5 +1,5 @@
 #include "catch.hpp"
-#include "models/QueryClauseTable.h"
+#include "models/QueryClauseResult.h"
 #include "PQL/QueryResultProjector.h"
 
 TEST_CASE("project single column results using no columns returns empty set") {

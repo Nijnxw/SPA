@@ -1,7 +1,7 @@
-#include "models/QueryClauseTable.h"
+#include "models/QueryClauseResult.h"
 #include "models/QueryClause.h"
 
 class ClauseEvaluator {
 public:
-	static QueryClauseTable evaluate(QueryClause& entity, bool isBooleanResult);
+	static QueryClauseResult evaluate(QueryClause& entity, bool isBooleanResult);
 };

@@ -1,0 +1,70 @@
+procedure testProgram {
+    read pi;
+    read rad1us;
+    read di4meter;
+    aRe4 = pi * (diameter - radius) * rad1us;
+    v01um3 = 4 / 3 * radius * radius * pi;
+    cIrcUm= 4 * pi * r4d1us * 2;
+
+    if ((circum > 420) || ((diameter == 2 * rad1us) && (area > 3203 + 1101 * 2103))) then {
+        while ((read != 0) && (!(print > 1231))) {
+            read read;
+            p1 = pI + re4d / v01um3 - print;
+            if (!(read == print)) then {
+                while (1 + radius - pi * 1000 < (1 + di4m3ter % pi) * 999) {
+                    pi = pi + 123;
+                    newArea = pi * diameter * pi / 12345;
+                    if (newArea < newArea * 1000) then {
+                        print newArea;
+                    } else {
+                        read p1;
+                    }
+                    print print;
+                }
+            } else {
+                if (pr1nT > 123) then {
+                    print read;
+                    read = v01um3 + area * cIrcUm;
+                } else {
+                    read pRint;
+                    read reAd;
+                }
+            }
+        }
+    } else {
+        p = 3833193000 + 827;
+        q = 3794950000 + 6493;
+        n = p * q;
+        rh0 = (p - 1) * (q - 1);
+        e = 65535;
+        t3Mp = 1;
+        d = 0;
+        while ((t3Mp  > 1) && ((temp / e) % 1 == 0)) {
+            temp = t3Mp + rho;
+            d = temp / e;
+        }
+    }
+
+
+    while (((d1ameter - radius) / 6 == circum % rad1us) || (c1rCuM >= 30 * area)) {
+        read NewDiameter;
+        radius1 = NewDiameter / 2;
+        print radius1;
+        counter = radius1 % 4 - 5;
+        if (counter <= circum) then {
+            newVol = volume - radius1;
+            while (counter > 0) {
+                newVol = newVol + newVol;
+            }
+        } else {
+            newVol = volume + radius1 / NewDiameter + 3203 - 2030;
+        }
+        counter = counter + 1;
+        print newVol;
+    }
+    read pneumonoultramicroscopicsilicovolcanoconiosis;
+    pneumonoultramicroscopicsilicovolcanoconiosis = 123456789097654321234567890987654321;
+    print condvhUX27IGi2izyLdM2jJsSYn5CTyi9r;
+    read weRAlmostDone;
+    print weAreDone;
+}

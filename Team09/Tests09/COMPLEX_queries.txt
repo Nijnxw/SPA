@@ -1084,9 +1084,9 @@ Select w such that Parent*(w,14) pattern assign1(_,_)
 8,12
 5000
 218 - parent* + 1 rel 2 pattern + common assign syn
-assign ab12; variable x24; if ifs
+assign ab12; variable x24;
 Select ab12 such that Parent*(12,ab12) pattern ab12(x24,_"pi"_)
-none
+13,14
 5000
 219 - parent* + 4 syn
 assign a123,a456; if ifs2; variable vr124; 

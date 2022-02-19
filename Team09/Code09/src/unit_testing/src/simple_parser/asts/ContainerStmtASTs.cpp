@@ -372,6 +372,10 @@ AST ContainerStmtASTs::getAST1_58() {
 
 // while statement - single statement in container
 
+AST ContainerStmtASTs::getAST1_59() {
+	return getAST1_41();
+}
+
 AST ContainerStmtASTs::getAST1_60() {
 	/*
 	 * procedure testProgram {

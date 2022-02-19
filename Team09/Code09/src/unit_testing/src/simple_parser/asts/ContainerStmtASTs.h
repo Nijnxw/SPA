@@ -55,6 +55,7 @@ public:
 	static AST getAST1_58();
 
 	// while statements - single statement in container
+	static AST getAST1_59();
 	static AST getAST1_60();
 	static AST getAST1_61();
 	static AST getAST1_62();

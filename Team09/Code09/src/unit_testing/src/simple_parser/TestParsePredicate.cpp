@@ -392,4 +392,332 @@ TEST_CASE ("Predicate 1.58 - Advanced - AND-NOT-OR") {
 	REQUIRE(*output == *ContainerStmtASTs::getAST1_58());
 }
 
+TEST_CASE ("Predicate 9.1 - Parentheses") {
+	// (x) < (1)
+	std::vector<Token*> input = {
+			new NameToken("procedure"), 	new NameToken("testProgram"),	new PunctuatorToken("{"),
+			new NameToken("while"),		new PunctuatorToken("("),
+			new PunctuatorToken("("),	new NameToken("x"),				new PunctuatorToken(")"),
+			new OperatorToken("<"),
+			new PunctuatorToken("("),	new IntegerToken("1"),			new PunctuatorToken(")"),
+			new PunctuatorToken(")"),	new PunctuatorToken("{"),
+			new NameToken("read"),		new NameToken("x"),				new PunctuatorToken(";"),
+			new PunctuatorToken("}"),	new PunctuatorToken("}"),		new EndOfFileToken(),
+	};
 
+	SPParser parser = SPParser(input);
+	AST output = parser.parseProgram();
+
+	REQUIRE(*output == *ContainerStmtASTs::getAST1_41());
+}
+
+TEST_CASE ("Predicate 9.2 - Parentheses") {
+	// (((x))) < (((1)))
+	std::vector<Token*> input = {
+			new NameToken("procedure"), 	new NameToken("testProgram"),	new PunctuatorToken("{"),
+			new NameToken("while"),		new PunctuatorToken("("),
+			new PunctuatorToken("("),	new PunctuatorToken("("),		new PunctuatorToken("("),
+			new NameToken("x"),
+			new PunctuatorToken(")"),	new PunctuatorToken(")"),		new PunctuatorToken(")"),
+			new OperatorToken("<"),
+			new PunctuatorToken("("),	new PunctuatorToken("("),		new PunctuatorToken("("),
+			new IntegerToken("1"),
+			new PunctuatorToken(")"),	new PunctuatorToken(")"),		new PunctuatorToken(")"),
+			new PunctuatorToken(")"),	new PunctuatorToken("{"),
+			new NameToken("read"),		new NameToken("x"),				new PunctuatorToken(";"),
+			new PunctuatorToken("}"),	new PunctuatorToken("}"),		new EndOfFileToken(),
+	};
+
+	SPParser parser = SPParser(input);
+	AST output = parser.parseProgram();
+
+	REQUIRE(*output == *ContainerStmtASTs::getAST1_41());
+}
+
+TEST_CASE ("Predicate 9.3 - Parentheses") {
+	// 1 > (((x + 1)))
+	std::vector<Token*> input = {
+			new NameToken("procedure"), 	new NameToken("testProgram"),	new PunctuatorToken("{"),
+			new NameToken("while"),		new PunctuatorToken("("),
+			new IntegerToken("1"),
+			new OperatorToken(">"),
+			new PunctuatorToken("("),	new PunctuatorToken("("),		new PunctuatorToken("("),
+			new NameToken("x"),			new OperatorToken("+"),			new IntegerToken("1"),
+			new PunctuatorToken(")"),	new PunctuatorToken(")"),		new PunctuatorToken(")"),
+			new PunctuatorToken(")"),	new PunctuatorToken("{"),
+			new NameToken("read"),		new NameToken("x"),				new PunctuatorToken(";"),
+			new PunctuatorToken("}"),	new PunctuatorToken("}"),		new EndOfFileToken(),
+	};
+
+	SPParser parser = SPParser(input);
+	AST output = parser.parseProgram();
+
+	REQUIRE(*output == *ContainerStmtASTs::getAST1_52());
+}
+
+TEST_CASE ("Predicate 9.4 - Parentheses") {
+	// (((x + 1))) >= 1
+	std::vector<Token*> input = {
+			new NameToken("procedure"), 	new NameToken("testProgram"),	new PunctuatorToken("{"),
+			new NameToken("while"),		new PunctuatorToken("("),
+			new PunctuatorToken("("),	new PunctuatorToken("("),		new PunctuatorToken("("),
+			new NameToken("x"),			new OperatorToken("+"),			new IntegerToken("1"),
+			new PunctuatorToken(")"),	new PunctuatorToken(")"),		new PunctuatorToken(")"),
+			new OperatorToken(">="),
+			new IntegerToken("1"),
+			new PunctuatorToken(")"),	new PunctuatorToken("{"),
+			new NameToken("read"),		new NameToken("x"),				new PunctuatorToken(";"),
+			new PunctuatorToken("}"),	new PunctuatorToken("}"),		new EndOfFileToken(),
+	};
+
+	SPParser parser = SPParser(input);
+	AST output = parser.parseProgram();
+
+	REQUIRE(*output == *ContainerStmtASTs::getAST1_53());
+}
+
+TEST_CASE ("Predicate 9.5 - Parentheses") {
+	// !((x) < (1))
+	std::vector<Token*> input = {
+			new NameToken("procedure"), 	new NameToken("testProgram"),	new PunctuatorToken("{"),
+			new NameToken("while"),		new PunctuatorToken("("),
+			new OperatorToken("!"),		new PunctuatorToken("("),		new PunctuatorToken("("),
+			new NameToken("x"),			new PunctuatorToken(")"),		new OperatorToken("<"),
+			new PunctuatorToken("("),	new IntegerToken("1"),			new PunctuatorToken(")"),
+			new PunctuatorToken(")"),	new PunctuatorToken(")"),		new PunctuatorToken("{"),
+			new NameToken("read"),		new NameToken("x"),				new PunctuatorToken(";"),
+			new PunctuatorToken("}"),	new PunctuatorToken("}"),		new EndOfFileToken(),
+	};
+
+	SPParser parser = SPParser(input);
+	AST output = parser.parseProgram();
+
+	REQUIRE(*output == *ContainerStmtASTs::getAST1_48());
+}
+
+TEST_CASE ("Predicate 9.6 - Parentheses") {
+	// ((x) < 1) && ((y) >= 3)
+	std::vector<Token*> input = {
+			new NameToken("procedure"), 	new NameToken("testProgram"),	new PunctuatorToken("{"),
+			new NameToken("while"),		new PunctuatorToken("("),		new PunctuatorToken("("),
+			new PunctuatorToken("("),	new NameToken("x"),				new PunctuatorToken(")"),
+			new OperatorToken("<"),		new IntegerToken("1"),
+			new PunctuatorToken(")"),	new OperatorToken("&&"),			new PunctuatorToken("("),
+			new PunctuatorToken("("),	new NameToken("y"),				new PunctuatorToken(")"),
+			new OperatorToken(">="),		new IntegerToken("3"),
+			new PunctuatorToken(")"),	new PunctuatorToken(")"),		new PunctuatorToken("{"),
+			new NameToken("read"),		new NameToken("x"),				new PunctuatorToken(";"),
+			new PunctuatorToken("}"),	new PunctuatorToken("}"),		new EndOfFileToken(),
+	};
+
+	SPParser parser = SPParser(input);
+	AST output = parser.parseProgram();
+
+	REQUIRE(*output == *ContainerStmtASTs::getAST1_49());
+}
+
+// --------------------------------------------------
+//                  UNHAPPY PATHS
+// --------------------------------------------------
+TEST_CASE ("Predicate 9.18 - Constants not a rel_expr") {
+	std::vector<Token*> input = {
+			new NameToken("procedure"), 	new NameToken("testProgram"),	new PunctuatorToken("{"),
+			new NameToken("while"),		new PunctuatorToken("("),
+			new IntegerToken("1"),
+			new PunctuatorToken(")"),	new PunctuatorToken("{"),
+			new NameToken("read"),		new NameToken("x"),				new PunctuatorToken(";"),
+			new PunctuatorToken("}"),	new PunctuatorToken("}"),		new EndOfFileToken(),
+	};
+	SPParser parser = SPParser(input);
+	REQUIRE_THROWS_WITH(parser.parseProgram(), "Expected comparator operator but got ')' instead.\n");
+}
+
+TEST_CASE ("Predicate 9.19 - Variables not a rel_expr") {
+	std::vector<Token*> input = {
+			new NameToken("procedure"), 	new NameToken("testProgram"),	new PunctuatorToken("{"),
+			new NameToken("while"),		new PunctuatorToken("("),
+			new NameToken("x"),
+			new PunctuatorToken(")"),	new PunctuatorToken("{"),
+			new NameToken("read"),		new NameToken("x"),				new PunctuatorToken(";"),
+			new PunctuatorToken("}"),	new PunctuatorToken("}"),		new EndOfFileToken(),
+	};
+	SPParser parser = SPParser(input);
+	REQUIRE_THROWS_WITH(parser.parseProgram(), "Expected comparator operator but got ')' instead.\n");
+}
+
+TEST_CASE ("Predicate 9.20 - Expr not a rel_expr") {
+	std::vector<Token*> input = {
+			new NameToken("procedure"), 	new NameToken("testProgram"),	new PunctuatorToken("{"),
+			new NameToken("while"),		new PunctuatorToken("("),
+			new NameToken("x"),			new OperatorToken("+"), 			new IntegerToken("1"),
+			new PunctuatorToken(")"),	new PunctuatorToken("{"),
+			new NameToken("read"),		new NameToken("x"),				new PunctuatorToken(";"),
+			new PunctuatorToken("}"),	new PunctuatorToken("}"),		new EndOfFileToken(),
+	};
+	SPParser parser = SPParser(input);
+	REQUIRE_THROWS_WITH(parser.parseProgram(), "Expected comparator operator but got ')' instead.\n");
+}
+
+TEST_CASE ("Predicate 9.21 - rel_expr cannot be wrapped in any parentheses") {
+	std::vector<Token*> input = {
+			new NameToken("procedure"), 	new NameToken("testProgram"),	new PunctuatorToken("{"),
+			new NameToken("while"),		new PunctuatorToken("("),
+			new PunctuatorToken("("),
+			new NameToken("x"),			new OperatorToken("<"),			new IntegerToken("1"),
+			new PunctuatorToken(")"),
+			new PunctuatorToken(")"),	new PunctuatorToken("{"),
+			new NameToken("read"),		new NameToken("x"),				new PunctuatorToken(";"),
+			new PunctuatorToken("}"),	new PunctuatorToken("}"),		new EndOfFileToken(),
+	};
+	SPParser parser = SPParser(input);
+	REQUIRE_THROWS_WITH(parser.parseProgram(), "Expected ')' but got '<' instead.\n");
+}
+
+TEST_CASE ("Predicate 9.22 - rel_expr cannot be wrapped in any parentheses") {
+	std::vector<Token*> input = {
+			new NameToken("procedure"), 	new NameToken("testProgram"),	new PunctuatorToken("{"),
+			new NameToken("while"),		new PunctuatorToken("("),
+			new PunctuatorToken("("),	new PunctuatorToken("("),
+			new NameToken("x"),			new OperatorToken("<"),			new IntegerToken("1"),
+			new PunctuatorToken(")"),	new PunctuatorToken(")"),
+			new PunctuatorToken(")"),	new PunctuatorToken("{"),
+			new NameToken("read"),		new NameToken("x"),				new PunctuatorToken(";"),
+			new PunctuatorToken("}"),	new PunctuatorToken("}"),		new EndOfFileToken(),
+	};
+	SPParser parser = SPParser(input);
+	REQUIRE_THROWS_WITH(parser.parseProgram(), "Expected ')' but got '<' instead.\n");
+}
+
+TEST_CASE ("Predicate 9.23 - Missing LHS of rel_expr") {
+	std::vector<Token*> input = {
+			new NameToken("procedure"), 	new NameToken("testProgram"),	new PunctuatorToken("{"),
+			new NameToken("while"),		new PunctuatorToken("("),
+											new OperatorToken("<"),			new IntegerToken("1"),
+			new PunctuatorToken(")"),	new PunctuatorToken("{"),
+			new NameToken("read"),		new NameToken("x"),				new PunctuatorToken(";"),
+			new PunctuatorToken("}"),	new PunctuatorToken("}"),		new EndOfFileToken(),
+	};
+	SPParser parser = SPParser(input);
+	REQUIRE_THROWS_WITH(parser.parseProgram(), "Expected an expression but got '<' instead.\n");
+}
+
+TEST_CASE ("Predicate 9.24 - Missing RHS of rel_expr") {
+	std::vector<Token*> input = {
+			new NameToken("procedure"), 	new NameToken("testProgram"),	new PunctuatorToken("{"),
+			new NameToken("while"),		new PunctuatorToken("("),
+			new NameToken("x"),			new OperatorToken("<"),
+			new PunctuatorToken(")"),	new PunctuatorToken("{"),
+			new NameToken("read"),		new NameToken("x"),				new PunctuatorToken(";"),
+			new PunctuatorToken("}"),	new PunctuatorToken("}"),		new EndOfFileToken(),
+	};
+	SPParser parser = SPParser(input);
+	REQUIRE_THROWS_WITH(parser.parseProgram(), "Expected an expression but got ')' instead.\n");
+}
+
+TEST_CASE ("Predicate 9.25 - Invalid comparator operator") {
+	std::vector<Token*> input = {
+			new NameToken("procedure"), 	new NameToken("testProgram"),	new PunctuatorToken("{"),
+			new NameToken("while"),		new PunctuatorToken("("),
+			new NameToken("x"), 			new OperatorToken("<="),			new OperatorToken("="),
+			new IntegerToken("1"),
+			new PunctuatorToken(")"),	new PunctuatorToken("{"),
+			new NameToken("read"),		new NameToken("x"),				new PunctuatorToken(";"),
+			new PunctuatorToken("}"),	new PunctuatorToken("}"),		new EndOfFileToken(),
+	};
+	SPParser parser = SPParser(input);
+	REQUIRE_THROWS_WITH(parser.parseProgram(), "Expected an expression but got '=' instead.\n");
+}
+
+TEST_CASE ("Predicate 9.26 - Missing parentheses for cond_expr - ConditionalOperator::NOT") {
+	// !x < 1
+	std::vector<Token*> input = {
+			new NameToken("procedure"), 	new NameToken("testProgram"),	new PunctuatorToken("{"),
+			new NameToken("while"),		new PunctuatorToken("("),
+			new OperatorToken("!"),
+			new NameToken("x"),			new OperatorToken("<"),			new IntegerToken("1"),
+			new PunctuatorToken(")"),	new PunctuatorToken("{"),
+			new NameToken("read"),		new NameToken("x"),				new PunctuatorToken(";"),
+			new PunctuatorToken("}"),	new PunctuatorToken("}"),		new EndOfFileToken(),
+	};
+	SPParser parser = SPParser(input);
+	REQUIRE_THROWS_WITH(parser.parseProgram(), "Expected '(' but got 'x' instead.\n");
+}
+
+TEST_CASE ("Predicate 9.27 - Missing parentheses for cond_expr") {
+	// x < 1 && (y >= 3)
+	std::vector<Token*> input = {
+			new NameToken("procedure"), 	new NameToken("testProgram"),	new PunctuatorToken("{"),
+			new NameToken("while"),		new PunctuatorToken("("),
+			new NameToken("x"),			new OperatorToken("<"),			new IntegerToken("1"),
+											new OperatorToken("&&"),			new PunctuatorToken("("),
+			new NameToken("y"),			new OperatorToken(">="),			new IntegerToken("3"),
+			new PunctuatorToken(")"),	new PunctuatorToken(")"),		new PunctuatorToken("{"),
+			new NameToken("read"),		new NameToken("x"),				new PunctuatorToken(";"),
+			new PunctuatorToken("}"),	new PunctuatorToken("}"),		new EndOfFileToken(),
+	};
+
+	SPParser parser = SPParser(input);
+	REQUIRE_THROWS_WITH(parser.parseProgram(), "Expected arithmetic operator but got '&&' instead.\n");
+}
+
+TEST_CASE ("Predicate 9.28 - Missing parentheses for cond_expr") {
+	// (x < 1) && y >= 3
+	std::vector<Token*> input = {
+			new NameToken("procedure"), 	new NameToken("testProgram"),	new PunctuatorToken("{"),
+			new NameToken("while"),		new PunctuatorToken("("),		new PunctuatorToken("("),
+			new NameToken("x"),			new OperatorToken("<"),			new IntegerToken("1"),
+			new PunctuatorToken(")"),	new OperatorToken("&&"),
+			new NameToken("y"),			new OperatorToken(">="),			new IntegerToken("3"),
+			new PunctuatorToken(")"),	new PunctuatorToken("{"),
+			new NameToken("read"),		new NameToken("x"),				new PunctuatorToken(";"),
+			new PunctuatorToken("}"),	new PunctuatorToken("}"),		new EndOfFileToken(),
+	};
+
+	SPParser parser = SPParser(input);
+	REQUIRE_THROWS_WITH(parser.parseProgram(), "Expected '(' but got 'y' instead.\n");
+}
+
+TEST_CASE ("Predicate 9.29 - Missing cond_expr - ConditionalOperator::NOT") {
+	std::vector<Token*> input = {
+			new NameToken("procedure"), 	new NameToken("testProgram"),	new PunctuatorToken("{"),
+			new NameToken("while"),		new PunctuatorToken("("),
+			new OperatorToken("!"),		new PunctuatorToken("("),		new PunctuatorToken(")"),
+			new PunctuatorToken(")"),	new PunctuatorToken("{"),
+			new NameToken("read"),		new NameToken("x"),				new PunctuatorToken(";"),
+			new PunctuatorToken("}"),	new PunctuatorToken("}"),		new EndOfFileToken(),
+	};
+	SPParser parser = SPParser(input);
+	REQUIRE_THROWS_WITH(parser.parseProgram(), "Expected an expression but got ')' instead.\n");
+}
+
+TEST_CASE ("Predicate 9.30 - Missing RHS for cond_expr") {
+	// () && (y >= 3)
+	std::vector<Token*> input = {
+			new NameToken("procedure"), 	new NameToken("testProgram"),	new PunctuatorToken("{"),
+			new NameToken("while"),		new PunctuatorToken("("),		new PunctuatorToken("("),
+			new PunctuatorToken(")"),	new OperatorToken("&&"),			new PunctuatorToken("("),
+			new NameToken("y"),			new OperatorToken(">="),			new IntegerToken("3"),
+			new PunctuatorToken(")"),	new PunctuatorToken(")"),		new PunctuatorToken("{"),
+			new NameToken("read"),		new NameToken("x"),				new PunctuatorToken(";"),
+			new PunctuatorToken("}"),	new PunctuatorToken("}"),		new EndOfFileToken(),
+	};
+
+	SPParser parser = SPParser(input);
+	REQUIRE_THROWS_WITH(parser.parseProgram(), "Expected an expression but got ')' instead.\n");
+}
+
+TEST_CASE ("Predicate 9.31 - Missing LHS for cond_expr") {
+	// (x < 1) && ()
+	std::vector<Token*> input = {
+			new NameToken("procedure"), 	new NameToken("testProgram"),	new PunctuatorToken("{"),
+			new NameToken("while"),		new PunctuatorToken("("),		new PunctuatorToken("("),
+			new NameToken("x"),			new OperatorToken("<"),			new IntegerToken("1"),
+			new PunctuatorToken(")"),	new OperatorToken("&&"),			new PunctuatorToken("("),
+			new PunctuatorToken(")"),	new PunctuatorToken(")"),	new PunctuatorToken("{"),
+			new NameToken("read"),		new NameToken("x"),				new PunctuatorToken(";"),
+			new PunctuatorToken("}"),	new PunctuatorToken("}"),		new EndOfFileToken(),
+	};
+
+	SPParser parser = SPParser(input);
+	REQUIRE_THROWS_WITH(parser.parseProgram(), "Expected an expression but got ')' instead.\n");
+}

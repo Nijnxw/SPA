@@ -27,8 +27,6 @@ bool RPN::contains(std::string rpn1, std::string rpn2) {
 		output = output || isSubVector;
 	}
 	return output;
-	//if (rpn1.length() < rpn2.length()) throw std::runtime_error("RPN elements length mismatch.\n");
-	//return rpn1.find(rpn2) != std::string::npos;
 }
 
 // HELPER IDENTIFIER FUNCTIONS

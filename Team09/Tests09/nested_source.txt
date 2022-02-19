@@ -1,0 +1,48 @@
+procedure XxXxErN3st3dS0urc3xXxX {
+  	if (a1 == b1) then {
+		a = 1;
+		while (c1 == d1) {
+			b = 1;
+			while (e1 == f1) {
+				c = 1;
+				if (g1 == h1) then {
+					d = 1;
+				} else {
+					e = 2;
+					while (i1 == j1) {
+						f = f + 1;
+					}
+				}
+				while (k1 == l1) {
+					g = 1;
+				}
+			}
+			if (m1 == n1) then {
+				h = 3;
+				if (o1 == p1) then {
+					i = 5;
+				} else {
+					j = 6;
+				}
+			} else {
+				k = 4;
+			}
+		}
+		if (q1 == r1) then {
+			l = 2;
+			if (s1 == t1) then {
+				m = 3;
+				while (u1 == v1) {
+					n = 4;
+				}
+			} else {
+				o = p;
+			}
+		}
+		else {
+			q = r;
+		}
+	} else {
+		s = t;
+	}
+}

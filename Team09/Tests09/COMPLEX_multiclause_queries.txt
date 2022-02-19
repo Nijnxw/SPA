@@ -111,7 +111,7 @@ none
 23 - follows* + 4 syns + common assign syn
 assign asm,asc; variable vr24; 
 Select asm such that Follows*(asm,asc) pattern asm(vr24,_"radius1"_)
-38,40
+38
 5000
 24 - parent + 1 pattern syn
 assign such; 
@@ -156,10 +156,10 @@ Select w such that Parent*(w,14) pattern assign1(_,_)
 32 - parent* + 1 rel 2 pattern + common assign syn
 assign ab12; variable x24; if ifs
 Select ab12 such that Parent*(12,ab12) pattern ab12(x24,_"pi"_)
-13,14
+none
 5000
 33 - parent* + 4 syn
 assign a123,a456; if ifs2; variable vr124; 
 Select ifs2 such that Parent*(ifs2,a123) pattern a456(_,_"diameter"_)
-7,11
+7,11,19,39
 5000

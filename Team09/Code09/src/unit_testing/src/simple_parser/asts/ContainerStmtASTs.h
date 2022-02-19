@@ -33,6 +33,7 @@ public:
 	static AST getAST1_40();
 	static AST getAST1_41();
 	// basic predicate - single comparator operator
+	static AST getAST1_42();
 	static AST getAST1_43();
 	static AST getAST1_44();
 	static AST getAST1_45();
@@ -43,6 +44,7 @@ public:
 	static AST getAST1_49();
 	static AST getAST1_50();
 	// predicate : term-expr interactions
+	static AST getAST1_51();
 	static AST getAST1_52();
 	static AST getAST1_53();
 	static AST getAST1_54();
@@ -53,6 +55,7 @@ public:
 	static AST getAST1_58();
 
 	// while statements - single statement in container
+	static AST getAST1_59();
 	static AST getAST1_60();
 	static AST getAST1_61();
 	static AST getAST1_62();

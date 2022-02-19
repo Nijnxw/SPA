@@ -8,7 +8,7 @@
 #include "pkb/PKB.h"
 #include "pkb/util/PKBUtil.cpp"
 #include "models/EntityType.h"
-#include "models/QueryClauseTable.h"
+#include "models/QueryClauseResult.h"
 #include "models/QueryClause.h"
 #include "models/RelationRef.h"
 
@@ -16,14 +16,14 @@
 
 class UMEvaluator : public RelationshipEvaluator {
 public:
-	QueryClauseTable
+	QueryClauseResult
 		getRelationship(RelationRef relationship, const std::string& LHS, const std::string& RHS, EntityType LHSType, EntityType RHSType, bool isBooleanResult);
 
 private:
-	QueryClauseTable getRelationshipByUnderscore(
+	QueryClauseResult getRelationshipByUnderscore(
 		RelationRef relationship, const std::string& LHS, const std::string& RHS, EntityType LHSType);
-	QueryClauseTable getRelationshipByVariable(
+	QueryClauseResult getRelationshipByVariable(
 		RelationRef relationship, const std::string& LHS, const std::string& RHS, EntityType LHSType);
-	QueryClauseTable getRelationshipBySynonym(
+	QueryClauseResult getRelationshipBySynonym(
 		RelationRef relationship, const std::string& LHS, const std::string& RHS, EntityType LHSType);
 };

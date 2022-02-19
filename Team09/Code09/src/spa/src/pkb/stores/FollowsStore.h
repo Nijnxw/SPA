@@ -8,7 +8,7 @@
 #include <unordered_set>
 
 #include "../../models/EntityType.h"
-#include "../../models/QueryClauseTable.h"
+#include "../../models/QueryClauseResult.h"
 #include "../util/PKBUtil.cpp"
 
 class FollowsStore {

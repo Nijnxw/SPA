@@ -1,6 +1,6 @@
 #include "PatternAEvaluator.h"
 
-QueryClauseTable PatternAEvaluator::getPattern(const std::string& LHS, const std::string& RHS, EntityType LHSType, EntityType RHSType,
+QueryClauseResult PatternAEvaluator::getPattern(const std::string& LHS, const std::string& RHS, EntityType LHSType, EntityType RHSType,
 	bool isBooleanResult) {
 
 	std::unordered_map<int, AssignStatement> assignStatements = PKB::getAssignStatements();
@@ -13,14 +13,14 @@ QueryClauseTable PatternAEvaluator::getPattern(const std::string& LHS, const std
 	case EntityType::WILD:
 		return PatternAEvaluator::getPatternByUnderscore(RHS, RHSType, assignStatements);
 	default:
-		QueryClauseTable emptyQueryResult;
+		QueryClauseResult emptyQueryResult;
 		return emptyQueryResult;
 	}
 }
 
-QueryClauseTable PatternAEvaluator::getPatternBySynonym(const std::string& LHS, const std::string& RHS, EntityType RHSType, 
+QueryClauseResult PatternAEvaluator::getPatternBySynonym(const std::string& LHS, const std::string& RHS, EntityType RHSType,
 const std::unordered_map<int, AssignStatement> assignStatements) {
-	QueryClauseTable queryResult;
+	QueryClauseResult queryResult;
 	std::vector<int> statementNumbers;
 	std::vector<std::string> variables;
 
@@ -44,7 +44,7 @@ const std::unordered_map<int, AssignStatement> assignStatements) {
 			queryResult.addColumn("a", statementNumbers);
 			queryResult.addColumn(LHS, variables);
 		}
-		else { // a(v, ”x + 1”) 
+		else { // a(v, ï¿½x + 1ï¿½) 
 			for (auto const& pair : assignStatements) {
 				int statementNum = pair.first;
 				AssignStatement statement = pair.second;
@@ -83,9 +83,9 @@ const std::unordered_map<int, AssignStatement> assignStatements) {
 	return queryResult;
 }
 
-QueryClauseTable PatternAEvaluator::getPatternByVariable(const std::string& LHS, const std::string& RHS, EntityType RHSType, 
+QueryClauseResult PatternAEvaluator::getPatternByVariable(const std::string& LHS, const std::string& RHS, EntityType RHSType,
 	const std::unordered_map<int, AssignStatement> assignStatements) {
-	QueryClauseTable queryResult;
+	QueryClauseResult queryResult;
 	std::vector<int> statementNumbers;
 
 	switch (RHSType) {
@@ -106,7 +106,7 @@ QueryClauseTable PatternAEvaluator::getPatternByVariable(const std::string& LHS,
 
 			queryResult.addColumn("a", statementNumbers);
 		}
-		else { // a("x", ”x + 1”)
+		else { // a("x", ï¿½x + 1ï¿½)
 			for (auto const& pair : assignStatements) {
 				int statementNum = pair.first;
 				AssignStatement statement = pair.second;
@@ -122,7 +122,7 @@ QueryClauseTable PatternAEvaluator::getPatternByVariable(const std::string& LHS,
 		}
 		break;
 	break;
-	case EntityType::WILD: // a(“x”, _)
+	case EntityType::WILD: // a(ï¿½xï¿½, _)
 		for (auto const& pair : assignStatements) {
 			int statementNum = pair.first;
 			AssignStatement statement = pair.second;
@@ -142,9 +142,9 @@ QueryClauseTable PatternAEvaluator::getPatternByVariable(const std::string& LHS,
 
 	return queryResult;
 }
-QueryClauseTable PatternAEvaluator::getPatternByUnderscore(const std::string& RHS, EntityType RHSType, 
+QueryClauseResult PatternAEvaluator::getPatternByUnderscore(const std::string& RHS, EntityType RHSType,
 	const std::unordered_map<int, AssignStatement> assignStatements) {
-	QueryClauseTable queryResult;
+	QueryClauseResult queryResult;
 	std::vector<int> statementNumbers;
 
 	switch (RHSType) {
@@ -165,7 +165,7 @@ QueryClauseTable PatternAEvaluator::getPatternByUnderscore(const std::string& RH
 
 			queryResult.addColumn("a", statementNumbers);
 		}
-		else { // a("x", ”x + 1”)
+		else { // a("x", ï¿½x + 1ï¿½)
 			for (auto const& pair : assignStatements) {
 				int statementNum = pair.first;
 				AssignStatement statement = pair.second;

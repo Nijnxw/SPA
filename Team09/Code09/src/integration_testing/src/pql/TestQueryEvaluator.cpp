@@ -17,8 +17,8 @@ TEST_CASE("QueryEvaluator evaluate") {
 		std::vector<QueryClause> clauses;
 		Query query = Query(selectSynonyms, clauses);
 
-		QueryClauseTable expected = {{{"s", {"3", "4"}}}};
-		QueryClauseTable actual = {QueryEvaluator::evaluate(query)};
+		QueryClauseResult expected = {{{"s", {"3", "4"}}}};
+		QueryClauseResult actual = {QueryEvaluator::evaluate(query)};
 
 		REQUIRE(actual == expected);
 	}
@@ -47,8 +47,8 @@ TEST_CASE("QueryEvaluator evaluate") {
 		std::vector<QueryClause> clauses = {stClause};
 		Query query = Query(selectSynonyms, clauses);
 
-		QueryClauseTable expected = {{{"s", {"1", "2", "3"}}}};
-		QueryClauseTable actual = {QueryEvaluator::evaluate(query)};
+		QueryClauseResult expected = {{{"s", {"1", "2", "3"}}}};
+		QueryClauseResult actual = {QueryEvaluator::evaluate(query)};
 
 		REQUIRE(actual == expected);
 	}
@@ -71,8 +71,8 @@ TEST_CASE("QueryEvaluator evaluate") {
 		std::vector<QueryClause> clauses = {stClause};
 		Query query = Query(selectSynonyms, clauses);
 
-		QueryClauseTable expected = {{{"s", {"1", "2", "2"}}, {"v", {"a", "a", "c"}}}};
-		QueryClauseTable actual = {QueryEvaluator::evaluate(query)};
+		QueryClauseResult expected = {{{"s", {"1", "2", "2"}}, {"v", {"a", "a", "c"}}}};
+		QueryClauseResult actual = {QueryEvaluator::evaluate(query)};
 
 		REQUIRE(actual == expected);
 	}
@@ -100,8 +100,8 @@ TEST_CASE("QueryEvaluator evaluate") {
 		std::vector<QueryClause> clauses = {pAClause};
 		Query query = Query(selectSynonyms, clauses);
 
-		QueryClauseTable expected = {{{"pn", {"1", "2", "3", "4"}}}};
-		QueryClauseTable actual = {QueryEvaluator::evaluate(query)};
+		QueryClauseResult expected = {{{"pn", {"1", "2", "3", "4"}}}};
+		QueryClauseResult actual = {QueryEvaluator::evaluate(query)};
 
 		REQUIRE(actual == expected);
 	}
@@ -126,8 +126,8 @@ TEST_CASE("QueryEvaluator evaluate") {
 		std::vector<QueryClause> clauses = {pAClause};
 		Query query = Query(selectSynonyms, clauses);
 
-		QueryClauseTable expected = {{{"a", {"1"}}}};
-		QueryClauseTable actual = {QueryEvaluator::evaluate(query)};
+		QueryClauseResult expected = {{{"a", {"1"}}}};
+		QueryClauseResult actual = {QueryEvaluator::evaluate(query)};
 
 		REQUIRE(actual == expected);
 	}
@@ -170,8 +170,8 @@ TEST_CASE("QueryEvaluator evaluate") {
 		std::vector<QueryClause> clauses = {stClause, pAClause};
 		Query query = Query(selectSynonyms, clauses);
 
-		QueryClauseTable expected = {{{"ifs", {"4", "9"}}}};
-		QueryClauseTable actual = {QueryEvaluator::evaluate(query)};
+		QueryClauseResult expected = {{{"ifs", {"4", "9"}}}};
+		QueryClauseResult actual = {QueryEvaluator::evaluate(query)};
 
 		REQUIRE(actual == expected);
 	}
@@ -212,8 +212,8 @@ TEST_CASE("QueryEvaluator evaluate") {
 		std::vector<QueryClause> clauses = {stClause, pAClause};
 		Query query = Query(selectSynonyms, clauses);
 
-		QueryClauseTable expected = {{{"ifs", {"1", "1", "1"}}, {"s", {"5", "6", "7"}}}};
-		QueryClauseTable actual = {QueryEvaluator::evaluate(query)};
+		QueryClauseResult expected = {{{"ifs", {"1", "1", "1"}}, {"s", {"5", "6", "7"}}}};
+		QueryClauseResult actual = {QueryEvaluator::evaluate(query)};
 
 		REQUIRE(actual == expected);
 	}
@@ -223,7 +223,7 @@ TEST_CASE("QueryEvaluator evaluate") {
 
 		/*
 			assign a; stmt s;
-			Select a such that Modifies(s, "x") pattern a("x", _"x"_)
+			Select a such that Modifies("3", "x") pattern a("x", _"x"_)
 		*/
 
 		PKB::addModifiesStatement(1, {"y", "z"});
@@ -237,10 +237,10 @@ TEST_CASE("QueryEvaluator evaluate") {
 		std::vector<QueryArgument> selectSynonyms = {{"a", EntityType::ASSIGN}};
 
 		std::vector<QueryArgument> stClauseArguments = {
-			{"s", EntityType::STMT},
+			{"3", EntityType::INT},
 			{"x", EntityType::STRING}
 		};
-		std::unordered_set<std::string> stUsedSynonyms = {"s"};
+		std::unordered_set<std::string> stUsedSynonyms = {};
 		QueryClause stClause = QueryClause(RelationRef::MODIFIES, stClauseArguments, stUsedSynonyms);
 
 		std::vector<QueryArgument> pAClauseArguments = {
@@ -253,8 +253,8 @@ TEST_CASE("QueryEvaluator evaluate") {
 		std::vector<QueryClause> clauses = {stClause, pAClause};
 		Query query = Query(selectSynonyms, clauses);
 
-		QueryClauseTable expected = {{{"a", {"2"}}}};
-		QueryClauseTable actual = {QueryEvaluator::evaluate(query)};
+		QueryClauseResult expected = {{{"a", {"2"}}}};
+		QueryClauseResult actual = {QueryEvaluator::evaluate(query)};
 
 		REQUIRE(actual == expected);
 	}
@@ -292,8 +292,8 @@ TEST_CASE("QueryEvaluator evaluate") {
 		std::vector<QueryClause> clauses = {stClause, pAClause};
 		Query query = Query(selectSynonyms, clauses);
 
-		QueryClauseTable expected = {{{"s", {"1", "2", "3"}}}};
-		QueryClauseTable actual = {QueryEvaluator::evaluate(query)};
+		QueryClauseResult expected = {{{"s", {"1", "2", "3"}}}};
+		QueryClauseResult actual = {QueryEvaluator::evaluate(query)};
 
 		REQUIRE(actual == expected);
 	}
@@ -342,8 +342,8 @@ TEST_CASE("QueryEvaluator evaluate") {
 		std::vector<QueryClause> clauses = {stClause, pAClause};
 		Query query = Query(selectSynonyms, clauses);
 
-		QueryClauseTable expected = {{{"s", {"1", "1"}}, {"a", {"4", "6"}}}};
-		QueryClauseTable actual = {QueryEvaluator::evaluate(query)};
+		QueryClauseResult expected = {{{"s", {"1", "1"}}, {"a", {"4", "6"}}}};
+		QueryClauseResult actual = {QueryEvaluator::evaluate(query)};
 
 		REQUIRE(actual == expected);
 	}
@@ -385,12 +385,12 @@ TEST_CASE("QueryEvaluator evaluate") {
 		std::vector<QueryClause> clauses = {stClause, pAClause};
 		Query query = Query(selectSynonyms, clauses);
 
-		QueryClauseTable expected = {
+		QueryClauseResult expected = {
 			{{"s", {"2", "2", "4", "4", "1", "1", "4", "3"}},
 			 {"v", {"x", "x", "x", "x", "x", "x", "z", "z"}},
 			 {"a", {"2", "4", "2", "4", "2", "4", "1", "1"}}
 			}};
-		QueryClauseTable actual = {QueryEvaluator::evaluate(query)};
+		QueryClauseResult actual = {QueryEvaluator::evaluate(query)};
 
 		REQUIRE(actual == expected);
 	}
@@ -432,8 +432,8 @@ TEST_CASE("QueryEvaluator evaluate") {
 		std::vector<QueryClause> clauses = {stClause, pAClause};
 		Query query = Query(selectSynonyms, clauses);
 
-		QueryClauseTable expected = {{{"a", {"1", "3", "4"}}, {"v", {"y", "x", "y"}}}};
-		QueryClauseTable actual = {QueryEvaluator::evaluate(query)};
+		QueryClauseResult expected = {{{"a", {"1", "3", "4"}}, {"v", {"y", "x", "y"}}}};
+		QueryClauseResult actual = {QueryEvaluator::evaluate(query)};
 
 		REQUIRE(actual == expected);
 	}

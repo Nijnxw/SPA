@@ -1,6 +1,6 @@
 #include "StmtStmtRelationshipEvaluator.h"
 
-QueryClauseTable StmtStmtRelationshipEvaluator::getRelationship(RelationRef relationship, const std::string& LHS, const std::string& RHS, EntityType LHSType, EntityType RHSType,
+QueryClauseResult StmtStmtRelationshipEvaluator::getRelationship(RelationRef relationship, const std::string& LHS, const std::string& RHS, EntityType LHSType, EntityType RHSType,
 	bool isBooleanResult) {
 	if (LHSType == EntityType::INT) {
 		return StmtStmtRelationshipEvaluator::getRelationshipByStatementNumber(relationship, LHS, RHS, RHSType);
@@ -14,18 +14,18 @@ QueryClauseTable StmtStmtRelationshipEvaluator::getRelationship(RelationRef rela
 		return StmtStmtRelationshipEvaluator::getRelationshipByUnderscore(relationship, RHS, RHSType);
 	}
 	else {
-		QueryClauseTable emptyQueryResult;
+		QueryClauseResult emptyQueryResult;
 		return emptyQueryResult;
 	}
 }
 
-QueryClauseTable StmtStmtRelationshipEvaluator::getTransitiveRelationship(RelationRef relationship, const std::string& LHS, const std::string& RHS, EntityType LHSType, EntityType RHSType,
+QueryClauseResult StmtStmtRelationshipEvaluator::getTransitiveRelationship(RelationRef relationship, const std::string& LHS, const std::string& RHS, EntityType LHSType, EntityType RHSType,
 	bool isBooleanResult) {
 	return StmtStmtRelationshipEvaluator::getRelationship(relationship, LHS, RHS, LHSType, RHSType, isBooleanResult);
 }
 
-QueryClauseTable StmtStmtRelationshipEvaluator::getRelationshipByStatementNumber(RelationRef relationship, const std::string& LHS, const std::string& RHS, EntityType RHSType) {
-	QueryClauseTable queryResult;
+QueryClauseResult StmtStmtRelationshipEvaluator::getRelationshipByStatementNumber(RelationRef relationship, const std::string& LHS, const std::string& RHS, EntityType RHSType) {
+	QueryClauseResult queryResult;
 
 	if (RHSType == EntityType::INT) { // Follows(1, 2)
 		if (PKB::isRelationship(relationship, std::stoi(LHS), std::stoi(RHS))) {
@@ -49,8 +49,8 @@ QueryClauseTable StmtStmtRelationshipEvaluator::getRelationshipByStatementNumber
 	return queryResult;
 }
 
-QueryClauseTable StmtStmtRelationshipEvaluator::getRelationshipByStatementVariable(RelationRef relationship, const std::string& LHS, const std::string& RHS, EntityType LHSType, EntityType RHSType) {
-	QueryClauseTable queryResult;
+QueryClauseResult StmtStmtRelationshipEvaluator::getRelationshipByStatementVariable(RelationRef relationship, const std::string& LHS, const std::string& RHS, EntityType LHSType, EntityType RHSType) {
+	QueryClauseResult queryResult;
 
 	if ((relationship == RelationRef::PARENT && LHSType == EntityType::READ) ||
 		(relationship == RelationRef::PARENT && LHSType == EntityType::PRINT) ||
@@ -83,8 +83,8 @@ QueryClauseTable StmtStmtRelationshipEvaluator::getRelationshipByStatementVariab
 
 	return queryResult;
 }
-QueryClauseTable StmtStmtRelationshipEvaluator::getRelationshipByUnderscore(RelationRef relationship, const std::string& RHS, EntityType RHSType) {
-	QueryClauseTable queryResult;
+QueryClauseResult StmtStmtRelationshipEvaluator::getRelationshipByUnderscore(RelationRef relationship, const std::string& RHS, EntityType RHSType) {
+	QueryClauseResult queryResult;
 
 	if (RHSType == EntityType::INT) { // Follows(_, 2)
 		if (PKB::isSecondEntity(relationship, std::stoi(RHS))) {

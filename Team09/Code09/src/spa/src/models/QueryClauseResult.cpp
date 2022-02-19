@@ -1,11 +1,11 @@
-#include "QueryClauseTable.h"
+#include "QueryClauseResult.h"
 #include "util/QueryUtils.h"
 
-QueryClauseTable::QueryClauseTable() {}
+QueryClauseResult::QueryClauseResult() {}
 
-QueryClauseTable::QueryClauseTable(const Table& table) : table(table), booleanResult(table.size() != 0) {}
+QueryClauseResult::QueryClauseResult(const Table& table) : table(table), booleanResult(table.size() != 0) {}
 
-bool QueryClauseTable::operator==(const QueryClauseTable& other) const {
+bool QueryClauseResult::operator==(const QueryClauseResult& other) const {
 	bool diffNumHeaders = table.size() != other.table.size();
 	bool bothZero = table.size() == 0 && other.table.size() == 0;
 	if (bothZero) {
@@ -43,7 +43,7 @@ std::string toString(const T& value) {
 }
 
 template<typename It>
-bool QueryClauseTable::addColumn(const std::string& header, const It& rows) {
+bool QueryClauseResult::addColumn(const std::string& header, const It& rows) {
 	if (rows.size() == 0) return false;
 	setBooleanResult(true);
 	std::vector<std::string> v;
@@ -54,22 +54,22 @@ bool QueryClauseTable::addColumn(const std::string& header, const It& rows) {
 	return true;
 }
 
-Table QueryClauseTable::getTable() {
+Table QueryClauseResult::getTable() {
 	return table;
 }
 
-bool QueryClauseTable::getBooleanResult() {
-	return booleanResult;
+bool QueryClauseResult::containsValidResult() {
+	return booleanResult || !table.empty();
 }
 
-void QueryClauseTable::setBooleanResult(bool inputBool) {
+void QueryClauseResult::setBooleanResult(bool inputBool) {
 	booleanResult = inputBool;
 }
 
-template bool QueryClauseTable::addColumn<std::unordered_set<std::string>>(const std::string& header,
+template bool QueryClauseResult::addColumn<std::unordered_set<std::string>>(const std::string& header,
 																		   const std::unordered_set<std::string>& rows);
 template bool
-QueryClauseTable::addColumn<std::unordered_set<int>>(const std::string& header, const std::unordered_set<int>& rows);
+QueryClauseResult::addColumn<std::unordered_set<int>>(const std::string& header, const std::unordered_set<int>& rows);
 template bool
-QueryClauseTable::addColumn<std::vector<std::string>>(const std::string& header, const std::vector<std::string>& rows);
-template bool QueryClauseTable::addColumn<std::vector<int>>(const std::string& header, const std::vector<int>& rows);
+QueryClauseResult::addColumn<std::vector<std::string>>(const std::string& header, const std::vector<std::string>& rows);
+template bool QueryClauseResult::addColumn<std::vector<int>>(const std::string& header, const std::vector<int>& rows);

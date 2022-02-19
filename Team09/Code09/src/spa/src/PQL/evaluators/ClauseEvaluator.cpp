@@ -6,7 +6,7 @@
 #include "ModifiesEvaluator.h"
 #include "PatternAEvaluator.h"
 
-QueryClauseTable ClauseEvaluator::evaluate(QueryClause& clause, bool isBooleanResult) {
+QueryClauseResult ClauseEvaluator::evaluate(QueryClause& clause, bool isBooleanResult) {
 	QueryArgument firstArg = clause.getArguments().at(0);
 	QueryArgument secondArg = clause.getArguments().at(1);
 

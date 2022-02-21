@@ -2,245 +2,176 @@
 #include "simple_parser/Token.h"
 
 #include "catch.hpp"
+#include "asts/ContainerStmtASTs.h"
 #include <vector>
 
 // --------------------------------------------------
 //                  HAPPY PATHS
 // --------------------------------------------------
-TEST_CASE("Test parsing of valid while statements") {
-	std::shared_ptr<VariableNode> xNode = std::make_shared<VariableNode>("x");
-	std::shared_ptr<VariableNode> yNode = std::make_shared<VariableNode>("y");
-	std::shared_ptr<VariableNode> zNode = std::make_shared<VariableNode>("z");
-	std::shared_ptr<ConstantNode> c1Node = std::make_shared<ConstantNode>("1");
-	std::shared_ptr<ConstantNode> c2Node = std::make_shared<ConstantNode>("2");
-	std::shared_ptr<ConstantNode> c3Node = std::make_shared<ConstantNode>("3");
-	ExprNode yPlusOneExprNode = std::make_shared<BinaryOperatorNode>(BinaryOperator::PLUS, yNode, c1Node);
-	std::shared_ptr<PredicateNode> eqNode = std::make_shared<PredicateNode>(
-			std::make_shared<RelExprNode>(yNode,
-										  ComparatorOperator::EQ,
-										  c2Node));
-	std::shared_ptr<PredicateNode> ltNode = std::make_shared<PredicateNode>(
-			std::make_shared<RelExprNode>(xNode,
-										  ComparatorOperator::LT,
-										  c1Node));
-	std::shared_ptr<PredicateNode> gteNode = std::make_shared<PredicateNode>(
-			std::make_shared<RelExprNode>(yPlusOneExprNode,
-										  ComparatorOperator::GTE,
-										  c3Node));
-	std::shared_ptr<PredicateNode> notNode = std::make_shared<PredicateNode>(ConditionalOperator::NOT,
-																			 gteNode);
-	std::shared_ptr<PredicateNode> neqNode = std::make_shared<PredicateNode>(
-			std::make_shared<RelExprNode>(yNode,
-										  ComparatorOperator::NEQ,
-										  c1Node));
 
-	std::shared_ptr<ReadNode> readNode = std::make_shared<ReadNode>(2, xNode);
-	std::vector<std::shared_ptr<StmtNode>> simpleStmtLst{readNode};
-
-	SECTION ("Simple predicate and statement") {
-		/*
-		 * Test Simple Program
-		 * procedure testProgram {
-		 * 1	while (x < 1) {
-		 * 2		read x;
-		 * 		}
-		 * }
-		 */
-		std::vector<Token*> input = {
-				new NameToken("procedure"), 	new NameToken("testProgram"),
-				new PunctuatorToken("{"),   	new NameToken("while"),
-				new PunctuatorToken("("), 	new NameToken("x"),
-				new OperatorToken("<"),		new IntegerToken("1"),
-				new PunctuatorToken(")"),	new PunctuatorToken("{"),
-				new NameToken("read"),		new NameToken("x"),
-				new PunctuatorToken(";"),	new PunctuatorToken("}"),
-				new PunctuatorToken("}"),	new EndOfFileToken(),
-		};
-
-		SPParser parser = SPParser(input);
-		AST output = parser.parseProgram();
-
-		std::shared_ptr<WhileNode> whileNode = std::make_shared<WhileNode>(1, ltNode, simpleStmtLst);
-		std::vector<std::shared_ptr<StmtNode>> stmtLst1{whileNode};
-		std::shared_ptr<ProcedureNode> procedureNode = std::make_shared<ProcedureNode>(stmtLst1, "testProgram");
-		std::vector<std::shared_ptr<ProcedureNode>> procLst{move(procedureNode)};
-		AST expected = std::make_shared<ProgramNode>(procLst);
-
-		REQUIRE(*output == *expected);
-	}
-	SECTION ("Semi complex predicate and simple statement") {
-		/*
-		 * Test Simple Program
-		 * procedure testProgram {
-		 * 1	while (!(y + 1 >= 3)) {
-		 * 2		read x;
-		 * 		}
-		 * }
-		 */
-		std::vector<Token*> input = {
-				new NameToken("procedure"), 	new NameToken("testProgram"), 	new PunctuatorToken("{"),
-				new NameToken("while"),		new PunctuatorToken("("), 		new OperatorToken("!"),
-				new PunctuatorToken("("), 	new NameToken("y"),			new OperatorToken("+"),
-				new IntegerToken("1"),		new OperatorToken(">="),		new IntegerToken("3"),
-				new PunctuatorToken(")"),	new PunctuatorToken(")"),		new PunctuatorToken("{"),
-				new NameToken("read"),		new NameToken("x"),				new PunctuatorToken(";"),
-				new PunctuatorToken("}"),	new PunctuatorToken("}"),		new EndOfFileToken(),
-		};
-
-		SPParser parser = SPParser(input);
-		AST output = parser.parseProgram();
-
-		std::shared_ptr<WhileNode> whileNode = std::make_shared<WhileNode>(1, notNode, simpleStmtLst);
-		std::vector<std::shared_ptr<StmtNode>> stmtLst1{whileNode};
-		std::shared_ptr<ProcedureNode> procedureNode = std::make_shared<ProcedureNode>(stmtLst1, "testProgram");
-		std::vector<std::shared_ptr<ProcedureNode>> procLst{move(procedureNode)};
-		AST expected = std::make_shared<ProgramNode>(procLst);
-
-		REQUIRE(*output == *expected);
-
-	}
-	SECTION ("Complex predicate and simple statement") {
-		/*
-		 * Test Simple Program
-		 * procedure testProgram {
-		 * 1	while ((x < 1) && ((!(y + 1 >= 3)) || (y == 2))) {
-		 * 2		read x;
-		 * 		}
-		 * }
-		 */
-		std::vector<Token*> input = {
-				new NameToken("procedure"), 	new NameToken("testProgram"), 	new PunctuatorToken("{"),
-				new NameToken("while"),		new PunctuatorToken("("), 		new PunctuatorToken("("),
-				new NameToken("x"),			new OperatorToken("<"),			new IntegerToken("1"),
-				new PunctuatorToken(")"),	new OperatorToken("&&"),			new PunctuatorToken("("),
-				new PunctuatorToken("("),	new OperatorToken("!"), 		new PunctuatorToken("("),
-				new NameToken("y"),			new OperatorToken("+"),		new IntegerToken("1"),
-				new OperatorToken(">="),		new IntegerToken("3"), 			new PunctuatorToken(")"),
-				new PunctuatorToken(")"),
-				new OperatorToken("||"),		new PunctuatorToken("("),		new NameToken("y"),
-				new OperatorToken("=="),		new IntegerToken("2"),			new PunctuatorToken(")"),
-				new PunctuatorToken(")"),	new PunctuatorToken(")"),		new PunctuatorToken("{"),
-				new NameToken("read"),		new NameToken("x"),				new PunctuatorToken(";"),
-				new PunctuatorToken("}"),	new PunctuatorToken("}"),		new EndOfFileToken(),
-		};
-
-		SPParser parser = SPParser(input);
-		AST output = parser.parseProgram();
-
-		std::shared_ptr<PredicateNode> orNode = std::make_shared<PredicateNode>(notNode,
-																				ConditionalOperator::OR,
-																				eqNode);
-		std::shared_ptr<PredicateNode> andNode = std::make_shared<PredicateNode>(ltNode,
-		        																 ConditionalOperator::AND,
-																				 orNode);
-
-		std::shared_ptr<WhileNode> whileNode = std::make_shared<WhileNode>(1, andNode, simpleStmtLst);
-		std::vector<std::shared_ptr<StmtNode>> stmtLst1{whileNode};
-		std::shared_ptr<ProcedureNode> procedureNode = std::make_shared<ProcedureNode>(stmtLst1, "testProgram");
-		std::vector<std::shared_ptr<ProcedureNode>> procLst{move(procedureNode)};
-		AST expected = std::make_shared<ProgramNode>(procLst);
-
-		REQUIRE(*output == *expected);
-	}
-	SECTION ("Nested while loops") {
-		/*
-		 * Test Simple Program
-		 * procedure testProgram {
-		 * 1	while (x < 1) {
-		 * 2		read x;
-		 * 3		while (y != 1) {
-		 * 4			print y;
-		 * 5			y = y + 1;
-		 * 			}
-		 * 6		read y;
-		 * 		}
-		 * 7	print x;
-		 * }
-		 */
-		std::vector<Token*> input = {
-				new NameToken("procedure"), 	new NameToken("testProgram"), 	new PunctuatorToken("{"),
-				new NameToken("while"),		new PunctuatorToken("("), 		new NameToken("x"),
-				new OperatorToken("<"),		new IntegerToken("1"),		new PunctuatorToken(")"),
-				new PunctuatorToken("{"),
-				new NameToken("read"),		new NameToken("x"),				new PunctuatorToken(";"),
-				new NameToken("while"),		new PunctuatorToken("("),		new NameToken("y"),
-				new OperatorToken("!="),		new IntegerToken("1"),			new PunctuatorToken(")"),
-				new PunctuatorToken("{"),	new NameToken("print"),			new NameToken("y"),
-				new PunctuatorToken(";"),	new NameToken("y"),				new OperatorToken("="),
-				new NameToken("y"),			new OperatorToken("+"),			new IntegerToken("1"),
-				new PunctuatorToken(";"),	new PunctuatorToken("}"),		new NameToken("read"),
-				new NameToken("y"),			new PunctuatorToken(";"),		new PunctuatorToken("}"),
-				new NameToken("print"),		new NameToken("x"),				new PunctuatorToken(";"),
-				new PunctuatorToken("}"),		new EndOfFileToken(),
-		};
-
-		SPParser parser = SPParser(input);
-		AST output = parser.parseProgram();
-
-		std::shared_ptr<StmtNode> printYNode = std::make_shared<PrintNode>(4, yNode);
-		std::shared_ptr<StmtNode> assignNode = std::make_shared<AssignNode>(5, yNode, yPlusOneExprNode, "y 1 +");
-		std::vector<std::shared_ptr<StmtNode>> innerWhileStmtLst{printYNode, assignNode};
-		std::shared_ptr<StmtNode> innerWhileNode = std::make_shared<WhileNode>(3, neqNode, innerWhileStmtLst);
-
-		std::shared_ptr<StmtNode> readYNode = std::make_shared<ReadNode>(6, yNode);
-		std::vector<std::shared_ptr<StmtNode>> outerWhileStmtLst{readNode, innerWhileNode, readYNode};
-		std::shared_ptr<StmtNode> outerWhileNode = std::make_shared<WhileNode>(1, ltNode, outerWhileStmtLst);
-
-		std::shared_ptr<StmtNode> printXNode = std::make_shared<PrintNode>(7, xNode);
-		std::vector<std::shared_ptr<StmtNode>> procStmtLst{outerWhileNode, printXNode};
-
-		std::shared_ptr<ProcedureNode> procedureNode = std::make_shared<ProcedureNode>(procStmtLst, "testProgram");
-		std::vector<std::shared_ptr<ProcedureNode>> procLst{procedureNode};
-		AST expected = std::make_shared<ProgramNode>(procLst);
-
-		REQUIRE(*output == *expected);
-	}
-}
-
-TEST_CASE ("Test parentheses in predicate") {
+TEST_CASE ("While 1.59 - Single statement - While-Read") {
 	/*
-		 * Test Simple Program
-		 * procedure testProgram {
-		 * 1	while ((x + 1) < 1) {
-		 * 2		read x;
-		 * 		}
-		 * }
-		 */
+	 * 1  while (x < 1) {
+	 * 2    read x;
+	 *    }
+	 */
 	std::vector<Token*> input = {
-			new NameToken("procedure"), 	new NameToken("testProgram"),
-			new PunctuatorToken("{"),   	new NameToken("while"),
-			new PunctuatorToken("("),	new PunctuatorToken("("), 	new NameToken("x"),
-			new OperatorToken("+"),		new IntegerToken("1"),		new PunctuatorToken(")"),
-			new OperatorToken("<"),		new IntegerToken("1"),
+			new NameToken("procedure"), 	new NameToken("testProgram"),	new PunctuatorToken("{"),
+			new NameToken("while"),		new PunctuatorToken("("),
+			new NameToken("x"),		new OperatorToken("<"),		new IntegerToken("1"),
 			new PunctuatorToken(")"),	new PunctuatorToken("{"),
-			new NameToken("read"),		new NameToken("x"),
-			new PunctuatorToken(";"),	new PunctuatorToken("}"),
-			new PunctuatorToken("}"),	new EndOfFileToken(),
+			new NameToken("read"),		new NameToken("x"),				new PunctuatorToken(";"),
+			new PunctuatorToken("}"),	new PunctuatorToken("}"),		new EndOfFileToken(),
 	};
 
 	SPParser parser = SPParser(input);
 	AST output = parser.parseProgram();
 
-	std::shared_ptr<VariableNode> x = std::make_shared<VariableNode>("x");
-	std::shared_ptr<ConstantNode> c1 = std::make_shared<ConstantNode>("1");
-	ExprNode xPlus1 = std::make_shared<BinaryOperatorNode>(BinaryOperator::PLUS, x, c1);
+	REQUIRE(*output == *ContainerStmtASTs::getAST1_59());
+}
 
-	std::shared_ptr<PredicateNode> ltNode = std::make_shared<PredicateNode>(
-			std::make_shared<RelExprNode>(xPlus1, ComparatorOperator::LT, c1)
-	);
-
-	std::vector<std::shared_ptr<StmtNode>> whileStmtLst {
-		std::make_shared<ReadNode>(2, x)
+TEST_CASE ("While 1.60 - Single statement - While-Print") {
+	/*
+	 * 1  while (x < 1) {
+	 * 2    print x;
+	 *    }
+	 */
+	std::vector<Token*> input = {
+			new NameToken("procedure"), 	new NameToken("testProgram"),	new PunctuatorToken("{"),
+			new NameToken("while"),		new PunctuatorToken("("),
+			new NameToken("x"),		new OperatorToken("<"),		new IntegerToken("1"),
+			new PunctuatorToken(")"),	new PunctuatorToken("{"),
+			new NameToken("print"),		new NameToken("x"),				new PunctuatorToken(";"),
+			new PunctuatorToken("}"),	new PunctuatorToken("}"),		new EndOfFileToken(),
 	};
 
-	std::shared_ptr<WhileNode> whileNode = std::make_shared<WhileNode>(1, ltNode, whileStmtLst);
-	std::vector<std::shared_ptr<StmtNode>> stmtLst1{whileNode};
-	std::shared_ptr<ProcedureNode> procedureNode = std::make_shared<ProcedureNode>(stmtLst1, "testProgram");
-	std::vector<std::shared_ptr<ProcedureNode>> procLst{move(procedureNode)};
-	AST expected = std::make_shared<ProgramNode>(procLst);
+	SPParser parser = SPParser(input);
+	AST output = parser.parseProgram();
 
-	REQUIRE(*output == *expected);
+	REQUIRE(*output == *ContainerStmtASTs::getAST1_60());
 }
+
+TEST_CASE ("While 1.61 - Single statement - While-Assign") {
+	/*
+	 * 1  while (x < 1) {
+	 * 2    a = x + 1;
+	 *    }
+	 */
+	std::vector<Token*> input = {
+			new NameToken("procedure"), 	new NameToken("testProgram"),	new PunctuatorToken("{"),
+			new NameToken("while"),		new PunctuatorToken("("),
+			new NameToken("x"),			new OperatorToken("<"),			new IntegerToken("1"),
+			new PunctuatorToken(")"),	new PunctuatorToken("{"),
+			new NameToken("a"),			new OperatorToken("="),				new NameToken("x"),
+			new OperatorToken("+"),		new IntegerToken("1"),			new PunctuatorToken(";"),
+			new PunctuatorToken("}"),	new PunctuatorToken("}"),		new EndOfFileToken(),
+	};
+
+	SPParser parser = SPParser(input);
+	AST output = parser.parseProgram();
+
+	REQUIRE(*output == *ContainerStmtASTs::getAST1_61());
+}
+
+TEST_CASE ("While 1.62 - Single statement - While-If") {
+	/*
+	 * 1  while (x < 1) {
+	 * 2    if (y < 1) then {
+	 * 3      read y;
+	 *      } else {
+	 * 4      print y; }
+	 *    }
+	 */
+	std::vector<Token*> input = {
+			new NameToken("procedure"), 	new NameToken("testProgram"),	new PunctuatorToken("{"),
+			new NameToken("while"),		new PunctuatorToken("("),
+			new NameToken("x"),			new OperatorToken("<"),			new IntegerToken("1"),
+			new PunctuatorToken(")"),	new PunctuatorToken("{"),
+			new NameToken("if"),			new PunctuatorToken("("),
+			new NameToken("y"),			new OperatorToken("<"),			new IntegerToken("1"),
+			new PunctuatorToken(")"),	new NameToken("then"),			new PunctuatorToken("{"),
+			new NameToken("read"),		new NameToken("y"),				new PunctuatorToken(";"),
+			new PunctuatorToken("}"),	new NameToken("else"),			new PunctuatorToken("{"),
+			new NameToken("print"),		new NameToken("y"),				new PunctuatorToken(";"),
+			new PunctuatorToken("}"),
+			new PunctuatorToken("}"),	new PunctuatorToken("}"),		new EndOfFileToken(),
+	};
+
+	SPParser parser = SPParser(input);
+	AST output = parser.parseProgram();
+
+	REQUIRE(*output == *ContainerStmtASTs::getAST1_62());
+}
+
+TEST_CASE ("While 1.63 - Single statement - While-While") {
+	/*
+	 * 1  while (x < 1) {
+	 * 2    while (y < 1) {
+	 * 3 	  read y; } }
+	 */
+	std::vector<Token*> input = {
+			new NameToken("procedure"), 	new NameToken("testProgram"),	new PunctuatorToken("{"),
+			new NameToken("while"),		new PunctuatorToken("("),
+			new NameToken("x"),			new OperatorToken("<"),			new IntegerToken("1"),
+			new PunctuatorToken(")"),	new PunctuatorToken("{"),
+			new NameToken("while"),		new PunctuatorToken("("),
+			new NameToken("y"),			new OperatorToken("<"),			new IntegerToken("1"),
+			new PunctuatorToken(")"),	new PunctuatorToken("{"),
+			new NameToken("read"),		new NameToken("y"),				new PunctuatorToken(";"),
+			new PunctuatorToken("}"),
+			new PunctuatorToken("}"),	new PunctuatorToken("}"),		new EndOfFileToken(),
+	};
+
+	SPParser parser = SPParser(input);
+	AST output = parser.parseProgram();
+
+	REQUIRE(*output == *ContainerStmtASTs::getAST1_63());
+}
+
+TEST_CASE ("While 1.64 - All statement types") {
+	/*
+	 * 1  while (x < 1) {
+	 * 2  	read x;
+	 * 3	print x;
+	 * 4	a = x + 1;
+	 * 5    if (y < 1) then {
+	 * 6      read y;
+	 *      } else {
+	 * 7      print y; }
+	 * 8	while (y < 1) {
+	 * 9	  read y; }
+	 *    }
+	 */
+	std::vector<Token*> input = {
+			new NameToken("procedure"), 	new NameToken("testProgram"),	new PunctuatorToken("{"),
+			new NameToken("while"),		new PunctuatorToken("("),
+			new NameToken("x"),			new OperatorToken("<"),			new IntegerToken("1"),
+			new PunctuatorToken(")"),	new PunctuatorToken("{"),
+			new NameToken("read"),		new NameToken("x"),				new PunctuatorToken(";"),
+			new NameToken("print"),		new NameToken("x"),				new PunctuatorToken(";"),
+			new NameToken("a"),			new OperatorToken("="), 			new NameToken("x"),
+			new OperatorToken("+"),		new IntegerToken("1"),				new PunctuatorToken(";"),
+			new NameToken("if"),			new PunctuatorToken("("),
+			new NameToken("y"),			new OperatorToken("<"),			new IntegerToken("1"),
+			new PunctuatorToken(")"),	new NameToken("then"),			new PunctuatorToken("{"),
+			new NameToken("read"),		new NameToken("y"),				new PunctuatorToken(";"),
+			new PunctuatorToken("}"),	new NameToken("else"),			new PunctuatorToken("{"),
+			new NameToken("print"),		new NameToken("y"),				new PunctuatorToken(";"),
+			new PunctuatorToken("}"),
+			new NameToken("while"),		new PunctuatorToken("("),
+			new NameToken("y"),			new OperatorToken("<"),			new IntegerToken("1"),
+			new PunctuatorToken(")"),	new PunctuatorToken("{"),
+			new NameToken("read"),		new NameToken("y"),				new PunctuatorToken(";"),
+			new PunctuatorToken("}"),
+			new PunctuatorToken("}"),	new PunctuatorToken("}"),		new EndOfFileToken(),
+	};
+
+	SPParser parser = SPParser(input);
+	AST output = parser.parseProgram();
+
+	REQUIRE(*output == *ContainerStmtASTs::getAST1_64());
+}
+
 
 // --------------------------------------------------
 //                 UNHAPPY PATHS

@@ -1,6 +1,6 @@
 #pragma once
 
-#include "models/QueryClauseTable.h"
+#include "models/QueryClauseResult.h"
 #include "models/QueryArgument.h"
 #include <unordered_set>
 

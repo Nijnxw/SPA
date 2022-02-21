@@ -34,6 +34,6 @@ file(GLOB headers "${CMAKE_CURRENT_SOURCE_DIR}/src/*.h"
 			   "${CMAKE_CURRENT_SOURCE_DIR}/src/util/*.hpp"
 )
 
-add_executable(unit_testing ${srcs} src/simple_parser/asts/ContainerStmtASTs.cpp src/simple_parser/asts/ContainerStmtASTs.h src/simple_parser/asts/CommonNodes.h src/simple_parser/asts/CommonNodes.cpp)
+add_executable(unit_testing ${srcs})
 
 target_link_libraries(unit_testing spa)

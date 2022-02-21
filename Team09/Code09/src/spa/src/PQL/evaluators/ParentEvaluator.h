@@ -9,24 +9,24 @@
 #include "pkb/PKB.h"
 #include "pkb/util/PKBUtil.cpp"
 #include "models/EntityType.h"
-#include "models/QueryClauseTable.h"
+#include "models/QueryClauseResult.h"
 #include "models/QueryClause.h"
 
 #include "StmtStmtRelationshipEvaluator.h"
 
 class ParentEvaluator : public StmtStmtRelationshipEvaluator {
 private:
-	QueryClauseTable getRelationship(RelationRef relationship, const std::string& LHS, const std::string& RHS, EntityType LHSType, EntityType RHSType,
+	QueryClauseResult getRelationship(RelationRef relationship, const std::string& LHS, const std::string& RHS, EntityType LHSType, EntityType RHSType,
 		bool isBooleanResult);
-	QueryClauseTable getTransitiveRelationship(RelationRef relationship, const std::string& LHS, const std::string& RHS, EntityType LHSType, EntityType RHSType,
+	QueryClauseResult getTransitiveRelationship(RelationRef relationship, const std::string& LHS, const std::string& RHS, EntityType LHSType, EntityType RHSType,
 		bool isBooleanResult);
 public:
 	ParentEvaluator();
 
-	QueryClauseTable
+	QueryClauseResult
 	getParent(const std::string& LHS, const std::string& RHS, EntityType LHSType, EntityType RHSType,
 			  bool isBooleanResult);
-	QueryClauseTable
+	QueryClauseResult
 	getParentT(const std::string& LHS, const std::string& RHS, EntityType LHSType, EntityType RHSType,
 			bool isBooleanResult);
 };

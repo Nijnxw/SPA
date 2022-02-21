@@ -4,7 +4,7 @@
 #include <unordered_map>
 #include <unordered_set>
 #include <vector>
-#include "models/QueryClauseTable.h"
+#include "models/QueryClauseResult.h"
 
 struct PairHash {
 	template<class T1, class T2>

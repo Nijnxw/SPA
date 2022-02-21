@@ -1,6 +1,6 @@
 #include "UMEvaluator.h"
 
-QueryClauseTable
+QueryClauseResult
 	UMEvaluator::getRelationship(RelationRef relationship, const std::string& LHS, const std::string& RHS, EntityType LHSType, EntityType RHSType, bool isBooleanResult) {
 
 	switch (RHSType) {
@@ -11,14 +11,14 @@ QueryClauseTable
 	case EntityType::WILD:
 		return getRelationshipByUnderscore(relationship, LHS, RHS, LHSType);
 	default:
-		QueryClauseTable emptyQueryResult;
+		QueryClauseResult emptyQueryResult;
 		return emptyQueryResult;
 	}
 }
 
-QueryClauseTable UMEvaluator::getRelationshipByUnderscore(
+QueryClauseResult UMEvaluator::getRelationshipByUnderscore(
 	RelationRef relationship, const std::string& LHS, const std::string& RHS, EntityType LHSType) {
-	QueryClauseTable queryResult;
+	QueryClauseResult queryResult;
 	std::unordered_set<int> relationshipStmts = (relationship == RelationRef::MODIFIES)
 		? PKB::getModifiesStatements()
 		: PKB::getUsesStatements();
@@ -67,8 +67,8 @@ QueryClauseTable UMEvaluator::getRelationshipByUnderscore(
 	return queryResult;
 }
 
-QueryClauseTable UMEvaluator::getRelationshipByVariable(RelationRef relationship, const std::string& LHS, const std::string& RHS, EntityType LHSType) {
-	QueryClauseTable queryResult;
+QueryClauseResult UMEvaluator::getRelationshipByVariable(RelationRef relationship, const std::string& LHS, const std::string& RHS, EntityType LHSType) {
+	QueryClauseResult queryResult;
 
 	std::unordered_set<int> relationshipStmts = (relationship == RelationRef::MODIFIES)
 		? PKB::getStatementsModifyingVariable(RHS)
@@ -116,8 +116,8 @@ QueryClauseTable UMEvaluator::getRelationshipByVariable(RelationRef relationship
 	return queryResult;
 }
 
-QueryClauseTable UMEvaluator::getRelationshipBySynonym(RelationRef relationship, const std::string& LHS, const std::string& RHS, EntityType LHSType) {
-	QueryClauseTable queryResult;
+QueryClauseResult UMEvaluator::getRelationshipBySynonym(RelationRef relationship, const std::string& LHS, const std::string& RHS, EntityType LHSType) {
+	QueryClauseResult queryResult;
 	std::vector<std::string> stmts;
 	std::vector<std::string> vars;
 

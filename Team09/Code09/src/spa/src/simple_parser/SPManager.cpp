@@ -1,18 +1,23 @@
 #include "SPManager.h"
 
 AST SPManager::parseFile(const std::string& filename) {
-	std::ifstream inputStream(filename);
-	if (!inputStream.is_open()) {
-		throw std::runtime_error("File do not exist!\n");
+	try {
+		std::ifstream inputStream(filename);
+		if (!inputStream.is_open()) {
+			throw std::runtime_error("File do not exist!\n");
+		}
+
+		Lexer lexer = Lexer(&inputStream);
+		std::vector<Token*> tokens = lexer.tokenize();
+
+		SPParser parser = SPParser(tokens);
+		AST ast = parser.parseProgram();
+
+		return ast;
+	} catch (const std::exception& e) {
+		std::cout << e.what();
+		exit(EXIT_FAILURE);
 	}
-
-	Lexer lexer = Lexer(&inputStream);
-	std::vector<Token*> tokens = lexer.tokenize();
-
-	SPParser parser = SPParser(tokens);
-	AST ast = parser.parseProgram();
-
-	return ast;
 }
 
 void SPManager::extractDesign(AST ast) {

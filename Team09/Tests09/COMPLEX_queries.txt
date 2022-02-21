@@ -1093,3 +1093,13 @@ assign a123,a456; if ifs2; variable vr124;
 Select ifs2 such that Parent*(ifs2,a123) pattern a456(_,_"diameter"_)
 7,11,19,39
 5000
+220 - modifies + 4 syn + 2 common syn
+assign a;variable v; 
+Select v such that Modifies(a,v) pattern a(v,_)
+aRe4,v01um3,cIrcUm,p1,pi,newArea,read,p,q,n,rh0,e,t3Mp,d,temp,radius1,counter,newVol,pneumonoultramicroscopicsilicovolcanoconiosis
+5000
+221 - uses + 4 syn + 2 common syn
+assign a;variable v; 
+Select a such that Uses(a,v) pattern a(v,_)
+13,42,44
+5000

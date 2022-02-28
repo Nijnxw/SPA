@@ -11,6 +11,6 @@ std::shared_ptr<VariableNode> CommonNodes::z = std::make_shared<VariableNode>("z
 
 AST CommonNodes::generateAST(std::vector<std::shared_ptr<StmtNode>> stmts) {
 	std::shared_ptr<ProcedureNode> proc = std::make_shared<ProcedureNode>(stmts, "testProgram");
-	std::vector<std::shared_ptr<ProcedureNode>> procList{ proc };
-	return std::make_shared<ProgramNode>(procList);
+	std::unordered_map<std::string, std::shared_ptr<ProcedureNode>> procMap{ {"testProgram", proc} };
+	return std::make_shared<ProgramNode>(procMap);
 }

@@ -5,15 +5,18 @@
 #include "ProcedureNode.h"
 
 #include <memory>
-#include <vector>
+#include <string>
+#include <unordered_map>
 
 class ProgramNode : public Node {
 private:
-	std::vector<std::shared_ptr<ProcedureNode>> procedureList;
+	std::unordered_map<std::string, std::shared_ptr<ProcedureNode>> procedureMap;
 
 public:
-	ProgramNode(std::vector<std::shared_ptr<ProcedureNode>> procList);
-	std::vector<std::shared_ptr<ProcedureNode>> getProcedureList() const;
+	ProgramNode(std::unordered_map<std::string, std::shared_ptr<ProcedureNode>> procMap);
+	std::unordered_map<std::string, std::shared_ptr<ProcedureNode>> getProcedureMap() const;
+	bool contains(std::string procName);
+	std::shared_ptr<ProcedureNode> retrieve(std::string procName);
 	bool operator==(const Node& other) const override;
 };
 

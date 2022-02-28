@@ -193,15 +193,15 @@ NestableRelationships processProcedure(std::shared_ptr<ProcedureNode> proc) {
 	return processStmtList(proc->getStmtList());
 }
 
-void processProcedureList(std::vector<std::shared_ptr<ProcedureNode>> procList) {
-	for (int i = 0; i < procList.size(); i++) {
-		processProcedure(procList[i]);
+void processProcedureList(std::unordered_map<std::string, std::shared_ptr<ProcedureNode>> procMap) {
+	for (auto& procPair : procMap) {
+		processProcedure(procPair.second);
 	}
 }
 
 void DesignExtractor::extractDesignElements(AST ast) {
 	EntityStager::clear();
-	processProcedureList(ast->getProcedureList());
+	processProcedureList(ast->getProcedureMap());
 }
 
 void DesignExtractor::commit() {

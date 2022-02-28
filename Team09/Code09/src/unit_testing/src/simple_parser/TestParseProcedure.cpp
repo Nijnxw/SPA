@@ -17,8 +17,8 @@ AST generateAST(std::string procName) {
 		std::make_shared<ReadNode>(1, std::make_shared<VariableNode>("x"))
 	};
 	std::shared_ptr<ProcedureNode> proc = std::make_shared<ProcedureNode>(stmts, procName);
-	std::vector<std::shared_ptr<ProcedureNode>> procList{ proc };
-	return std::make_shared<ProgramNode>(procList);
+	std::unordered_map<std::string, std::shared_ptr<ProcedureNode>> procMap{ {procName, proc} };
+	return std::make_shared<ProgramNode>(procMap);
 }
 
 // --------------------------------------------------
@@ -101,8 +101,8 @@ TEST_CASE ("Test parsing of valid procedure") {
 		std::shared_ptr<ReadNode> readNode = std::make_shared<ReadNode>(1, std::make_shared<VariableNode>("p"));
 		std::vector<std::shared_ptr<StmtNode>> stmtLst{move(readNode)};
 		std::shared_ptr<ProcedureNode> procedureNode = std::make_shared<ProcedureNode>(stmtLst, "testProgram");
-		std::vector<std::shared_ptr<ProcedureNode>> procLst{move(procedureNode)};
-		AST expected = std::make_shared<ProgramNode>(procLst);
+		std::unordered_map<std::string, std::shared_ptr<ProcedureNode>> procMap{ {"testProgram", move(procedureNode)}};
+		AST expected = std::make_shared<ProgramNode>(procMap);
 
 		REQUIRE(*output == *expected);
 	}
@@ -130,8 +130,8 @@ TEST_CASE ("Test parsing of valid procedure") {
 		std::shared_ptr<ReadNode> readNode2 = std::make_shared<ReadNode>(2, std::make_shared<VariableNode>("testProgram"));
 		std::vector<std::shared_ptr<StmtNode>> stmtLst{move(readNode1), move(readNode2)};
 		std::shared_ptr<ProcedureNode> procedureNode = std::make_shared<ProcedureNode>(stmtLst, "testProgram");
-		std::vector<std::shared_ptr<ProcedureNode>> procLst{move(procedureNode)};
-		AST expected = std::make_shared<ProgramNode>(procLst);
+		std::unordered_map<std::string, std::shared_ptr<ProcedureNode>> procMap{ {"testProgram", move(procedureNode)} };
+		AST expected = std::make_shared<ProgramNode>(procMap);
 
 		REQUIRE(*output == *expected);
 	}

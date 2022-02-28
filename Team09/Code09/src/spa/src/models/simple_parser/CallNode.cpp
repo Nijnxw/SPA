@@ -1,7 +1,7 @@
 #include "CallNode.h"
 
-CallNode::CallNode(std::string s)
-	: Node(NodeType::CALL) {
+CallNode::CallNode(int sn, std::string s)
+	: StmtNode(NodeType::CALL, sn) {
 	procedure = s;
 }
 

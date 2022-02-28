@@ -1,14 +1,14 @@
-#include "Node.h"
+#include "StmtNode.h"
 #include "NodeType.h"
 
 #include <string>
 
-class CallNode : public Node {
+class CallNode : public StmtNode {
 private:
 	std::string procedure;
 
 public:
-	CallNode(std::string s);
+	CallNode(int sn, std::string s);
 	std::string getProcedureName() const;
 	bool operator==(const Node& other) const override;
 };

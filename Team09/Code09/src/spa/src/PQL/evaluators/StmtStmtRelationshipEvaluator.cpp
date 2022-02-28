@@ -18,7 +18,6 @@ QueryClauseResult StmtStmtRelationshipEvaluator::getRelationship(RelationRef rel
 		return StmtStmtRelationshipEvaluator::getRelationshipByUnderscore(relationship, RHS, RHSType);
 	}
 	else {
-		QueryClauseResult emptyQueryResult;
 		return emptyQueryResult;
 	}
 }

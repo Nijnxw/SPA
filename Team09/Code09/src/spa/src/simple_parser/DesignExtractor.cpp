@@ -181,15 +181,11 @@ NestableRelationships processCallNode(AST ast, std::vector<std::string> callStac
 	if (rs.getModifiesSize() > 0) EntityStager::stageModifiesStatements(call->getStmtNumber(), rs.getModifies());
 	if (rs.getUsesSize() > 0) EntityStager::stageUsesStatements(call->getStmtNumber(), rs.getUses());
 
+	rs.addCalls(call->getProcedureName());
 	if (callStack.size() > 0) {
 		EntityStager::stageCalls(callStack[0], call->getProcedureName());
-		rs.addCalls(call->getProcedureName());
-		for (std::string caller : callStack) {
-			for (std::string callee : rs.getCalls()) {
-				EntityStager::stageCallsT(caller, callee);
-			}
-			//2d iteration through callstack and rs.getCalls()
-			//EntityStager::stageCallT(proc, call->getProcedureName());
+		for (std::string callee : rs.getCalls()) {
+			EntityStager::stageCallsT(callStack[0], callee);
 		}
 	}
 	return rs;

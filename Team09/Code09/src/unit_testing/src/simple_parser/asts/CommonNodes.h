@@ -16,5 +16,5 @@ protected:
 	static std::shared_ptr<VariableNode> y;
 	static std::shared_ptr<VariableNode> z;
 public:
-	static AST generateAST(std::vector<std::shared_ptr<StmtNode>> stmts);
+	static AST generateBasicAST(std::vector<std::shared_ptr<StmtNode>> stmts);
 };

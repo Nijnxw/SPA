@@ -12,7 +12,7 @@ std::vector<Token*> generateTokens(std::string procName) {
 	};
 }
 
-AST generateAST(std::string procName) {
+AST generateBasicAST(std::string procName) {
 	std::vector<std::shared_ptr<StmtNode>> stmts {
 		std::make_shared<ReadNode>(1, std::make_shared<VariableNode>("x"))
 	};
@@ -29,7 +29,7 @@ TEST_CASE("Proc_name validity 5.1 - Lowercase") {
 	std::vector<Token*> input = generateTokens("main");
 	SPParser parser = SPParser(input);
 	AST output = parser.parseProgram();
-	REQUIRE(*output == *generateAST("main"));
+	REQUIRE(*output == *generateBasicAST("main"));
 }
 
 TEST_CASE("Proc_name validity 5.2 - Uppercase") {
@@ -37,7 +37,7 @@ TEST_CASE("Proc_name validity 5.2 - Uppercase") {
 	std::vector<Token*> input = generateTokens("MAIN");
 	SPParser parser = SPParser(input);
 	AST output = parser.parseProgram();
-	REQUIRE(*output == *generateAST("MAIN"));
+	REQUIRE(*output == *generateBasicAST("MAIN"));
 }
 
 TEST_CASE("Proc_name validity 5.3 - Mixed casing") {
@@ -45,7 +45,7 @@ TEST_CASE("Proc_name validity 5.3 - Mixed casing") {
 	std::vector<Token*> input = generateTokens("mAiN");
 	SPParser parser = SPParser(input);
 	AST output = parser.parseProgram();
-	REQUIRE(*output == *generateAST("mAiN"));
+	REQUIRE(*output == *generateBasicAST("mAiN"));
 }
 
 TEST_CASE("Proc_name validity 5.4 - Alphanumeric") {
@@ -53,7 +53,7 @@ TEST_CASE("Proc_name validity 5.4 - Alphanumeric") {
 	std::vector<Token*> input = generateTokens("main1");
 	SPParser parser = SPParser(input);
 	AST output = parser.parseProgram();
-	REQUIRE(*output == *generateAST("main1"));
+	REQUIRE(*output == *generateBasicAST("main1"));
 }
 
 TEST_CASE("Proc_name validity 5.5 - procedure as proc_name") {
@@ -61,7 +61,7 @@ TEST_CASE("Proc_name validity 5.5 - procedure as proc_name") {
 	std::vector<Token*> input = generateTokens("procedure");
 	SPParser parser = SPParser(input);
 	AST output = parser.parseProgram();
-	REQUIRE(*output == *generateAST("procedure"));
+	REQUIRE(*output == *generateBasicAST("procedure"));
 }
 
 TEST_CASE("Proc_name validity 5.6 - SIMPLE keywords as proc_name") {
@@ -69,7 +69,7 @@ TEST_CASE("Proc_name validity 5.6 - SIMPLE keywords as proc_name") {
 	std::vector<Token*> input = generateTokens("read");
 	SPParser parser = SPParser(input);
 	AST output = parser.parseProgram();
-	REQUIRE(*output == *generateAST("read"));
+	REQUIRE(*output == *generateBasicAST("read"));
 }
 
 TEST_CASE("Proc_name validity 5.7 - proc_name can be as long as possible") {
@@ -77,7 +77,7 @@ TEST_CASE("Proc_name validity 5.7 - proc_name can be as long as possible") {
 	std::vector<Token*> input = generateTokens("supercalifragilisticexpialidocious");
 	SPParser parser = SPParser(input);
 	AST output = parser.parseProgram();
-	REQUIRE(*output == *generateAST("supercalifragilisticexpialidocious"));
+	REQUIRE(*output == *generateBasicAST("supercalifragilisticexpialidocious"));
 }
 
 TEST_CASE ("Test parsing of valid procedure") {

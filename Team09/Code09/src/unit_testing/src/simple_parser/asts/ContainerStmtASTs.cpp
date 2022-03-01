@@ -52,7 +52,7 @@ AST ContainerStmtASTs::getAST1_39() {
 			std::make_shared<WhileNode>(1, predC1EqC1, whileStmtListRead)
 	};
 
-	return generateAST(stmtLst);
+	return generateBasicAST(stmtLst);
 }
 
 AST ContainerStmtASTs::getAST1_40() {
@@ -69,7 +69,7 @@ AST ContainerStmtASTs::getAST1_40() {
 			std::make_shared<WhileNode>(1, predXLtY, whileStmtListRead)
 	};
 
-	return generateAST(stmtLst);
+	return generateBasicAST(stmtLst);
 }
 
 AST ContainerStmtASTs::getAST1_41() {
@@ -82,7 +82,7 @@ AST ContainerStmtASTs::getAST1_41() {
 			std::make_shared<WhileNode>(1, predXLtC1, whileStmtListRead),
 	};
 
-	return generateAST(stmtLst);
+	return generateBasicAST(stmtLst);
 }
 
 // basic predicate - single comparator operator
@@ -105,7 +105,7 @@ AST ContainerStmtASTs::getAST1_43() {
 			std::make_shared<WhileNode>(1, predXLtY, whileStmtListRead)
 	};
 
-	return generateAST(stmtLst);
+	return generateBasicAST(stmtLst);
 }
 
 AST ContainerStmtASTs::getAST1_44() {
@@ -122,7 +122,7 @@ AST ContainerStmtASTs::getAST1_44() {
 			std::make_shared<WhileNode>(1, predXLtY, whileStmtListRead)
 	};
 
-	return generateAST(stmtLst);
+	return generateBasicAST(stmtLst);
 }
 
 AST ContainerStmtASTs::getAST1_45() {
@@ -139,7 +139,7 @@ AST ContainerStmtASTs::getAST1_45() {
 			std::make_shared<WhileNode>(1, predXLtY, whileStmtListRead)
 	};
 
-	return generateAST(stmtLst);
+	return generateBasicAST(stmtLst);
 }
 
 AST ContainerStmtASTs::getAST1_46() {
@@ -156,7 +156,7 @@ AST ContainerStmtASTs::getAST1_46() {
 			std::make_shared<WhileNode>(1, predXLtY, whileStmtListRead)
 	};
 
-	return generateAST(stmtLst);
+	return generateBasicAST(stmtLst);
 }
 
 AST ContainerStmtASTs::getAST1_47() {
@@ -173,7 +173,7 @@ AST ContainerStmtASTs::getAST1_47() {
 			std::make_shared<WhileNode>(1, predXLtY, whileStmtListRead)
 	};
 
-	return generateAST(stmtLst);
+	return generateBasicAST(stmtLst);
 }
 
 // basic predicate - single conditional operator
@@ -190,7 +190,7 @@ AST ContainerStmtASTs::getAST1_48() {
 										whileStmtListRead)
 	};
 
-	return generateAST(stmtLst);
+	return generateBasicAST(stmtLst);
 }
 
 AST ContainerStmtASTs::getAST1_49() {
@@ -205,7 +205,7 @@ AST ContainerStmtASTs::getAST1_49() {
 										whileStmtListRead)
 	};
 
-	return generateAST(stmtLst);
+	return generateBasicAST(stmtLst);
 }
 
 AST ContainerStmtASTs::getAST1_50() {
@@ -220,7 +220,7 @@ AST ContainerStmtASTs::getAST1_50() {
 										whileStmtListRead)
 	};
 
-	return generateAST(stmtLst);
+	return generateBasicAST(stmtLst);
 }
 
 // predicate : term-expr interactions
@@ -243,7 +243,7 @@ AST ContainerStmtASTs::getAST1_52() {
 			std::make_shared<WhileNode>(1, pred, whileStmtListRead)
 	};
 
-	return generateAST(stmtLst);
+	return generateBasicAST(stmtLst);
 }
 
 AST ContainerStmtASTs::getAST1_53() {
@@ -260,7 +260,7 @@ AST ContainerStmtASTs::getAST1_53() {
 			std::make_shared<WhileNode>(1, pred, whileStmtListRead)
 	};
 
-	return generateAST(stmtLst);
+	return generateBasicAST(stmtLst);
 }
 
 AST ContainerStmtASTs::getAST1_54() {
@@ -277,7 +277,7 @@ AST ContainerStmtASTs::getAST1_54() {
 			std::make_shared<WhileNode>(1, pred, whileStmtListRead)
 	};
 
-	return generateAST(stmtLst);
+	return generateBasicAST(stmtLst);
 }
 
 // predicate : advanced
@@ -301,7 +301,7 @@ AST ContainerStmtASTs::getAST1_55() {
 			std::make_shared<WhileNode>(1, predAnd, whileStmtListRead)
 	};
 
-	return generateAST(stmtLst);
+	return generateBasicAST(stmtLst);
 }
 
 AST ContainerStmtASTs::getAST1_56() {
@@ -323,7 +323,7 @@ AST ContainerStmtASTs::getAST1_56() {
 			std::make_shared<WhileNode>(1, predNot, whileStmtListRead)
 	};
 
-	return generateAST(stmtLst);
+	return generateBasicAST(stmtLst);
 }
 
 AST ContainerStmtASTs::getAST1_57() {
@@ -345,7 +345,7 @@ AST ContainerStmtASTs::getAST1_57() {
 			std::make_shared<WhileNode>(1, predAnd, whileStmtListRead)
 	};
 
-	return generateAST(stmtLst);
+	return generateBasicAST(stmtLst);
 }
 
 AST ContainerStmtASTs::getAST1_58() {
@@ -367,7 +367,7 @@ AST ContainerStmtASTs::getAST1_58() {
 			std::make_shared<WhileNode>(1, predOr, whileStmtListRead)
 	};
 
-	return generateAST(stmtLst);
+	return generateBasicAST(stmtLst);
 }
 
 // while statement - single statement in container
@@ -390,7 +390,7 @@ AST ContainerStmtASTs::getAST1_60() {
 			std::make_shared<WhileNode>(1, predXLtC1, whileStmtLst)
 	};
 
-	return generateAST(stmtLst);
+	return generateBasicAST(stmtLst);
 }
 
 AST ContainerStmtASTs::getAST1_61() {
@@ -407,7 +407,7 @@ AST ContainerStmtASTs::getAST1_61() {
 			std::make_shared<WhileNode>(1, predXLtC1, whileStmtLst)
 	};
 
-	return generateAST(stmtLst);
+	return generateBasicAST(stmtLst);
 }
 
 AST ContainerStmtASTs::getAST1_62() {
@@ -435,7 +435,7 @@ AST ContainerStmtASTs::getAST1_62() {
 			std::make_shared<WhileNode>(1, predXLtC1, whileStmtLst)
 	};
 
-	return generateAST(stmtLst);
+	return generateBasicAST(stmtLst);
 }
 
 AST ContainerStmtASTs::getAST1_63() {
@@ -458,7 +458,7 @@ AST ContainerStmtASTs::getAST1_63() {
 			std::make_shared<WhileNode>(1, predXLtC1, whileStmtLst)
 	};
 
-	return generateAST(stmtLst);
+	return generateBasicAST(stmtLst);
 }
 
 // while statement - all statement types in container
@@ -504,7 +504,7 @@ AST ContainerStmtASTs::getAST1_64() {
 			std::make_shared<WhileNode>(1, predXLtC1, whileStmtLst)
 	};
 
-	return generateAST(stmtLst);
+	return generateBasicAST(stmtLst);
 }
 
 // If statement - single statement in container
@@ -530,7 +530,7 @@ AST ContainerStmtASTs::getAST1_65() {
 			std::make_shared<IfNode>(1, predXLtC1, thenStmtLst, elseStmtLst)
 	};
 
-	return generateAST(stmtLst);
+	return generateBasicAST(stmtLst);
 }
 
 AST ContainerStmtASTs::getAST1_66() {
@@ -554,7 +554,7 @@ AST ContainerStmtASTs::getAST1_66() {
 			std::make_shared<IfNode>(1, predXLtC1, thenStmtLst, elseStmtLst)
 	};
 
-	return generateAST(stmtLst);
+	return generateBasicAST(stmtLst);
 }
 
 AST ContainerStmtASTs::getAST1_67() {
@@ -578,7 +578,7 @@ AST ContainerStmtASTs::getAST1_67() {
 			std::make_shared<IfNode>(1, predXLtC1, thenStmtLst, elseStmtLst)
 	};
 
-	return generateAST(stmtLst);
+	return generateBasicAST(stmtLst);
 }
 
 AST ContainerStmtASTs::getAST1_68() {
@@ -612,7 +612,7 @@ AST ContainerStmtASTs::getAST1_68() {
 			std::make_shared<IfNode>(1, predXLtC1, thenStmtLst, elseStmtLst)
 	};
 
-	return generateAST(stmtLst);
+	return generateBasicAST(stmtLst);
 }
 
 AST ContainerStmtASTs::getAST1_69() {
@@ -646,7 +646,7 @@ AST ContainerStmtASTs::getAST1_69() {
 			std::make_shared<IfNode>(1, predXLtC1, thenStmtLst, elseStmtLst)
 	};
 
-	return generateAST(stmtLst);
+	return generateBasicAST(stmtLst);
 }
 
 AST ContainerStmtASTs::getAST1_70() {
@@ -674,7 +674,7 @@ AST ContainerStmtASTs::getAST1_70() {
 			std::make_shared<IfNode>(1, predXLtC1, thenStmtLst, elseStmtLst)
 	};
 
-	return generateAST(stmtLst);
+	return generateBasicAST(stmtLst);
 }
 
 AST ContainerStmtASTs::getAST1_71() {
@@ -702,7 +702,7 @@ AST ContainerStmtASTs::getAST1_71() {
 			std::make_shared<IfNode>(1, predXLtC1, thenStmtLst, elseStmtLst)
 	};
 
-	return generateAST(stmtLst);
+	return generateBasicAST(stmtLst);
 }
 
 // if statement - all statement types in container
@@ -752,7 +752,7 @@ AST ContainerStmtASTs::getAST1_72() {
 			std::make_shared<IfNode>(1, predXLtC1, thenStmtLst, elseStmtLst)
 	};
 
-	return generateAST(stmtLst);
+	return generateBasicAST(stmtLst);
 }
 
 AST ContainerStmtASTs::getAST1_73() {
@@ -800,5 +800,5 @@ AST ContainerStmtASTs::getAST1_73() {
 			std::make_shared<IfNode>(1, predXLtC1, thenStmtLst, elseStmtLst)
 	};
 
-	return generateAST(stmtLst);
+	return generateBasicAST(stmtLst);
 }

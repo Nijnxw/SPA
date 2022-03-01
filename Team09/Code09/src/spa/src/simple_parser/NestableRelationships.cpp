@@ -13,6 +13,10 @@ void NestableRelationships::addModifies(std::string modified) {
 	modifies.insert(modified);
 }
 
+void NestableRelationships::addCalls(std::string procedure) {
+	calls.insert(calls.begin(), procedure); //maintain stack like structure
+}
+
 void NestableRelationships::addChildren(int child) {
 	children.insert(child);
 }
@@ -29,6 +33,10 @@ std::unordered_set<std::string> NestableRelationships::getModifies() {
 	return modifies;
 }
 
+std::vector<std::string> NestableRelationships::getCalls() {
+	return calls;
+}
+
 std::unordered_set<int> NestableRelationships::getChildren() {
 	return children;
 }
@@ -39,6 +47,10 @@ int NestableRelationships::getUsesSize() {
 
 int NestableRelationships::getModifiesSize() {
 	return modifies.size();
+}
+
+int NestableRelationships::getCallsSize() {
+	return calls.size();
 }
 
 int NestableRelationships::getChildrenSize() {

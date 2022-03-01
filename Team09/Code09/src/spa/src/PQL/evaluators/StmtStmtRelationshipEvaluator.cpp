@@ -2,7 +2,11 @@
 
 QueryClauseResult StmtStmtRelationshipEvaluator::getRelationship(RelationRef relationship, const std::string& LHS, const std::string& RHS, EntityType LHSType, EntityType RHSType,
 	bool isBooleanResult) {
-	if (LHSType == EntityType::INT) {
+	QueryClauseResult emptyQueryResult;
+	if (LHSType != EntityType::WILD && LHSType == RHSType && LHS == RHS) { // Same statements which are not wildcards
+		return emptyQueryResult;
+	}
+	else if (LHSType == EntityType::INT) {
 		return StmtStmtRelationshipEvaluator::getRelationshipByStatementNumber(relationship, LHS, RHS, RHSType);
 	}
 	else if (LHSType == EntityType::STMT || LHSType == EntityType::ASSIGN || LHSType == EntityType::IF ||
@@ -14,7 +18,6 @@ QueryClauseResult StmtStmtRelationshipEvaluator::getRelationship(RelationRef rel
 		return StmtStmtRelationshipEvaluator::getRelationshipByUnderscore(relationship, RHS, RHSType);
 	}
 	else {
-		QueryClauseResult emptyQueryResult;
 		return emptyQueryResult;
 	}
 }

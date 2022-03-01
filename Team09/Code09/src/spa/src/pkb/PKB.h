@@ -20,6 +20,10 @@
 #include "stores/ModifiesStore.h"
 
 class PKB {
+private:
+	static inline EntityStore entityStore;
+	static inline FollowsStore followsStore;
+	static inline ParentStore parentStore;
 public:
 	PKB();
 

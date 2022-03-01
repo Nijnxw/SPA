@@ -15,11 +15,18 @@
 #include <memory>
 #include <string>
 #include <unordered_set>
+#include <unordered_map>
 #include <vector>
 
 class DesignExtractor {
+private:
+	static inline std::unordered_map<std::string, NestableRelationships> procCache;
+
 public:
 	DesignExtractor();
+	static bool isCached(std::string procName);
+	static NestableRelationships retrieve(std::string procName);
+	static void cache(std::string procName, NestableRelationships rs);
 
 	static void extractDesignElements(AST ast);
 	static void commit();

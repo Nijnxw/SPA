@@ -2,6 +2,19 @@
 
 DesignExtractor::DesignExtractor() {}
 
+bool DesignExtractor::isCached(std::string procName) {
+	return DesignExtractor::procCache.find(procName) != DesignExtractor::procCache.end();
+}
+
+NestableRelationships DesignExtractor::retrieve(std::string procName) {
+	if (!isCached(procName)) return NestableRelationships::createEmpty();
+	return DesignExtractor::procCache.at(procName);
+}
+
+void DesignExtractor::cache(std::string procName, NestableRelationships rs) {
+	DesignExtractor::procCache.insert({ procName, rs });
+}
+
 NestableRelationships processStmtList(AST ast, std::vector<std::string> callStack, std::vector<std::shared_ptr<StmtNode>> stmtList);
 NestableRelationships processProcedure(AST ast, std::vector<std::string> callStack, std::shared_ptr<ProcedureNode> proc);
 
@@ -160,18 +173,23 @@ NestableRelationships processCallNode(AST ast, std::vector<std::string> callStac
 
 	if (!ast->contains(call->getProcedureName())) return NestableRelationships::createEmpty();
 
-	std::vector<std::string> newStack = callStack;
-	newStack.insert(callStack.begin(), call->getProcedureName());
-	NestableRelationships rs = processProcedure(ast, newStack, ast->retrieve(call->getProcedureName()));
+	std::shared_ptr<ProcedureNode> test = ast->retrieve(call->getProcedureName());
+
+	NestableRelationships rs = processProcedure(ast, callStack, ast->retrieve(call->getProcedureName())); //under cache system: this wont populate callstore also
 	rs.clearChildren(); //remove parent-child information
 
 	if (rs.getModifiesSize() > 0) EntityStager::stageModifiesStatements(call->getStmtNumber(), rs.getModifies());
 	if (rs.getUsesSize() > 0) EntityStager::stageUsesStatements(call->getStmtNumber(), rs.getUses());
 
 	if (callStack.size() > 0) {
-		//EntityStager::stageCall(callStack[0], call->getProcedureName())
-		for (std::string proc : callStack) {
-			//EntityStager::stageCallT(proc, call->getProcedureName())
+		EntityStager::stageCalls(callStack[0], call->getProcedureName());
+		rs.addCalls(call->getProcedureName());
+		for (std::string caller : callStack) {
+			for (std::string callee : rs.getCalls()) {
+				EntityStager::stageCallsT(caller, callee);
+			}
+			//2d iteration through callstack and rs.getCalls()
+			//EntityStager::stageCallT(proc, call->getProcedureName());
 		}
 	}
 	return rs;
@@ -216,8 +234,12 @@ NestableRelationships processStmtList(AST ast, std::vector<std::string> callStac
 NestableRelationships processProcedure(AST ast, std::vector<std::string> callStack, std::shared_ptr<ProcedureNode> proc) {
 	EntityStager::stageProcedure(proc->getProcName());
 
+	if (DesignExtractor::isCached(proc->getProcName())) return DesignExtractor::retrieve(proc->getProcName());
+
+	//only run when rs is not cached
 	callStack.insert(callStack.begin(), proc->getProcName());
 	NestableRelationships rs = processStmtList(ast, callStack, proc->getStmtList());
+	DesignExtractor::cache(proc->getProcName(), rs);
 	if (rs.getModifiesSize() > 0) EntityStager::stageModifiesProcedure(proc->getProcName(), rs.getModifies());
 	if (rs.getUsesSize() > 0) EntityStager::stageUsesProcedure(proc->getProcName(), rs.getUses());
 	return rs;
@@ -231,9 +253,11 @@ void processProcedureList(AST ast, std::unordered_map<std::string, std::shared_p
 
 void DesignExtractor::extractDesignElements(AST ast) {
 	EntityStager::clear();
+	DesignExtractor::procCache.clear();
 	processProcedureList(ast, ast->getProcedureMap());
 }
 
 void DesignExtractor::commit() {
 	EntityStager::commit();
+	DesignExtractor::procCache.clear();
 }

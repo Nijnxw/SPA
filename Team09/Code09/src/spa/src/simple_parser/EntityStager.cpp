@@ -20,6 +20,8 @@ void EntityStager::clear() {
 	stagedFollowsT.clear();
 	stagedParent.clear();
 	stagedParentT.clear();
+	stagedCalls.clear();
+	stagedCallsT.clear();
 	stagedUsesStatement.clear();
 	stagedUsesProcedure.clear();
 	stagedModifiesStatement.clear();
@@ -81,6 +83,14 @@ std::vector<std::pair<int, int>> EntityStager::getStagedParent() {
 
 std::vector<std::pair<int, int>> EntityStager::getStagedParentT() {
 	return stagedParentT;
+}
+
+std::vector<std::pair<std::string, std::string>> EntityStager::getStagedCalls() {
+	return stagedCalls;
+}
+
+std::vector<std::pair<std::string, std::string>> EntityStager::getStagedCallsT() {
+	return stagedCallsT;
 }
 
 std::vector<std::pair<int, std::unordered_set<std::string>>> EntityStager::getStagedUsesStatement() {
@@ -158,6 +168,14 @@ void EntityStager::stageParentT(int parent, std::unordered_set<int> children) {
 	for (int child: children) {
 		stagedParentT.emplace_back(parent, child);
 	}
+}
+
+void EntityStager::stageCalls(std::string caller, std::string callee) {
+	stagedCalls.emplace_back(caller, callee);
+}
+
+void EntityStager::stageCallsT(std::string caller, std::string callee) {
+	stagedCallsT.emplace_back(caller, callee);
 }
 
 void EntityStager::stageUsesStatements(int stmt, std::unordered_set<std::string> variables) {

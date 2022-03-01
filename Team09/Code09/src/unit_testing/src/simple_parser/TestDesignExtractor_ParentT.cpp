@@ -493,6 +493,27 @@ TEST_CASE("ParentsT 3.33 - 3 levels of nesting - 1 stmt per nest level - if-whil
 	EntityStager::clear();
 }
 
+TEST_CASE("ParentsT 3.34 - Complex two procedure") {
+	EntityStager::clear();
+	DesignExtractor::extractDesignElements(RelationshipASTs::getAST3_34());
+
+	std::vector<std::pair<int, int>> expectedParentsT{
+		{1, 2}, {1, 6}, {1, 7}, {1, 8}, {1, 9}, {1, 10},
+		{2, 3}, {2, 4}, {2, 5}, {10, 11}, {10, 12}, {10, 13},
+		{1, 3}, {1, 4}, {1, 5}, {1, 11}, {1, 12}, {1, 13},
+		{14, 15}, {14, 22},
+		{15, 16}, {15, 18}, {15, 19}, {15, 21}, {14, 16}, {14, 18}, {14, 19}, {14, 21},
+		{16, 17}, {19, 20}, {15, 17}, {15, 20}, {14, 17}, {14, 20}
+	};
+	std::sort(expectedParentsT.begin(), expectedParentsT.end());
+
+	std::vector<std::pair<int, int>> actualParentsT = EntityStager::getStagedParentT();
+	std::sort(actualParentsT.begin(), actualParentsT.end());
+
+	REQUIRE(actualParentsT == expectedParentsT);
+	EntityStager::clear();
+}
+
 TEST_CASE("ParentsT 4.1 - Complex AST") {
 	EntityStager::clear();
 	DesignExtractor::extractDesignElements(ComplexASTs::getAST4_1());

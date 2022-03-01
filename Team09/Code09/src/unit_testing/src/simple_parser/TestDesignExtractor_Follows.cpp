@@ -465,6 +465,23 @@ TEST_CASE("Follows 3.33 - 3 levels of nesting - 1 stmt per nest level - if-while
 	EntityStager::clear();
 }
 
+TEST_CASE("Follows 3.34 - Complex two procedure") {
+	EntityStager::clear();
+	DesignExtractor::extractDesignElements(RelationshipASTs::getAST3_34());
+
+	std::vector<std::pair<int, int>> expectedFollows{
+		{2, 6}, {3, 4}, {4, 5}, {6, 7}, {8, 9}, {9, 10}, {11, 12}, {12, 13},
+		{16, 18}, {19, 21}, {15, 22}
+	};
+	std::sort(expectedFollows.begin(), expectedFollows.end());
+
+	std::vector<std::pair<int, int>> actualFollows = EntityStager::getStagedFollows();
+	std::sort(actualFollows.begin(), actualFollows.end());
+
+	REQUIRE(actualFollows == expectedFollows);
+	EntityStager::clear();
+}
+
 TEST_CASE("Follows 4.1 - Complex AST") {
 	EntityStager::clear();
 	DesignExtractor::extractDesignElements(ComplexASTs::getAST4_1());

@@ -69,4 +69,5 @@ public:
 	static AST getAST3_31();
 	static AST getAST3_32();
 	static AST getAST3_33();
+	static AST getAST3_34();
 };

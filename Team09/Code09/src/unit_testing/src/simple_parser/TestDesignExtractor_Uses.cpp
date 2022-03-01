@@ -966,6 +966,37 @@ TEST_CASE("Uses 3.33 - 3 levels of nesting - 1 stmt per nest level - if-while-if
 	EntityStager::clear();
 }
 
+TEST_CASE("Uses 3.34 - Complex two procedure") {
+	EntityStager::clear();
+	DesignExtractor::extractDesignElements(RelationshipASTs::getAST3_34());
+
+	std::vector<std::pair<int, std::unordered_set<std::string>>> expectedUsesStatement{
+		{1, {"x", "y"}}, {2, {"x", "y"}}, {4, {"x"}}, {5, {"x"}}, {7, {"x"}},
+		{9, {"y"}}, {10, {"x", "y"}}, {12, {"x"}}, {13, {"x"}},
+		{14, {"w", "x", "y", "z"}}, {15, {"w", "y", "z"}}, {16, {"z"}}, {19, {"w"}}
+	};
+	std::sort(expectedUsesStatement.begin(), expectedUsesStatement.end(),
+		[](auto& left, auto& right) {return left.first < right.first; });
+
+	std::vector<std::pair<int, std::unordered_set<std::string>>> actualUsesStatement = EntityStager::getStagedUsesStatement();
+	std::sort(actualUsesStatement.begin(), actualUsesStatement.end(),
+		[](auto& left, auto& right) {return left.first < right.first; });
+
+	std::vector<std::pair<std::string, std::unordered_set<std::string>>> expectedUsesProcedure{
+		{"testProgram", {"x", "y"}}, {"testProgram2", {"w", "x", "y", "z"}}
+	};
+	std::sort(expectedUsesProcedure.begin(), expectedUsesProcedure.end(),
+		[](auto& left, auto& right) {return left.first < right.first; });
+
+	std::vector<std::pair<std::string, std::unordered_set<std::string>>> actualUsesProcedure = EntityStager::getStagedUsesProcedure();
+	std::sort(actualUsesProcedure.begin(), actualUsesProcedure.end(),
+		[](auto& left, auto& right) {return left.first < right.first; });
+
+	REQUIRE(actualUsesStatement == expectedUsesStatement);
+	REQUIRE(actualUsesProcedure == expectedUsesProcedure);
+	EntityStager::clear();
+}
+
 TEST_CASE("Uses 4.1 - Complex AST") {
 	EntityStager::clear();
 	DesignExtractor::extractDesignElements(ComplexASTs::getAST4_1());

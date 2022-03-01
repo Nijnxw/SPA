@@ -998,3 +998,105 @@ AST RelationshipASTs::getAST3_33() {
 	};
 	return generateBasicAST(stmtList, "testProgram");
 }
+
+AST RelationshipASTs::getAST3_34() {
+	/*
+	 * procedure testProgram {
+	 * 1   if (x < 1) then {
+	 * 2     while (y < 1) {
+	 * 3       read y;
+	 * 4       print x;
+	 * 5       x = x + 1;
+	 *       }
+	 * 6     read x;
+	 * 7     x = x + 1;
+	 *     } else {
+	 * 8     read z;
+	 * 9     print y;
+	 * 10    while (y < 1) {
+	 * 11      read y;
+	 * 12      print x;
+	 * 13      x = x + 1;
+	 *       }
+	 *     }
+	 *   }
+	 * 
+	 *   procedure testProgram2 {
+	 * 14  while (x < 1) {
+	 * 15    if (y < 2) then {
+	 * 16      while (z < 3) {
+	 * 17        read z;
+	 *         }
+	 * 18      read y;
+	 *       } else {
+	 * 19      while (w < 3) {
+	 * 20         read w;
+	 *         }
+	 * 21      read w;
+	 *       }
+	 * 22    read x;
+	 *     }
+	 *   }
+
+	 */
+
+	std::vector<std::shared_ptr<StmtNode>> thenWhileStmtList{
+		std::make_shared<ReadNode>(3, y),
+		std::make_shared<PrintNode>(4, x),
+		std::make_shared<AssignNode>(5, x, xPlus1, "x 1 +")
+	};
+	std::vector<std::shared_ptr<StmtNode>> thenStmtList{
+		std::make_shared<WhileNode>(2, predYLt1, thenWhileStmtList),
+		std::make_shared<ReadNode>(6, x),
+		std::make_shared<AssignNode>(7, x, xPlus1, "x 1 +")
+	};
+
+	std::vector<std::shared_ptr<StmtNode>> elseWhileStmtList{
+		std::make_shared<ReadNode>(11, y),
+		std::make_shared<PrintNode>(12, x),
+		std::make_shared<AssignNode>(13, x, xPlus1, "x 1 +")
+	};
+	std::vector<std::shared_ptr<StmtNode>> elseStmtList{
+		std::make_shared<ReadNode>(8, z),
+		std::make_shared<PrintNode>(9, y),
+		std::make_shared<WhileNode>(10, predYLt1, elseWhileStmtList)
+	};
+	std::vector<std::shared_ptr<StmtNode>> proc1StmtLst{
+		std::make_shared<IfNode>(1, predXLt1, thenStmtList, elseStmtList)
+	};
+
+	std::shared_ptr<ProcedureNode> proc1 = std::make_shared<ProcedureNode>(proc1StmtLst, "testProgram");
+
+	std::vector<std::shared_ptr<StmtNode>> whileThenWhileStmtList{
+	std::make_shared<ReadNode>(17, z)
+	};
+	std::vector<std::shared_ptr<StmtNode>> whileThenStmtList{
+		std::make_shared<WhileNode>(16, predZLt3, whileThenWhileStmtList),
+		std::make_shared<ReadNode>(18, y)
+	};
+
+	std::vector<std::shared_ptr<StmtNode>> whileElseWhileStmtList{
+		std::make_shared<ReadNode>(20, w)
+	};
+	std::vector<std::shared_ptr<StmtNode>> whileElseStmtList{
+		std::make_shared<WhileNode>(19, predWLt3, whileElseWhileStmtList),
+		std::make_shared<ReadNode>(21, w)
+	};
+
+	std::vector<std::shared_ptr<StmtNode>> whileStmtList{
+		std::make_shared<IfNode>(15, predYLt2, whileThenStmtList, whileElseStmtList),
+		std::make_shared<ReadNode>(22, x)
+	};
+
+	std::vector<std::shared_ptr<StmtNode>> proc2StmtLst{
+		std::make_shared<WhileNode>(14, predXLt1, whileStmtList)
+	};
+
+	std::shared_ptr<ProcedureNode> proc2 = std::make_shared<ProcedureNode>(proc2StmtLst, "testProgram2");
+	std::unordered_map<std::string, std::shared_ptr<ProcedureNode>> procMap{
+		{"testProgram", proc1},
+		{"testProgram2", proc2},
+	};
+
+	return std::make_shared<ProgramNode>(procMap);
+}

@@ -969,6 +969,38 @@ TEST_CASE("Modifies 3.33 - 3 levels of nesting - 1 stmt per nest level - if-whil
 	EntityStager::clear();
 }
 
+TEST_CASE("Modifies 3.34 - Complex two procedure") {
+	EntityStager::clear();
+	DesignExtractor::extractDesignElements(RelationshipASTs::getAST3_34());
+
+	std::vector<std::pair<int, std::unordered_set<std::string>>> expectedModifiesStatement{
+		{1, {"x", "y", "z"}}, {2, {"x", "y"}}, {3, {"y"}}, {5, {"x"}}, {6, {"x"}}, {7, {"x"}},
+		{8, {"z"}}, {10, {"x", "y"}}, {11, {"y"}}, {13, {"x"}},
+		{14, {"w", "x", "y", "z"}}, {15, {"w", "y", "z"}}, {16, {"z"}}, {17, {"z"}},
+		{18, {"y"}}, {19, {"w"}}, {20, {"w"}}, {21, {"w"}}, {22, {"x"}}
+	};
+	std::sort(expectedModifiesStatement.begin(), expectedModifiesStatement.end(),
+		[](auto& left, auto& right) {return left.first < right.first; });
+
+	std::vector<std::pair<int, std::unordered_set<std::string>>> actualModifiesStatement = EntityStager::getStagedModifiesStatement();
+	std::sort(actualModifiesStatement.begin(), actualModifiesStatement.end(),
+		[](auto& left, auto& right) {return left.first < right.first; });
+
+	std::vector<std::pair<std::string, std::unordered_set<std::string>>> expectedModifiesProcedure{
+		{"testProgram", {"x", "y", "z"}}, {"testProgram2", {"w", "x", "y", "z"}}
+	};
+	std::sort(expectedModifiesProcedure.begin(), expectedModifiesProcedure.end(),
+		[](auto& left, auto& right) {return left.first < right.first; });
+
+	std::vector<std::pair<std::string, std::unordered_set<std::string>>> actualModifiesProcedure = EntityStager::getStagedModifiesProcedure();
+	std::sort(actualModifiesProcedure.begin(), actualModifiesProcedure.end(),
+		[](auto& left, auto& right) {return left.first < right.first; });
+
+	REQUIRE(actualModifiesStatement == expectedModifiesStatement);
+	REQUIRE(actualModifiesProcedure == expectedModifiesProcedure);
+	EntityStager::clear();
+}
+
 TEST_CASE("Modifies 4.1 - Complex AST") {
 	EntityStager::clear();
 	DesignExtractor::extractDesignElements(ComplexASTs::getAST4_1());

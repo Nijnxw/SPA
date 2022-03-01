@@ -4,7 +4,7 @@
 #include "UsesEvaluator.h"
 #include "ParentEvaluator.h"
 #include "ModifiesEvaluator.h"
-#include "PatternAEvaluator.h"
+#include "PatternAssignEvaluator.h"
 
 QueryClauseResult ClauseEvaluator::evaluate(QueryClause& clause, bool isBooleanResult) {
 	QueryArgument firstArg = clause.getArguments().at(0);
@@ -14,7 +14,7 @@ QueryClauseResult ClauseEvaluator::evaluate(QueryClause& clause, bool isBooleanR
 	ParentEvaluator parentEvaluator = ParentEvaluator();
 	UsesEvaluator usesEvaluator = UsesEvaluator();
 	ModifiesEvaluator modifiesEvaluator = ModifiesEvaluator();
-	PatternAEvaluator patternAEvaluator = PatternAEvaluator();
+	PatternAssignEvaluator patternAssignEvaluator = PatternAssignEvaluator();
 
 	switch (clause.getClauseType()) {
 		case RelationRef::FOLLOWS:
@@ -36,7 +36,7 @@ QueryClauseResult ClauseEvaluator::evaluate(QueryClause& clause, bool isBooleanR
 			return usesEvaluator.getUses(firstArg.getValue(), secondArg.getValue(), firstArg.getType(),
 										 secondArg.getType(), isBooleanResult);
 		case RelationRef::PATTERN_A:
-			return patternAEvaluator.getPattern(firstArg.getValue(), secondArg.getValue(), clause.getClauseSynonym(), firstArg.getType(),
+			return patternAssignEvaluator.getPattern(firstArg.getValue(), secondArg.getValue(), clause.getClauseSynonym(), firstArg.getType(),
 												secondArg.getType(), isBooleanResult);
 		default:
 			return {};

@@ -15,7 +15,6 @@ volatile bool AbstractWrapper::GlobalStop = false;
 TestWrapper::TestWrapper() {
     // create any objects here as instance variables of this class
     // as well as any initialization required for your spa program
-    
 }
 
 // method for parsing the SIMPLE source

@@ -15,6 +15,7 @@ public:
 	void addUses(std::string used);
 	void addModifies(std::string modified);
 	void addChildren(int child);
+	void clearChildren();
 
 	std::unordered_set<std::string> getUses();
 	std::unordered_set<std::string> getModifies();

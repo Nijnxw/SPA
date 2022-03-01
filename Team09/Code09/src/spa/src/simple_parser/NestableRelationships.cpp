@@ -17,6 +17,10 @@ void NestableRelationships::addChildren(int child) {
 	children.insert(child);
 }
 
+void NestableRelationships::clearChildren() {
+	children.clear();
+}
+
 std::unordered_set<std::string> NestableRelationships::getUses() {
 	return uses;
 }

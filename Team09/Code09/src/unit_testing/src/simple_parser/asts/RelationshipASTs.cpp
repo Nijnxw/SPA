@@ -11,8 +11,8 @@ std::shared_ptr<ConstantNode> generateConstant(int conValue) {
 
 AST generateAST(std::vector<std::shared_ptr<StmtNode>> stmts, std::string progName) {
 	std::shared_ptr<ProcedureNode> proc = std::make_shared<ProcedureNode>(stmts, progName);
-	std::vector<std::shared_ptr<ProcedureNode>> procList{ proc };
-	return std::make_shared<ProgramNode>(procList);
+	std::unordered_map<std::string, std::shared_ptr<ProcedureNode>> procMap{ {progName, proc} };
+	return std::make_shared<ProgramNode>(procMap);
 }
 
 std::shared_ptr<ConstantNode> RelationshipASTs::one = generateConstant(1);

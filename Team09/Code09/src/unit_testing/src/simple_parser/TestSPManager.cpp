@@ -35,8 +35,8 @@ TEST_CASE("Parse SIMPLE file into AST") {
 		std::shared_ptr<ReadNode> readNode = std::make_shared<ReadNode>(1, std::make_shared<VariableNode>("x"));
 		std::vector<std::shared_ptr<StmtNode>> stmtLst{readNode};
 		std::shared_ptr<ProcedureNode> procedureNode = std::make_shared<ProcedureNode>(stmtLst, "testProgram");
-		std::vector<std::shared_ptr<ProcedureNode>> procLst{procedureNode};
-		AST expected = std::make_shared<ProgramNode>(procLst);
+		std::unordered_map<std::string, std::shared_ptr<ProcedureNode>> procMap{ {"testProgram", procedureNode} };
+		AST expected = std::make_shared<ProgramNode>(procMap);
 
 		REQUIRE(*output == *expected);
 	}
@@ -54,8 +54,8 @@ TEST_CASE("Parse SIMPLE file into AST") {
 		std::shared_ptr<PrintNode> printNode = std::make_shared<PrintNode>(1, std::make_shared<VariableNode>("x"));
 		std::vector<std::shared_ptr<StmtNode>> stmtLst{printNode};
 		std::shared_ptr<ProcedureNode> procedureNode = std::make_shared<ProcedureNode>(stmtLst, "testProgram");
-		std::vector<std::shared_ptr<ProcedureNode>> procLst{procedureNode};
-		AST expected = std::make_shared<ProgramNode>(procLst);
+		std::unordered_map<std::string, std::shared_ptr<ProcedureNode>> procMap{ {"testProgram", procedureNode} };
+		AST expected = std::make_shared<ProgramNode>(procMap);
 
 		REQUIRE(*output == *expected);
 	}
@@ -92,8 +92,8 @@ TEST_CASE("Parse SIMPLE file into AST") {
 
 		std::vector<std::shared_ptr<StmtNode>> stmtLst{assignNode1, assignNode2};
 		std::shared_ptr<ProcedureNode> procedureNode = std::make_shared<ProcedureNode>(stmtLst, "testProgram");
-		std::vector<std::shared_ptr<ProcedureNode>> procLst{procedureNode};
-		AST expected = std::make_shared<ProgramNode>(procLst);
+		std::unordered_map<std::string, std::shared_ptr<ProcedureNode>> procMap{ {"testProgram", procedureNode} };
+		AST expected = std::make_shared<ProgramNode>(procMap);
 
 		REQUIRE(*output == *expected);
 	}
@@ -140,8 +140,8 @@ TEST_CASE("Parse SIMPLE file into AST") {
 		std::vector<std::shared_ptr<StmtNode>> stmtLst{printNode1, readNode1, printNode2, readNode2, assignNode1,
 													   assignNode2};
 		std::shared_ptr<ProcedureNode> procedureNode = std::make_shared<ProcedureNode>(stmtLst, "testProgram");
-		std::vector<std::shared_ptr<ProcedureNode>> procLst{procedureNode};
-		AST expected = std::make_shared<ProgramNode>(procLst);
+		std::unordered_map<std::string, std::shared_ptr<ProcedureNode>> procMap{ {"testProgram", procedureNode} };
+		AST expected = std::make_shared<ProgramNode>(procMap);
 
 		REQUIRE(*output == *expected);
 	}
@@ -157,8 +157,8 @@ TEST_CASE("Extract design from SIMPLE program") {
 
 	std::vector<std::shared_ptr<StmtNode>> stmtLst{printNode1, readNode1, printNode2, readNode2};
 	std::shared_ptr<ProcedureNode> procedureNode = std::make_shared<ProcedureNode>(stmtLst, "testProgram");
-	std::vector<std::shared_ptr<ProcedureNode>> procLst{procedureNode};
-	AST ast = std::make_shared<ProgramNode>(procLst);
+	std::unordered_map<std::string, std::shared_ptr<ProcedureNode>> procMap{ {"testProgram", procedureNode} };
+	AST ast = std::make_shared<ProgramNode>(procMap);
 
 	SPManager::extractDesign(ast);
 

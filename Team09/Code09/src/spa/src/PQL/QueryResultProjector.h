@@ -1,10 +1,10 @@
 #pragma once
 
-#include "models/QueryClauseTable.h"
+#include "models/QueryClauseResult.h"
 #include "models/QueryArgument.h"
-#include <list>
+#include <unordered_set>
 
 class QueryResultProjector {
 public:
-	static std::list<std::string> formatResult(Table& res, std::vector<QueryArgument>& selectSyn);
+	static std::unordered_set<std::string> formatResult(Table& res, std::vector<QueryArgument>& selectSyn);
 };

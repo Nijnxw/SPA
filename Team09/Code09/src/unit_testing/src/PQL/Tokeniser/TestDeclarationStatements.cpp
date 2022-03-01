@@ -1,200 +1,101 @@
 #include "catch.hpp"
 #include "PQL/Tokeniser.h"
+#include "TestingUtils.cpp"
 
-TEST_CASE("PQL tokeniser declaration statement test case 1: statement") {
-	std::vector<PQLToken> expectedPQLTokens;
+TEST_CASE("PQL tokeniser declaration statement test case 1: single declaration, statement") {
 	std::string queryString = "stmt s;";
-	Tokeniser tokeniser = Tokeniser(queryString);
+	auto tokeniser = Tokeniser(queryString);
+	std::vector<PQLToken*> PQLTokens = tokeniser.tokenise();
 
-	expectedPQLTokens.push_back(PQLToken(TokenType::STMT));
-	expectedPQLTokens.push_back(PQLToken(TokenType::SYNONYM, "s"));
-	expectedPQLTokens.push_back(PQLToken(TokenType::SEMICOLON));
+	std::vector<PQLToken*> expectedPQLTokens = {
+		new PQLToken(TokenType::STMT, "stmt"),
+		new PQLToken(TokenType::SYNONYM, "s"),
+		new PQLToken(TokenType::SEMICOLON, ";")
+	};
 
-	std::vector<PQLToken> PQLTokens = tokeniser.tokenise();
-
-	bool result = std::equal(PQLTokens.begin(), PQLTokens.end(), expectedPQLTokens.begin());
+	bool result = compareVectors(PQLTokens, expectedPQLTokens);
 	REQUIRE(result);
 }
 
-TEST_CASE("PQL tokeniser declaration statement test case 2: read") {
-	std::vector<PQLToken> expectedPQLTokens;
-	std::string queryString = "read rd;";
-	Tokeniser tokeniser = Tokeniser(queryString);
+TEST_CASE("PQL tokeniser declaration statement test case 2: single declaration, print + valid synonym") {
+	std::string queryString = "print pn123;";
+	auto tokeniser = Tokeniser(queryString);
+	std::vector<PQLToken*> PQLTokens = tokeniser.tokenise();
 
-	expectedPQLTokens.push_back(PQLToken(TokenType::READ));
-	expectedPQLTokens.push_back(PQLToken(TokenType::SYNONYM, "rd"));
-	expectedPQLTokens.push_back(PQLToken(TokenType::SEMICOLON));
+	std::vector<PQLToken*> expectedPQLTokens = {
+		new PQLToken(TokenType::PRINT, "print"),
+		new PQLToken(TokenType::SYNONYM, "pn123"),
+		new PQLToken(TokenType::SEMICOLON, ";")
+	};
 
-	std::vector<PQLToken> PQLTokens = tokeniser.tokenise();
-
-	bool result = std::equal(PQLTokens.begin(), PQLTokens.end(), expectedPQLTokens.begin());
+	bool result = compareVectors(PQLTokens, expectedPQLTokens);
 	REQUIRE(result);
 }
 
-TEST_CASE("PQL tokeniser declaration statement test case 3: print") {
-	std::vector<PQLToken> expectedPQLTokens;
-	std::string queryString = "read rd;";
-	Tokeniser tokeniser = Tokeniser(queryString);
+TEST_CASE("PQL tokeniser declaration statement test case 3: single declaration, while + keyword") {
+	std::string queryString = "while Select;";
+	auto tokeniser = Tokeniser(queryString);
+	std::vector<PQLToken*> PQLTokens = tokeniser.tokenise();
 
-	expectedPQLTokens.push_back(PQLToken(TokenType::READ));
-	expectedPQLTokens.push_back(PQLToken(TokenType::SYNONYM, "rd"));
-	expectedPQLTokens.push_back(PQLToken(TokenType::SEMICOLON));
+	std::vector<PQLToken*> expectedPQLTokens = {
+		new PQLToken(TokenType::WHILE, "while"),
+		new PQLToken(TokenType::SELECT, "Select"),
+		new PQLToken(TokenType::SEMICOLON, ";")
+	};
 
-	std::vector<PQLToken> PQLTokens = tokeniser.tokenise();
-
-	bool result = std::equal(PQLTokens.begin(), PQLTokens.end(), expectedPQLTokens.begin());
+	bool result = compareVectors(PQLTokens, expectedPQLTokens);
 	REQUIRE(result);
 }
 
-TEST_CASE("PQL tokeniser declaration statement test case 4: while") {
-	std::vector<PQLToken> expectedPQLTokens;
-	std::string queryString = "while w;";
-	Tokeniser tokeniser = Tokeniser(queryString);
+//Tokeniser will still pass this test case because tokeniser is only concern about the lexical rules of each token from the input, not the syntax of the input 
+TEST_CASE("PQL tokeniser declaration statement test case 4: single declaration, variable + integer") {
+	std::string queryString = "variable 123;";
+	auto tokeniser = Tokeniser(queryString);
+	std::vector<PQLToken*> PQLTokens = tokeniser.tokenise();
 
-	expectedPQLTokens.push_back(PQLToken(TokenType::WHILE));
-	expectedPQLTokens.push_back(PQLToken(TokenType::SYNONYM, "w"));
-	expectedPQLTokens.push_back(PQLToken(TokenType::SEMICOLON));
+	std::vector<PQLToken*> expectedPQLTokens = {
+		new PQLToken(TokenType::VARIABLE, "variable"),
+		new PQLToken(TokenType::INTEGER, "123"),
+		new PQLToken(TokenType::SEMICOLON, ";")
+	};
 
-	std::vector<PQLToken> PQLTokens = tokeniser.tokenise();
-
-	bool result = std::equal(PQLTokens.begin(), PQLTokens.end(), expectedPQLTokens.begin());
+	bool result = compareVectors(PQLTokens, expectedPQLTokens);
 	REQUIRE(result);
 }
 
-TEST_CASE("PQL tokeniser declaration statement test case 5: if") {
-	std::vector<PQLToken> expectedPQLTokens;
-	std::string queryString = "if ifs;";
-	Tokeniser tokeniser = Tokeniser(queryString);
+TEST_CASE("PQL tokeniser declaration statement test case 5: double declaration, constant + 2 synonyms") {
+	std::string queryString = "constant c1,c2;";
+	auto tokeniser = Tokeniser(queryString);
+	std::vector<PQLToken*> PQLTokens = tokeniser.tokenise();
 
-	expectedPQLTokens.push_back(PQLToken(TokenType::IF));
-	expectedPQLTokens.push_back(PQLToken(TokenType::SYNONYM, "ifs"));
-	expectedPQLTokens.push_back(PQLToken(TokenType::SEMICOLON));
+	std::vector<PQLToken*> expectedPQLTokens = {
+		new PQLToken(TokenType::CONST, "constant"),
+		new PQLToken(TokenType::SYNONYM, "c1"),
+		new PQLToken(TokenType::COMMA, ","),
+		new PQLToken(TokenType::SYNONYM, "c2"),
+		new PQLToken(TokenType::SEMICOLON, ";")
+	};
 
-	std::vector<PQLToken> PQLTokens = tokeniser.tokenise();
-
-	bool result = std::equal(PQLTokens.begin(), PQLTokens.end(), expectedPQLTokens.begin());
+	bool result = compareVectors(PQLTokens, expectedPQLTokens);
 	REQUIRE(result);
 }
 
-TEST_CASE("PQL tokeniser declaration statement test case 6: assign") {
-	std::vector<PQLToken> expectedPQLTokens;
-	std::string queryString = "assign a;";
-	Tokeniser tokeniser = Tokeniser(queryString);
+TEST_CASE("PQL tokeniser declaration statement test case 6: multi declaration, read + 3 synonyms") {
+	std::string queryString = "read r1,r2 , r3;";
+	auto tokeniser = Tokeniser(queryString);
+	std::vector<PQLToken*> PQLTokens = tokeniser.tokenise();
 
-	expectedPQLTokens.push_back(PQLToken(TokenType::ASSIGN));
-	expectedPQLTokens.push_back(PQLToken(TokenType::SYNONYM, "a"));
-	expectedPQLTokens.push_back(PQLToken(TokenType::SEMICOLON));
+	std::vector<PQLToken*> expectedPQLTokens = {
+		new PQLToken(TokenType::READ, "read"),
+		new PQLToken(TokenType::SYNONYM, "r1"),
+		new PQLToken(TokenType::COMMA, ","),
+		new PQLToken(TokenType::SYNONYM, "r2"),
+		new PQLToken(TokenType::COMMA, ","),
+		new PQLToken(TokenType::SYNONYM, "r3"),
+		new PQLToken(TokenType::SEMICOLON, ";")
+	};
 
-	std::vector<PQLToken> PQLTokens = tokeniser.tokenise();
-
-	bool result = std::equal(PQLTokens.begin(), PQLTokens.end(), expectedPQLTokens.begin());
+	bool result = compareVectors(PQLTokens, expectedPQLTokens);
 	REQUIRE(result);
 }
 
-TEST_CASE("PQL tokeniser declaration statement test case 7: variable") {
-	std::vector<PQLToken> expectedPQLTokens;
-	std::string queryString = "variable v;";
-	Tokeniser tokeniser = Tokeniser(queryString);
-
-	expectedPQLTokens.push_back(PQLToken(TokenType::VARIABLE));
-	expectedPQLTokens.push_back(PQLToken(TokenType::SYNONYM, "v"));
-	expectedPQLTokens.push_back(PQLToken(TokenType::SEMICOLON));
-
-	std::vector<PQLToken> PQLTokens = tokeniser.tokenise();
-
-	bool result = std::equal(PQLTokens.begin(), PQLTokens.end(), expectedPQLTokens.begin());
-	REQUIRE(result);
-}
-
-TEST_CASE("PQL tokeniser declaration statement test case 8: constant") {
-	std::vector<PQLToken> expectedPQLTokens;
-	std::string queryString = "constant c;";
-	Tokeniser tokeniser = Tokeniser(queryString);
-
-	expectedPQLTokens.push_back(PQLToken(TokenType::CONST));
-	expectedPQLTokens.push_back(PQLToken(TokenType::SYNONYM, "c"));
-	expectedPQLTokens.push_back(PQLToken(TokenType::SEMICOLON));
-
-	std::vector<PQLToken> PQLTokens = tokeniser.tokenise();
-
-	bool result = std::equal(PQLTokens.begin(), PQLTokens.end(), expectedPQLTokens.begin());
-	REQUIRE(result);
-}
-
-TEST_CASE("PQL tokeniser declaration statement test case 9: procedure") {
-	std::vector<PQLToken> expectedPQLTokens;
-	std::string queryString = "procedure proc;";
-	Tokeniser tokeniser = Tokeniser(queryString);
-
-	expectedPQLTokens.push_back(PQLToken(TokenType::PROC));
-	expectedPQLTokens.push_back(PQLToken(TokenType::SYNONYM, "proc"));
-	expectedPQLTokens.push_back(PQLToken(TokenType::SEMICOLON));
-
-	std::vector<PQLToken> PQLTokens = tokeniser.tokenise();
-
-	bool result = std::equal(PQLTokens.begin(), PQLTokens.end(), expectedPQLTokens.begin());
-	REQUIRE(result);
-}
-
-TEST_CASE("PQL tokeniser declaration statement test case 10: multiple declarations 1") {
-	std::vector<PQLToken> expectedPQLTokens;
-	std::string queryString = "procedure proc; constant c,c1;\nvariable v,v1; ";
-	Tokeniser tokeniser = Tokeniser(queryString);
-
-	expectedPQLTokens.push_back(PQLToken(TokenType::PROC));
-	expectedPQLTokens.push_back(PQLToken(TokenType::SYNONYM, "proc"));
-	expectedPQLTokens.push_back(PQLToken( TokenType::SEMICOLON));
-
-	expectedPQLTokens.push_back(PQLToken(TokenType::CONST));
-	expectedPQLTokens.push_back(PQLToken(TokenType::SYNONYM, "c"));
-	expectedPQLTokens.push_back(PQLToken(TokenType::COMMA));
-	expectedPQLTokens.push_back(PQLToken(TokenType::SYNONYM, "c1"));
-	expectedPQLTokens.push_back(PQLToken(TokenType::SEMICOLON));
-
-	expectedPQLTokens.push_back(PQLToken(TokenType::VARIABLE));
-	expectedPQLTokens.push_back(PQLToken(TokenType::SYNONYM, "v"));
-	expectedPQLTokens.push_back(PQLToken(TokenType::COMMA));
-	expectedPQLTokens.push_back(PQLToken(TokenType::SYNONYM, "v1"));
-	expectedPQLTokens.push_back(PQLToken(TokenType::SEMICOLON));
-
-	std::vector<PQLToken> PQLTokens = tokeniser.tokenise();
-
-	bool result = std::equal(PQLTokens.begin(), PQLTokens.end(), expectedPQLTokens.begin());
-	REQUIRE(result);
-}
-
-TEST_CASE("PQL tokeniser declaration statement test case 11: multiple declarations 2") {
-	std::vector<PQLToken> expectedPQLTokens;
-	std::string queryString = "assign a; while w,w1;\nif ifs,ifs1; ";
-	Tokeniser tokeniser = Tokeniser(queryString);
-
-	expectedPQLTokens.push_back(PQLToken(TokenType::ASSIGN));
-	expectedPQLTokens.push_back(PQLToken(TokenType::SYNONYM, "a"));
-	expectedPQLTokens.push_back(PQLToken(TokenType::SEMICOLON));
-
-	expectedPQLTokens.push_back(PQLToken(TokenType::WHILE));
-	expectedPQLTokens.push_back(PQLToken(TokenType::SYNONYM, "w"));
-	expectedPQLTokens.push_back(PQLToken(TokenType::COMMA));
-	expectedPQLTokens.push_back(PQLToken(TokenType::SYNONYM, "w1"));
-	expectedPQLTokens.push_back(PQLToken(TokenType::SEMICOLON));
-
-	expectedPQLTokens.push_back(PQLToken(TokenType::IF));
-	expectedPQLTokens.push_back(PQLToken(TokenType::SYNONYM, "ifs"));
-	expectedPQLTokens.push_back(PQLToken(TokenType::COMMA));
-	expectedPQLTokens.push_back(PQLToken(TokenType::SYNONYM, "ifs1"));
-	expectedPQLTokens.push_back(PQLToken(TokenType::SEMICOLON));
-
-	std::vector<PQLToken> PQLTokens = tokeniser.tokenise();
-
-	bool result = std::equal(PQLTokens.begin(), PQLTokens.end(), expectedPQLTokens.begin());
-	REQUIRE(result);
-}
-
-
-TEST_CASE("PQL tokeniser declaration statement test case 12: incorrect declaration") {
-	std::vector<PQLToken> expectedPQLTokens;
-	std::string queryString = "as^sign a; while w,w1;\nif ifs,ifs1; ";
-	Tokeniser tokeniser = Tokeniser(queryString);
-
-	REQUIRE_THROWS(tokeniser.tokenise());
-}

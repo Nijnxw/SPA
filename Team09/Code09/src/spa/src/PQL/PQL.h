@@ -1,8 +1,10 @@
-#pragma once 
+#pragma once
 
 #include <vector>
-#include <models/Query.h>
-#include <PQL/PQLToken.h>
+#include <list>
+#include "models/Query.h"
+#include "models/QueryClauseResult.h"
+#include "PQL/PQLToken.h"
 
 namespace PQL {
 	/**
@@ -12,13 +14,17 @@ namespace PQL {
 	 * @param	query String which ontains the PQL query/queries
 	 * @return	vector of tokens which will be passed into the parser for parsing
 	*/
-	const std::vector<PQLToken> tokenise(std::string query);
+	const std::vector<PQLToken*> tokenise(std::string query);
 
 	/**
 	 * @brief	Parses a vector of tokens into a Query object
 	 * @param	tokens Vector of tokens 
 	 * @return	Query object to be passed to the evaluator
 	 */
-	Query parse(std::vector<PQLToken> tokens);
+	Query parse(std::vector<PQLToken*> tokens);
+
+	Table evaluate(Query& query);
+
+	std::unordered_set<std::string> getResults(Table& res, std::vector<QueryArgument>& selectSyn);
 
 }

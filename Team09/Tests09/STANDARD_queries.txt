@@ -1,0 +1,1735 @@
+1 - Valid synonym after select - one character in synonym
+stmt s;
+Select s
+1,2,3,4,5,6,7,8,9
+5000
+2 - Valid synonym after select - alphanumeric synonym
+assign a1;
+Select a1
+1,5,6,8,9
+5000
+3 - Valid synonym after select - Synonym of variable length
+variable abcdef12345; 
+Select abcdef12345
+a,aPlus,b,c,d,false,nice,pattern,pn,r,such,team9,that,true
+5000
+4 - Valid synonym after select - pattern Keyword as synonym
+procedure pattern;
+Select pattern
+simplestSIMPLE
+5000
+5 - Valid synonym after select - such Keyword as synonym
+while such;
+Select such
+7
+5000
+6 - Valid synonym after select - that Keyword as synonym
+read that;
+Select that
+2
+5000
+7 - Valid synonym after select - Uses Keyword as synonym
+print Uses;
+Select Uses
+3
+5000
+8 - Valid synonym after select - Modifies Keyword as synonym
+if Modifies;
+Select Modifies
+4
+5000
+9 - Valid synonym after select - Follows Keyword as synonym
+constant Follows;
+Select Follows
+1,2,34,235
+5000
+10 - Valid synonym after select - Select Keyword as synonym
+stmt Select; 
+Select Select
+1,2,3,4,5,6,7,8,9
+5000
+11 - Valid synonym after select - Parent Keyword as synonym
+stmt Parent; 
+Select Parent
+1,2,3,4,5,6,7,8,9
+5000
+12 - Valid synonym after select - stmt Keyword as synonym
+stmt stmt; 
+Select stmt
+1,2,3,4,5,6,7,8,9
+5000
+13 - Valid synonym after select - print Keyword as synonym
+print print; 
+Select print
+3
+5000
+14 - Valid synonym after select - read Keyword as synonym
+read read; 
+Select read
+2
+5000
+15 - Valid synonym after select - if Keyword as synonym
+if if; 
+Select if
+4
+5000
+16 - Valid synonym after select - while Keyword as synonym
+while while; 
+Select while
+7
+5000
+17 - Valid synonym after select - assign Keyword as synonym
+assign assign; 
+Select assign
+1,5,6,8,9
+5000
+18 - Valid synonym after select - variable Keyword as synonym
+variable variable; 
+Select variable
+a,aPlus,b,c,d,false,nice,pattern,pn,r,such,team9,that,true
+5000
+19 - Valid synonym after select - procedure Keyword as synonym
+procedure procedure; 
+Select procedure
+simplestSIMPLE
+5000
+20 - Valid synonym after select - constant Keyword as synonym
+constant constant; 
+Select constant
+1,2,34,235
+5000
+21 - Parsing of multiple declarations
+constant c1,c2; stmt s;
+Select c1
+1,2,34,235
+5000
+22 - Invalid synonym - graceful failure
+constant 1c;
+Select 1c
+none
+5000
+23 - Integer as synonym - graceful failure
+constant 1;
+Select 1
+none
+5000
+24 - Missing declaration synonym - graceful failure
+constant ;
+Select c
+none
+5000
+25 - Missing semicolon - graceful failure
+constant c
+Select c
+none
+5000
+26 - Missing synonym after select - graceful failure
+constant c;
+Select 
+none
+5000
+27 - Missing declaration statement - graceful failure
+c;
+Select c
+none
+5000
+28 - Missing select statement - graceful failure
+constant c;
+c
+none
+5000
+29 - Result synonym does not exist
+constant c;
+Select c1
+none
+5000 
+30 - Invalid design entity (case sensitive) - graceful failure
+Constant c;
+Select c
+none
+5000
+31 - Valid Modifies Query for read,syn
+read re; variable v;
+Select re such that Modifies(re, v)
+2
+5000
+32 - Valid Modifies Query for stmt,syn
+stmt s; variable v;
+Select s such that Modifies(s, v)
+1,2,4,5,6,7,8,9
+5000
+33 - Valid Modifies Query for while,syn
+while w; variable v;
+Select w such that Modifies(w, v)
+7
+5000
+34 - Valid Modifies Query for if,syn
+if ifs; variable v;
+Select ifs such that Modifies(ifs, v)
+4
+5000
+35 - Valid Modifies Query for assign,syn
+assign a; variable v;
+Select a such that Modifies(a, v)
+1,5,6,8,9
+5000
+36 - Valid Modifies Query for stmtNo,syn
+variable v;
+Select v such that Modifies(1, v)
+a
+5000
+37 - Valid Modifies Query for read,underscore
+read re; variable v;
+Select re such that Modifies(re, _)
+2
+5000
+38 - Valid Modifies Query for stmt,underscore
+stmt s; 
+Select s such that Modifies(s, _)
+1,2,4,5,6,7,8,9
+5000
+39 - Valid Modifies Query for while,underscore
+while w; 
+Select w such that Modifies(w, _)
+7
+5000
+40 - Valid Modifies Query for if,underscore
+if ifs; 
+Select ifs such that Modifies(ifs, _)
+4
+5000
+41 - Valid Modifies Query for assign,underscore
+assign a; 
+Select a such that Modifies(a, _)
+1,5,6,8,9
+5000
+42 - Valid Modifies Query for stmtNo,underscore
+variable v;
+Select v such that Modifies(2, _)
+a,aPlus,b,c,d,false,nice,pattern,pn,r,such,team9,that,true
+5000
+43 - Valid Modifies Query for read,variableName
+read re; 
+Select re such that Modifies(re, "r")
+2
+5000
+44 - Valid Modifies Query for stmt,variableName
+stmt s;
+Select s such that Modifies(s, "d")
+9
+5000
+45 - Valid Modifies Query for while,variableName
+while w; 
+Select w such that Modifies(w, "aPlus")
+7
+5000
+46 - Valid Modifies Query for if,variableName
+if ifs; 
+Select ifs such that Modifies(ifs,"such")
+4
+5000
+47 - Valid Modifies Query for assign,variableName
+assign a; 
+Select a such that Modifies(a, "a")
+1
+5000
+48 - Valid Modifies Query for stmtNo,variableName
+variable v;
+Select v such that Modifies(6, "pattern")
+a,aPlus,b,c,d,false,nice,pattern,pn,r,such,team9,that,true
+5000
+49 - Illegal argument - wild card as first arg
+variable v;
+Select v such that Modifies(_, v)
+none
+5000
+50 - Illegal argument - pn synonym as first arg (syntactically valid but not semantically valid)
+variable v; print pn;
+Select pn such that Modifies(pn, v)
+none
+5000
+51 - Illegal argument - var synonym as first arg
+variable v,v2;
+Select v such that Modifies(v, v2)
+none
+5000
+52 - Illegal argument - const synonym as first arg
+variable v; constant c;
+Select pn such that Modifies(c, v)
+none
+5000
+53 - Illegal argument - while synonym as second arg 
+assign a; while w;
+Select a such that Modifies(a, w)
+none
+5000
+54 - Illegal argument - if synonym as second arg 
+assign a; if ifs;
+Select a such that Modifies(a, ifs)
+none
+5000
+55 - Illegal argument - assign synonym as second arg 
+assign a,a1;
+Select a such that Modifies(a, a1)
+none
+5000
+56 - Illegal argument - read synonym as second arg 
+assign a; read re;
+Select a such that Modifies(a, re)
+none
+5000
+57 - Illegal argument - stmt synonym as second arg 
+assign a; stmt s;
+Select a such that Modifies(a, s)
+none
+5000
+58 - Illegal argument - print synonym as second arg 
+assign a; print pn;
+Select a such that Modifies(a, pn)
+none
+5000
+59 - Illegal argument - constant synonym as second arg 
+assign a; constant c;
+Select a such that Modifies(a, c)
+none
+5000
+60 - Illegal argument - stmtNo synonym as second arg 
+assign a; 
+Select a such that Modifies(a, 1)
+none
+5000
+61 - Illegal argument - variableName synonym as second arg 
+assign a; 
+Select a such that Modifies(a, "1")
+none
+5000
+62 - Missing open parenthesis
+assign a; 
+Select a such that Modifies a, 1)
+none
+5000
+63 - Missing first argument
+assign a; 
+Select a such that Modifies (, 1)
+none
+5000
+64 - Missing second argument
+assign a; 
+Select a such that Modifies (a, )
+none
+5000
+65 - Missing comma
+assign a; 
+Select a such that Modifies (a 1)
+none
+5000
+66 - Missing closing parenthesis 
+assign a; 
+Select a such that Modifies (a, 1
+none
+5000
+67 - Insufficient arguments
+assign a; 
+Select a such that Modifies (a)
+none
+5000
+68 - Valid Uses Query for print,syn
+print pn; variable v;
+Select pn such that Uses(pn, v)
+3
+5000
+69 - Valid Uses Query for stmt,syn
+stmt s; variable v;
+Select s such that Uses(s, v)
+1,3,4,5,6,7,8,9
+5000
+70 - Valid Uses Query for while,syn
+while w; variable v;
+Select w such that Uses(w, v)
+7
+5000
+71 - Valid Uses Query for if,syn
+if ifs; variable v;
+Select ifs such that Uses(ifs, v)
+4
+5000
+72 - Valid Uses Query for assign,syn
+assign a; variable v;
+Select a such that Uses(a, v)
+1,5,6,8,9
+5000
+73 - Valid Uses Query for stmtNo,syn
+variable v;
+Select v such that Uses(1, v)
+a,b,c,d
+5000
+74  - Valid Uses Query for print,underscore
+print pn; variable v;
+Select pn such that Uses(pn, _)
+3
+5000
+75  - Valid Uses Query for stmt,underscore
+stmt s; 
+Select s such that Uses(s, _)
+1,3,4,5,6,7,8,9
+5000
+76 - Valid Uses Query for while,underscore
+while w; 
+Select w such that Uses(w, _)
+7
+5000
+77 - Valid Uses Query for if,underscore
+if ifs; 
+Select ifs such that Uses(ifs, _)
+4
+5000
+78 - Valid Uses Query for assign,underscore
+assign a; 
+Select a such that Uses(a, _)
+1,5,6,8,9
+5000
+79 - Valid Uses Query for stmtNo,underscore
+variable v;
+Select v such that Uses(3, _)
+a,aPlus,b,c,d,false,nice,pattern,pn,r,such,team9,that,true
+5000
+80 - Valid Uses Query for print,variableName
+print pn; 
+Select pn such that Uses(pn, "pn")
+3
+5000
+81 - Valid Uses Query for stmt,variableName
+stmt s;
+Select s such that Uses(s, "nice")
+4,6
+5000
+82 - Valid Uses Query for while,variableName
+while w; 
+Select w such that Uses(w, "true")
+7
+5000
+83 - Valid Uses Query for if,variableName
+if ifs; 
+Select ifs such that Uses(ifs,"team9")
+4
+5000
+84 - Valid Uses Query for assign,variableName
+assign a; 
+Select a such that Uses(a, "c")
+1,9
+5000
+85 - Valid Uses Query for stmtNo,variableName
+variable v;
+Select v such that Uses(4, "that")
+a,aPlus,b,c,d,false,nice,pattern,pn,r,such,team9,that,true
+5000
+86 - Illegal argument - wild card as first arg
+variable v;
+Select v such that Uses(_, v)
+none
+5000
+87 - Illegal argument - re synonym as first arg (syntactically valid but semantically invalid)
+variable v; read re;
+Select re such that Uses(re, v)
+none
+5000
+88 - Illegal argument - var synonym as first arg
+variable v,v2;
+Select v such that Uses(v, v2)
+none
+5000
+89 - Illegal argument - const synonym as first arg  
+variable v; constant c;
+Select pn such that Uses(c, v)
+none
+5000
+90 - Illegal argument - non-var synonym as second arg 
+assign a; while w;
+Select a such that Uses(a, w)
+none
+5000
+91 - Illegal argument - non-var synonym as second arg 
+assign a; if ifs;
+Select a such that Uses(a, ifs)
+none
+5000
+92 - Illegal argument - non-var synonym as second arg 
+assign a,a1;
+Select a such that Uses(a, a1)
+none
+5000
+93 - Illegal argument - non-var synonym as second arg 
+assign a; print pn;
+Select a such that Uses(a, pn)
+none
+5000
+94 - Illegal argument - non-var synonym as second arg 
+assign a; stmt s;
+Select a such that Uses(a, s)
+none
+5000
+95 - Illegal argument - non-var synonym as second arg 
+assign a; 
+Select a such that Uses(a, 1)
+none
+5000
+96 - Illegal argument - non-var synonym as second arg 
+assign a; 
+Select a such that Uses(a, "1")
+none
+5000
+97 - Illegal argument - non-var synonym as second arg 
+assign a; procedure p;
+Select a such that Uses(a, p)
+none
+5000
+98 - Illegal argument - non-var synonym as second arg 
+assign a; read re;
+Select a such that Uses(a, re)
+none
+5000
+99 - Illegal argument - non-var synonym as second arg 
+assign a; constant c;
+Select a such that Uses(a, c)
+none
+5000
+100 - Missing open parenthesis
+assign a; 
+Select a such that Uses a, 1)
+none
+5000
+101 - Missing first argument
+assign a; 
+Select a such that Uses (, 1)
+none
+5000
+102 - Missing second argument
+assign a; 
+Select a such that Uses (a, )
+none
+5000
+103 - Missing comma
+assign a; 
+Select a such that Uses (a 1)
+none
+5000
+104 - Missing closing parenthesis
+assign a; 
+Select a such that Uses (a, 1
+none
+5000
+105 - Insufficient arguments
+assign a; 
+Select a such that Uses (a)
+none
+5000
+106 - Valid Follows Query stmtNo,read
+read re; 
+Select re such that Follows(1,re) 
+2
+5000
+107 - Valid Follows Query stmtNo,stmt
+stmt s; 
+Select s such that Follows(2,s)
+3
+5000
+108 - Valid Follows Query stmtNo,while
+while w; 
+Select w such that Follows(4,w)
+7
+5000
+109 - Valid Follows Query stmtNo,if
+if ifs; 
+Select ifs such that Follows(3,ifs)
+4
+5000
+110 - Valid Follows Query stmtNo,assign
+assign a; 
+Select a such that Follows(7,a)
+9
+5000
+111 - Valid Follows Query stmtNo,print
+print pn ; 
+Select pn such that Follows(2,pn)
+3
+5000
+112 - Valid Follows Query stmtNo,underscore
+stmt s; 
+Select s such that Follows(7,_)
+1,2,3,4,5,6,7,8,9
+5000
+113 - Valid Follows Query stmtNo,stmtNo
+stmt s; 
+Select s such that Follows(7,9)
+1,2,3,4,5,6,7,8,9
+5000
+114 - Valid Follows Query read,stmtNo
+read re; 
+Select re such that Follows(re,3) 
+2
+5000
+115 - Valid Follows Query stmt,stmtNo
+stmt s; 
+Select s such that Follows(s,2)
+1
+5000
+116 - Valid Follows Query while,stmtNo
+while w; 
+Select w such that Follows(w,9)
+7
+5000
+117 - Valid Follows Query if,stmtNo
+if ifs; 
+Select ifs such that Follows(ifs,7)
+4
+5000
+118 - Valid Follows Query assign,stmtNo
+assign a; 
+Select a such that Follows(a,2)
+1
+5000
+119 - Valid Follows Query print,stmtNo
+print pn ; 
+Select pn such that Follows(pn,4)
+3
+5000
+120 - Valid Follows Query underscore,stmtNo
+stmt s; 
+Select s such that Follows(_,7)
+1,2,3,4,5,6,7,8,9
+5000
+121 - Valid Follows Query underscore,read
+read re; 
+Select re such that Follows(_,re) 
+2
+5000
+122 - Valid Follows Query underscore,stmt
+stmt s; 
+Select s such that Follows(_,s)
+2,3,4,7,9
+5000
+123 - Valid Follows Query underscore,while
+while w; 
+Select w such that Follows(_,w)
+7
+5000
+124 - Valid Follows Query underscore,if
+if ifs; 
+Select ifs such that Follows(_,ifs)
+4
+5000
+125 - Valid Follows Query underscore,assign
+assign a; 
+Select a such that Follows(_,a)
+9
+5000
+126 - Valid Follows Query underscore,print
+print pn ; 
+Select pn such that Follows(_,pn)
+3
+5000
+127 - Valid Follows Query underscore,underscore
+stmt s; 
+Select s such that Follows(_,_)
+1,2,3,4,5,6,7,8,9
+5000
+128 - Valid Follows Query read,underscore
+read re; 
+Select re such that Follows(re,_) 
+2
+5000
+129 - Valid Follows Query stmt,underscore
+stmt s; 
+Select s such that Follows(s,_)
+1,2,3,4,7
+5000
+130 - Valid Follows Query while,underscore
+while w; 
+Select w such that Follows(w,_)
+7
+5000
+131 - Valid Follows Query if,underscore
+if ifs; 
+Select ifs such that Follows(ifs,_)
+4
+5000
+132 - Valid Follows Query assign,underscore
+assign a; 
+Select a such that Follows(a,_)
+1
+5000
+133 - Valid Follows Query print,underscore
+print pn ; 
+Select pn such that Follows(pn,_)
+3
+5000
+134 - Valid Follows Query stmtNo,underscore
+stmt s; 
+Select s such that Follows(7,_)
+1,2,3,4,5,6,7,8,9
+5000
+135 - Valid Follows Query read,stmt
+read re; stmt s; 
+Select re such that Follows(re,s) 
+2
+5000
+136 - Valid Follows Query stmt,stmt
+stmt s,s2; 
+Select s such that Follows(s2,s)
+2,3,4,7,9
+5000
+137 - Valid Follows Query while,stmt
+while w; stmt s; 
+Select w such that Follows(w,s)
+7
+5000
+138 - Valid Follows Query if,stmt
+if ifs; stmt s; 
+Select ifs such that Follows(ifs,s)
+4
+5000
+139 - Valid Follows Query assign,stmt
+assign a; stmt s;
+Select a such that Follows(a,s)
+1
+5000
+140 - Valid Follows Query print,stmt
+print pn; stmt s; 
+Select pn such that Follows(pn,s)
+3
+5000
+141 - Valid Follows Query stmt,stmtNo
+stmt s; 
+Select s such that Follows(s,9)
+7
+5000
+142 - Edge case testing, nothing can precede 1
+stmt s; 
+Select s such that Follows(s,1)
+none
+5000
+143 - Illegal argument - string as first arg
+stmt s; 
+Select s such that Follows("asdf",s)
+none
+5000
+144 - Illegal argument - var synonym as first arg
+stmt s; variable v;
+Select s such that Follows(v,s)
+none
+5000
+145 - Illegal argument - const synonym as first arg
+stmt s; constant c;
+Select s such that Follows(c,s)
+none
+5000
+146 - Illegal argument - procedure synonym as first arg
+stmt s; procedure p;
+Select s such that Follows(p,s)
+none
+5000
+147 - Illegal argument - string as second arg
+stmt s; 
+Select s such that Follows(s,"asdfe")
+none
+5000
+148 - Illegal argument - var synonym as second arg
+stmt s; variable v;
+Select s such that Follows(s,v)
+none
+5000
+149 - Illegal argument - const synonym as second arg
+stmt s; constant c;
+Select s such that Follows(s,c)
+none
+5000
+150 - Illegal argument - procedure synonym as second arg
+stmt s; procedure p;
+Select s such that Follows(s,p)
+none
+5000
+151 - Illegal argument - stmt numbers are the same
+stmt s;
+Select s such that Follows (6,6)
+none
+5000
+152 - Illegal argument - first stmt number cannot be larger than second stmt number
+stmt s;
+Select s such that Follows (7,6)
+none
+5000
+153 - Missing open parenthesis
+stmt s; 
+Select s such that Follows s,9)
+none
+5000
+154 - Missing first argument
+stmt s; 
+Select s such that Follows(,9)
+none
+5000
+155 - Missing second argument
+stmt s; 
+Select s such that Follows(s,)
+none
+5000
+156 - Missing comma
+stmt s; 
+Select s such that Follows(s 9)
+none
+5000
+157 - Missing closing parenthesis
+stmt s; 
+Select s such that Follows(s, 9
+none
+5000
+158 - Insufficient arguments
+stmt s; 
+Select s such that Follows(s)
+none
+5000
+159 - Valid Follows* Query stmtNo,read
+read re; 
+Select re such that Follows*(1,re) 
+2
+5000
+160 - Valid Follows* Query stmtNo,stmt
+stmt s; 
+Select s such that Follows*(2,s)
+3,4,7,9
+5000
+161 - Valid Follows* Query stmtNo,while
+while w; 
+Select w such that Follows*(3,w)
+7
+5000
+162 - Valid Follows* Query stmtNo,if
+if ifs; 
+Select ifs such that Follows*(2,ifs)
+4
+5000
+163 - Valid Follows* Query stmtNo,assign
+assign a; 
+Select a such that Follows*(4,a)
+9
+5000
+164 - Valid Follows* Query stmtNo,print
+print pn ; 
+Select pn such that Follows*(1,pn)
+3
+5000
+165 - Valid Follows* Query stmtNo,underscore
+stmt s; 
+Select s such that Follows*(3,_)
+1,2,3,4,5,6,7,8,9
+5000
+166 - Valid Follows* Query stmtNo,stmtNo
+stmt s; 
+Select s such that Follows*(1,9)
+1,2,3,4,5,6,7,8,9
+5000
+167 - Valid Follows* Query read,stmtNo
+read re; 
+Select re such that Follows*(re,7) 
+2
+5000
+168 - Valid Follows* Query stmt,stmtNo
+stmt s; 
+Select s such that Follows*(s,7)
+1,2,3,4
+5000
+169 - Valid Follows* Query while,stmtNo
+while w; 
+Select w such that Follows*(w,9)
+7
+5000
+170 - Valid Follows* Query if,stmtNo
+if ifs; 
+Select ifs such that Follows*(ifs,9)
+4
+5000
+171 - Valid Follows* Query assign,stmtNo
+assign a; 
+Select a such that Follows*(a,9)
+1
+5000
+172 - Valid Follows* Query print,stmtNo
+print pn ; 
+Select pn such that Follows*(pn,7)
+3
+5000
+173 - Valid Follows* Query underscore,stmtNo
+stmt s; 
+Select s such that Follows*(_,7)
+1,2,3,4,5,6,7,8,9
+5000
+174 - Valid Follows* Query underscore,read
+read re; 
+Select re such that Follows*(_,re) 
+2
+5000
+175 - Valid Follows* Query underscore,stmt
+stmt s; 
+Select s such that Follows*(_,s)
+2,3,4,7,9
+5000
+176 - Valid Follows* Query underscore,while
+while w; 
+Select w such that Follows*(_,w)
+7
+5000
+177 - Valid Follows* Query underscore,if
+if ifs; 
+Select ifs such that Follows*(_,ifs)
+4
+5000
+178 - Valid Follows* Query underscore,assign
+assign a; 
+Select a such that Follows*(_,a)
+9
+5000
+179 - Valid Follows* Query underscore,print
+print pn ; 
+Select pn such that Follows*(_,pn)
+3
+5000
+180 - Valid Follows* Query underscore,underscore
+stmt s; 
+Select s such that Follows*(_,_)
+1,2,3,4,5,6,7,8,9
+5000
+181 - Valid Follows* Query read,underscore
+read re; 
+Select re such that Follows*(re,_) 
+2
+5000
+182 - Valid Follows* Query stmt,underscore
+stmt s; 
+Select s such that Follows*(s,_)
+1,2,3,4,7
+5000
+183 - Valid Follows* Query while,underscore
+while w; 
+Select w such that Follows*(w,_)
+7
+5000
+184 - Valid Follows* Query if,underscore
+if ifs; 
+Select ifs such that Follows*(ifs,_)
+4
+5000
+185 - Valid Follows* Query assign,underscore
+assign a; 
+Select a such that Follows*(a,_)
+1
+5000
+186 - Valid Follows* Query print,underscore
+print pn; 
+Select pn such that Follows*(pn,_)
+3
+5000
+187 - Valid Follows* Query stmtNo,underscore
+stmt s; 
+Select s such that Follows*(3,_)
+1,2,3,4,5,6,7,8,9
+5000
+188 - Valid Follows* Query read,stmt
+read re; stmt s; 
+Select re such that Follows*(re,s) 
+2
+5000
+189 - Valid Follows* Query stmt,stmt
+stmt s,s2; 
+Select s such that Follows*(s2,s)
+2,3,4,7,9
+5000
+190 - Valid Follows* Query while,stmt
+while w; stmt s; 
+Select w such that Follows*(w,s)
+7
+5000
+191 - Valid Follows* Query if,stmt
+if ifs; stmt s; 
+Select ifs such that Follows*(ifs,s)
+4
+5000
+192 - Valid Follows* Query assign,stmt
+assign a; stmt s;
+Select a such that Follows*(a,s)
+1
+5000
+193 - Valid Follows* Query print,stmt
+print pn; stmt s; 
+Select pn such that Follows*(pn,s)
+3
+5000
+194 - Valid Follows* Query stmt,stmtNo
+stmt s; 
+Select s such that Follows*(s,7)
+1,2,3,4
+5000
+195 - Edge case testing, nothing can precede 1
+stmt s; 
+Select s such that Follows*(s,1)
+none
+5000
+196 - Illegal argument 3- string as first arg
+stmt s; 
+Select s such that Follows*("asdf",s)
+none
+5000
+197 - Illegal argument 3- var synonym as first arg
+stmt s; variable v;
+Select s such that Follows*(v,s)
+none
+5000
+198 - Illegal argument 3- const synonym as first arg
+stmt s; constant c;
+Select s such that Follows*(c,s)
+none
+5000
+199 - Illegal argument 3- procedure synonym as first arg
+stmt s; procedure p;
+Select s such that Follows*(p,s)
+none
+5000
+200 - Illegal argument 3- string as second arg
+stmt s; 
+Select s such that Follows*(s,"asdfe")
+none
+5000
+201 - Illegal argument 3- var synonym as second arg
+stmt s; variable v;
+Select s such that Follows*(s,v)
+none
+5000
+202 - Illegal argument 3- const synonym as second arg
+stmt s; constant c;
+Select s such that Follows*(s,c)
+none
+5000
+203 - Illegal argument 3- procedure synonym as second arg
+stmt s; procedure p;
+Select s such that Follows*(s,p)
+none
+5000
+204 - Illegal argument 3- stmt numbers are the same
+stmt s;
+Select s such that Follows*(6,6)
+none
+5000
+205 - Illegal argument 3- first stmt number cannot be larger than second stmt number
+stmt s;
+Select s such that Follows*(7,6)
+none
+5000
+206 - Missing open parenthesis
+stmt s; 
+Select s such that Follows* s,9)
+none
+5000
+207 - Missing first argument
+stmt s; 
+Select s such that Follows*(,9)
+none
+5000
+208 - Missing second argument
+stmt s; 
+Select s such that Follows*(s,)
+none
+5000
+209 - Missing comma
+stmt s; 
+Select s such that Follows*(s 9)
+none
+5000
+210 - Missing closing parenthesis
+stmt s; 
+Select s such that Follows*(s, 9
+none
+5000
+211 - Insufficient arguments
+stmt s; 
+Select s such that Follows*(s)
+none
+5000
+212 - Valid Parent Query stmtNo,read
+read re; 
+Select re such that Parent(4,re) 
+none
+5000
+213 - Valid Parent Query stmtNo,stmt
+stmt s; 
+Select s such that Parent(4,s)
+5,6
+5000
+214 - Valid Parent Query stmtNo,while
+while w; 
+Select w such that Parent(3,w)
+none
+5000
+215 - Valid Parent Query stmtNo,if
+if ifs; 
+Select ifs such that Parent(4,ifs)
+none
+5000
+216 - Valid Parent Query stmtNo,assign
+assign a; 
+Select a such that Parent(7,a)
+8
+5000
+217 - Valid Parent Query stmtNo,print
+print pn; 
+Select pn such that Parent(6,pn)
+none
+5000
+218 - Valid Parent Query stmtNo,underscore
+stmt s; 
+Select s such that Parent(7,_)
+1,2,3,4,5,6,7,8,9
+5000
+219 - Valid Parent Query stmtNo,stmtNo
+stmt s; 
+Select s such that Parent(8,9)
+none
+5000
+220 - Invalid Parent Query read,stmtNo
+read re; 
+Select re such that Parent(re,4) 
+none
+5000
+221 - Valid Parent Query stmt,stmtNo
+stmt s; 
+Select s such that Parent(s,2)
+none
+5000
+222 - Valid Parent Query while,stmtNo
+while w; 
+Select w such that Parent(w,3)
+none
+5000
+223 - Valid Parent Query if,stmtNo
+if ifs; 
+Select ifs such that Parent(ifs,4)
+none
+5000
+224 - Invalid Parent Query assign,stmtNo
+assign a; 
+Select a such that Parent(a,5)
+none
+5000
+225 - Invalid Parent Query print,stmtNo
+print pn ; 
+Select pn such that Parent(pn,6)
+none
+5000
+226 - Valid Parent Query underscore,stmtNo
+stmt s; 
+Select s such that Parent(_,8)
+1,2,3,4,5,6,7,8,9
+5000
+227 - Valid Parent Query underscore,read
+read re; 
+Select re such that Parent(_,re) 
+none
+5000
+228 - Valid Parent Query underscore,stmt
+stmt s; 
+Select s such that Parent(_,s)
+5,6,8
+5000
+229 - Valid Parent Query underscore,while
+while w; 
+Select w such that Parent(_,w)
+none
+5000
+230 - Valid Parents Query underscore,if
+if ifs; 
+Select ifs such that Parent(_,ifs)
+none
+5000
+231 - Valid Parent Query underscore,assign
+assign a; 
+Select a such that Parent(_,a)
+5,6,8
+5000
+232 - Valid Parent Query underscore,print
+print pn ; 
+Select pn such that Parent(_,pn)
+none
+5000
+233 - Valid Parent Query underscore,underscore
+stmt s; 
+Select s such that Parent(_,_)
+1,2,3,4,5,6,7,8,9
+5000
+234 - Invalid Parent Query read,underscore
+read re; 
+Select re such that Parent(re,_) 
+none
+5000
+235 - Valid Parent Query stmt,underscore
+stmt s; 
+Select s such that Parent(s,_)
+4,7
+5000
+236 - Valid Parent Query while,underscore
+while w; 
+Select w such that Parent(w,_)
+7
+5000
+237 - Valid Parent Query if,underscore
+if ifs; 
+Select ifs such that Parent(ifs,_)
+4
+5000
+238 - Invalid Parent Query assign,underscore
+assign a; 
+Select a such that Parent(a,_)
+none
+5000
+239 - Invalid Parent Query print,underscore
+print pn ; 
+Select pn such that Parent(pn,_)
+none
+5000
+240 - Valid Parent Query stmtNo,underscore
+stmt s; 
+Select s such that Parent(9,_)
+none
+5000
+241 - Invalid Parent Query read,stmt
+read re; stmt s; 
+Select re such that Parent(re,s) 
+none
+5000
+242 - Valid Parent Query stmt,stmt
+stmt s,s2; 
+Select s such that Parent(s2,s)
+5,6,8
+5000
+243 - Valid Parent Query while,stmt
+while w; stmt s; 
+Select w such that Parent(w,s)
+7
+5000
+244 - Valid Parent Query if,stmt
+if ifs; stmt s; 
+Select ifs such that Parent(ifs,s)
+4
+5000
+245 - Invalid Parent Query assign,stmt
+assign a; stmt s;
+Select a such that Parent(a,s)
+none
+5000
+246 - Invalid Parent Query print,stmt
+print pn; stmt s; 
+Select pn such that Parent(pn,s)
+none
+5000
+247 - Valid Parent Query stmt,stmtNo
+stmt s; 
+Select s such that Parent(s,9)
+none
+5000
+248 - Edge case testing, nothing can precede 1
+stmt s; 
+Select s such that Parent("asdf",1)
+none
+5000
+249 - Illegal argument - string as first arg
+stmt s; 
+Select s such that Parent("asdf",s)
+none
+5000
+250 - Illegal argument - var synonym as first arg
+stmt s; variable v;
+Select s such that Parent(v,s)
+none
+5000
+251 - Illegal argument - const synonym as first arg
+stmt s; constant c;
+Select s such that Parent(c,s)
+none
+5000
+252 - Illegal argument - procedure synonym as first arg
+stmt s; procedure p;
+Select s such that Parent(p,s)
+none
+5000
+253 - Illegal argument - string as second arg
+stmt s; 
+Select s such that Parent(s,"asdfe")
+none
+5000
+254 - Illegal argument - var synonym as second arg
+stmt s; variable v;
+Select s such that Parent(s,v)
+none
+5000
+255 - Illegal argument - const synonym as second arg
+stmt s; constant c;
+Select s such that Parent(s,c)
+none
+5000
+256 - Illegal argument - procedure synonym as second arg
+stmt s; procedure p;
+Select s such that Parent(s,p)
+none
+5000
+257 - Illegal argument - stmt numbers are the same
+stmt s;
+Select s such that Parent(6,6)
+none
+5000
+258 - Illegal argument - first stmt number cannot be larger than second stmt number
+stmt s;
+Select s such that Parent(7,6)
+none
+5000
+259 - Missing open parenthesis
+stmt s; 
+Select s such that Parents,9)
+none
+5000
+260 - Missing first argument
+stmt s; 
+Select s such that Parent(,9)
+none
+5000
+261 - Missing second argument
+stmt s; 
+Select s such that Parent(s,)
+none
+5000
+262 - Missing comma
+stmt s; 
+Select s such that Parent(s 9)
+none
+5000
+263 - Missing closing parenthesis
+stmt s; 
+Select s such that Parent(s, 9
+none
+5000
+264 - Insufficient arguments
+stmt s; 
+Select s such that Parent(s)
+none
+5000
+265 - Valid Parent* Query stmtNo,read
+read re; 
+Select re such that Parent*(1,re) 
+none
+5000
+266 - Valid Parent* Query stmtNo,stmt
+stmt s; 
+Select s such that Parent*(4,s)
+5,6
+5000
+267 - Valid Parent* Query stmtNo,while
+while w; 
+Select w such that Parent*(7,w)
+none
+5000
+268 - Valid Parent* Query stmtNo,if
+if ifs; 
+Select ifs such that Parent*(4,ifs)
+none
+5000
+269 - Valid Parent* Query stmtNo,assign
+assign a; 
+Select a such that Parent*(5,a)
+none
+5000
+270 - Valid Parent* Query stmtNo,print
+print pn ; 
+Select pn such that Parent*(6,pn)
+none
+5000
+271 - Valid Parent* Query stmtNo,underscore
+stmt s; 
+Select s such that Parent*(7,_)
+1,2,3,4,5,6,7,8,9
+5000
+272 - Valid Parent* Query stmtNo,stmtNo
+stmt s; 
+Select s such that Parent*(8,9)
+none
+5000
+273 - Invalid Parent* Query read,stmtNo
+read re; 
+Select re such that Parent*(re,4) 
+none
+5000
+274 - Valid Parent* Query stmt,stmtNo
+stmt s; 
+Select s such that Parent*(s,6)
+4
+5000
+275 - Valid Parent* Query while,stmtNo
+while w; 
+Select w such that Parent*(w,8)
+7
+5000
+276 - Valid Parent* Query if,stmtNo
+if ifs; 
+Select ifs such that Parent*(ifs,5)
+4
+5000
+277 - Invalid Parent* Query assign,stmtNo
+assign a; 
+Select a such that Parent*(a,5)
+none
+5000
+278 - Invalid Parent* Query print,stmtNo
+print pn ; 
+Select pn such that Parent*(pn,6)
+none
+5000
+279 - Valid Parent* Query underscore,stmtNo
+stmt s; 
+Select s such that Parent*(_,7)
+none
+5000
+280 - Valid Parent* Query underscore,read
+read re; 
+Select re such that Parent*(_,re) 
+none
+5000
+281 - Valid Parent* Query underscore,stmt
+stmt s; 
+Select s such that Parent*(_,s)
+5,6,8
+5000
+282 - Valid Parent* Query underscore,while
+while w; 
+Select w such that Parent*(_,w)
+none
+5000
+283 - Valid Parent* Query underscore,if
+if ifs; 
+Select ifs such that Parent*(_,ifs)
+none
+5000
+284 - Valid Parent* Query underscore,assign
+assign a; 
+Select a such that Parent*(_,a)
+5,6,8
+5000
+285 - Valid Parent* Query underscore,print
+print pn ; 
+Select pn such that Parent*(_,pn)
+none
+5000
+286 - Valid Parent* Query underscore,underscore
+stmt s; 
+Select s such that Parent*(_,_)
+1,2,3,4,5,6,7,8,9
+5000
+287 - Valid Parent* Query underscore,stmtNo
+stmt s; 
+Select s such that Parent*(_,9)
+none
+5000
+288 - Invalid Parent* Query read,underscore
+read re; 
+Select re such that Parent*(re,_) 
+none
+5000
+289 - Valid Parent* Query stmt,underscore
+stmt s; 
+Select s such that Parent*(s,_)
+4,7
+5000
+290 - Valid Parent* Query while,underscore
+while w; 
+Select w such that Parent*(w,_)
+7
+5000
+291 - Valid Parent* Query if,underscore
+if ifs; 
+Select ifs such that Parent*(ifs,_)
+4
+5000
+292 - Invalid Parent* Query assign,underscore
+assign a; 
+Select a such that Parent*(a,_)
+none
+5000
+293 - Invalid Parent* Query print,underscore
+print pn ; 
+Select pn such that Parent*(pn,_)
+none
+5000
+294 - Valid Parent* Query stmtNo,underscore
+stmt s; 
+Select s such that Parent*(9,_)
+none
+5000
+295 - Invalid Parent* Query read,stmt
+read re; stmt s; 
+Select re such that Parent*(re,s) 
+none
+5000
+296 - Valid Parent* Query stmt,stmt
+stmt s,s2; 
+Select s such that Parent*(s2,s)
+5,6,8
+5000
+297 - Valid Parent* Query while,stmt
+while w; stmt s; 
+Select w such that Parent*(w,s)
+7
+5000
+298 - Valid Parent* Query if,stmt
+if ifs; stmt s; 
+Select ifs such that Parent*(ifs,s)
+4
+5000
+299 - Invalid Parent* Query assign,stmt
+assign a; stmt s;
+Select a such that Parent*(a,s)
+none
+5000
+300 - Invalid Parent* Query print,stmt
+print pn; stmt s; 
+Select pn such that Parent*(pn,s)
+none
+5000
+301 - Valid Parent* Query stmt,stmtNo
+stmt s; 
+Select s such that Parent*(s,9)
+none
+5000
+302 - Edge case testing, nothing can precede 1
+stmt s; 
+Select s such that Parent*("asdf",1)
+none
+5000
+303 - Illegal argument 1- string as first arg
+stmt s; 
+Select s such that Parent*("asdf",s)
+none
+5000
+304 - Illegal argument 1- var synonym as first arg
+stmt s; variable v;
+Select s such that Parent*(v,s)
+none
+5000
+305 - Illegal argument 1- const synonym as first arg
+stmt s; constant c;
+Select s such that Parent*(c,s)
+none
+5000
+306 - Illegal argument 1- procedure synonym as first arg
+stmt s; procedure p;
+Select s such that Parent*(p,s)
+none
+5000
+307 - Illegal argument 1- string as second arg
+stmt s; 
+Select s such that Parent*(s,"asdfe")
+none
+5000
+308 - Illegal argument 1- var synonym as second arg
+stmt s; variable v;
+Select s such that Parent*(s,v)
+none
+5000
+309 - Illegal argument 1- const synonym as second arg
+stmt s; constant c;
+Select s such that Parent*(s,c)
+none
+5000
+310 - Illegal argument 1- procedure synonym as second arg
+stmt s; procedure p;
+Select s such that Parent*(s,p)
+none
+5000
+311 - Illegal argument 1- stmt numbers are the same
+stmt s;
+Select s such that Parent*(6,6)
+none
+5000
+312 - Illegal argument 1- first stmt number cannot be larger than second stmt number
+stmt s;
+Select s such that Parent*(7,6)
+none
+5000
+313 - Missing open parenthesis
+stmt s; 
+Select s such that Parent*s,9)
+none
+5000
+314 - Missing first argument
+stmt s; 
+Select s such that Parent*(,9)
+none
+5000
+315 - Missing second argument
+stmt s; 
+Select s such that Parent*(s,)
+none
+5000
+316 - Missing comma
+stmt s; 
+Select s such that Parent*(s 9)
+none
+5000
+317 - Missing closing parenthesis
+stmt s; 
+Select s such that Parent*(s, 9
+none
+5000
+318 - Insufficient arguments
+stmt s; 
+Select s such that Parent*(s)
+none
+5000
+319 - Valid pattern query syn,underscore
+variable v; assign a;
+Select a pattern a(v,_)
+1,5,6,8,9
+5000
+320 - Valid pattern query syn,partialMatchVar
+variable v1; assign a;
+Select a pattern a(v1,_"a"_)
+1
+5000
+321 - Valid pattern query syn,partialMatchInt
+variable v2; assign a;
+Select a pattern a(v2,_"235"_)
+9
+5000
+322 - Valid pattern query variableName,underscore
+assign a;
+Select a pattern a("d",_)
+9
+5000
+323 - Valid pattern query variableName,partialMatchVar
+assign a;
+Select a pattern a("pattern",_"nice"_)
+6
+5000
+324 - Valid pattern query variableName,partialMatchInt
+assign a;
+Select a pattern a("aPlus",_"that"_)
+
+5000
+325 - Valid pattern query underscore,underscore
+assign a;
+Select a pattern a(_,_)
+1,5,6,8,9
+5000
+326 - Valid pattern query underscore,partialMatchVar
+assign a;
+Select a pattern a(_,_"true"_)
+8
+5000
+327 - Valid pattern query underscore,partialMatchInt
+assign a;
+Select a pattern a(_,_"34"_)
+9
+5000
+328 - Valid pattern query different assign-syn
+assign a,a1; variable v;
+Select a pattern a1(v,_"235"_)
+1,5,6,8,9
+5000
+329 - Illegal argument - non-var syn as first argument
+assign a; read re;
+Select a pattern a(re,_"xH"_)
+none
+5000
+330 - Illegal argument - invalid factor, missing right underscore
+assign a; variable v;
+Select a pattern a(v,_"f2")
+none
+5000
+331 - Illegal argument - invalid factor, missing left underscore
+assign a; variable v;
+Select a pattern a(v,"x2"_)
+none
+5000
+332 - Illegal argument - integer as first arg
+assign a; 
+Select a pattern a(1,_"n1"_)
+none
+5000
+333 - Missing assign-syn
+assign a; variable v;
+Select a pattern (v,_"x3"_)
+none
+5000
+334 - Missing open parenthesis
+assign a; variable v;
+Select a pattern a v,_"y12"_)
+none
+5000
+335 - Missing first arg
+assign a; variable v;
+Select a pattern a( ,_"x3"_)
+none
+5000
+336 - Missing comma
+assign a; variable v;
+Select a pattern a(v _"y3"_)
+none
+5000
+337 - Missing second arg
+assign a; variable v;
+Select a pattern a(v, )
+none
+5000
+338 - Missing close parenthesis
+assign a; variable v;
+Select a pattern a(v, _"z3"_
+none
+5000
+339 - Only one arg
+assign a; variable v;
+Select a pattern a(v)
+none
+5000
+340 - Shared common synonyms, no Select synonym in any clauses
+stmt s; assign a;
+Select s such that Follows(a,2) pattern a ("a", _"d"_) 
+1,2,3,4,5,6,7,8,9
+5000
+341 - Shared common synonyms, Select synonym only in first clause 
+stmt s; assign a;
+Select s such that Parent*(s,a) pattern a ("pattern", _"nice"_)
+4
+5000
+342 - Shared common synonyms, Select synonym only in second clause
+stmt s; assign a; variable v;
+Select a such that Uses(s,v) pattern a (v, _"c"_)
+1,9
+5000
+343 - Shared common synonyms, Select synonym in both clauses
+assign a; variable v;
+Select a such that Modifies(a,v) pattern a("d", _"235"_) 
+9
+5000
+344 - No shared common synonyms, no Select synonyms in any clauses
+stmt s; assign a; if ifs;
+Select ifs such that Parent(4, s) pattern a("d", _"34"_)
+4
+5000
+345 - No shared common synonym, Select synonym only in first clause
+stmt s; if ifs; assign a;
+Select ifs such that Follows*(ifs, s) pattern a("such", _"that"_)
+4
+5000
+346 - No shared common synonym, Select synonym only in second clause
+assign a; stmt s;
+Select a such that Modifies(s, "r") pattern a("aPlus", _"true"_)
+8
+5000
+347 - 2 shared common synonym, Select synonym in both clauses
+assign a; variable v;
+Select a such that Modifies(a,v) pattern a(v, _"c"_)
+1,9
+5000

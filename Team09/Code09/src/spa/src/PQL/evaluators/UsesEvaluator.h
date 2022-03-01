@@ -9,14 +9,16 @@
 #include "pkb/PKB.h"
 #include "pkb/util/PKBUtil.cpp"
 #include "models/EntityType.h"
-#include "models/QueryClauseTable.h"
+#include "models/QueryClauseResult.h"
 #include "models/QueryClause.h"
 
 #include "UMEvaluator.h"
 
 class UsesEvaluator : public UMEvaluator {
 public:
-	static QueryClauseTable
+	UsesEvaluator();
+
+	QueryClauseResult
 	getUses(const std::string& LHS, const std::string& RHS, EntityType LHSType, EntityType RHSType,
 			bool isBooleanResult);
 };

@@ -1,219 +1,491 @@
 #include "catch.hpp"
-#include "models/EntityType.h"
-#include "models/simple_parser/AST.h"
-#include "models/simple_parser/ExprNodes.h"
-#include "models/simple_parser/IoNodes.h"
-#include "models/simple_parser/ProcedureNode.h"
 #include "simple_parser/EntityStager.h"
 #include "simple_parser/DesignExtractor.h"
+#include "asts/ComplexASTs.h"
+#include "asts/RelationshipASTs.h"
 
 #include <memory>
-#include <unordered_set>
 #include <vector>
 
-TEST_CASE("Basic Follows* - 3 lines - IO") {
+TEST_CASE("FollowsT 3.1 - Single Read") {
 	EntityStager::clear();
-
-	/*
-	 * Test Simple Program
-	 * procedure testProgram {
-	 * 1	read x;
-	 * 2	print x;
-	 * 3	print y;
-	 * }
-	 */
-
-	 // building AST
-	std::shared_ptr<VariableNode> x = std::make_shared<VariableNode>("x");
-	std::shared_ptr<VariableNode> y = std::make_shared<VariableNode>("y");
-
-	std::shared_ptr<ReadNode> stmt1 = std::make_shared<ReadNode>(1, x);
-	std::shared_ptr<PrintNode> stmt2 = std::make_shared<PrintNode>(2, x);
-	std::shared_ptr<PrintNode> stmt3 = std::make_shared<PrintNode>(3, y);
-
-	std::vector<std::shared_ptr<StmtNode>> stmtList{ stmt1, stmt2, stmt3 };
-
-	std::shared_ptr<ProcedureNode> proc = std::make_shared<ProcedureNode>(stmtList, "testProgram");
-	std::vector<std::shared_ptr<ProcedureNode>> procList{ proc };
-
-	AST ast = std::make_shared<ProgramNode>(procList);
-
-	DesignExtractor::extractDesignElements(ast);
-
-	std::vector<std::pair<int, int>> expectedFollowsT;
-	expectedFollowsT.push_back(std::make_pair(1, 2));
-	expectedFollowsT.push_back(std::make_pair(1, 3));
-	expectedFollowsT.push_back(std::make_pair(2, 3));
-
+	DesignExtractor::extractDesignElements(RelationshipASTs::getAST3_1());
+	std::vector<std::pair<int, int>> expectedFollowsT{ };
 	REQUIRE(EntityStager::getStagedFollowsT() == expectedFollowsT);
-
 	EntityStager::clear();
 }
 
-TEST_CASE("Basic Follows* - 3 lines - With Assignment") {
+TEST_CASE("FollowsT 3.2 - Single Read") {
 	EntityStager::clear();
+	DesignExtractor::extractDesignElements(RelationshipASTs::getAST3_2());
+	std::vector<std::pair<int, int>> expectedFollowsT{ };
+	REQUIRE(EntityStager::getStagedFollowsT() == expectedFollowsT);
+	EntityStager::clear();
+}
 
-	/*
-	 * Test Simple Program
-	 * procedure testProgram {
-	 * 1	read x;
-	 * 2	print y;
-	 * 3	y = x + 1;
-	 * }
-	 */
+TEST_CASE("FollowsT 3.3 - Single Advanced Assign") {
+	EntityStager::clear();
+	DesignExtractor::extractDesignElements(RelationshipASTs::getAST3_3());
+	std::vector<std::pair<int, int>> expectedFollowsT{ };
+	REQUIRE(EntityStager::getStagedFollowsT() == expectedFollowsT);
+	EntityStager::clear();
+}
 
-	 // building AST
-	std::shared_ptr<VariableNode> x = std::make_shared<VariableNode>("x");
-	std::shared_ptr<VariableNode> y = std::make_shared<VariableNode>("y");
-	std::shared_ptr<ConstantNode> one = std::make_shared<ConstantNode>("1");
+TEST_CASE("FollowsT 3.4 - Single Advanced Assign") {
+	EntityStager::clear();
+	DesignExtractor::extractDesignElements(RelationshipASTs::getAST3_4());
+	std::vector<std::pair<int, int>> expectedFollowsT{ };
+	REQUIRE(EntityStager::getStagedFollowsT() == expectedFollowsT);
+	EntityStager::clear();
+}
 
-	std::shared_ptr<ReadNode> stmt1 = std::make_shared<ReadNode>(1, x);
-	std::shared_ptr<PrintNode> stmt2 = std::make_shared<PrintNode>(2, y);
+TEST_CASE("FollowsT 3.5 - 2 basic statements") {
+	EntityStager::clear();
+	DesignExtractor::extractDesignElements(RelationshipASTs::getAST3_5());
 
-	ExprNode expression = std::make_shared<BinaryOperatorNode>(BinaryOperator::PLUS, x, one);
-	std::shared_ptr<AssignNode> stmt3 = std::make_shared<AssignNode>(3, y, expression, "x 1 +");
+	std::vector<std::pair<int, int>> expectedFollowsT{ {1, 2} };
+	std::sort(expectedFollowsT.begin(), expectedFollowsT.end());
 
-	std::vector<std::shared_ptr<StmtNode>> stmtList{ stmt1, stmt2, stmt3 };
+	std::vector<std::pair<int, int>> actualFollowsT = EntityStager::getStagedFollowsT();
+	std::sort(actualFollowsT.begin(), actualFollowsT.end());
 
-	std::shared_ptr<ProcedureNode> proc = std::make_shared<ProcedureNode>(stmtList, "testProgram");
-	std::vector<std::shared_ptr<ProcedureNode>> procList{ proc };
+	REQUIRE(actualFollowsT == expectedFollowsT);
+	EntityStager::clear();
+}
 
-	AST ast = std::make_shared<ProgramNode>(procList);
+TEST_CASE("FollowsT 3.6 - 2 basic statements") {
+	EntityStager::clear();
+	DesignExtractor::extractDesignElements(RelationshipASTs::getAST3_6());
 
-	DesignExtractor::extractDesignElements(ast);
+	std::vector<std::pair<int, int>> expectedFollowsT{ {1, 2} };
+	std::sort(expectedFollowsT.begin(), expectedFollowsT.end());
+
+	std::vector<std::pair<int, int>> actualFollowsT = EntityStager::getStagedFollowsT();
+	std::sort(actualFollowsT.begin(), actualFollowsT.end());
+
+	REQUIRE(actualFollowsT == expectedFollowsT);
+	EntityStager::clear();
+}
+
+TEST_CASE("FollowsT 3.7 - 2 basic statements") {
+	EntityStager::clear();
+	DesignExtractor::extractDesignElements(RelationshipASTs::getAST3_7());
+
+	std::vector<std::pair<int, int>> expectedFollowsT{ {1, 2} };
+	std::sort(expectedFollowsT.begin(), expectedFollowsT.end());
+
+	std::vector<std::pair<int, int>> actualFollowsT = EntityStager::getStagedFollowsT();
+	std::sort(actualFollowsT.begin(), actualFollowsT.end());
+
+	REQUIRE(actualFollowsT == expectedFollowsT);
+	EntityStager::clear();
+}
+
+TEST_CASE("FollowsT 3.8 - 3 basic statements") {
+	EntityStager::clear();
+	DesignExtractor::extractDesignElements(RelationshipASTs::getAST3_8());
+
+	std::vector<std::pair<int, int>> expectedFollowsT{ {1, 2}, {2, 3}, {1, 3} };
+	std::sort(expectedFollowsT.begin(), expectedFollowsT.end());
+
+	std::vector<std::pair<int, int>> actualFollowsT = EntityStager::getStagedFollowsT();
+	std::sort(actualFollowsT.begin(), actualFollowsT.end());
+
+	REQUIRE(actualFollowsT == expectedFollowsT);
+	EntityStager::clear();
+}
+
+TEST_CASE("FollowsT 3.9 - 3 basic statements") {
+	EntityStager::clear();
+	DesignExtractor::extractDesignElements(RelationshipASTs::getAST3_9());
+
+	std::vector<std::pair<int, int>> expectedFollowsT{ {1, 2}, {2, 3}, {1, 3} };
+	std::sort(expectedFollowsT.begin(), expectedFollowsT.end());
+
+	std::vector<std::pair<int, int>> actualFollowsT = EntityStager::getStagedFollowsT();
+	std::sort(actualFollowsT.begin(), actualFollowsT.end());
+
+	REQUIRE(actualFollowsT == expectedFollowsT);
+	EntityStager::clear();
+}
+
+TEST_CASE("FollowsT 3.10 - 3 basic statements") {
+	EntityStager::clear();
+	DesignExtractor::extractDesignElements(RelationshipASTs::getAST3_10());
+
+	std::vector<std::pair<int, int>> expectedFollowsT{ {1, 2}, {2, 3}, {1, 3} };
+	std::sort(expectedFollowsT.begin(), expectedFollowsT.end());
+
+	std::vector<std::pair<int, int>> actualFollowsT = EntityStager::getStagedFollowsT();
+	std::sort(actualFollowsT.begin(), actualFollowsT.end());
+
+	REQUIRE(actualFollowsT == expectedFollowsT);
+	EntityStager::clear();
+}
+
+TEST_CASE("FollowsT 3.11 - 2 basic statements + 1 container - while at end of procedure") {
+	EntityStager::clear();
+	DesignExtractor::extractDesignElements(RelationshipASTs::getAST3_11());
+
+	std::vector<std::pair<int, int>> expectedFollowsT{ {1, 2}, {2, 3}, {1, 3} };
+	std::sort(expectedFollowsT.begin(), expectedFollowsT.end());
+
+	std::vector<std::pair<int, int>> actualFollowsT = EntityStager::getStagedFollowsT();
+	std::sort(actualFollowsT.begin(), actualFollowsT.end());
+
+	REQUIRE(actualFollowsT == expectedFollowsT);
+	EntityStager::clear();
+}
+
+TEST_CASE("FollowsT 3.12 - 2 basic statements + 1 container - while at start of procedure") {
+	EntityStager::clear();
+	DesignExtractor::extractDesignElements(RelationshipASTs::getAST3_12());
+
+	std::vector<std::pair<int, int>> expectedFollowsT{ {1, 3}, {3, 4}, {1, 4} };
+	std::sort(expectedFollowsT.begin(), expectedFollowsT.end());
+
+	std::vector<std::pair<int, int>> actualFollowsT = EntityStager::getStagedFollowsT();
+	std::sort(actualFollowsT.begin(), actualFollowsT.end());
+
+	REQUIRE(actualFollowsT == expectedFollowsT);
+	EntityStager::clear();
+}
+
+TEST_CASE("FollowsT 3.13 - 2 basic statements + 1 container - while at middle of procedure") {
+	EntityStager::clear();
+	DesignExtractor::extractDesignElements(RelationshipASTs::getAST3_13());
+
+	std::vector<std::pair<int, int>> expectedFollowsT{ {1, 2}, {2, 4}, {1, 4} };
+	std::sort(expectedFollowsT.begin(), expectedFollowsT.end());
+
+	std::vector<std::pair<int, int>> actualFollowsT = EntityStager::getStagedFollowsT();
+	std::sort(actualFollowsT.begin(), actualFollowsT.end());
+
+	REQUIRE(actualFollowsT == expectedFollowsT);
+	EntityStager::clear();
+}
+
+TEST_CASE("FollowsT 3.14 - 2 basic statements + 1 container - if at end of procedure") {
+	EntityStager::clear();
+	DesignExtractor::extractDesignElements(RelationshipASTs::getAST3_14());
+
+	std::vector<std::pair<int, int>> expectedFollowsT{ {1, 2}, {2, 3}, {1, 3} };
+	std::sort(expectedFollowsT.begin(), expectedFollowsT.end());
+
+	std::vector<std::pair<int, int>> actualFollowsT = EntityStager::getStagedFollowsT();
+	std::sort(actualFollowsT.begin(), actualFollowsT.end());
+
+	REQUIRE(actualFollowsT == expectedFollowsT);
+	EntityStager::clear();
+}
+
+TEST_CASE("FollowsT 3.15 - 2 basic statements + 1 container - if at start of procedure") {
+	EntityStager::clear();
+	DesignExtractor::extractDesignElements(RelationshipASTs::getAST3_15());
+
+	std::vector<std::pair<int, int>> expectedFollowsT{ {1, 4}, {4, 5}, {1, 5} };
+	std::sort(expectedFollowsT.begin(), expectedFollowsT.end());
+
+	std::vector<std::pair<int, int>> actualFollowsT = EntityStager::getStagedFollowsT();
+	std::sort(actualFollowsT.begin(), actualFollowsT.end());
+
+	REQUIRE(actualFollowsT == expectedFollowsT);
+	EntityStager::clear();
+}
+
+TEST_CASE("FollowsT 3.16 - 2 basic statements + 1 container - if at middle of procedure") {
+	EntityStager::clear();
+	DesignExtractor::extractDesignElements(RelationshipASTs::getAST3_16());
+
+	std::vector<std::pair<int, int>> expectedFollowsT{ {1, 2}, {2, 5}, {1, 5} };
+	std::sort(expectedFollowsT.begin(), expectedFollowsT.end());
+
+	std::vector<std::pair<int, int>> actualFollowsT = EntityStager::getStagedFollowsT();
+	std::sort(actualFollowsT.begin(), actualFollowsT.end());
+
+	REQUIRE(actualFollowsT == expectedFollowsT);
+	EntityStager::clear();
+}
+
+TEST_CASE("FollowsT 3.17 - 2 container statements same nesting level") {
+	EntityStager::clear();
+	DesignExtractor::extractDesignElements(RelationshipASTs::getAST3_17());
+
+	std::vector<std::pair<int, int>> expectedFollowsT{ {1, 3} };
+	std::sort(expectedFollowsT.begin(), expectedFollowsT.end());
+
+	std::vector<std::pair<int, int>> actualFollowsT = EntityStager::getStagedFollowsT();
+	std::sort(actualFollowsT.begin(), actualFollowsT.end());
+
+	REQUIRE(actualFollowsT == expectedFollowsT);
+	EntityStager::clear();
+}
+
+TEST_CASE("FollowsT 3.18 - 1 container - 3 basic statements - while") {
+	EntityStager::clear();
+	DesignExtractor::extractDesignElements(RelationshipASTs::getAST3_18());
+
+	std::vector<std::pair<int, int>> expectedFollowsT{ {2, 3}, {3, 4}, {2, 4} };
+	std::sort(expectedFollowsT.begin(), expectedFollowsT.end());
+
+	std::vector<std::pair<int, int>> actualFollowsT = EntityStager::getStagedFollowsT();
+	std::sort(actualFollowsT.begin(), actualFollowsT.end());
+
+	REQUIRE(actualFollowsT == expectedFollowsT);
+	EntityStager::clear();
+}
+
+TEST_CASE("FollowsT 3.19 - 1 container - 3 basic statements - if") {
+	EntityStager::clear();
+	DesignExtractor::extractDesignElements(RelationshipASTs::getAST3_19());
+
+	std::vector<std::pair<int, int>> expectedFollowsT{ 
+		{2, 3}, {3, 4}, {2, 4}, {5, 6}, {6, 7}, {5, 7}
+	};
+	std::sort(expectedFollowsT.begin(), expectedFollowsT.end());
+
+	std::vector<std::pair<int, int>> actualFollowsT = EntityStager::getStagedFollowsT();
+	std::sort(actualFollowsT.begin(), actualFollowsT.end());
+
+	REQUIRE(actualFollowsT == expectedFollowsT);
+	EntityStager::clear();
+}
+
+TEST_CASE("FollowsT 3.20 - 2 nesting levels; 1 basic statement per level - if-while") {
+	EntityStager::clear();
+	DesignExtractor::extractDesignElements(RelationshipASTs::getAST3_20());
+
+	std::vector<std::pair<int, int>> expectedFollowsT{ {2, 3}, {5, 6} };
+	std::sort(expectedFollowsT.begin(), expectedFollowsT.end());
+
+	std::vector<std::pair<int, int>> actualFollowsT = EntityStager::getStagedFollowsT();
+	std::sort(actualFollowsT.begin(), actualFollowsT.end());
+
+	REQUIRE(actualFollowsT == expectedFollowsT);
+	EntityStager::clear();
+}
+
+TEST_CASE("FollowsT 3.21 - 2 nesting levels; 1 basic statement per level - if-if") {
+	EntityStager::clear();
+	DesignExtractor::extractDesignElements(RelationshipASTs::getAST3_21());
+
+	std::vector<std::pair<int, int>> expectedFollowsT{ {2, 3}, {6, 7} };
+	std::sort(expectedFollowsT.begin(), expectedFollowsT.end());
+
+	std::vector<std::pair<int, int>> actualFollowsT = EntityStager::getStagedFollowsT();
+	std::sort(actualFollowsT.begin(), actualFollowsT.end());
+
+	REQUIRE(actualFollowsT == expectedFollowsT);
+	EntityStager::clear();
+}
+
+TEST_CASE("FollowsT 3.22 - 2 nesting levels; 1 basic statement per level - while-if") {
+	EntityStager::clear();
+	DesignExtractor::extractDesignElements(RelationshipASTs::getAST3_22());
+
+	std::vector<std::pair<int, int>> expectedFollowsT{ {2, 5} };
+	std::sort(expectedFollowsT.begin(), expectedFollowsT.end());
+
+	std::vector<std::pair<int, int>> actualFollowsT = EntityStager::getStagedFollowsT();
+	std::sort(actualFollowsT.begin(), actualFollowsT.end());
+
+	REQUIRE(actualFollowsT == expectedFollowsT);
+	EntityStager::clear();
+}
+
+TEST_CASE("FollowsT 3.23 - 2 nesting levels; 1 basic statement per level - while-while") {
+	EntityStager::clear();
+	DesignExtractor::extractDesignElements(RelationshipASTs::getAST3_23());
+
+	std::vector<std::pair<int, int>> expectedFollowsT{ {2, 4} };
+	std::sort(expectedFollowsT.begin(), expectedFollowsT.end());
+
+	std::vector<std::pair<int, int>> actualFollowsT = EntityStager::getStagedFollowsT();
+	std::sort(actualFollowsT.begin(), actualFollowsT.end());
+
+	REQUIRE(actualFollowsT == expectedFollowsT);
+	EntityStager::clear();
+}
+
+TEST_CASE("FollowsT 3.24 - 2 nest levels; 3 statements per nest level - if-while perm 1") {
+	EntityStager::clear();
+	DesignExtractor::extractDesignElements(RelationshipASTs::getAST3_24());
 
 	std::vector<std::pair<int, int>> expectedFollowsT{
-		std::make_pair(1, 2),
-		std::make_pair(1, 3),
-		std::make_pair(2, 3)
+		{2, 3}, {4, 5}, {5, 6}, {4, 6}, {3, 7}, {2, 7}, {8, 12}, {9, 10}, {10, 11}, {9, 11}, {12, 13}, {8, 13}
 	};
+	std::sort(expectedFollowsT.begin(), expectedFollowsT.end());
 
-	REQUIRE(EntityStager::getStagedFollowsT() == expectedFollowsT);
+	std::vector<std::pair<int, int>> actualFollowsT = EntityStager::getStagedFollowsT();
+	std::sort(actualFollowsT.begin(), actualFollowsT.end());
 
+	REQUIRE(actualFollowsT == expectedFollowsT);
 	EntityStager::clear();
 }
 
-TEST_CASE("Follows* - 3 statements - With While") {
-
-	//TODO: nested while
-
+TEST_CASE("FollowsT 3.25 - 2 nest levels; 3 statements per nest level - if-while perm 2") {
 	EntityStager::clear();
-
-	/*
-	 * Test Simple Program
-	 * procedure testProgram {
-	 * 1	while (x > 1) {
-	 * 2	    read x;
-	 * 3        read z;
-	 * 4    	y = x + 1;
-	 *      }
-	 * 5    read y;
-	 * }
-	 */
-
-	 // building AST
-	std::shared_ptr<VariableNode> x = std::make_shared<VariableNode>("x");
-	std::shared_ptr<VariableNode> y = std::make_shared<VariableNode>("y");
-	std::shared_ptr<VariableNode> z = std::make_shared<VariableNode>("z");
-	std::shared_ptr<ConstantNode> one = std::make_shared<ConstantNode>("1");
-
-	std::shared_ptr<RelExprNode> rel = std::make_shared<RelExprNode>(y, ComparatorOperator::GT, one);
-	std::shared_ptr<PredicateNode> pred = std::make_shared<PredicateNode>(rel);
-
-	std::vector<std::shared_ptr<StmtNode>> whileStmtList;
-	std::shared_ptr<ReadNode> read1 = std::make_shared<ReadNode>(2, x);
-	std::shared_ptr<ReadNode> read2 = std::make_shared<ReadNode>(3, z);
-	ExprNode expression = std::make_shared<BinaryOperatorNode>(BinaryOperator::PLUS, x, one);
-	std::shared_ptr<AssignNode> stmt3 = std::make_shared<AssignNode>(4, y, expression, "x 1 +");
-	whileStmtList.push_back(read1);
-	whileStmtList.push_back(read2);
-	whileStmtList.push_back(stmt3);
-
-	std::shared_ptr<WhileNode> whiles = std::make_shared<WhileNode>(1, pred, whileStmtList);
-	std::shared_ptr<ReadNode> read3 = std::make_shared<ReadNode>(5, y);
-	std::vector<std::shared_ptr<StmtNode>> stmtList{ whiles, read3 };
-
-	std::shared_ptr<ProcedureNode> proc = std::make_shared<ProcedureNode>(stmtList, "testProgram");
-	std::vector<std::shared_ptr<ProcedureNode>> procList{ proc };
-
-	AST ast = std::make_shared<ProgramNode>(procList);
-
-	DesignExtractor::extractDesignElements(ast);
-
-	std::vector<std::pair<int, int>> test = EntityStager::getStagedFollowsT();
+	DesignExtractor::extractDesignElements(RelationshipASTs::getAST3_25());
 
 	std::vector<std::pair<int, int>> expectedFollowsT{
-		std::make_pair(1, 5),
-		std::make_pair(2, 3),
-		std::make_pair(2, 4),
-		std::make_pair(3, 4)
+		{2, 6}, {3, 4}, {4, 5}, {3, 5}, {6, 7}, {2, 7}, {8, 9}, {9, 10}, {8, 10}, {11, 12}, {12, 13}, {11, 13}
 	};
+	std::sort(expectedFollowsT.begin(), expectedFollowsT.end());
 
-	REQUIRE(EntityStager::getStagedFollowsT() == expectedFollowsT);
+	std::vector<std::pair<int, int>> actualFollowsT = EntityStager::getStagedFollowsT();
+	std::sort(actualFollowsT.begin(), actualFollowsT.end());
 
+	REQUIRE(actualFollowsT == expectedFollowsT);
 	EntityStager::clear();
 }
 
-TEST_CASE("Follows* - With If") {
+TEST_CASE("FollowsT 3.26 - 2 nest levels; 3 statements per nest level - if-while perm 3") {
 	EntityStager::clear();
+	DesignExtractor::extractDesignElements(RelationshipASTs::getAST3_26());
 
-	//TODO: nested if
-	SECTION("Single if - simple predicate") {
-		/*
-		 * Test Simple Program
-		 * procedure testProgram {
-		 * 1	if (y > 1) then {
-		 * 2        read x;
-		 * 3        read x;
-		 * 4        read x;
-		 *      } else {
-		 *      }
-		 * 5    read y;
-		 * 6    read y;
-		 * 7    read y;
-		 *  }
-		 */
+	std::vector<std::pair<int, int>> expectedFollowsT{
+		{2, 3}, {3, 4}, {2, 4}, {5, 6}, {6, 7}, {5, 7}, {8, 9}, {10, 11}, {11, 12}, {10, 12}, {9, 13}, {8, 13}
+	};
+	std::sort(expectedFollowsT.begin(), expectedFollowsT.end());
 
-		 // building AST
-		std::shared_ptr<VariableNode> x = std::make_shared<VariableNode>("x");
-		std::shared_ptr<VariableNode> y = std::make_shared<VariableNode>("y");
-		RelFactorNode one = std::make_shared<ConstantNode>("1");
+	std::vector<std::pair<int, int>> actualFollowsT = EntityStager::getStagedFollowsT();
+	std::sort(actualFollowsT.begin(), actualFollowsT.end());
 
-		std::shared_ptr<RelExprNode> rel = std::make_shared<RelExprNode>(y, ComparatorOperator::GT, one);
-		std::shared_ptr<PredicateNode> pred = std::make_shared<PredicateNode>(rel);
+	REQUIRE(actualFollowsT == expectedFollowsT);
+	EntityStager::clear();
+}
 
-		std::vector<std::shared_ptr<StmtNode>> thenStmtList;
-		std::shared_ptr<ReadNode> readX2 = std::make_shared<ReadNode>(2, x);
-		std::shared_ptr<ReadNode> readX3 = std::make_shared<ReadNode>(3, x);
-		std::shared_ptr<ReadNode> readX4 = std::make_shared<ReadNode>(4, x);
-		thenStmtList.push_back(readX2);
-		thenStmtList.push_back(readX3);
-		thenStmtList.push_back(readX4);
+TEST_CASE("FollowsT 3.27 - 2 nest levels; 3 statements per nest level - while-if loc 1") {
+	EntityStager::clear();
+	DesignExtractor::extractDesignElements(RelationshipASTs::getAST3_27());
 
-		std::vector<std::shared_ptr<StmtNode>> elseStmtList;
+	std::vector<std::pair<int, int>> expectedFollowsT{
+		{2, 9}, {9, 10}, {2, 10}, {3, 4}, {4, 5}, {3, 5}, {6, 7}, {7, 8}, {6, 8}
+	};
+	std::sort(expectedFollowsT.begin(), expectedFollowsT.end());
 
-		std::shared_ptr<IfNode> ifs = std::make_shared<IfNode>(1, pred, thenStmtList, elseStmtList);
-		std::shared_ptr<ReadNode> readY5 = std::make_shared<ReadNode>(5, y);
-		std::shared_ptr<ReadNode> readY6 = std::make_shared<ReadNode>(6, y);
-		std::shared_ptr<ReadNode> readY7 = std::make_shared<ReadNode>(7, y);
-		std::vector<std::shared_ptr<StmtNode>> stmtList{ ifs, readY5, readY6, readY7 };
-		std::shared_ptr<ProcedureNode> proc = std::make_shared<ProcedureNode>(stmtList, "testProgram");
-		std::vector<std::shared_ptr<ProcedureNode>> procList{ proc };
+	std::vector<std::pair<int, int>> actualFollowsT = EntityStager::getStagedFollowsT();
+	std::sort(actualFollowsT.begin(), actualFollowsT.end());
 
-		AST ast = std::make_shared<ProgramNode>(procList);
+	REQUIRE(actualFollowsT == expectedFollowsT);
+	EntityStager::clear();
+}
 
-		DesignExtractor::extractDesignElements(ast);
-		std::vector<std::pair<int, int>> test = EntityStager::getStagedFollowsT();
-		std::vector<std::pair<int, int>> expectedFollows{
-			std::make_pair(1, 5), std::make_pair(1, 6), std::make_pair(1, 7),
-			std::make_pair(2, 3), std::make_pair(2, 4), std::make_pair(3, 4),
-			std::make_pair(5, 6), std::make_pair(5, 7), std::make_pair(6, 7)
-		};
+TEST_CASE("FollowsT 3.28 - 2 nest levels; 3 statements per nest level - while-if loc 2") {
+	EntityStager::clear();
+	DesignExtractor::extractDesignElements(RelationshipASTs::getAST3_28());
 
-		REQUIRE(EntityStager::getStagedFollowsT() == expectedFollows);
+	std::vector<std::pair<int, int>> expectedFollowsT{
+		{2, 3}, {3, 10}, {2, 10}, {4, 5}, {5, 6}, {4, 6}, {7, 8}, {8, 9}, {7, 9}
+	};
+	std::sort(expectedFollowsT.begin(), expectedFollowsT.end());
 
-		DesignExtractor::extractDesignElements(ast);
+	std::vector<std::pair<int, int>> actualFollowsT = EntityStager::getStagedFollowsT();
+	std::sort(actualFollowsT.begin(), actualFollowsT.end());
 
-		EntityStager::clear();
-	}
+	REQUIRE(actualFollowsT == expectedFollowsT);
+	EntityStager::clear();
+}
+
+TEST_CASE("FollowsT 3.29 - 2 nest levels; 3 statements per nest level - while-if loc 3") {
+	EntityStager::clear();
+	DesignExtractor::extractDesignElements(RelationshipASTs::getAST3_29());
+
+	std::vector<std::pair<int, int>> expectedFollowsT{
+		{2, 3}, {3, 4}, {2, 4}, {5, 6}, {6, 7}, {5, 7}, {8, 9}, {9, 10}, {8, 10}
+	};
+	std::sort(expectedFollowsT.begin(), expectedFollowsT.end());
+
+	std::vector<std::pair<int, int>> actualFollowsT = EntityStager::getStagedFollowsT();
+	std::sort(actualFollowsT.begin(), actualFollowsT.end());
+
+	REQUIRE(actualFollowsT == expectedFollowsT);
+	EntityStager::clear();
+}
+
+TEST_CASE("FollowsT 3.30 - 3 levels of nesting - 1 stmt per nest level - if-if-if") {
+	EntityStager::clear();
+	DesignExtractor::extractDesignElements(RelationshipASTs::getAST3_30());
+
+	std::vector<std::pair<int, int>> expectedFollowsT{
+		{4, 7}, {2, 8}
+	};
+	std::sort(expectedFollowsT.begin(), expectedFollowsT.end());
+
+	std::vector<std::pair<int, int>> actualFollowsT = EntityStager::getStagedFollowsT();
+	std::sort(actualFollowsT.begin(), actualFollowsT.end());
+
+	REQUIRE(actualFollowsT == expectedFollowsT);
+	EntityStager::clear();
+}
+
+TEST_CASE("FollowsT 3.31 - 3 levels of nesting - 1 stmt per nest level - while-while-while") {
+	EntityStager::clear();
+	DesignExtractor::extractDesignElements(RelationshipASTs::getAST3_31());
+
+	std::vector<std::pair<int, int>> expectedFollowsT{
+		{3, 5}, {2, 6}
+	};
+	std::sort(expectedFollowsT.begin(), expectedFollowsT.end());
+
+	std::vector<std::pair<int, int>> actualFollowsT = EntityStager::getStagedFollowsT();
+	std::sort(actualFollowsT.begin(), actualFollowsT.end());
+
+	REQUIRE(actualFollowsT == expectedFollowsT);
+	EntityStager::clear();
+}
+
+TEST_CASE("FollowsT 3.32 - 3 levels of nesting - 1 stmt per nest level - while-if-while") {
+	EntityStager::clear();
+	DesignExtractor::extractDesignElements(RelationshipASTs::getAST3_32());
+
+	std::vector<std::pair<int, int>> expectedFollowsT{
+		{3, 5}, {2, 9}, {6, 8}
+	};
+	std::sort(expectedFollowsT.begin(), expectedFollowsT.end());
+
+	std::vector<std::pair<int, int>> actualFollowsT = EntityStager::getStagedFollowsT();
+	std::sort(actualFollowsT.begin(), actualFollowsT.end());
+
+	REQUIRE(actualFollowsT == expectedFollowsT);
+	EntityStager::clear();
+}
+
+TEST_CASE("FollowsT 3.33 - 3 levels of nesting - 1 stmt per nest level - if-while-if") {
+	EntityStager::clear();
+	DesignExtractor::extractDesignElements(RelationshipASTs::getAST3_33());
+
+	std::vector<std::pair<int, int>> expectedFollowsT{
+		{3, 6}, {2, 7}
+	};
+	std::sort(expectedFollowsT.begin(), expectedFollowsT.end());
+
+	std::vector<std::pair<int, int>> actualFollowsT = EntityStager::getStagedFollowsT();
+	std::sort(actualFollowsT.begin(), actualFollowsT.end());
+
+	REQUIRE(actualFollowsT == expectedFollowsT);
+	EntityStager::clear();
+}
+
+TEST_CASE("FollowsT 4.1 - Complex AST") {
+	EntityStager::clear();
+	DesignExtractor::extractDesignElements(ComplexASTs::getAST4_1());
+
+	std::vector<std::pair<int, int>> expectedFollowsT{
+		{1, 2}, {2, 3}, {3, 4}, {4, 5}, 
+		{1, 3}, {1, 4}, {1, 5},
+		{2, 4}, {2, 5}, {3, 5},
+		{5, 18}, {1, 18}, {2, 18}, {3, 18}, {4, 18},
+		{7, 8}, {8, 9}, {9, 10}, {10, 14},
+		{7, 9}, {7, 10}, {7, 14},
+		{8, 10}, {8, 14}, {9, 14},
+		{11, 12}, {15, 16}, {16, 17}, {15, 17}
+	};
+	std::sort(expectedFollowsT.begin(), expectedFollowsT.end());
+
+	std::vector<std::pair<int, int>> actualFollowsT = EntityStager::getStagedFollowsT();
+	std::sort(actualFollowsT.begin(), actualFollowsT.end());
+
+	REQUIRE(actualFollowsT == expectedFollowsT);
+	EntityStager::clear();
 }

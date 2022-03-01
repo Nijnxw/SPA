@@ -1,75 +1,83 @@
-#include <unordered_set>
 #include "QueryEvaluator.h"
-#include "models/QueryClauseTable.h"
+#include "models/QueryClauseResult.h"
 #include "PQL/evaluators/EntityEvaluator.h"
 #include "PQL/evaluators/ClauseEvaluator.h"
 #include "util/QueryUtils.h"
 
+// assume single result synonym
+// assume at most 2 clauses (iter 1 req)
 Table QueryEvaluator::evaluate(Query& query) {
-	Table results;
+	Table finalResult;
 
-	QueryArgument resultSynonym = query.getResultSynonyms().front();
-	std::unordered_set<std::string> selectRelatedSynonyms = {resultSynonym.getValue()};    // for iter 1 (1 select)
-	std::vector<QueryClauseTable> relatedResults;
+	bool isNoClauseQuery = query.getClauses().empty();
+	bool isSingleClauseQuery = query.getClauses().size() == 1;
+	bool isMultiClauseQuery = query.getClauses().size() == 2;
 
-	// for iteration 1, just check the 2 clauses, in future iteration, need to group clauses
-	if (query.getClauses().empty()) {
-		results = EntityEvaluator::evaluate(resultSynonym).getTable();
-	} else if (query.getClauses().size() == 1) {
-		QueryClause clause = query.getClauses().at(0);
-		bool clauseContainsSelect = clause.getUsedSynonyms().count(resultSynonym.getValue()) > 0;
+	if (query.getResultSynonyms().size() != 1) {
+		return finalResult;
+	}
 
-		if (clauseContainsSelect) {
-			results = ClauseEvaluator::evaluate(clause, false).getTable();
-		} else {
-			Table clauseResult = ClauseEvaluator::evaluate(clause, true).getTable();
-			if (!clauseResult.empty()) {
-				results = EntityEvaluator::evaluate(resultSynonym).getTable();
-			}
-		}
-	} else {
+	QueryArgument resultSyn = query.getResultSynonyms().front();
+
+	if (isNoClauseQuery) {
+		finalResult = EntityEvaluator::evaluate(resultSyn).getTable();
+	} else if (isSingleClauseQuery) {
+		QueryClause clause = query.getClauses().front();
+		finalResult = evaluateSingleClause(clause, resultSyn);
+	} else if (isMultiClauseQuery) {
 		QueryClause firstClause = query.getClauses().at(0);
 		QueryClause secondClause = query.getClauses().at(1);
-		bool eitherClauseContainsSelect =
-			firstClause.containsSynonym(resultSynonym) || secondClause.containsSynonym(resultSynonym);
+		finalResult = evaluateMultiClause(firstClause, secondClause, resultSyn);
+	}
 
-		if (eitherClauseContainsSelect) {
-			if (firstClause.containsCommonSynonym(secondClause)) {
-				Table firstTable = ClauseEvaluator::evaluate(firstClause, false).getTable();
-				Table secondTable = ClauseEvaluator::evaluate(secondClause, false).getTable();
+	return finalResult;
+}
 
-				results = QueryUtils::hashJoin(firstTable, secondTable);
-			} else if (firstClause.containsSynonym(resultSynonym)) {
-				Table firstTable = ClauseEvaluator::evaluate(firstClause, false).getTable();
-				Table secondTable = ClauseEvaluator::evaluate(secondClause, true).getTable();
+Table QueryEvaluator::evaluateSingleClause(QueryClause& clause, QueryArgument& resultSyn) {
+	bool clauseContainsResSyn = clause.containsSynonym(resultSyn);
+	QueryClauseResult clauseRes = ClauseEvaluator::evaluate(clause, false);
 
-				if (!secondTable.empty()) {
-					results = firstTable;
-				}
-			} else {
-				Table firstTable = ClauseEvaluator::evaluate(firstClause, true).getTable();
-				Table secondTable = ClauseEvaluator::evaluate(secondClause, false).getTable();
+	if (!clauseContainsResSyn && clauseRes.containsValidResult()) {
+		return EntityEvaluator::evaluate(resultSyn).getTable();
+	} else {
+		return clauseRes.getTable();
+	}
+}
 
-				if (!firstTable.empty()) {
-					results = secondTable;
-				}
-			}
+Table QueryEvaluator::evaluateMultiClause(QueryClause& firstClause, QueryClause& secondClause,
+										  QueryArgument& resultSyn) {
+	QueryClauseResult firstClauseRes = ClauseEvaluator::evaluate(firstClause, false);
+	QueryClauseResult secondClauseRes = ClauseEvaluator::evaluate(secondClause, false);
+	Table emptyRes;
+
+	bool noneContainsResSyn = !firstClause.containsSynonym(resultSyn) && !secondClause.containsSynonym(resultSyn);
+	bool bothContainsResSyn = firstClause.containsSynonym(resultSyn) && secondClause.containsSynonym(resultSyn);
+
+	if (bothContainsResSyn) {
+		return QueryUtils::hashJoin(firstClauseRes.getTable(), secondClauseRes.getTable());
+	} else if (noneContainsResSyn) {
+		bool containsResult;
+		if (firstClause.containsCommonSynonym(secondClause)) {
+			Table intermediateRes = QueryUtils::hashJoin(firstClauseRes.getTable(), secondClauseRes.getTable());
+			containsResult = !intermediateRes.empty();
 		} else {
-			Table firstTable = ClauseEvaluator::evaluate(firstClause, false).getTable();
-			Table secondTable = ClauseEvaluator::evaluate(secondClause, false).getTable();
+			containsResult = firstClauseRes.containsValidResult() && secondClauseRes.containsValidResult();
+		}
 
-			if (firstClause.containsCommonSynonym(secondClause)) {
-				Table intermediateResult = QueryUtils::hashJoin(firstTable, secondTable);
-				if (!intermediateResult.empty()) {
-					results = EntityEvaluator::evaluate(resultSynonym).getTable();
-				}
-			} else {
-				if (!firstTable.empty() && !secondTable.empty()) {
-					results = EntityEvaluator::evaluate(resultSynonym).getTable();
-				}
-			}
+		if (containsResult) {
+			return EntityEvaluator::evaluate(resultSyn).getTable();
+		}
+	} else {
+		if (firstClause.containsCommonSynonym(secondClause)) {
+			return QueryUtils::hashJoin(firstClauseRes.getTable(), secondClauseRes.getTable());
+		}
+
+		if (firstClause.containsSynonym(resultSyn)) {
+			return secondClauseRes.containsValidResult() ? firstClauseRes.getTable() : emptyRes;
+		} else {
+			return firstClauseRes.containsValidResult() ? secondClauseRes.getTable() : emptyRes;
 		}
 	}
 
-	return results;
+	return emptyRes;
 }

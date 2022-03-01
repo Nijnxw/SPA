@@ -35,9 +35,14 @@ TEST_CASE("Correct Handling of Terms") {
 }
 
 TEST_CASE("Correct Handling of Parentheses") {
+    REQUIRE(RPN::convertToRpn("(1)") == "1");
+    REQUIRE(RPN::convertToRpn("((((1))))") == "1");
+    REQUIRE(RPN::convertToRpn("(x)") == "x");
     REQUIRE(RPN::convertToRpn("(1 - 5)") == "1 5 -");
+    REQUIRE(RPN::convertToRpn("(((1 - 6)))") == "1 6 -");
     REQUIRE(RPN::convertToRpn("3 + 44 * 2 / ( 1 - 5 )") == "3 44 2 * 1 5 - / +");
     REQUIRE(RPN::convertToRpn("3+4*2/(1-5)+1*22") == "3 4 2 * 1 5 - / + 1 22 * +");
+    REQUIRE(RPN::convertToRpn("3+4*2/(((((1-5)))))+1*22") == "3 4 2 * 1 5 - / + 1 22 * +");
 }
 
 TEST_CASE("Correct Handling of Contains") {
@@ -49,8 +54,10 @@ TEST_CASE("Correct Handling of Contains") {
 
     std::string rpn2("3 4 2 *");
     std::string rpn3("3 4 *");
+    std::string rpn4("33 4 2 *");
     REQUIRE(RPN::contains(rpn1, rpn2) == true);
     REQUIRE(RPN::contains(rpn1, rpn3) == false);
+    REQUIRE(RPN::contains(rpn1, rpn4) == false);
 }
 
 TEST_CASE("Invalid Token Name") {
@@ -60,12 +67,4 @@ TEST_CASE("Invalid Token Name") {
 TEST_CASE("Mismatch Parentheses") {
     REQUIRE_THROWS_WITH(RPN::convertToRpn("1+)"), "Non Matching Parentheses Detected.\n");
     REQUIRE_THROWS_WITH(RPN::convertToRpn("(abc+123"), "Non Matching Parentheses Detected.\n");
-}
-
-TEST_CASE("RPN mismatch size") {
-    std::string rpn1("3 4 2 *");
-    std::string rpn2("3 4 2 * 1 5 - / + 1 22 * +");
-    
-    REQUIRE_NOTHROW(RPN::contains(rpn2, rpn1) == true);
-    REQUIRE_THROWS_WITH(RPN::contains(rpn1, rpn2), "RPN elements length mismatch.\n");
 }

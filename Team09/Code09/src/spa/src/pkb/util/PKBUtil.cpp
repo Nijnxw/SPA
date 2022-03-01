@@ -99,4 +99,16 @@ namespace PKBUtil
 
         return { firstColumn, secondColumn };
     }
+
+    static std::unordered_set<std::pair<int, int>, PKBUtil::hashFunction> convertVectorTupleToSetPairs(std::vector<int> firstEntities, std::vector<int> secondEntities) {
+        std::unordered_set<std::pair<int, int>, PKBUtil::hashFunction> result;
+
+        for (int i = 0; i < firstEntities.size(); i++) {
+            std::pair<int, int> pair;
+            pair = std::make_pair(firstEntities[i], secondEntities[i]);
+            result.insert(pair);
+        }
+        
+        return result;
+    }
 }

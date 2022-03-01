@@ -9,17 +9,24 @@
 #include "pkb/PKB.h"
 #include "pkb/util/PKBUtil.cpp"
 #include "models/EntityType.h"
-#include "models/QueryClauseTable.h"
+#include "models/QueryClauseResult.h"
 #include "models/QueryClause.h"
 
 #include "StmtStmtRelationshipEvaluator.h"
 
 class FollowsEvaluator : public StmtStmtRelationshipEvaluator {
+private: 
+	QueryClauseResult getRelationship(RelationRef relationship, const std::string& LHS, const std::string& RHS, EntityType LHSType, EntityType RHSType,
+		bool isBooleanResult);
+	QueryClauseResult getTransitiveRelationship(RelationRef relationship, const std::string& LHS, const std::string& RHS, EntityType LHSType, EntityType RHSType,
+		bool isBooleanResult);
 public:
-	static QueryClauseTable
+	FollowsEvaluator();
+
+	QueryClauseResult
 		getFollows(const std::string& LHS, const std::string& RHS, EntityType LHSType, EntityType RHSType,
 			bool isBooleanResult);
-	static QueryClauseTable
+	QueryClauseResult
 		getFollowsT(const std::string& LHS, const std::string& RHS, EntityType LHSType, EntityType RHSType,
 			bool isBooleanResult);
 };

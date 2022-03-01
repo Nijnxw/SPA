@@ -1,3 +1,4 @@
+#include "asts/NonContainerStmtASTs.h"
 #include "simple_parser/SPParser.h"
 #include "simple_parser/Token.h"
 
@@ -7,61 +8,37 @@
 // --------------------------------------------------
 //                  HAPPY PATHS
 // --------------------------------------------------
-TEST_CASE ("Test parsing of valid print statements") {
-	SECTION("One print statement") {
-		/*
-		 * Test Simple Program
-		 * procedure testProgram {
-		 * 1	print p;
-		 * }
-		 */
-		std::vector<Token*> input = {
-				new NameToken("procedure"), 	new NameToken("testProgram"),
-				new PunctuatorToken("{"),   	new NameToken("print"),
-				new NameToken("p"),        	new PunctuatorToken(";"),
-				new PunctuatorToken("}"),	new EndOfFileToken(),
-		};
+TEST_CASE ("Print 1.2 - Basic print") {
+	std::vector<Token*> input = {
+			new NameToken("procedure"), 	new NameToken("testProgram"),	new PunctuatorToken("{"),
+			new NameToken("print"),		new NameToken("x"),        		new PunctuatorToken(";"),
+			new PunctuatorToken("}"),	new EndOfFileToken(),
+	};
 
-		SPParser parser = SPParser(input);
-		AST output = parser.parseProgram();
+	SPParser parser = SPParser(input);
+	AST output = parser.parseProgram();
 
-		std::shared_ptr<PrintNode> printNode = std::make_shared<PrintNode>(1, std::make_shared<VariableNode>("p"));
-		std::vector<std::shared_ptr<StmtNode>> stmtLst{move(printNode)};
-		std::shared_ptr<ProcedureNode> procedureNode = std::make_shared<ProcedureNode>(stmtLst, "testProgram");
-		std::vector<std::shared_ptr<ProcedureNode>> procLst{move(procedureNode)};
-		AST expected = std::make_shared<ProgramNode>(procLst);
+	REQUIRE(*output == *NonContainerStmtASTs::getAST1_2());
+}
+TEST_CASE ("Print 1.2a - A few print statements") {
+	std::vector<Token*> input = {
+			new NameToken("procedure"),	new NameToken("testProgram"),	new PunctuatorToken("{"),
+			new NameToken("print"),		new NameToken("x"), 				new PunctuatorToken(";"),
+			new NameToken("print"),		new NameToken("y"),				new PunctuatorToken(";"),
+			new PunctuatorToken("}"),	new EndOfFileToken(),
+	};
 
-		REQUIRE(*output == *expected);
-	}
-	SECTION("A few print statements") {
-		/*
-		 * Test Simple Program
-		 * procedure testProgram {
-		 * 1	print p;
-		 * 2	print testProgram;
-		 * }
-		 */
-		std::vector<Token*> input = {
-				new NameToken("procedure"),	new NameToken("testProgram"),
-				new PunctuatorToken("{"),   	new NameToken("print"),
-				new NameToken("p"), 			new PunctuatorToken(";"),
-				new NameToken("print"),		new NameToken("testProgram"),
-				new PunctuatorToken(";"),	new PunctuatorToken("}"),
-				new EndOfFileToken(),
-		};
+	SPParser parser = SPParser(input);
+	AST output = parser.parseProgram();
 
-		SPParser parser = SPParser(input);
-		AST output = parser.parseProgram();
+	std::shared_ptr<PrintNode> printNode1 = std::make_shared<PrintNode>(1, std::make_shared<VariableNode>("x"));
+	std::shared_ptr<PrintNode> printNode2 = std::make_shared<PrintNode>(2, std::make_shared<VariableNode>("y"));
+	std::vector<std::shared_ptr<StmtNode>> stmtLst {printNode1, printNode2};
+	std::shared_ptr<ProcedureNode> procedureNode = std::make_shared<ProcedureNode>(stmtLst, "testProgram");
+	std::unordered_map<std::string, std::shared_ptr<ProcedureNode>> procMap{ {"testProgram", procedureNode} };
+	AST expected = std::make_shared<ProgramNode>(procMap);
 
-		std::shared_ptr<PrintNode> printNode1 = std::make_shared<PrintNode>(1, std::make_shared<VariableNode>("p"));
-		std::shared_ptr<PrintNode> printNode2 = std::make_shared<PrintNode>(2, std::make_shared<VariableNode>("testProgram"));
-		std::vector<std::shared_ptr<StmtNode>> stmtLst{move(printNode1), move(printNode2)};
-		std::shared_ptr<ProcedureNode> procedureNode = std::make_shared<ProcedureNode>(stmtLst, "testProgram");
-		std::vector<std::shared_ptr<ProcedureNode>> procLst{move(procedureNode)};
-		AST expected = std::make_shared<ProgramNode>(procLst);
-
-		REQUIRE(*output == *expected);
-	}
+	REQUIRE(*output == *expected);
 }
 
 // --------------------------------------------------
@@ -76,7 +53,7 @@ TEST_CASE ("Test parsing of invalid print statement") {
 				new PunctuatorToken("}"),	new EndOfFileToken(),
 		};
 		SPParser parser = SPParser(input);
-		REQUIRE_THROWS_WITH(parser.parseProgram(), "Expected '=' but got 'p' instead.\n");
+		REQUIRE_THROWS_WITH(parser.parseProgram(), "Invalid statement syntax at statement 1.\n");
 	}
 	SECTION ("'print' keyword is case sensitive") {
 		std::vector<Token*> input = {
@@ -86,7 +63,7 @@ TEST_CASE ("Test parsing of invalid print statement") {
 				new PunctuatorToken("}"),	new EndOfFileToken(),
 		};
 		SPParser parser = SPParser(input);
-		REQUIRE_THROWS_WITH(parser.parseProgram(), "Expected '=' but got 'p' instead.\n");
+		REQUIRE_THROWS_WITH(parser.parseProgram(), "Invalid statement syntax at statement 1.\n");
 	}
 	SECTION ("Constants as var_name") {
 		std::vector<Token*> input = {

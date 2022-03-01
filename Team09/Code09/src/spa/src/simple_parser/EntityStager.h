@@ -79,8 +79,8 @@ public:
 
 	static void stageFollows(int follower, int followee);
 	static void stageFollowsT(int follower, int followee);
-	static void stageParent(int parent, int child);
-	static void stageParentT(int parent, int child);
+	static void stageParent(int parent, std::unordered_set<int> children);
+	static void stageParentT(int parent, std::unordered_set<int> children);
 
 	static void stageUsesStatements(int stmt, std::unordered_set<std::string> variables);
 	static void stageUsesProcedure(std::string proc, std::unordered_set<std::string> variables);

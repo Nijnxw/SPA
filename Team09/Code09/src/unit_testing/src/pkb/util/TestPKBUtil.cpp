@@ -144,4 +144,20 @@ TEST_CASE("PKBUtil Helper Functions") {
 			std::tuple<std::vector<int>, std::vector<int>> expectedTuple = { firstColumn, secondColumn };
 			REQUIRE(tuple == expectedTuple);
 		}
+
+		SECTION("convertVectorTupleToSetPairs positive query when key exists") {
+			std::vector<int> firstColumn = { 1 };
+			std::vector<int> secondColumn = { 2 };
+
+			std::unordered_set<std::pair<int, int>, PKBUtil::hashFunction> tuple = 
+				PKBUtil::convertVectorTupleToSetPairs(firstColumn, secondColumn);
+
+			std::unordered_set<std::pair<int, int>, PKBUtil::hashFunction> expectedTuple;
+
+			std::pair<int, int> pair;
+			pair = std::make_pair(1, 2);
+			expectedTuple.insert(pair);
+
+			REQUIRE(tuple == expectedTuple);
+		}
 }

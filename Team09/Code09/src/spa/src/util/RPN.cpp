@@ -1,10 +1,32 @@
 #include "util/RPN.h"
 #include "util/RPNToken.h"
 
+//string splitter util
+std::vector<std::string> split(const std::string& s, char delim) {
+	std::vector<std::string> output;
+	std::istringstream iss(s);
+	std::string item;
+	while (std::getline(iss, item, delim)) {
+		output.push_back(item);
+	}
+	return output;
+}
+
 //check if this rpn contains the other rpn
 bool RPN::contains(std::string rpn1, std::string rpn2) {
-	if (rpn1.length() < rpn2.length()) throw std::runtime_error("RPN elements length mismatch.\n");
-	return rpn1.find(rpn2) != std::string::npos;
+	std::vector<std::string> tokens1 = split(rpn1, ' ');
+	std::vector<std::string> tokens2 = split(rpn2, ' ');
+	if (tokens1.size() < tokens2.size()) return false;
+
+	bool output = false;
+	for (int start = 0; start <= tokens1.size() - tokens2.size(); start++) {
+		bool isSubVector = true;
+		for (int offset = 0; offset < tokens2.size(); offset++) {
+			isSubVector = isSubVector && tokens2[offset] == tokens1[start + offset];
+		}
+		output = output || isSubVector;
+	}
+	return output;
 }
 
 // HELPER IDENTIFIER FUNCTIONS
@@ -117,11 +139,11 @@ std::string RPN::convertToRpn(std::string infix) {
 		} else {
 			bool matched = false;
 			while (!stack.empty() && !matched) {
-				rpn.push_back(stack.top().getContents());
-				stack.pop();
-
 				if (!stack.empty() && stack.top().isLeftParenthesis()) {
 					matched = true;
+					stack.pop();
+				} else {
+					rpn.push_back(stack.top().getContents());
 					stack.pop();
 				}
 			}

@@ -1,7 +1,7 @@
 #include "EntityEvaluator.h"
 #include "pkb/PKB.h"
 
-QueryClauseTable EntityEvaluator::evaluate(QueryArgument& entity) {
+QueryClauseResult EntityEvaluator::evaluate(QueryArgument& entity) {
 	Table result;
 	std::vector<std::string> rows;
 	switch (entity.getType()) {

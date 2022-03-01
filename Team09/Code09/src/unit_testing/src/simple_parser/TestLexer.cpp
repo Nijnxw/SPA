@@ -155,7 +155,14 @@ TEST_CASE("Test SIMPLE program") {
 // --------------------------------------------------
 //                  UNHAPPY PATHS
 // --------------------------------------------------
-TEST_CASE("Test undefined tokens") {
+TEST_CASE("Test invalid symbols - underscore") {
+	std::string program = "proc_name";
+	std::istringstream input(program);
+	auto lexer = Lexer(&input);
+	REQUIRE_THROWS(lexer.tokenize());
+}
+
+TEST_CASE("Test invalid symbols - '@'") {
     std::string program = "@";
     std::istringstream input(program);
     auto lexer = Lexer(&input);

@@ -32,8 +32,8 @@ AST generateAST(std::string varName, bool isReadStmt = true) {
 		);
 	}
 	std::shared_ptr<ProcedureNode> proc = std::make_shared<ProcedureNode>(stmts, "main");
-	std::vector<std::shared_ptr<ProcedureNode>> procList{ proc };
-	return std::make_shared<ProgramNode>(procList);
+	std::unordered_map<std::string, std::shared_ptr<ProcedureNode>> procMap{ {"main", proc} };
+	return std::make_shared<ProgramNode>(procMap);
 }
 
 // --------------------------------------------------
@@ -153,8 +153,8 @@ TEST_CASE("Const validity 7.1 - constant") {
 	};
 
 	std::shared_ptr<ProcedureNode> proc = std::make_shared<ProcedureNode>(stmts, "main");
-	std::vector<std::shared_ptr<ProcedureNode>> procList{ proc };
-	AST expected = std::make_shared<ProgramNode>(procList);
+	std::unordered_map<std::string, std::shared_ptr<ProcedureNode>> procMap{ {"main", proc} };
+	AST expected = std::make_shared<ProgramNode>(procMap);
 
 	REQUIRE(*output == *expected);
 }
@@ -177,8 +177,8 @@ TEST_CASE("Const validity 7.2 - const can be as long as possible") {
 	};
 
 	std::shared_ptr<ProcedureNode> proc = std::make_shared<ProcedureNode>(stmts, "main");
-	std::vector<std::shared_ptr<ProcedureNode>> procList{ proc };
-	AST expected = std::make_shared<ProgramNode>(procList);
+	std::unordered_map<std::string, std::shared_ptr<ProcedureNode>> procMap{ {"main", proc} };
+	AST expected = std::make_shared<ProgramNode>(procMap);
 
 	REQUIRE(*output == *expected);
 }

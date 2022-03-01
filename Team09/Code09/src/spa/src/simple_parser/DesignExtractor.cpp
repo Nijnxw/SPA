@@ -173,8 +173,6 @@ NestableRelationships processCallNode(AST ast, std::vector<std::string> callStac
 
 	if (!ast->contains(call->getProcedureName())) return NestableRelationships::createEmpty();
 
-	std::shared_ptr<ProcedureNode> test = ast->retrieve(call->getProcedureName());
-
 	NestableRelationships rs = processProcedure(ast, callStack, ast->retrieve(call->getProcedureName())); //under cache system: this wont populate callstore also
 	rs.clearChildren(); //remove parent-child information
 

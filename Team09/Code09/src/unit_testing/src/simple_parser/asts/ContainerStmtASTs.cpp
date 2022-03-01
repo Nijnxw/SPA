@@ -802,3 +802,227 @@ AST ContainerStmtASTs::getAST1_73() {
 
 	return generateBasicAST(stmtLst);
 }
+
+AST ContainerStmtASTs::getAST1_74() {
+	/*
+	 * procedure testProgram {
+	 * 1    read x;
+	 * }
+	 *
+	 * procedure testProgram2 {
+	 * 2	if (x < 1) then {
+	 * 3		read x;
+	 * 		} else {
+	 * 4		if (y < 1) then {
+	 * 5			read y;
+	 * 			} else {
+	 * 6			print y; } } }
+	 */
+	
+	std::vector<std::shared_ptr<StmtNode>> proc1StmtLst{
+		std::make_shared<ReadNode>(1, z)
+	};
+	
+	std::shared_ptr<ProcedureNode> proc1 = std::make_shared<ProcedureNode>(proc1StmtLst, "testProgram");
+
+	std::vector<std::shared_ptr<StmtNode>> thenStmtLst{
+			std::make_shared<ReadNode>(3, x)
+	};
+
+	std::vector<std::shared_ptr<StmtNode>> innerThenStmtLst{
+			std::make_shared<ReadNode>(5, y)
+	};
+
+	std::vector<std::shared_ptr<StmtNode>> innerElseStmtLst{
+			std::make_shared<PrintNode>(6, y)
+	};
+
+	std::vector<std::shared_ptr<StmtNode>> elseStmtLst{
+			std::make_shared<IfNode>(4, predYLtC1, innerThenStmtLst, innerElseStmtLst)
+	};
+
+	std::vector<std::shared_ptr<StmtNode>> proc2StmtLst{
+			std::make_shared<IfNode>(2, predXLtC1, thenStmtLst, elseStmtLst)
+	};
+
+	std::shared_ptr<ProcedureNode> proc2 = std::make_shared<ProcedureNode>(proc2StmtLst, "testProgram2");
+
+	std::unordered_map<std::string, std::shared_ptr<ProcedureNode>> procMap{ 
+		{"testProgram", proc1},
+		{"testProgram2", proc2},
+	};
+
+	return std::make_shared<ProgramNode>(procMap);
+}
+
+AST ContainerStmtASTs::getAST1_75() {
+	/*
+	 * procedure testProgram1 {
+	 * 1	print z;
+	 *  }
+	 * 
+	 * procedure testProgram2 {
+	 * 2	while (!((y + 1 < x) && ((x == 2) || (1 != 1)))) {
+	 * 3		read x; } }
+	 */
+
+	std::vector<std::shared_ptr<StmtNode>> proc1StmtLst{
+		std::make_shared<PrintNode>(1, z)
+	};
+
+	std::shared_ptr<ProcedureNode> proc1 = std::make_shared<ProcedureNode>(proc1StmtLst, "testProgram");
+
+	std::shared_ptr<PredicateNode> predOr = std::make_shared<PredicateNode>(predXEqC2,
+		ConditionalOperator::OR,
+		predC1NeqC1);
+	std::shared_ptr<PredicateNode> predAnd = std::make_shared<PredicateNode>(predYPlusC1LtX,
+		ConditionalOperator::AND,
+		predOr);
+	std::shared_ptr<PredicateNode> predNot = std::make_shared<PredicateNode>(ConditionalOperator::NOT,
+		predAnd);
+
+	std::vector<std::shared_ptr<StmtNode>> whileStmtLst{
+		std::make_shared<ReadNode>(3, x)
+	};
+
+	std::vector<std::shared_ptr<StmtNode>> proc2StmtLst{
+			std::make_shared<WhileNode>(2, predNot, whileStmtLst)
+	};
+
+	std::shared_ptr<ProcedureNode> proc2 = std::make_shared<ProcedureNode>(proc2StmtLst, "testProgram2");
+
+	std::unordered_map<std::string, std::shared_ptr<ProcedureNode>> procMap{
+		{"testProgram", proc1},
+		{"testProgram2", proc2},
+	};
+
+	return std::make_shared<ProgramNode>(procMap);
+}
+
+AST ContainerStmtASTs::getAST1_76() {
+	/*
+	 * procedure testProgram {
+	 * 1	a = 1 + (x * (y - 2) / (z % 3));
+	 * }
+	 * 
+	 * procedure testProgram2 {
+	 * 2	print b;
+	 * }
+	 */
+	
+	auto zModC3 = std::make_shared<BinaryOperatorNode>(BinaryOperator::MODULO, z, c3);
+	auto yMinusC2 = std::make_shared<BinaryOperatorNode>(BinaryOperator::MINUS, y, c2);
+	auto xTimesYMinusC2 = std::make_shared<BinaryOperatorNode>(BinaryOperator::TIMES, x, yMinusC2);
+	auto xTimesYMinusC2DivZModC3 = std::make_shared<BinaryOperatorNode>(BinaryOperator::DIVIDE, xTimesYMinusC2, zModC3);
+
+	std::vector<std::shared_ptr<StmtNode>> proc1StmtLst{
+			std::make_shared<AssignNode>(1, a,
+										 std::make_shared<BinaryOperatorNode>(BinaryOperator::PLUS, c1, xTimesYMinusC2DivZModC3),
+										 "1 x y 2 - * z 3 % / +"),
+	};
+
+	std::shared_ptr<ProcedureNode> proc1 = std::make_shared<ProcedureNode>(proc1StmtLst, "testProgram");
+
+	std::vector<std::shared_ptr<StmtNode>> proc2StmtLst{
+		std::make_shared<PrintNode>(2, b)
+	};
+	std::shared_ptr<ProcedureNode> proc2 = std::make_shared<ProcedureNode>(proc2StmtLst, "testProgram2");
+
+	std::unordered_map<std::string, std::shared_ptr<ProcedureNode>> procMap{
+		{"testProgram", proc1},
+		{"testProgram2", proc2},
+	};
+
+	return std::make_shared<ProgramNode>(procMap);
+}
+
+AST ContainerStmtASTs::getAST1_77() {
+	/*
+	 * procedure testProgram {
+	 * 1	while (x < 1) {
+	 * 2		while (y < 1) {
+	 * 3        	read y; } } }
+	 * 
+	 * procedure testProgram2 {
+	 * 4	read x; }
+	 */
+
+	std::vector<std::shared_ptr<StmtNode>> innerWhileStmtLst{
+			std::make_shared<ReadNode>(3, y)
+	};
+
+	std::vector<std::shared_ptr<StmtNode>> whileStmtLst{
+			std::make_shared<WhileNode>(2, predYLtC1, innerWhileStmtLst)
+	};
+
+	std::vector<std::shared_ptr<StmtNode>> proc1StmtLst{
+			std::make_shared<WhileNode>(1, predXLtC1, whileStmtLst)
+	};
+	std::shared_ptr<ProcedureNode> proc1 = std::make_shared<ProcedureNode>(proc1StmtLst, "testProgram");
+
+	std::vector<std::shared_ptr<StmtNode>> proc2StmtLst{
+		std::make_shared<ReadNode>(4, x)
+	};
+	std::shared_ptr<ProcedureNode> proc2 = std::make_shared<ProcedureNode>(proc2StmtLst, "testProgram2");
+
+	std::unordered_map<std::string, std::shared_ptr<ProcedureNode>> procMap{
+		{"testProgram", proc1},
+		{"testProgram2", proc2},
+	};
+
+	return std::make_shared<ProgramNode>(procMap);
+}
+
+AST ContainerStmtASTs::getAST1_78() {
+	/*
+	 * procedure testProgram {
+	 * 1	if (x < 1) then {
+	 * 2		read x;
+	 * 		} else {
+	 * 3		if (y < 1) then {
+	 * 4			read y;
+	 * 			} else {
+	 * 5			print y; } } }
+	 * 
+	 * procedure testProgram2 {
+	 * 6	a = (1 + x * 3) % (y);
+	 * }
+	 */
+	std::vector<std::shared_ptr<StmtNode>> thenStmtLst{
+			std::make_shared<ReadNode>(2, x)
+	};
+
+	std::vector<std::shared_ptr<StmtNode>> innerThenStmtLst{
+			std::make_shared<ReadNode>(4, y)
+	};
+
+	std::vector<std::shared_ptr<StmtNode>> innerElseStmtLst{
+			std::make_shared<PrintNode>(5, y)
+	};
+
+	std::vector<std::shared_ptr<StmtNode>> elseStmtLst{
+			std::make_shared<IfNode>(3, predYLtC1, innerThenStmtLst, innerElseStmtLst)
+	};
+
+	std::vector<std::shared_ptr<StmtNode>> proc1StmtLst{
+			std::make_shared<IfNode>(1, predXLtC1, thenStmtLst, elseStmtLst)
+	};
+	std::shared_ptr<ProcedureNode> proc1 = std::make_shared<ProcedureNode>(proc1StmtLst, "testProgram");
+
+	auto xTimesC3 = std::make_shared<BinaryOperatorNode>(BinaryOperator::TIMES, x, c3);
+	auto c1PlusXTimesC3 = std::make_shared<BinaryOperatorNode>(BinaryOperator::PLUS, c1, xTimesC3);
+
+	std::vector<std::shared_ptr<StmtNode>> proc2StmtLst{
+			std::make_shared<AssignNode>(6, a,
+										 std::make_shared<BinaryOperatorNode>(BinaryOperator::MODULO, c1PlusXTimesC3, y),
+										 "1 x 3 * + y %")
+	};
+	std::shared_ptr<ProcedureNode> proc2 = std::make_shared<ProcedureNode>(proc2StmtLst, "testProgram2");
+
+	std::unordered_map<std::string, std::shared_ptr<ProcedureNode>> procMap{
+		{"testProgram", proc1},
+		{"testProgram2", proc2},
+	};
+
+	return std::make_shared<ProgramNode>(procMap);
+}

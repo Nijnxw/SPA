@@ -37,4 +37,9 @@ public:
 	static AST getAST2_30();
 	static AST getAST2_31();
 	static AST getAST2_32();
+	static AST getAST2_33();
+	static AST getAST2_34();
+	static AST getAST2_35();
+	static AST getAST2_36();
+	static AST getAST2_37();
 };

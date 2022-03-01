@@ -77,6 +77,12 @@ public:
 	static AST getAST1_72();
 	static AST getAST1_73();
 
+	// multiple procedures
+	static AST getAST1_74();
+	static AST getAST1_75();
+	static AST getAST1_76();
+	static AST getAST1_77();
+	static AST getAST1_78();
 };
 
 

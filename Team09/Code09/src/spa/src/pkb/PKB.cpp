@@ -12,8 +12,8 @@ void PKB::clearAllStores() {
 	PKB::entityStore.clear();
 	PKB::followsStore.clear();
 	PKB::parentStore.clear();
-	UsesStore::clear();
-	ModifiesStore::clear();
+	PKB::usesStore.clear();
+	PKB::modifiesStore.clear();
 }
 
 /* Setters called by Source Processor */
@@ -57,18 +57,18 @@ bool PKB::addParentT(int parent, int child) {
 }
 
 bool PKB::addUsesStatement(int statementNumber, const std::unordered_set<std::string>& variables) {
-	return UsesStore::addUsesStatement(statementNumber, variables);
+	return usesStore.addStmtVarRelationship(statementNumber, variables);
 }
 
 bool PKB::addUsesProcedure(const std::string& procedure, const std::unordered_set<std::string>& variables) {
-	return UsesStore::addUsesProcedure(procedure, variables);
+	return usesStore.addProcVarRelationship(procedure, variables);
 }
 
 bool PKB::addModifiesStatement(int statementNumber, const std::unordered_set<std::string>& variables) {
-	return ModifiesStore::addModifiesStatement(statementNumber, variables);
+	return modifiesStore.addStmtVarRelationship(statementNumber, variables);
 }
 bool PKB::addModifiesProcedure(const std::string& procedure, const std::unordered_set<std::string>& variables) {
-	return ModifiesStore::addModifiesProcedure(procedure, variables);
+	return modifiesStore.addProcVarRelationship(procedure, variables);
 }
 
 /* Getters called by Query Evaluator */
@@ -385,81 +385,86 @@ std::tuple<std::vector<int>, std::vector<int>> PKB::getAllParentTPairs() {
 
 /* Uses Getters */
 std::unordered_set<int> PKB::getUsesStatements() {
-	return UsesStore::getUsesStatements();
+	return usesStore.getStmtInRelationship();
 }
 
 std::unordered_set<std::string> PKB::getUsedVariables() {
-	return UsesStore::getUsedVariables();
+	return usesStore.getVarInRelationship();
 }
 
 std::unordered_map<int, std::unordered_set<std::string>> PKB::getStatementNumberToVariablesUsed() {
-	return UsesStore::getStatementNumberToVariablesUsed();
+	return usesStore.getStmtToVarRelationship();
 }
 
 std::unordered_map<std::string, std::unordered_set<int>> PKB::getVariableToStatementNumbersUsedBy() {
-	return UsesStore::getVariableToStatementNumbersUsedBy();
+	return usesStore.getVarToStmtRelationship();
 }
 
 std::unordered_map<std::string, std::unordered_set<std::string>> PKB::getProcedureToVariablesUsed() {
-	return UsesStore::getProcedureToVariablesUsed();
+	return usesStore.getProcToVarRelationship();
 }
 
 std::unordered_map<std::string, std::unordered_set<std::string>> PKB::getVariableToProceduresUsedBy() {
-	return UsesStore::getVariableToProceduresUsedBy();
+	return usesStore.getVarToProcRelationship();
 }
 
 std::unordered_set<std::string> PKB::getVariablesUsedByStatement(int stmtNo) {
-	return UsesStore::getVariablesUsedByStatement(stmtNo);
+	return usesStore.getVarByStmt(stmtNo);
 }
 std::unordered_set<std::string> PKB::getVariablesUsedByProcedure(const std::string& procName) {
-	return UsesStore::getVariablesUsedByProcedure(procName);
+	return usesStore.getVarByProc(procName);
 }
 std::unordered_set<int> PKB::getStatementsUsingVariable(const std::string& variable) {
-	return UsesStore::getStatementsUsingVariable(variable);
+	return usesStore.getStmtByVar(variable);
+}
+std::unordered_set<std::string> PKB::getProcedureUsingVariable(const std::string& variable) {
+	return usesStore.getProcByVar(variable);
 }
 std::tuple<std::vector<std::string>, std::vector<std::string>>
 PKB::getStmtsToUsedVariable(const std::unordered_set<int>& stmts) {
-	return UsesStore::getStmtsToUsedVariable(stmts);
+	return usesStore.getStmtToVarByStmts(stmts);
 }
 
 /* Modifies Getters */
 std::unordered_set<int> PKB::getModifiesStatements() {
-	return ModifiesStore::getModifiesStatements();
+	return modifiesStore.getStmtInRelationship();
 }
 
 std::unordered_set<std::string> PKB::getModifiedVariables() {
-	return ModifiesStore::getModifiedVariables();
+	return modifiesStore.getVarInRelationship();
 }
 
 std::unordered_map<int, std::unordered_set<std::string>> PKB::getStatementNumberToVariablesModified() {
-	return ModifiesStore::getStatementNumberToVariablesModified();
+	return modifiesStore.getStmtToVarRelationship();
 }
 
 std::unordered_map<std::string, std::unordered_set<int>> PKB::getVariableToStatementNumbersModifiedBy() {
-	return ModifiesStore::getVariableToStatementNumbersModifiedBy();
+	return modifiesStore.getVarToStmtRelationship();
 }
 
 std::unordered_map<std::string, std::unordered_set<std::string>> PKB::getProcedureToVariablesModified() {
-	return ModifiesStore::getProcedureToVariablesModified();
+	return modifiesStore.getProcToVarRelationship();
 }
 
 std::unordered_map<std::string, std::unordered_set<std::string>> PKB::getVariableToProceduresModifiedBy() {
-	return ModifiesStore::getVariableToProceduresModifiedBy();
+	return modifiesStore.getVarToProcRelationship();
 }
 
 std::unordered_set<std::string> PKB::getVariablesModifiedByStatement(int stmtNo) {
-	return ModifiesStore::getVariablesModifiedByStatement(stmtNo);
+	return modifiesStore.getVarByStmt(stmtNo);
 }
 
 std::unordered_set<std::string> PKB::getVariablesModifiedByProcedure(const std::string& procName) {
-	return ModifiesStore::getVariablesModifiedByProcedure(procName);
+	return modifiesStore.getVarByProc(procName);
 }
 
 std::unordered_set<int> PKB::getStatementsModifyingVariable(const std::string& variable) {
-	return ModifiesStore::getStatementsModifyingVariable(variable);
+	return modifiesStore.getStmtByVar(variable);
 }
-
+std::unordered_set<std::string> PKB::getProcedureModifyingVariable(const std::string& variable) {
+	return modifiesStore.getProcByVar(variable);
+}
 std::tuple<std::vector<std::string>, std::vector<std::string>>
 PKB::getStmtsToModifiedVariable(const std::unordered_set<int>& stmts) {
-	return ModifiesStore::getStmtsToModifiedVariable(stmts);
+	return modifiesStore.getStmtToVarByStmts(stmts);
 }

@@ -61,6 +61,11 @@ QueryClauseResult UMEvaluator::getRelationshipByUnderscore(
 			PKB::getStatementsWithType(EntityType::WHILE)));
 		break;
 
+	case EntityType::PROC:
+		if (relationship == RelationRef::USES && !PKB::getVariablesUsedByProcedure(LHS).empty()
+			|| relationship == RelationRef::MODIFIES && !PKB::getVariablesModifiedByProcedure(LHS).empty())
+			queryResult.setBooleanResult(true);
+		break;
 	default:
 		return queryResult;
 	}
@@ -109,6 +114,11 @@ QueryClauseResult UMEvaluator::getRelationshipByVariable(RelationRef relationshi
 	case EntityType::WHILE:
 		queryResult.addColumn(LHS,
 			PKBUtil::unorderedSetIntersection(relationshipStmts, PKB::getStatementsWithType(EntityType::WHILE)));
+		break;
+	case EntityType::PROC:
+		if (relationship == RelationRef::USES && !PKB::getVariablesUsedByProcedure(LHS).count(RHS)
+			|| relationship == RelationRef::MODIFIES && !PKB::getVariablesModifiedByProcedure(LHS).count(RHS))
+			queryResult.setBooleanResult(true);
 		break;
 	default:
 		return queryResult;
@@ -167,6 +177,15 @@ QueryClauseResult UMEvaluator::getRelationshipBySynonym(RelationRef relationship
 		std::tie(stmts, vars) = (relationship == RelationRef::MODIFIES)
 			? PKB::getStmtsToModifiedVariable(PKB::getStatementsWithType(EntityType::WHILE))
 			: PKB::getStmtsToUsedVariable(PKB::getStatementsWithType(EntityType::WHILE));
+		break;
+	case EntityType::PROC:
+		if (relationship == RelationRef::USES) {
+			queryResult.addColumn(RHS, PKB::getVariablesUsedByProcedure(LHS));
+		}
+		else {
+			queryResult.addColumn(RHS, PKB::getVariablesModifiedByProcedure(LHS));
+		}
+
 		break;
 	default:
 		return queryResult;

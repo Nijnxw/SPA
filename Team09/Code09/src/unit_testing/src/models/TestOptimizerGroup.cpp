@@ -1,9 +1,9 @@
 #include "catch.hpp"
 #include "models/QueryClause.h"
-#include "models/OptimizerQuery.h"
+#include "models/OptimizerGroup.h"
 
 TEST_CASE("Test correctness of adjacency list building") {
-	OptimizerQuery query;
+	OptimizerGroup query;
 
 	std::vector<QueryArgument> args1 = {{"1", EntityType::INT},
 										{"x", EntityType::STRING}};

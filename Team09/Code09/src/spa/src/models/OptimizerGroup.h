@@ -2,11 +2,10 @@
 
 #include <unordered_map>
 #include "OptimizerClause.h"
-#include "OpimizerGroup.h"
 
-class OptimizerQuery {
+class OptimizerGroup {
 public:
-	OptimizerQuery();
+	OptimizerGroup();
 
 	bool addEdge(QueryClause& clause, int weight);
 	std::unordered_map<std::string, std::vector<OptimizerClause>> getAdjList();

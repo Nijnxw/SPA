@@ -1,9 +1,9 @@
-#include "OptimizerQuery.h"
+#include "OptimizerGroup.h"
 
 
-OptimizerQuery::OptimizerQuery() {}
+OptimizerGroup::OptimizerGroup() {}
 
-bool OptimizerQuery::addEdge(QueryClause& clause, int weight) {
+bool OptimizerGroup::addEdge(QueryClause& clause, int weight) {
 	const std::unordered_set<std::string>& synonyms = clause.getUsedSynonyms();
 
 	if (synonyms.empty()) {
@@ -23,11 +23,11 @@ bool OptimizerQuery::addEdge(QueryClause& clause, int weight) {
 	return true;
 }
 
-std::unordered_map<std::string, std::vector<OptimizerClause>> OptimizerQuery::getAdjList() {
+std::unordered_map<std::string, std::vector<OptimizerClause>> OptimizerGroup::getAdjList() {
 	return adjList;
 }
 
 // TODO: DFS to split the clauses into individual groups
-std::vector<OptimizerGroup> OptimizerQuery::groupClauses() {
+std::vector<OptimizerGroup> OptimizerGroup::groupClauses() {
 	return std::vector<OptimizerGroup>();
 }

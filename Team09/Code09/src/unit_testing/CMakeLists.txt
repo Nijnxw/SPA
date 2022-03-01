@@ -34,6 +34,6 @@ file(GLOB headers "${CMAKE_CURRENT_SOURCE_DIR}/src/*.h"
 	"${CMAKE_CURRENT_SOURCE_DIR}/src/util/*.hpp"
 	)
 
-add_executable(unit_testing ${srcs} src/models/TestOptimizerQuery.cpp)
+add_executable(unit_testing ${srcs})
 
 target_link_libraries(unit_testing spa)

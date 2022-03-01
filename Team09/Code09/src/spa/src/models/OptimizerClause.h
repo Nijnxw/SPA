@@ -4,7 +4,7 @@
 
 /*
  * A wrapper class for the QueryClause class, each OptimizerClause represents an
- * edge between 2 synonyms in the adjacency list of the OptimizerQuery object.
+ * edge between 2 synonyms in the adjacency list of the OptimizerGroup object.
  */
 class OptimizerClause {
 public:

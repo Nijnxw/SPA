@@ -1,27 +1,21 @@
 #pragma once
 
 #include "simple_parser/Token.h"
+#include "Commons/CommonLexer.h"
 
 #include <cctype>
 #include <string>
 #include <fstream>
 #include <vector>
 
-class Lexer {
+class Lexer:CommonLexer {
     private:
-        std::string nextStr;
-        std::istream* stream;
-
-        char peek();
-        char next();
         void readName();
         void readInteger();
 
     public:
         std::vector<Token*> lexical_tokens;
-
         explicit Lexer(std::istream* new_stream);
-
         std::vector<Token*> tokenize();
 };
 

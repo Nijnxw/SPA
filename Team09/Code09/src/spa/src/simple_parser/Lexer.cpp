@@ -1,15 +1,7 @@
 #include "simple_parser/Lexer.h"
 
 
-Lexer::Lexer(std::istream* new_stream) : stream(new_stream){}
-
-char Lexer::peek() {
-    return stream->peek();
-}
-
-char Lexer::next() {
-    return stream->get();
-}
+Lexer::Lexer(std::istream* new_stream) : CommonLexer(new_stream){}
 
 void Lexer::readName() {
     while (isalnum(peek()) != 0) {
@@ -26,7 +18,7 @@ void Lexer::readInteger() {
 std::vector<Token*> Lexer::tokenize() {
     char nextChar;
 
-    while (!stream->eof()) {
+    while (notEOF()) {
         nextChar = next();
         if (nextChar == EOF) {
             break;

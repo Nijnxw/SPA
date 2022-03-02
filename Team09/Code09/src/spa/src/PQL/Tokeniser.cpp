@@ -9,7 +9,7 @@
 #include "PQL/Tokeniser.h"
 #include "PQL/PQLUtils.cpp"
 
-Tokeniser::Tokeniser(std::string rawQueryString) : rawQuery(new std::stringstream(rawQueryString)) {}
+Tokeniser::Tokeniser(std::string rawQueryString) : CommonLexer(new std::stringstream(rawQueryString)) {}
 
 void Tokeniser::processRawToken(std::string rawToken) {
 	if (stringTokenMap.find(rawToken) != stringTokenMap.end()) {
@@ -31,22 +31,21 @@ void Tokeniser::processRawToken(std::string rawToken) {
 }
 
 void Tokeniser::pushToken() {
-	if (rawToken.size() > 0) {
-		processRawToken(rawToken);
+	if (nextStr.size() > 0) {
+		processRawToken(nextStr);
 	}
-	rawToken = "";
+	nextStr = "";
 }
-
 
 std::vector<PQLToken*> Tokeniser::tokenise() {
 	try {
-		char nextChar = rawQuery->get();
-		while (!rawQuery->eof()) {
+		char nextChar = next();
+		while (notEOF()) {
 			switch (nextChar) {
 			//Start of string
 			case '"':
 				isWithinStringLiterals = !isWithinStringLiterals;
-				rawToken += nextChar;
+				nextStr += nextChar;
 				break;
 
 			//White spaces
@@ -65,15 +64,15 @@ std::vector<PQLToken*> Tokeniser::tokenise() {
 			case ')':
 			case ';':
 				pushToken();
-				rawToken += nextChar;
+				nextStr += nextChar;
 				pushToken();
 				break;
 
 			default:
-				rawToken += nextChar;
+				nextStr += nextChar;
 				break;
 			}
-			nextChar = rawQuery->get();
+			nextChar = next();
 		}
 		pushToken();
 	}

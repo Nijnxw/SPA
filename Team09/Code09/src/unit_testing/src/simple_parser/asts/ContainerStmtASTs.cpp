@@ -1026,3 +1026,169 @@ AST ContainerStmtASTs::getAST1_78() {
 
 	return std::make_shared<ProgramNode>(procMap);
 }
+
+AST ContainerStmtASTs::getAST1_79() {
+	/*
+	 * procedure testProgram {
+	 * 1	call testProgram2;
+	 * }
+	 *
+	 * procedure testProgram2 {
+	 * 2	print x;
+	 * }
+	 */
+	std::vector<std::shared_ptr<StmtNode>> proc1StmtLst{
+		std::make_shared<CallNode>(1, "testProgram2")
+	};
+	std::shared_ptr<ProcedureNode> proc1 = std::make_shared<ProcedureNode>(proc1StmtLst, "testProgram");
+
+	std::vector<std::shared_ptr<StmtNode>> proc2StmtLst{
+		std::make_shared<PrintNode>(2, x)
+	};
+	std::shared_ptr<ProcedureNode> proc2 = std::make_shared<ProcedureNode>(proc2StmtLst, "testProgram2");
+
+	std::unordered_map<std::string, std::shared_ptr<ProcedureNode>> procMap{
+		{"testProgram", proc1},
+		{"testProgram2", proc2},
+	};
+
+	return std::make_shared<ProgramNode>(procMap);
+}
+
+AST ContainerStmtASTs::getAST1_80() {
+	/*
+	 * procedure testProgram {
+	 * 1	print x;
+	 * }
+	 *
+	 * procedure testProgram2 {
+	 * 2	call testProgram2;
+	 * }
+	 */
+	std::vector<std::shared_ptr<StmtNode>> proc1StmtLst{
+		std::make_shared<PrintNode>(1, x)
+	};
+	std::shared_ptr<ProcedureNode> proc1 = std::make_shared<ProcedureNode>(proc1StmtLst, "testProgram");
+
+	std::vector<std::shared_ptr<StmtNode>> proc2StmtLst{
+		std::make_shared<CallNode>(2, "testProgram1")
+	};
+	std::shared_ptr<ProcedureNode> proc2 = std::make_shared<ProcedureNode>(proc2StmtLst, "testProgram2");
+
+	std::unordered_map<std::string, std::shared_ptr<ProcedureNode>> procMap{
+		{"testProgram", proc1},
+		{"testProgram2", proc2},
+	};
+
+	return std::make_shared<ProgramNode>(procMap);
+}
+
+AST ContainerStmtASTs::getAST1_81() {
+	/*
+	 *  procedure testProgram {
+	 * 1  if (x < 1) then {
+	 * 2    print x;
+	 *    } else {
+	 * 3    call testProgram2;
+	 *    }
+	 *  }
+	 *
+	 *  procedure testProgram2 {
+	 * 4  print y;
+	 *  }
+	 */
+	std::vector<std::shared_ptr<StmtNode>> thenStmtLst{
+		std::make_shared<PrintNode>(2, x)
+	};
+
+	std::vector<std::shared_ptr<StmtNode>> elseStmtLst{
+		std::make_shared<CallNode>(3, "testProgram2")
+	};
+	std::vector<std::shared_ptr<StmtNode>> proc1StmtLst{
+		std::make_shared<IfNode>(1, predXLtC1, thenStmtLst, elseStmtLst)
+	};
+	std::shared_ptr<ProcedureNode> proc1 = std::make_shared<ProcedureNode>(proc1StmtLst, "testProgram");
+
+	std::vector<std::shared_ptr<StmtNode>> proc2StmtLst{
+		std::make_shared<PrintNode>(4, y)
+	};
+	std::shared_ptr<ProcedureNode> proc2 = std::make_shared<ProcedureNode>(proc2StmtLst, "testProgram2");
+
+	std::unordered_map<std::string, std::shared_ptr<ProcedureNode>> procMap{
+		{"testProgram", proc1},
+		{"testProgram2", proc2},
+	};
+	return std::make_shared<ProgramNode>(procMap);
+}
+
+AST ContainerStmtASTs::getAST1_82() {
+	/*
+	 *  procedure testProgram {
+	 * 1  print x;
+	 *  }
+	 *
+	 *  procedure testProgram2 {
+	 * 2  if (x < 1) then {
+	 * 3    print y;
+	 *    } else {
+	 * 4    call testProgram;
+	 *    }
+	 *  }
+	 */
+
+	std::vector<std::shared_ptr<StmtNode>> proc1StmtLst{
+		std::make_shared<PrintNode>(1, x)
+	};
+	std::shared_ptr<ProcedureNode> proc1 = std::make_shared<ProcedureNode>(proc1StmtLst, "testProgram");
+
+	std::vector<std::shared_ptr<StmtNode>> thenStmtLst{
+		std::make_shared<PrintNode>(3, y)
+	};
+
+	std::vector<std::shared_ptr<StmtNode>> elseStmtLst{
+		std::make_shared<CallNode>(4, "testProgram")
+	};
+	std::vector<std::shared_ptr<StmtNode>> proc2StmtLst{
+		std::make_shared<IfNode>(2, predXLtC1, thenStmtLst, elseStmtLst)
+	};
+	std::shared_ptr<ProcedureNode> proc2 = std::make_shared<ProcedureNode>(proc2StmtLst, "testProgram2");
+
+	std::unordered_map<std::string, std::shared_ptr<ProcedureNode>> procMap{
+		{"testProgram", proc1},
+		{"testProgram2", proc2},
+	};
+	return std::make_shared<ProgramNode>(procMap);
+}
+
+AST ContainerStmtASTs::getAST1_83() {
+	/*
+	 *  procedure testProgram {	
+	 * 1  while (x < 1) {
+	 * 2    call testProgram2;
+	 *    }
+	 *  }
+	 *
+	 *  procedure testProgram2 {
+	 * 3  print y;
+	 *  }
+	 */
+
+	std::vector<std::shared_ptr<StmtNode>> whileStmtLst{
+		std::make_shared<CallNode>(2, "testProgram2")
+	};
+	std::vector<std::shared_ptr<StmtNode>> proc1StmtLst{
+		std::make_shared<WhileNode>(1, predXLtC1, whileStmtLst)
+	};
+	std::shared_ptr<ProcedureNode> proc2 = std::make_shared<ProcedureNode>(proc1StmtLst, "testProgram");
+
+	std::vector<std::shared_ptr<StmtNode>> proc2StmtLst{
+		std::make_shared<PrintNode>(3, y)
+	};
+	std::shared_ptr<ProcedureNode> proc1 = std::make_shared<ProcedureNode>(proc2StmtLst, "testProgram2");
+
+	std::unordered_map<std::string, std::shared_ptr<ProcedureNode>> procMap{
+		{"testProgram", proc1},
+		{"testProgram2", proc2},
+	};
+	return std::make_shared<ProgramNode>(procMap);
+}

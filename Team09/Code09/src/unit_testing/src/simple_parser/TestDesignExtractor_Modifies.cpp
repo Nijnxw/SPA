@@ -969,6 +969,8 @@ TEST_CASE("Modifies 3.33 - 3 levels of nesting - 1 stmt per nest level - if-whil
 	EntityStager::clear();
 }
 
+//ITERATION 2
+
 TEST_CASE("Modifies 3.34 - Complex two procedure") {
 	EntityStager::clear();
 	DesignExtractor::extractDesignElements(RelationshipASTs::getAST3_34());
@@ -988,6 +990,629 @@ TEST_CASE("Modifies 3.34 - Complex two procedure") {
 
 	std::vector<std::pair<std::string, std::unordered_set<std::string>>> expectedModifiesProcedure{
 		{"testProgram", {"x", "y", "z"}}, {"testProgram2", {"w", "x", "y", "z"}}
+	};
+	std::sort(expectedModifiesProcedure.begin(), expectedModifiesProcedure.end(),
+		[](auto& left, auto& right) {return left.first < right.first; });
+
+	std::vector<std::pair<std::string, std::unordered_set<std::string>>> actualModifiesProcedure = EntityStager::getStagedModifiesProcedure();
+	std::sort(actualModifiesProcedure.begin(), actualModifiesProcedure.end(),
+		[](auto& left, auto& right) {return left.first < right.first; });
+
+	REQUIRE(actualModifiesStatement == expectedModifiesStatement);
+	REQUIRE(actualModifiesProcedure == expectedModifiesProcedure);
+	EntityStager::clear();
+}
+
+TEST_CASE("Modifies 3.35 - Normal Post Declared") {
+	EntityStager::clear();
+	DesignExtractor::extractDesignElements(RelationshipASTs::getAST3_35());
+
+	std::vector<std::pair<int, std::unordered_set<std::string>>> expectedModifiesStatement{
+		{1, {"y"}}, {2, {"x"}}
+	};
+	std::sort(expectedModifiesStatement.begin(), expectedModifiesStatement.end(),
+		[](auto& left, auto& right) {return left.first < right.first; });
+
+	std::vector<std::pair<int, std::unordered_set<std::string>>> actualModifiesStatement = EntityStager::getStagedModifiesStatement();
+	std::sort(actualModifiesStatement.begin(), actualModifiesStatement.end(),
+		[](auto& left, auto& right) {return left.first < right.first; });
+
+	std::vector<std::pair<std::string, std::unordered_set<std::string>>> expectedModifiesProcedure{
+		{"testProgram1", {"x", "y"}}
+	};
+	std::sort(expectedModifiesProcedure.begin(), expectedModifiesProcedure.end(),
+		[](auto& left, auto& right) {return left.first < right.first; });
+
+	std::vector<std::pair<std::string, std::unordered_set<std::string>>> actualModifiesProcedure = EntityStager::getStagedModifiesProcedure();
+	std::sort(actualModifiesProcedure.begin(), actualModifiesProcedure.end(),
+		[](auto& left, auto& right) {return left.first < right.first; });
+
+	REQUIRE(actualModifiesStatement == expectedModifiesStatement);
+	REQUIRE(actualModifiesProcedure == expectedModifiesProcedure);
+	EntityStager::clear();
+}
+
+TEST_CASE("Modifies 3.36 - Normal Pre Declared") {
+	EntityStager::clear();
+	DesignExtractor::extractDesignElements(RelationshipASTs::getAST3_36());
+
+	std::vector<std::pair<int, std::unordered_set<std::string>>> expectedModifiesStatement{
+		{1, {"y"}}, {2, {"x"}}, {5, {"x", "y"}}
+	};
+	std::sort(expectedModifiesStatement.begin(), expectedModifiesStatement.end(),
+		[](auto& left, auto& right) {return left.first < right.first; });
+
+	std::vector<std::pair<int, std::unordered_set<std::string>>> actualModifiesStatement = EntityStager::getStagedModifiesStatement();
+	std::sort(actualModifiesStatement.begin(), actualModifiesStatement.end(),
+		[](auto& left, auto& right) {return left.first < right.first; });
+
+	std::vector<std::pair<std::string, std::unordered_set<std::string>>> expectedModifiesProcedure{
+		{"testProgram1", {"x", "y"}}, {"testProgram2", {"x", "y"}}
+	};
+	std::sort(expectedModifiesProcedure.begin(), expectedModifiesProcedure.end(),
+		[](auto& left, auto& right) {return left.first < right.first; });
+
+	std::vector<std::pair<std::string, std::unordered_set<std::string>>> actualModifiesProcedure = EntityStager::getStagedModifiesProcedure();
+	std::sort(actualModifiesProcedure.begin(), actualModifiesProcedure.end(),
+		[](auto& left, auto& right) {return left.first < right.first; });
+
+	REQUIRE(actualModifiesStatement == expectedModifiesStatement);
+	REQUIRE(actualModifiesProcedure == expectedModifiesProcedure);
+	EntityStager::clear();
+}
+
+TEST_CASE("Modifies 3.37 - Normal Pre declared	Nested in If") {
+	EntityStager::clear();
+	DesignExtractor::extractDesignElements(RelationshipASTs::getAST3_37());
+
+	std::vector<std::pair<int, std::unordered_set<std::string>>> expectedModifiesStatement{
+		{1, {"y"}}, {3, {"w", "y"}}, {4, {"y"}}, {5, {"y"}}, {6, {"w"}}
+	};
+	std::sort(expectedModifiesStatement.begin(), expectedModifiesStatement.end(),
+		[](auto& left, auto& right) {return left.first < right.first; });
+
+	std::vector<std::pair<int, std::unordered_set<std::string>>> actualModifiesStatement = EntityStager::getStagedModifiesStatement();
+	std::sort(actualModifiesStatement.begin(), actualModifiesStatement.end(),
+		[](auto& left, auto& right) {return left.first < right.first; });
+
+	std::vector<std::pair<std::string, std::unordered_set<std::string>>> expectedModifiesProcedure{
+		{"testProgram1", {"y"}}, {"testProgram2", {"w", "y"}},
+	};
+	std::sort(expectedModifiesProcedure.begin(), expectedModifiesProcedure.end(),
+		[](auto& left, auto& right) {return left.first < right.first; });
+
+	std::vector<std::pair<std::string, std::unordered_set<std::string>>> actualModifiesProcedure = EntityStager::getStagedModifiesProcedure();
+	std::sort(actualModifiesProcedure.begin(), actualModifiesProcedure.end(),
+		[](auto& left, auto& right) {return left.first < right.first; });
+
+	REQUIRE(actualModifiesStatement == expectedModifiesStatement);
+	REQUIRE(actualModifiesProcedure == expectedModifiesProcedure);
+	EntityStager::clear();
+}
+
+TEST_CASE("Modifies 3.38 - Normal Pre declared	Nested in Else") {
+	EntityStager::clear();
+	DesignExtractor::extractDesignElements(RelationshipASTs::getAST3_38());
+
+	std::vector<std::pair<int, std::unordered_set<std::string>>> expectedModifiesStatement{
+		{1, {"y"}}, {3, {"w", "y"}}, {4, {"y"}}, {5, {"y"}}, {6, {"w"}}
+	};
+	std::sort(expectedModifiesStatement.begin(), expectedModifiesStatement.end(),
+		[](auto& left, auto& right) {return left.first < right.first; });
+
+	std::vector<std::pair<int, std::unordered_set<std::string>>> actualModifiesStatement = EntityStager::getStagedModifiesStatement();
+	std::sort(actualModifiesStatement.begin(), actualModifiesStatement.end(),
+		[](auto& left, auto& right) {return left.first < right.first; });
+
+	std::vector<std::pair<std::string, std::unordered_set<std::string>>> expectedModifiesProcedure{
+		{"testProgram1", {"y"}}, {"testProgram2", {"w", "y"}},
+	};
+	std::sort(expectedModifiesProcedure.begin(), expectedModifiesProcedure.end(),
+		[](auto& left, auto& right) {return left.first < right.first; });
+
+	std::vector<std::pair<std::string, std::unordered_set<std::string>>> actualModifiesProcedure = EntityStager::getStagedModifiesProcedure();
+	std::sort(actualModifiesProcedure.begin(), actualModifiesProcedure.end(),
+		[](auto& left, auto& right) {return left.first < right.first; });
+
+	REQUIRE(actualModifiesStatement == expectedModifiesStatement);
+	REQUIRE(actualModifiesProcedure == expectedModifiesProcedure);
+	EntityStager::clear();
+}
+
+TEST_CASE("Modifies 3.39 - Normal Post declared Nested in If") {
+	EntityStager::clear();
+	DesignExtractor::extractDesignElements(RelationshipASTs::getAST3_39());
+
+	std::vector<std::pair<int, std::unordered_set<std::string>>> expectedModifiesStatement{
+		{1, {"w", "y"}}, {2, {"y"}}, {3, {"y"}}, {4, {"w"}}, {5, {"y"}}
+	};
+	std::sort(expectedModifiesStatement.begin(), expectedModifiesStatement.end(),
+		[](auto& left, auto& right) {return left.first < right.first; });
+
+	std::vector<std::pair<int, std::unordered_set<std::string>>> actualModifiesStatement = EntityStager::getStagedModifiesStatement();
+	std::sort(actualModifiesStatement.begin(), actualModifiesStatement.end(),
+		[](auto& left, auto& right) {return left.first < right.first; });
+
+	std::vector<std::pair<std::string, std::unordered_set<std::string>>> expectedModifiesProcedure{
+		{"testProgram1", {"w", "y"}}, {"testProgram2", {"y"}}
+	};
+	std::sort(expectedModifiesProcedure.begin(), expectedModifiesProcedure.end(),
+		[](auto& left, auto& right) {return left.first < right.first; });
+
+	std::vector<std::pair<std::string, std::unordered_set<std::string>>> actualModifiesProcedure = EntityStager::getStagedModifiesProcedure();
+	std::sort(actualModifiesProcedure.begin(), actualModifiesProcedure.end(),
+		[](auto& left, auto& right) {return left.first < right.first; });
+
+	REQUIRE(actualModifiesStatement == expectedModifiesStatement);
+	REQUIRE(actualModifiesProcedure == expectedModifiesProcedure);
+	EntityStager::clear();
+}
+
+TEST_CASE("Modifies 3.40 - Normal Post declared Nested in Else") {
+	EntityStager::clear();
+	DesignExtractor::extractDesignElements(RelationshipASTs::getAST3_40());
+
+	std::vector<std::pair<int, std::unordered_set<std::string>>> expectedModifiesStatement{
+		{1, {"w", "y"}}, {2, {"y"}}, {3, {"y"}}, {4, {"w"}}, {5, {"y"}}
+	};
+	std::sort(expectedModifiesStatement.begin(), expectedModifiesStatement.end(),
+		[](auto& left, auto& right) {return left.first < right.first; });
+
+	std::vector<std::pair<int, std::unordered_set<std::string>>> actualModifiesStatement = EntityStager::getStagedModifiesStatement();
+	std::sort(actualModifiesStatement.begin(), actualModifiesStatement.end(),
+		[](auto& left, auto& right) {return left.first < right.first; });
+
+	std::vector<std::pair<std::string, std::unordered_set<std::string>>> expectedModifiesProcedure{
+		{"testProgram1", {"w", "y"}}, {"testProgram2", {"y"}}
+	};
+	std::sort(expectedModifiesProcedure.begin(), expectedModifiesProcedure.end(),
+		[](auto& left, auto& right) {return left.first < right.first; });
+
+	std::vector<std::pair<std::string, std::unordered_set<std::string>>> actualModifiesProcedure = EntityStager::getStagedModifiesProcedure();
+	std::sort(actualModifiesProcedure.begin(), actualModifiesProcedure.end(),
+		[](auto& left, auto& right) {return left.first < right.first; });
+
+	REQUIRE(actualModifiesStatement == expectedModifiesStatement);
+	REQUIRE(actualModifiesProcedure == expectedModifiesProcedure);
+	EntityStager::clear();
+}
+
+TEST_CASE("Modifies 3.41 - Normal Pre declared Nested in While") {
+	EntityStager::clear();
+	DesignExtractor::extractDesignElements(RelationshipASTs::getAST3_41());
+
+	std::vector<std::pair<int, std::unordered_set<std::string>>> expectedModifiesStatement{
+		{2, {"z"}}, {3, {"x"}}, {5, {"x"}}
+	};
+	std::sort(expectedModifiesStatement.begin(), expectedModifiesStatement.end(),
+		[](auto& left, auto& right) {return left.first < right.first; });
+
+	std::vector<std::pair<int, std::unordered_set<std::string>>> actualModifiesStatement = EntityStager::getStagedModifiesStatement();
+	std::sort(actualModifiesStatement.begin(), actualModifiesStatement.end(),
+		[](auto& left, auto& right) {return left.first < right.first; });
+
+	std::vector<std::pair<std::string, std::unordered_set<std::string>>> expectedModifiesProcedure{
+		{"testProgram2", {"x", "z"}}
+	};
+	std::sort(expectedModifiesProcedure.begin(), expectedModifiesProcedure.end(),
+		[](auto& left, auto& right) {return left.first < right.first; });
+
+	std::vector<std::pair<std::string, std::unordered_set<std::string>>> actualModifiesProcedure = EntityStager::getStagedModifiesProcedure();
+	std::sort(actualModifiesProcedure.begin(), actualModifiesProcedure.end(),
+		[](auto& left, auto& right) {return left.first < right.first; });
+
+	REQUIRE(actualModifiesStatement == expectedModifiesStatement);
+	REQUIRE(actualModifiesProcedure == expectedModifiesProcedure);
+	EntityStager::clear();
+}
+
+TEST_CASE("Modifies 3.42 - Normal Post declared Nested in While") {
+	EntityStager::clear();
+	DesignExtractor::extractDesignElements(RelationshipASTs::getAST3_42());
+
+	std::vector<std::pair<int, std::unordered_set<std::string>>> expectedModifiesStatement{
+		{1, {"x"}}, {2, {"x"}}, {4, {"z"}}
+	};
+	std::sort(expectedModifiesStatement.begin(), expectedModifiesStatement.end(),
+		[](auto& left, auto& right) {return left.first < right.first; });
+
+	std::vector<std::pair<int, std::unordered_set<std::string>>> actualModifiesStatement = EntityStager::getStagedModifiesStatement();
+	std::sort(actualModifiesStatement.begin(), actualModifiesStatement.end(),
+		[](auto& left, auto& right) {return left.first < right.first; });
+
+	std::vector<std::pair<std::string, std::unordered_set<std::string>>> expectedModifiesProcedure{
+		{"testProgram1", {"x", "z"}}
+	};
+	std::sort(expectedModifiesProcedure.begin(), expectedModifiesProcedure.end(),
+		[](auto& left, auto& right) {return left.first < right.first; });
+
+	std::vector<std::pair<std::string, std::unordered_set<std::string>>> actualModifiesProcedure = EntityStager::getStagedModifiesProcedure();
+	std::sort(actualModifiesProcedure.begin(), actualModifiesProcedure.end(),
+		[](auto& left, auto& right) {return left.first < right.first; });
+
+	REQUIRE(actualModifiesStatement == expectedModifiesStatement);
+	REQUIRE(actualModifiesProcedure == expectedModifiesProcedure);
+	EntityStager::clear();
+}
+
+TEST_CASE("Modifies 3.43 - 3 calls sequential predeclared") {
+	EntityStager::clear();
+	DesignExtractor::extractDesignElements(RelationshipASTs::getAST3_43());
+
+	std::vector<std::pair<int, std::unordered_set<std::string>>> expectedModifiesStatement{
+		{3, {"x"}}, {4, {"y"}}, {6, {"y"}}, {7, {"x", "y"}}
+	};
+	std::sort(expectedModifiesStatement.begin(), expectedModifiesStatement.end(),
+		[](auto& left, auto& right) {return left.first < right.first; });
+
+	std::vector<std::pair<int, std::unordered_set<std::string>>> actualModifiesStatement = EntityStager::getStagedModifiesStatement();
+	std::sort(actualModifiesStatement.begin(), actualModifiesStatement.end(),
+		[](auto& left, auto& right) {return left.first < right.first; });
+
+	std::vector<std::pair<std::string, std::unordered_set<std::string>>> expectedModifiesProcedure{
+		{"testProgram2", {"x", "y"}}, {"testProgram3", {"x", "y"}}
+	};
+	std::sort(expectedModifiesProcedure.begin(), expectedModifiesProcedure.end(),
+		[](auto& left, auto& right) {return left.first < right.first; });
+
+	std::vector<std::pair<std::string, std::unordered_set<std::string>>> actualModifiesProcedure = EntityStager::getStagedModifiesProcedure();
+	std::sort(actualModifiesProcedure.begin(), actualModifiesProcedure.end(),
+		[](auto& left, auto& right) {return left.first < right.first; });
+
+	REQUIRE(actualModifiesStatement == expectedModifiesStatement);
+	REQUIRE(actualModifiesProcedure == expectedModifiesProcedure);
+	EntityStager::clear();
+}
+
+TEST_CASE("Modifies 3.44 - 3 calls sequential post declared") {
+	EntityStager::clear();
+	DesignExtractor::extractDesignElements(RelationshipASTs::getAST3_44());
+
+	std::vector<std::pair<int, std::unordered_set<std::string>>> expectedModifiesStatement{
+		{2, {"x", "y"}}, {4, {"x"}}, {5, {"y"}}, {6, {"y"}}, {7, {"y"}}
+	};
+	std::sort(expectedModifiesStatement.begin(), expectedModifiesStatement.end(),
+		[](auto& left, auto& right) {return left.first < right.first; });
+
+	std::vector<std::pair<int, std::unordered_set<std::string>>> actualModifiesStatement = EntityStager::getStagedModifiesStatement();
+	std::sort(actualModifiesStatement.begin(), actualModifiesStatement.end(),
+		[](auto& left, auto& right) {return left.first < right.first; });
+
+	std::vector<std::pair<std::string, std::unordered_set<std::string>>> expectedModifiesProcedure{
+		{"testProgram1", {"x", "y"}}, {"testProgram2", {"x", "y"}}, {"testProgram3", {"y"}}
+	};
+	std::sort(expectedModifiesProcedure.begin(), expectedModifiesProcedure.end(),
+		[](auto& left, auto& right) {return left.first < right.first; });
+
+	std::vector<std::pair<std::string, std::unordered_set<std::string>>> actualModifiesProcedure = EntityStager::getStagedModifiesProcedure();
+	std::sort(actualModifiesProcedure.begin(), actualModifiesProcedure.end(),
+		[](auto& left, auto& right) {return left.first < right.first; });
+
+	REQUIRE(actualModifiesStatement == expectedModifiesStatement);
+	REQUIRE(actualModifiesProcedure == expectedModifiesProcedure);
+	EntityStager::clear();
+}
+
+TEST_CASE("Modifies 3.45 - 3 calls forking from top") {
+	EntityStager::clear();
+	DesignExtractor::extractDesignElements(RelationshipASTs::getAST3_45());
+
+	std::vector<std::pair<int, std::unordered_set<std::string>>> expectedModifiesStatement{
+		{2, {"x", "y"}}, {4, {"y"}}, {5, {"x"}}, {6, {"y"}}, {7, {"y"}}
+	};
+	std::sort(expectedModifiesStatement.begin(), expectedModifiesStatement.end(),
+		[](auto& left, auto& right) {return left.first < right.first; });
+
+	std::vector<std::pair<int, std::unordered_set<std::string>>> actualModifiesStatement = EntityStager::getStagedModifiesStatement();
+	std::sort(actualModifiesStatement.begin(), actualModifiesStatement.end(),
+		[](auto& left, auto& right) {return left.first < right.first; });
+
+	std::vector<std::pair<std::string, std::unordered_set<std::string>>> expectedModifiesProcedure{
+		{"testProgram1", {"x", "y"}}, {"testProgram2", {"x", "y"}}, {"testProgram3", {"y"}}
+	};
+	std::sort(expectedModifiesProcedure.begin(), expectedModifiesProcedure.end(),
+		[](auto& left, auto& right) {return left.first < right.first; });
+
+	std::vector<std::pair<std::string, std::unordered_set<std::string>>> actualModifiesProcedure = EntityStager::getStagedModifiesProcedure();
+	std::sort(actualModifiesProcedure.begin(), actualModifiesProcedure.end(),
+		[](auto& left, auto& right) {return left.first < right.first; });
+
+	REQUIRE(actualModifiesStatement == expectedModifiesStatement);
+	REQUIRE(actualModifiesProcedure == expectedModifiesProcedure);
+	EntityStager::clear();
+}
+
+TEST_CASE("Modifies 3.46 - 3 calls forking from bottom") {
+	EntityStager::clear();
+	DesignExtractor::extractDesignElements(RelationshipASTs::getAST3_46());
+
+	std::vector<std::pair<int, std::unordered_set<std::string>>> expectedModifiesStatement{
+		{3, {"x"}}, {4, {"y"}}, {6, {"y"}}, {7, {"x", "y"}}
+	};
+	std::sort(expectedModifiesStatement.begin(), expectedModifiesStatement.end(),
+		[](auto& left, auto& right) {return left.first < right.first; });
+
+	std::vector<std::pair<int, std::unordered_set<std::string>>> actualModifiesStatement = EntityStager::getStagedModifiesStatement();
+	std::sort(actualModifiesStatement.begin(), actualModifiesStatement.end(),
+		[](auto& left, auto& right) {return left.first < right.first; });
+
+	std::vector<std::pair<std::string, std::unordered_set<std::string>>> expectedModifiesProcedure{
+		{"testProgram2", {"x", "y"}}, {"testProgram3", {"x", "y"}}
+	};
+	std::sort(expectedModifiesProcedure.begin(), expectedModifiesProcedure.end(),
+		[](auto& left, auto& right) {return left.first < right.first; });
+
+	std::vector<std::pair<std::string, std::unordered_set<std::string>>> actualModifiesProcedure = EntityStager::getStagedModifiesProcedure();
+	std::sort(actualModifiesProcedure.begin(), actualModifiesProcedure.end(),
+		[](auto& left, auto& right) {return left.first < right.first; });
+
+	REQUIRE(actualModifiesStatement == expectedModifiesStatement);
+	REQUIRE(actualModifiesProcedure == expectedModifiesProcedure);
+	EntityStager::clear();
+}
+
+TEST_CASE("Modifies 3.47 - 3 calls forking from middle") {
+	EntityStager::clear();
+	DesignExtractor::extractDesignElements(RelationshipASTs::getAST3_47());
+
+	std::vector<std::pair<int, std::unordered_set<std::string>>> expectedModifiesStatement{
+		{3, {"x"}}, {5, {"y"}}, {6, {"y"}}, {7, {"y"}}
+	};
+	std::sort(expectedModifiesStatement.begin(), expectedModifiesStatement.end(),
+		[](auto& left, auto& right) {return left.first < right.first; });
+
+	std::vector<std::pair<int, std::unordered_set<std::string>>> actualModifiesStatement = EntityStager::getStagedModifiesStatement();
+	std::sort(actualModifiesStatement.begin(), actualModifiesStatement.end(),
+		[](auto& left, auto& right) {return left.first < right.first; });
+
+	std::vector<std::pair<std::string, std::unordered_set<std::string>>> expectedModifiesProcedure{
+		{"testProgram2", {"x", "y"}}, {"testProgram3", {"y"}}
+	};
+	std::sort(expectedModifiesProcedure.begin(), expectedModifiesProcedure.end(),
+		[](auto& left, auto& right) {return left.first < right.first; });
+
+	std::vector<std::pair<std::string, std::unordered_set<std::string>>> actualModifiesProcedure = EntityStager::getStagedModifiesProcedure();
+	std::sort(actualModifiesProcedure.begin(), actualModifiesProcedure.end(),
+		[](auto& left, auto& right) {return left.first < right.first; });
+
+	REQUIRE(actualModifiesStatement == expectedModifiesStatement);
+	REQUIRE(actualModifiesProcedure == expectedModifiesProcedure);
+	EntityStager::clear();
+}
+
+TEST_CASE("Modifies 3.48 - 4 calls sequential call (mix of post and pre declared)") {
+	EntityStager::clear();
+	DesignExtractor::extractDesignElements(RelationshipASTs::getAST3_48());
+
+	std::vector<std::pair<int, std::unordered_set<std::string>>> expectedModifiesStatement{
+		{2, {"y"}}, {4, {"x"}}, {5, {"y"}}, {6, {"y"}}, {7, {"y"}},
+		{8, {"x", "y", "z"}}, {10, {"x", "y"}}, {11, {"z"}}
+	};
+	std::sort(expectedModifiesStatement.begin(), expectedModifiesStatement.end(),
+		[](auto& left, auto& right) {return left.first < right.first; });
+
+	std::vector<std::pair<int, std::unordered_set<std::string>>> actualModifiesStatement = EntityStager::getStagedModifiesStatement();
+	std::sort(actualModifiesStatement.begin(), actualModifiesStatement.end(),
+		[](auto& left, auto& right) {return left.first < right.first; });
+
+	std::vector<std::pair<std::string, std::unordered_set<std::string>>> expectedModifiesProcedure{
+		{"testProgram1", {"y"}}, {"testProgram2", {"x", "y"}},
+		{"testProgram3", {"y"}}, {"testProgram4", {"x", "y", "z"}}
+	};
+	std::sort(expectedModifiesProcedure.begin(), expectedModifiesProcedure.end(),
+		[](auto& left, auto& right) {return left.first < right.first; });
+
+	std::vector<std::pair<std::string, std::unordered_set<std::string>>> actualModifiesProcedure = EntityStager::getStagedModifiesProcedure();
+	std::sort(actualModifiesProcedure.begin(), actualModifiesProcedure.end(),
+		[](auto& left, auto& right) {return left.first < right.first; });
+
+	REQUIRE(actualModifiesStatement == expectedModifiesStatement);
+	REQUIRE(actualModifiesProcedure == expectedModifiesProcedure);
+	EntityStager::clear();
+}
+
+TEST_CASE("Modifies 3.49 - 4 calls - 1 - (2, 3, 4)") {
+	EntityStager::clear();
+	DesignExtractor::extractDesignElements(RelationshipASTs::getAST3_49());
+
+	std::vector<std::pair<int, std::unordered_set<std::string>>> expectedModifiesStatement{
+		{2, {"z"}}, {3, {"y"}}, {5, {"x", "y"}}, {6, {"x"}}, {7, {"y"}},
+		{8, {"y"}}, {9, {"z"}}, {11, {"z"}}
+	};
+	std::sort(expectedModifiesStatement.begin(), expectedModifiesStatement.end(),
+		[](auto& left, auto& right) {return left.first < right.first; });
+
+	std::vector<std::pair<int, std::unordered_set<std::string>>> actualModifiesStatement = EntityStager::getStagedModifiesStatement();
+	std::sort(actualModifiesStatement.begin(), actualModifiesStatement.end(),
+		[](auto& left, auto& right) {return left.first < right.first; });
+
+	std::vector<std::pair<std::string, std::unordered_set<std::string>>> expectedModifiesProcedure{
+		{"testProgram1", {"x", "y", "z"}}, {"testProgram2", {"x", "y"}},
+		{"testProgram3", {"y"}}, {"testProgram4", {"z"}}
+	};
+	std::sort(expectedModifiesProcedure.begin(), expectedModifiesProcedure.end(),
+		[](auto& left, auto& right) {return left.first < right.first; });
+
+	std::vector<std::pair<std::string, std::unordered_set<std::string>>> actualModifiesProcedure = EntityStager::getStagedModifiesProcedure();
+	std::sort(actualModifiesProcedure.begin(), actualModifiesProcedure.end(),
+		[](auto& left, auto& right) {return left.first < right.first; });
+
+	REQUIRE(actualModifiesStatement == expectedModifiesStatement);
+	REQUIRE(actualModifiesProcedure == expectedModifiesProcedure);
+	EntityStager::clear();
+}
+
+TEST_CASE("Modifies 3.50 - 4 calls - (1, 2, 4) - 3") {
+	EntityStager::clear();
+	DesignExtractor::extractDesignElements(RelationshipASTs::getAST3_50());
+
+	std::vector<std::pair<int, std::unordered_set<std::string>>> expectedModifiesStatement{
+		{2, {"y"}}, {4, {"x"}}, {5, {"y"}}, {6, {"y"}}, {7, {"y"}},
+		{8, {"y", "z"}}, {9, {"y"}}, {11, {"z"}}
+	};
+	std::sort(expectedModifiesStatement.begin(), expectedModifiesStatement.end(),
+		[](auto& left, auto& right) {return left.first < right.first; });
+
+	std::vector<std::pair<int, std::unordered_set<std::string>>> actualModifiesStatement = EntityStager::getStagedModifiesStatement();
+	std::sort(actualModifiesStatement.begin(), actualModifiesStatement.end(),
+		[](auto& left, auto& right) {return left.first < right.first; });
+
+	std::vector<std::pair<std::string, std::unordered_set<std::string>>> expectedModifiesProcedure{
+		{"testProgram1", {"y"}}, {"testProgram2", {"x", "y"}},
+		{"testProgram3", {"y"}}, {"testProgram4", {"y", "z"}}
+	};
+	std::sort(expectedModifiesProcedure.begin(), expectedModifiesProcedure.end(),
+		[](auto& left, auto& right) {return left.first < right.first; });
+
+	std::vector<std::pair<std::string, std::unordered_set<std::string>>> actualModifiesProcedure = EntityStager::getStagedModifiesProcedure();
+	std::sort(actualModifiesProcedure.begin(), actualModifiesProcedure.end(),
+		[](auto& left, auto& right) {return left.first < right.first; });
+
+	REQUIRE(actualModifiesStatement == expectedModifiesStatement);
+	REQUIRE(actualModifiesProcedure == expectedModifiesProcedure);
+	EntityStager::clear();
+}
+
+TEST_CASE("Modifies 3.51 - 4 calls - 1 - (3, 4) - 2") {
+	EntityStager::clear();
+	DesignExtractor::extractDesignElements(RelationshipASTs::getAST3_51());
+
+	std::vector<std::pair<int, std::unordered_set<std::string>>> expectedModifiesStatement{
+		{1, {"x", "y", "z"}}, {3, {"x", "y"}}, {5, {"x"}}, {6, {"y"}}, {7, {"y"}},
+		{8, {"x", "y"}}, {9, {"x", "y", "z"}}, {11, {"x", "y"}}, {12, {"z"}}
+	};
+	std::sort(expectedModifiesStatement.begin(), expectedModifiesStatement.end(),
+		[](auto& left, auto& right) {return left.first < right.first; });
+
+	std::vector<std::pair<int, std::unordered_set<std::string>>> actualModifiesStatement = EntityStager::getStagedModifiesStatement();
+	std::sort(actualModifiesStatement.begin(), actualModifiesStatement.end(),
+		[](auto& left, auto& right) {return left.first < right.first; });
+
+	std::vector<std::pair<std::string, std::unordered_set<std::string>>> expectedModifiesProcedure{
+		{"testProgram1", {"x", "y", "z"}}, {"testProgram2", {"x", "y"}},
+		{"testProgram3", {"x", "y"}}, {"testProgram4", {"x", "y", "z"}}
+	};
+	std::sort(expectedModifiesProcedure.begin(), expectedModifiesProcedure.end(),
+		[](auto& left, auto& right) {return left.first < right.first; });
+
+	std::vector<std::pair<std::string, std::unordered_set<std::string>>> actualModifiesProcedure = EntityStager::getStagedModifiesProcedure();
+	std::sort(actualModifiesProcedure.begin(), actualModifiesProcedure.end(),
+		[](auto& left, auto& right) {return left.first < right.first; });
+
+	REQUIRE(actualModifiesStatement == expectedModifiesStatement);
+	REQUIRE(actualModifiesProcedure == expectedModifiesProcedure);
+	EntityStager::clear();
+}
+
+TEST_CASE("Modifies 3.52 - 4 calls - 2 - 4 - (3, 1)") {
+	EntityStager::clear();
+	DesignExtractor::extractDesignElements(RelationshipASTs::getAST3_52());
+
+	std::vector<std::pair<int, std::unordered_set<std::string>>> expectedModifiesStatement{
+		{3, {"x"}}, {4, {"y", "z"}}, {5, {"y"}}, {6, {"y"}}, {7, {"y", "z"}},
+		{8, {"y"}}, {10, {"z"}}
+	};
+	std::sort(expectedModifiesStatement.begin(), expectedModifiesStatement.end(),
+		[](auto& left, auto& right) {return left.first < right.first; });
+
+	std::vector<std::pair<int, std::unordered_set<std::string>>> actualModifiesStatement = EntityStager::getStagedModifiesStatement();
+	std::sort(actualModifiesStatement.begin(), actualModifiesStatement.end(),
+		[](auto& left, auto& right) {return left.first < right.first; });
+
+	std::vector<std::pair<std::string, std::unordered_set<std::string>>> expectedModifiesProcedure{
+		{"testProgram2", {"x", "y", "z"}}, {"testProgram3", {"y"}}, {"testProgram4", {"y", "z"}}
+	};
+	std::sort(expectedModifiesProcedure.begin(), expectedModifiesProcedure.end(),
+		[](auto& left, auto& right) {return left.first < right.first; });
+
+	std::vector<std::pair<std::string, std::unordered_set<std::string>>> actualModifiesProcedure = EntityStager::getStagedModifiesProcedure();
+	std::sort(actualModifiesProcedure.begin(), actualModifiesProcedure.end(),
+		[](auto& left, auto& right) {return left.first < right.first; });
+
+	REQUIRE(actualModifiesStatement == expectedModifiesStatement);
+	REQUIRE(actualModifiesProcedure == expectedModifiesProcedure);
+	EntityStager::clear();
+}
+
+TEST_CASE("Modifies 3.53 - 4 calls - (1, 2) - 3 - 4") {
+	EntityStager::clear();
+	DesignExtractor::extractDesignElements(RelationshipASTs::getAST3_53());
+
+	std::vector<std::pair<int, std::unordered_set<std::string>>> expectedModifiesStatement{
+		{3, {"y", "z"}}, {4, {"x"}}, {5, {"y", "z"}}, {6, {"y"}}, {7, {"y"}},
+		{8, {"z"}}, {9, {"z"}}, {11, {"z"}}
+	};
+	std::sort(expectedModifiesStatement.begin(), expectedModifiesStatement.end(),
+		[](auto& left, auto& right) {return left.first < right.first; });
+
+	std::vector<std::pair<int, std::unordered_set<std::string>>> actualModifiesStatement = EntityStager::getStagedModifiesStatement();
+	std::sort(actualModifiesStatement.begin(), actualModifiesStatement.end(),
+		[](auto& left, auto& right) {return left.first < right.first; });
+
+	std::vector<std::pair<std::string, std::unordered_set<std::string>>> expectedModifiesProcedure{
+		{"testProgram1", {"y", "z"}}, {"testProgram2", {"x", "y", "z"}},
+		{"testProgram3", {"y", "z"}}, {"testProgram4", {"z"}}
+	};
+	std::sort(expectedModifiesProcedure.begin(), expectedModifiesProcedure.end(),
+		[](auto& left, auto& right) {return left.first < right.first; });
+
+	std::vector<std::pair<std::string, std::unordered_set<std::string>>> actualModifiesProcedure = EntityStager::getStagedModifiesProcedure();
+	std::sort(actualModifiesProcedure.begin(), actualModifiesProcedure.end(),
+		[](auto& left, auto& right) {return left.first < right.first; });
+
+	REQUIRE(actualModifiesStatement == expectedModifiesStatement);
+	REQUIRE(actualModifiesProcedure == expectedModifiesProcedure);
+	EntityStager::clear();
+}
+
+TEST_CASE("Modifies 3.54 - 4 calls - (3, (2 - 4)) - 1") {
+	EntityStager::clear();
+	DesignExtractor::extractDesignElements(RelationshipASTs::getAST3_54());
+
+	std::vector<std::pair<int, std::unordered_set<std::string>>> expectedModifiesStatement{
+		{3, {"x"}}, {4, {"z"}}, {5, {"y"}}, {6, {"y"}},
+		{8, {"z"}}, {10, {"z"}}
+	};
+	std::sort(expectedModifiesStatement.begin(), expectedModifiesStatement.end(),
+		[](auto& left, auto& right) {return left.first < right.first; });
+
+	std::vector<std::pair<int, std::unordered_set<std::string>>> actualModifiesStatement = EntityStager::getStagedModifiesStatement();
+	std::sort(actualModifiesStatement.begin(), actualModifiesStatement.end(),
+		[](auto& left, auto& right) {return left.first < right.first; });
+
+	std::vector<std::pair<std::string, std::unordered_set<std::string>>> expectedModifiesProcedure{
+		{"testProgram2", {"x", "y", "z"}}, {"testProgram3", {"y"}}, {"testProgram4", {"z"}}
+	};
+	std::sort(expectedModifiesProcedure.begin(), expectedModifiesProcedure.end(),
+		[](auto& left, auto& right) {return left.first < right.first; });
+
+	std::vector<std::pair<std::string, std::unordered_set<std::string>>> actualModifiesProcedure = EntityStager::getStagedModifiesProcedure();
+	std::sort(actualModifiesProcedure.begin(), actualModifiesProcedure.end(),
+		[](auto& left, auto& right) {return left.first < right.first; });
+
+	REQUIRE(actualModifiesStatement == expectedModifiesStatement);
+	REQUIRE(actualModifiesProcedure == expectedModifiesProcedure);
+	EntityStager::clear();
+}
+
+TEST_CASE("Modifies 3.55 - 4 calls - 2 - ((1 - 4), 3)") {
+	EntityStager::clear();
+	DesignExtractor::extractDesignElements(RelationshipASTs::getAST3_55());
+
+	std::vector<std::pair<int, std::unordered_set<std::string>>> expectedModifiesStatement{
+		{2, {"z"}}, {4, {"y"}}, {5, {"x"}}, {6, {"z"}}, {7, {"y"}},
+		{8, {"y"}}, {9, {"z"}}, {11, {"z"}}
+	};
+	std::sort(expectedModifiesStatement.begin(), expectedModifiesStatement.end(),
+		[](auto& left, auto& right) {return left.first < right.first; });
+
+	std::vector<std::pair<int, std::unordered_set<std::string>>> actualModifiesStatement = EntityStager::getStagedModifiesStatement();
+	std::sort(actualModifiesStatement.begin(), actualModifiesStatement.end(),
+		[](auto& left, auto& right) {return left.first < right.first; });
+
+	std::vector<std::pair<std::string, std::unordered_set<std::string>>> expectedModifiesProcedure{
+		{"testProgram1", {"z"}},{"testProgram2", {"x", "y", "z"}},
+		{"testProgram3", {"y"}}, {"testProgram4", {"z"}}
 	};
 	std::sort(expectedModifiesProcedure.begin(), expectedModifiesProcedure.end(),
 		[](auto& left, auto& right) {return left.first < right.first; });

@@ -4,20 +4,15 @@
 #include <unordered_map>
 #include <vector>
 
-namespace PKBUtil
-{
-    struct hashFunction
-    {
-        size_t operator()(const std::pair<int,
-            int>& x) const
-        {
+namespace PKBUtil {
+    struct hashFunction {
+        size_t operator()(const std::pair<int, int>& x) const {
             return x.first ^ x.second;
         }
     };
 
     template <typename T>
-    static std::unordered_set<T> unorderedSetIntersection(const std::unordered_set<T>& set1, const std::unordered_set<T>& set2)
-    {
+    static std::unordered_set<T> unorderedSetIntersection(const std::unordered_set<T>& set1, const std::unordered_set<T>& set2) {
         std::unordered_set<T> resultSet;
         if (set1.size() < set2.size()) {
             for (const auto& ele : set1) {

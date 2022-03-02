@@ -1383,7 +1383,7 @@ AST RelationshipASTs::getAST3_42() {
 	 *  procedure testProgram1 {
 	 * 1  while (x < 1) {
 	 * 2    read x;
-	 * 3    call testProgram1;
+	 * 3    call testProgram2;
 	 *    }
 	 * 4  read z;
 	 *  }
@@ -1395,7 +1395,7 @@ AST RelationshipASTs::getAST3_42() {
 
 	std::vector<std::shared_ptr<StmtNode>> whileStmtList{
 		std::make_shared<ReadNode>(2, x),
-		std::make_shared<CallNode>(3, "testProgram1")
+		std::make_shared<CallNode>(3, "testProgram2")
 	};
 	std::vector<std::shared_ptr<StmtNode>> proc1StmtLst{
 		std::make_shared<WhileNode>(1, predXLt1, whileStmtList),
@@ -1585,9 +1585,9 @@ AST RelationshipASTs::getAST3_46() {
 	std::shared_ptr<ProcedureNode> proc2 = std::make_shared<ProcedureNode>(proc2StmtLst, "testProgram2");
 
 	std::vector<std::shared_ptr<StmtNode>> proc3StmtLst{
-		std::make_shared<CallNode>(5, "testProgram2"),
+		std::make_shared<CallNode>(5, "testProgram1"),
 		std::make_shared<AssignNode>(6, x, xPlus1, "x 1 +"),
-		std::make_shared<CallNode>(7, "testProgram3")
+		std::make_shared<CallNode>(7, "testProgram2")
 	};
 	std::shared_ptr<ProcedureNode> proc3 = std::make_shared<ProcedureNode>(proc3StmtLst, "testProgram3");
 
@@ -1938,16 +1938,15 @@ AST RelationshipASTs::getAST3_52() {
 	 *
 	 *   procedure testProgram3 {
 	 * 6   x = y + 1;
-	 * 7   call testProgram2;
 	 *   }
 	 *
 	 *   procedure testProgram4 {
-	 * 8   if (z < 3) then {
-	 * 9      call testProgram3;
-	 * 10     read z;
+	 * 7   if (z < 3) then {
+	 * 8      call testProgram3;
+	 * 9      read z;
 	 *     } else {
-	 * 11    print z;
-	 * 12    call testProgram1;
+	 * 10    print z;
+	 * 11    call testProgram1;
 	 *     }
 	 *   }
 	 */
@@ -1967,21 +1966,20 @@ AST RelationshipASTs::getAST3_52() {
 
 	std::vector<std::shared_ptr<StmtNode>> proc3StmtLst{
 		std::make_shared<AssignNode>(6, x, xPlus1, "x 1 +"),
-		std::make_shared<CallNode>(7, "testProgram2")
 	};
 	std::shared_ptr<ProcedureNode> proc3 = std::make_shared<ProcedureNode>(proc3StmtLst, "testProgram3");
 
 	std::vector<std::shared_ptr<StmtNode>> thenStmtList{
-		std::make_shared<ReadNode>(9, z),
-		std::make_shared<CallNode>(10, "testProgram3")
+		std::make_shared<ReadNode>(8, z),
+		std::make_shared<CallNode>(9, "testProgram3")
 	};
 	std::vector<std::shared_ptr<StmtNode>> elseStmtList{
-		std::make_shared<PrintNode>(11, z),
-		std::make_shared<CallNode>(12, "testProgram1")
+		std::make_shared<PrintNode>(10, z),
+		std::make_shared<CallNode>(11, "testProgram1")
 	};
 
 	std::vector<std::shared_ptr<StmtNode>> proc4StmtLst{
-		std::make_shared<IfNode>(8, predZLt3, thenStmtList, elseStmtList)
+		std::make_shared<IfNode>(7, predZLt3, thenStmtList, elseStmtList)
 	};
 	std::shared_ptr<ProcedureNode> proc4 = std::make_shared<ProcedureNode>(proc4StmtLst, "testProgram4");
 

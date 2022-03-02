@@ -1,5 +1,5 @@
 #include "catch.hpp"
-#include "../../../src/pkb/stores/ParentStore.h"
+#include "../src/pkb/stores/ParentStore.h"
 
 TEST_CASE("ParentStore API") {
 	ParentStore parentStore;
@@ -136,13 +136,13 @@ TEST_CASE("ParentStore API") {
 
 		// isSecondStatementT()
 		SECTION("isSecondStatementT() positive query") {
-			bool res = parentStore.isSecondStatementT(4);
+			bool res = parentStore.isSecondStatementT(5);
 			bool expectedRes = true;
 			REQUIRE(res == expectedRes);
 		}
 
 		SECTION("isSecondStatementT() negative query - first statement") {
-			bool res = parentStore.isSecondStatementT(5);
+			bool res = parentStore.isSecondStatementT(4);
 			bool expectedRes = false;
 			REQUIRE(res == expectedRes);
 		}
@@ -256,12 +256,16 @@ TEST_CASE("ParentStore API") {
 			secondColumn.push_back(8);
 
 			std::tuple<std::vector<int>, std::vector<int>> expectedRes = { firstColumn, secondColumn };
-			REQUIRE(res == expectedRes);
+			
+			std::unordered_set<std::pair<int, int>, PKBUtil::hashFunction> set = PKBUtil::convertVectorTupleToSetPairs(std::get<0>(res), std::get<1>(res));
+			std::unordered_set<std::pair<int, int>, PKBUtil::hashFunction> expectedSet = PKBUtil::convertVectorTupleToSetPairs(std::get<0>(expectedRes), std::get<1>(expectedRes));
+
+			REQUIRE(set == expectedSet);
 		}
 
 		// getAllRelationshipPairsT
 		SECTION("getAllRelationshipPairsT() positive query") {
-			std::tuple<std::vector<int>, std::vector<int>> res = parentStore.getAllRelationshipPairsT();
+			std::tuple<std::vector<int>, std::vector<int>> res = parentStore.getAllRelationshipTPairs();
 
 			std::vector<int> firstColumn;
 			std::vector<int> secondColumn;
@@ -276,7 +280,11 @@ TEST_CASE("ParentStore API") {
 			secondColumn.push_back(8);
 
 			std::tuple<std::vector<int>, std::vector<int>> expectedRes = { firstColumn, secondColumn };
-			REQUIRE(res == expectedRes);
+			
+			std::unordered_set<std::pair<int, int>, PKBUtil::hashFunction> set = PKBUtil::convertVectorTupleToSetPairs(std::get<0>(res), std::get<1>(res));
+			std::unordered_set<std::pair<int, int>, PKBUtil::hashFunction> expectedSet = PKBUtil::convertVectorTupleToSetPairs(std::get<0>(expectedRes), std::get<1>(expectedRes));
+
+			REQUIRE(set == expectedSet);
 		}
 	}
 	parentStore.clear();

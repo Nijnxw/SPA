@@ -160,9 +160,7 @@ TEST_CASE("Test multiple procedures") {
   SPParser parser = SPParser(input);
   AST output = parser.parseProgram();
   AST expected = generateASTs("main", "testProgram");
-  REQUIRE(output->getProcedureMap().size() == expected->getProcedureMap().size());
-  REQUIRE(*output->getProcedureMap()["main"] == *expected->getProcedureMap()["main"]);
-  REQUIRE(*output->getProcedureMap()["testProgram"] == *expected->getProcedureMap()["testProgram"]);
+  REQUIRE(*output == *expected);
 }
 
 // --------------------------------------------------

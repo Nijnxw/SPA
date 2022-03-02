@@ -65,11 +65,20 @@ bool StmtStmtStore::isSecondStatementT(int secondStatement) {
 
 std::unordered_set<int> StmtStmtStore::getFirstStatements(int secondStatement) {
 	std::unordered_set<int> result;
+	if (secondStatementToFirstStatement.count(secondStatement) <= 0) {
+		return result;
+	}
+
 	result.insert(secondStatementToFirstStatement[secondStatement]);
 	return result;
 }
 
 std::unordered_set<int> StmtStmtStore::getSecondStatements(int firstStatement) {
+	std::unordered_set<int> result;
+	if (firstStatementToSecondStatements.count(firstStatement) <= 0) {
+		return result;
+	}
+
 	return firstStatementToSecondStatements[firstStatement];
 }
 
@@ -82,10 +91,20 @@ std::unordered_set<int> StmtStmtStore::getAllSecondStatements() {
 }
 
 std::unordered_set<int> StmtStmtStore::getFirstStatementsT(int secondStatement) {
+	std::unordered_set<int> result;
+	if (secondStatementToFirstStatementsT.count(secondStatement) <= 0) {
+		return result;
+	}
+
 	return secondStatementToFirstStatementsT[secondStatement];
 }
 
 std::unordered_set<int> StmtStmtStore::getSecondStatementsT(int firstStatement) {
+	std::unordered_set<int> result;
+	if (firstStatementToSecondStatementsT.count(firstStatement) <= 0) {
+		return result;
+	}
+
 	return firstStatementToSecondStatementsT[firstStatement];
 }
 

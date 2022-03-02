@@ -1,5 +1,5 @@
 #include "catch.hpp"
-#include "../../../src/pkb/stores/FollowsStore.h"
+#include "pkb/stores/FollowsStore.h"
 
 TEST_CASE("FollowsStore API") {
 	FollowsStore followsStore;
@@ -24,6 +24,10 @@ TEST_CASE("FollowsStore API") {
 		followsStore.addRelationshipT(1, 4);
 		followsStore.addRelationshipT(1, 7);
 		followsStore.addRelationshipT(1, 9);
+
+		followsStore.addRelationshipT(2, 4);
+		followsStore.addRelationshipT(2, 7);
+		followsStore.addRelationshipT(2, 9);
 
 		followsStore.addRelationshipT(3, 7);
 		followsStore.addRelationshipT(3, 9);
@@ -274,18 +278,22 @@ TEST_CASE("FollowsStore API") {
 
 			firstColumn.push_back(7);
 			secondColumn.push_back(9);
-
+		
 			std::tuple<std::vector<int>, std::vector<int>> expectedRes = { firstColumn, secondColumn };
-			REQUIRE(res == expectedRes);
+			
+			std::unordered_set<std::pair<int, int>, PKBUtil::hashFunction> set = PKBUtil::convertVectorTupleToSetPairs(std::get<0>(res), std::get<1>(res));
+			std::unordered_set<std::pair<int, int>, PKBUtil::hashFunction> expectedSet = PKBUtil::convertVectorTupleToSetPairs(std::get<0>(expectedRes), std::get<1>(expectedRes));
+
+			REQUIRE(set == expectedSet);
 		}
 
 		// getAllRelationshipPairsT
 		SECTION("getAllRelationshipPairsT() positive query") {
-			std::tuple<std::vector<int>, std::vector<int>> res = followsStore.getAllRelationshipPairsT();
+			std::tuple<std::vector<int>, std::vector<int>> res = followsStore.getAllRelationshipTPairs();
 
 			std::vector<int> firstColumn;
 			std::vector<int> secondColumn;
-
+			
 			firstColumn.push_back(1);
 			secondColumn.push_back(2);
 
@@ -313,6 +321,15 @@ TEST_CASE("FollowsStore API") {
 			firstColumn.push_back(1);
 			secondColumn.push_back(9);
 
+			firstColumn.push_back(2);
+			secondColumn.push_back(4);
+
+			firstColumn.push_back(2);
+			secondColumn.push_back(7);
+
+			firstColumn.push_back(2);
+			secondColumn.push_back(9);
+
 			firstColumn.push_back(3);
 			secondColumn.push_back(7);
 
@@ -323,7 +340,11 @@ TEST_CASE("FollowsStore API") {
 			secondColumn.push_back(9);
 
 			std::tuple<std::vector<int>, std::vector<int>> expectedRes = { firstColumn, secondColumn };
-			REQUIRE(res == expectedRes);
+			
+			std::unordered_set<std::pair<int, int>, PKBUtil::hashFunction> set = PKBUtil::convertVectorTupleToSetPairs(std::get<0>(res), std::get<1>(res));
+			std::unordered_set<std::pair<int, int>, PKBUtil::hashFunction> expectedSet = PKBUtil::convertVectorTupleToSetPairs(std::get<0>(expectedRes), std::get<1>(expectedRes));
+
+			REQUIRE(set == expectedSet);
 		}
 	}
 	followsStore.clear();

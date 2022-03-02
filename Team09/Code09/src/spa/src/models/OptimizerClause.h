@@ -26,7 +26,7 @@ private:
 
 template<>
 struct std::hash<OptimizerClause> {
-	size_t operator()(const OptimizerClause& clause) {
+	size_t operator()(const OptimizerClause& clause) const {
 		return std::hash<QueryClause>()(clause.getClause());
 	}
 };

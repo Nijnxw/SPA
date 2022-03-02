@@ -20,14 +20,14 @@ TEST_CASE("Add single synonym - should have an edge loop back to same vertex") {
 	std::unordered_set<std::string> usedSyn = {"s"};
 	QueryClause clause = {RelationRef::MODIFIES, args, usedSyn};
 
-	std::unordered_map<std::string, std::vector<OptimizerClause>> expected = {
+	AdjList expected = {
 		{"s", {{"s", "s", 0, clause}}}
 	};
 
 	OptimizerGraph graph;
 
 	REQUIRE(graph.addEdge(clause, 0));
-	auto actual = graph.getAdjList();
+	AdjList actual = graph.getAdjList();
 	REQUIRE(actual == expected);
 }
 
@@ -37,14 +37,11 @@ TEST_CASE("Add 2 synonyms (repeated) - should have an edge loop back to same ver
 	std::unordered_set<std::string> usedSyn = {"s"};
 	QueryClause clause = {RelationRef::FOLLOWS, args, usedSyn};
 
-	std::unordered_map<std::string, std::vector<OptimizerClause>> expected = {
-		{"s", {{"s", "s", 0, clause}}}
-	};
+	OptimizerGraph expected = {{{"s", {{"s", "s", 0, clause}}}}};
 
-	OptimizerGraph graph;
+	OptimizerGraph actual;
 
-	REQUIRE(graph.addEdge(clause, 0));
-	auto actual = graph.getAdjList();
+	REQUIRE(actual.addEdge(clause, 0));
 	REQUIRE(actual == expected);
 }
 
@@ -54,14 +51,10 @@ TEST_CASE("Add 2 synonyms (both different) - should have edge between 2 vertices
 	std::unordered_set<std::string> usedSyn = {"s", "v"};
 	QueryClause clause = {RelationRef::MODIFIES, args, usedSyn};
 
-	std::unordered_map<std::string, std::vector<OptimizerClause>> expected = {
-		{"s", {{"s", "v", 0, clause}}},
-		{"v", {{"v", "s", 0, clause}}}
-	};
+	OptimizerGraph expected = {{{"s", {{"s", "v", 0, clause}}}, {"v", {{"v", "s", 0, clause}}}}};
 
-	OptimizerGraph graph;
+	OptimizerGraph actual;
 
-	REQUIRE(graph.addEdge(clause, 0));
-	auto actual = graph.getAdjList();
+	REQUIRE(actual.addEdge(clause, 0));
 	REQUIRE(actual == expected);
 }

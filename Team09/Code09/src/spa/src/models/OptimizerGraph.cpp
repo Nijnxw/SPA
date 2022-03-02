@@ -2,6 +2,8 @@
 
 OptimizerGraph::OptimizerGraph() {}
 
+OptimizerGraph::OptimizerGraph(const AdjList& adjList) : adjList(adjList) {}
+
 bool OptimizerGraph::addEdge(const OptimizerClause& clause) {
 	return addEdge(clause.getClause(), clause.getWeight());
 }
@@ -26,6 +28,27 @@ bool OptimizerGraph::addEdge(const QueryClause& clause, int weight) {
 	return true;
 }
 
-std::unordered_map<std::string, std::vector<OptimizerClause>> OptimizerGraph::getAdjList() {
+AdjList OptimizerGraph::getAdjList() {
 	return adjList;
+}
+
+bool OptimizerGraph::operator==(const OptimizerGraph& other) const {
+	AdjList otherAdjList = other.adjList;
+	for (const auto& keyVal: adjList) {
+		if (otherAdjList.find(keyVal.first) == otherAdjList.end()) {
+			return false;
+		}
+		std::vector<OptimizerClause> otherNeighbours = otherAdjList.at(keyVal.first);
+
+		std::unordered_set<OptimizerClause, std::hash<OptimizerClause>> clauseSet = {keyVal.second.begin(),
+																					 keyVal.second.end()};
+		std::unordered_set<OptimizerClause, std::hash<OptimizerClause>> otherClauseSet = {otherNeighbours.begin(),
+																						  otherNeighbours.end()};
+
+		if (clauseSet != otherClauseSet) {
+			return false;
+		}
+	}
+
+	return true;
 }

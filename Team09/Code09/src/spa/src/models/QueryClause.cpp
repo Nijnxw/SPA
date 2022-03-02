@@ -40,3 +40,13 @@ bool QueryClause::containsCommonSynonym(QueryClause& other) const {
 bool QueryClause::containsSynonym(QueryArgument& synonym) const {
 	return usedSynonyms.count(synonym.getValue()) > 0;
 }
+
+std::string QueryClause::toString() const {
+	std::string str = ToString(clauseType);
+	for (const auto& arg: arguments) {
+		str += " ";
+		str += arg.getValue();
+	}
+	return str;
+}
+

@@ -3,15 +3,19 @@
 #include <unordered_map>
 #include "OptimizerClause.h"
 
+typedef std::unordered_map<std::string, std::vector<OptimizerClause>> AdjList;
+
 class OptimizerGraph {
 public:
 	OptimizerGraph();
+	OptimizerGraph(const AdjList& adjList);
 
 	bool addEdge(const OptimizerClause& clause);
 	bool addEdge(const QueryClause& clause, int weight);
-	std::unordered_map<std::string, std::vector<OptimizerClause>> getAdjList();
+	AdjList getAdjList();
+	bool operator==(const OptimizerGraph& other) const;
 
 protected:
-	std::unordered_set<QueryClause> clauses;    // to prevent duplicate clauses
-	std::unordered_map<std::string, std::vector<OptimizerClause>> adjList;
+	std::unordered_set<QueryClause, std::hash<QueryClause>> clauses;    // to prevent duplicate clauses
+	AdjList adjList;
 };

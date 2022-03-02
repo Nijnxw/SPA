@@ -21,6 +21,9 @@ QueryClause OptimizerClause::getClause() const {
 }
 
 bool OptimizerClause::operator<(const OptimizerClause& other) const {
+	if (weight == other.weight) {
+		return clause.toString() < other.clause.toString();
+	}
 	return weight < other.weight;
 }
 

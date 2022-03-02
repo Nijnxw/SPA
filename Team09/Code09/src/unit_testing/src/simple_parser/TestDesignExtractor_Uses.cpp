@@ -966,6 +966,8 @@ TEST_CASE("Uses 3.33 - 3 levels of nesting - 1 stmt per nest level - if-while-if
 	EntityStager::clear();
 }
 
+//ITERATION 2
+
 TEST_CASE("Uses 3.34 - Complex two procedure") {
 	EntityStager::clear();
 	DesignExtractor::extractDesignElements(RelationshipASTs::getAST3_34());
@@ -984,6 +986,628 @@ TEST_CASE("Uses 3.34 - Complex two procedure") {
 
 	std::vector<std::pair<std::string, std::unordered_set<std::string>>> expectedUsesProcedure{
 		{"testProgram", {"x", "y"}}, {"testProgram2", {"w", "x", "y", "z"}}
+	};
+	std::sort(expectedUsesProcedure.begin(), expectedUsesProcedure.end(),
+		[](auto& left, auto& right) {return left.first < right.first; });
+
+	std::vector<std::pair<std::string, std::unordered_set<std::string>>> actualUsesProcedure = EntityStager::getStagedUsesProcedure();
+	std::sort(actualUsesProcedure.begin(), actualUsesProcedure.end(),
+		[](auto& left, auto& right) {return left.first < right.first; });
+
+	REQUIRE(actualUsesStatement == expectedUsesStatement);
+	REQUIRE(actualUsesProcedure == expectedUsesProcedure);
+	EntityStager::clear();
+}
+
+TEST_CASE("Uses 3.35 - Normal Post Declared") {
+	EntityStager::clear();
+	DesignExtractor::extractDesignElements(RelationshipASTs::getAST3_35());
+
+	std::vector<std::pair<int, std::unordered_set<std::string>>> expectedUsesStatement{
+		{3, {"x", "y"}}, {4, {"x"}}, {5, {"y"}}
+	};
+	std::sort(expectedUsesStatement.begin(), expectedUsesStatement.end(),
+		[](auto& left, auto& right) {return left.first < right.first; });
+
+	std::vector<std::pair<int, std::unordered_set<std::string>>> actualUsesStatement = EntityStager::getStagedUsesStatement();
+	std::sort(actualUsesStatement.begin(), actualUsesStatement.end(),
+		[](auto& left, auto& right) {return left.first < right.first; });
+
+	std::vector<std::pair<std::string, std::unordered_set<std::string>>> expectedUsesProcedure{
+		{"testProgram1", {"x", "y"}}, {"testProgram2", {"x", "y"}},
+	};
+	std::sort(expectedUsesProcedure.begin(), expectedUsesProcedure.end(),
+		[](auto& left, auto& right) {return left.first < right.first; });
+
+	std::vector<std::pair<std::string, std::unordered_set<std::string>>> actualUsesProcedure = EntityStager::getStagedUsesProcedure();
+	std::sort(actualUsesProcedure.begin(), actualUsesProcedure.end(),
+		[](auto& left, auto& right) {return left.first < right.first; });
+
+	REQUIRE(actualUsesStatement == expectedUsesStatement);
+	REQUIRE(actualUsesProcedure == expectedUsesProcedure);
+	EntityStager::clear();
+}
+
+TEST_CASE("Uses 3.36 - Normal Pre Declared") {
+	EntityStager::clear();
+	DesignExtractor::extractDesignElements(RelationshipASTs::getAST3_36());
+
+	std::vector<std::pair<int, std::unordered_set<std::string>>> expectedUsesStatement{
+		{3, {"x"}}, {4, {"y"}}
+	};
+	std::sort(expectedUsesStatement.begin(), expectedUsesStatement.end(),
+		[](auto& left, auto& right) {return left.first < right.first; });
+
+	std::vector<std::pair<int, std::unordered_set<std::string>>> actualUsesStatement = EntityStager::getStagedUsesStatement();
+	std::sort(actualUsesStatement.begin(), actualUsesStatement.end(),
+		[](auto& left, auto& right) {return left.first < right.first; });
+
+	std::vector<std::pair<std::string, std::unordered_set<std::string>>> expectedUsesProcedure{
+		{"testProgram2", {"x", "y"}}
+	};
+	std::sort(expectedUsesProcedure.begin(), expectedUsesProcedure.end(),
+		[](auto& left, auto& right) {return left.first < right.first; });
+
+	std::vector<std::pair<std::string, std::unordered_set<std::string>>> actualUsesProcedure = EntityStager::getStagedUsesProcedure();
+	std::sort(actualUsesProcedure.begin(), actualUsesProcedure.end(),
+		[](auto& left, auto& right) {return left.first < right.first; });
+
+	REQUIRE(actualUsesStatement == expectedUsesStatement);
+	REQUIRE(actualUsesProcedure == expectedUsesProcedure);
+	EntityStager::clear();
+}
+
+TEST_CASE("Uses 3.37 - Normal Pre declared	Nested in If") {
+	EntityStager::clear();
+	DesignExtractor::extractDesignElements(RelationshipASTs::getAST3_37());
+
+	std::vector<std::pair<int, std::unordered_set<std::string>>> expectedUsesStatement{
+		{2, {"x"}}, {3, {"x", "y"}}, {4, {"x"}}
+	};
+	std::sort(expectedUsesStatement.begin(), expectedUsesStatement.end(),
+		[](auto& left, auto& right) {return left.first < right.first; });
+
+	std::vector<std::pair<int, std::unordered_set<std::string>>> actualUsesStatement = EntityStager::getStagedUsesStatement();
+	std::sort(actualUsesStatement.begin(), actualUsesStatement.end(),
+		[](auto& left, auto& right) {return left.first < right.first; });
+
+	std::vector<std::pair<std::string, std::unordered_set<std::string>>> expectedUsesProcedure{
+		{"testProgram1", {"x"}}, {"testProgram2", {"x", "y"}},
+	};
+	std::sort(expectedUsesProcedure.begin(), expectedUsesProcedure.end(),
+		[](auto& left, auto& right) {return left.first < right.first; });
+
+	std::vector<std::pair<std::string, std::unordered_set<std::string>>> actualUsesProcedure = EntityStager::getStagedUsesProcedure();
+	std::sort(actualUsesProcedure.begin(), actualUsesProcedure.end(),
+		[](auto& left, auto& right) {return left.first < right.first; });
+
+	REQUIRE(actualUsesStatement == expectedUsesStatement);
+	REQUIRE(actualUsesProcedure == expectedUsesProcedure);
+	EntityStager::clear();
+}
+
+TEST_CASE("Uses 3.38 - Normal Pre declared	Nested in Else") {
+	EntityStager::clear();
+	DesignExtractor::extractDesignElements(RelationshipASTs::getAST3_38());
+
+	std::vector<std::pair<int, std::unordered_set<std::string>>> expectedUsesStatement{
+		{2, {"x"}}, {3, {"x", "y"}}, {5, {"x"}}
+	};
+	std::sort(expectedUsesStatement.begin(), expectedUsesStatement.end(),
+		[](auto& left, auto& right) {return left.first < right.first; });
+
+	std::vector<std::pair<int, std::unordered_set<std::string>>> actualUsesStatement = EntityStager::getStagedUsesStatement();
+	std::sort(actualUsesStatement.begin(), actualUsesStatement.end(),
+		[](auto& left, auto& right) {return left.first < right.first; });
+
+	std::vector<std::pair<std::string, std::unordered_set<std::string>>> expectedUsesProcedure{
+		{"testProgram1", {"x"}}, {"testProgram2", {"x", "y"}},
+	};
+	std::sort(expectedUsesProcedure.begin(), expectedUsesProcedure.end(),
+		[](auto& left, auto& right) {return left.first < right.first; });
+
+	std::vector<std::pair<std::string, std::unordered_set<std::string>>> actualUsesProcedure = EntityStager::getStagedUsesProcedure();
+	std::sort(actualUsesProcedure.begin(), actualUsesProcedure.end(),
+		[](auto& left, auto& right) {return left.first < right.first; });
+
+	REQUIRE(actualUsesStatement == expectedUsesStatement);
+	REQUIRE(actualUsesProcedure == expectedUsesProcedure);
+	EntityStager::clear();
+}
+
+TEST_CASE("Uses 3.39 - Normal Post declared Nested in If") {
+	EntityStager::clear();
+	DesignExtractor::extractDesignElements(RelationshipASTs::getAST3_39());
+
+	std::vector<std::pair<int, std::unordered_set<std::string>>> expectedUsesStatement{
+		{1, {"x", "y"}}, {2, {"x"}}, {6, {"x"}}
+	};
+	std::sort(expectedUsesStatement.begin(), expectedUsesStatement.end(),
+		[](auto& left, auto& right) {return left.first < right.first; });
+
+	std::vector<std::pair<int, std::unordered_set<std::string>>> actualUsesStatement = EntityStager::getStagedUsesStatement();
+	std::sort(actualUsesStatement.begin(), actualUsesStatement.end(),
+		[](auto& left, auto& right) {return left.first < right.first; });
+
+	std::vector<std::pair<std::string, std::unordered_set<std::string>>> expectedUsesProcedure{
+		{"testProgram1", {"x", "y"}}, {"testProgram2", {"x"}},
+	};
+	std::sort(expectedUsesProcedure.begin(), expectedUsesProcedure.end(),
+		[](auto& left, auto& right) {return left.first < right.first; });
+
+	std::vector<std::pair<std::string, std::unordered_set<std::string>>> actualUsesProcedure = EntityStager::getStagedUsesProcedure();
+	std::sort(actualUsesProcedure.begin(), actualUsesProcedure.end(),
+		[](auto& left, auto& right) {return left.first < right.first; });
+
+	REQUIRE(actualUsesStatement == expectedUsesStatement);
+	REQUIRE(actualUsesProcedure == expectedUsesProcedure);
+	EntityStager::clear();
+}
+
+TEST_CASE("Uses 3.40 - Normal Post declared Nested in Else") {
+	EntityStager::clear();
+	DesignExtractor::extractDesignElements(RelationshipASTs::getAST3_40());
+
+	std::vector<std::pair<int, std::unordered_set<std::string>>> expectedUsesStatement{
+		{1, {"x", "y"}}, {3, {"x"}}, {6, {"x"}}
+	};
+	std::sort(expectedUsesStatement.begin(), expectedUsesStatement.end(),
+		[](auto& left, auto& right) {return left.first < right.first; });
+
+	std::vector<std::pair<int, std::unordered_set<std::string>>> actualUsesStatement = EntityStager::getStagedUsesStatement();
+	std::sort(actualUsesStatement.begin(), actualUsesStatement.end(),
+		[](auto& left, auto& right) {return left.first < right.first; });
+
+	std::vector<std::pair<std::string, std::unordered_set<std::string>>> expectedUsesProcedure{
+		{"testProgram1", {"x", "y"}}, {"testProgram2", {"x"}},
+	};
+	std::sort(expectedUsesProcedure.begin(), expectedUsesProcedure.end(),
+		[](auto& left, auto& right) {return left.first < right.first; });
+
+	std::vector<std::pair<std::string, std::unordered_set<std::string>>> actualUsesProcedure = EntityStager::getStagedUsesProcedure();
+	std::sort(actualUsesProcedure.begin(), actualUsesProcedure.end(),
+		[](auto& left, auto& right) {return left.first < right.first; });
+
+	REQUIRE(actualUsesStatement == expectedUsesStatement);
+	REQUIRE(actualUsesProcedure == expectedUsesProcedure);
+	EntityStager::clear();
+}
+
+TEST_CASE("Uses 3.41 - Normal Pre declared Nested in While") {
+	EntityStager::clear();
+	DesignExtractor::extractDesignElements(RelationshipASTs::getAST3_41());
+
+	std::vector<std::pair<int, std::unordered_set<std::string>>> expectedUsesStatement{
+		{1, {"x"}}, {3, {"x"}}, {4, {"x"}}
+	};
+	std::sort(expectedUsesStatement.begin(), expectedUsesStatement.end(),
+		[](auto& left, auto& right) {return left.first < right.first; });
+
+	std::vector<std::pair<int, std::unordered_set<std::string>>> actualUsesStatement = EntityStager::getStagedUsesStatement();
+	std::sort(actualUsesStatement.begin(), actualUsesStatement.end(),
+		[](auto& left, auto& right) {return left.first < right.first; });
+
+	std::vector<std::pair<std::string, std::unordered_set<std::string>>> expectedUsesProcedure{
+		{"testProgram1", {"x"}}, {"testProgram2", {"x"}},
+	};
+	std::sort(expectedUsesProcedure.begin(), expectedUsesProcedure.end(),
+		[](auto& left, auto& right) {return left.first < right.first; });
+
+	std::vector<std::pair<std::string, std::unordered_set<std::string>>> actualUsesProcedure = EntityStager::getStagedUsesProcedure();
+	std::sort(actualUsesProcedure.begin(), actualUsesProcedure.end(),
+		[](auto& left, auto& right) {return left.first < right.first; });
+
+	REQUIRE(actualUsesStatement == expectedUsesStatement);
+	REQUIRE(actualUsesProcedure == expectedUsesProcedure);
+	EntityStager::clear();
+}
+
+TEST_CASE("Uses 3.42 - Normal Post declared Nested in While") {
+	EntityStager::clear();
+	DesignExtractor::extractDesignElements(RelationshipASTs::getAST3_42());
+
+	std::vector<std::pair<int, std::unordered_set<std::string>>> expectedUsesStatement{
+		{1, {"x"}}, {3, {"x"}}, {5, {"x"}}
+	};
+	std::sort(expectedUsesStatement.begin(), expectedUsesStatement.end(),
+		[](auto& left, auto& right) {return left.first < right.first; });
+
+	std::vector<std::pair<int, std::unordered_set<std::string>>> actualUsesStatement = EntityStager::getStagedUsesStatement();
+	std::sort(actualUsesStatement.begin(), actualUsesStatement.end(),
+		[](auto& left, auto& right) {return left.first < right.first; });
+
+	std::vector<std::pair<std::string, std::unordered_set<std::string>>> expectedUsesProcedure{
+		{"testProgram1", {"x"}}, {"testProgram2", {"x"}},
+	};
+	std::sort(expectedUsesProcedure.begin(), expectedUsesProcedure.end(),
+		[](auto& left, auto& right) {return left.first < right.first; });
+
+	std::vector<std::pair<std::string, std::unordered_set<std::string>>> actualUsesProcedure = EntityStager::getStagedUsesProcedure();
+	std::sort(actualUsesProcedure.begin(), actualUsesProcedure.end(),
+		[](auto& left, auto& right) {return left.first < right.first; });
+
+	REQUIRE(actualUsesStatement == expectedUsesStatement);
+	REQUIRE(actualUsesProcedure == expectedUsesProcedure);
+	EntityStager::clear();
+}
+
+TEST_CASE("Uses 3.43 - 3 calls sequential predeclared") {
+	EntityStager::clear();
+	DesignExtractor::extractDesignElements(RelationshipASTs::getAST3_43());
+
+	std::vector<std::pair<int, std::unordered_set<std::string>>> expectedUsesStatement{
+		{1, {"x", "y", "z"}}, {2, {"y", "z"}}, {3, {"z"}}, {5, {"z"}}, {6, {"y"}},
+		{8, {"x"}}
+	};
+	std::sort(expectedUsesStatement.begin(), expectedUsesStatement.end(),
+		[](auto& left, auto& right) {return left.first < right.first; });
+
+	std::vector<std::pair<int, std::unordered_set<std::string>>> actualUsesStatement = EntityStager::getStagedUsesStatement();
+	std::sort(actualUsesStatement.begin(), actualUsesStatement.end(),
+		[](auto& left, auto& right) {return left.first < right.first; });
+
+	std::vector<std::pair<std::string, std::unordered_set<std::string>>> expectedUsesProcedure{
+		{"testProgram", {"x", "y", "z"}}
+	};
+	std::sort(expectedUsesProcedure.begin(), expectedUsesProcedure.end(),
+		[](auto& left, auto& right) {return left.first < right.first; });
+
+	std::vector<std::pair<std::string, std::unordered_set<std::string>>> actualUsesProcedure = EntityStager::getStagedUsesProcedure();
+	std::sort(actualUsesProcedure.begin(), actualUsesProcedure.end(),
+		[](auto& left, auto& right) {return left.first < right.first; });
+
+	REQUIRE(actualUsesStatement == expectedUsesStatement);
+	REQUIRE(actualUsesProcedure == expectedUsesProcedure);
+	EntityStager::clear();
+}
+
+TEST_CASE("Uses 3.44 - 3 calls sequential post declared") {
+	EntityStager::clear();
+	DesignExtractor::extractDesignElements(RelationshipASTs::getAST3_44());
+
+	std::vector<std::pair<int, std::unordered_set<std::string>>> expectedUsesStatement{
+		{1, {"x", "y", "z"}}, {2, {"y", "z"}}, {3, {"z"}}, {5, {"z"}}, {6, {"y"}},
+		{8, {"x"}}
+	};
+	std::sort(expectedUsesStatement.begin(), expectedUsesStatement.end(),
+		[](auto& left, auto& right) {return left.first < right.first; });
+
+	std::vector<std::pair<int, std::unordered_set<std::string>>> actualUsesStatement = EntityStager::getStagedUsesStatement();
+	std::sort(actualUsesStatement.begin(), actualUsesStatement.end(),
+		[](auto& left, auto& right) {return left.first < right.first; });
+
+	std::vector<std::pair<std::string, std::unordered_set<std::string>>> expectedUsesProcedure{
+		{"testProgram", {"x", "y", "z"}}
+	};
+	std::sort(expectedUsesProcedure.begin(), expectedUsesProcedure.end(),
+		[](auto& left, auto& right) {return left.first < right.first; });
+
+	std::vector<std::pair<std::string, std::unordered_set<std::string>>> actualUsesProcedure = EntityStager::getStagedUsesProcedure();
+	std::sort(actualUsesProcedure.begin(), actualUsesProcedure.end(),
+		[](auto& left, auto& right) {return left.first < right.first; });
+
+	REQUIRE(actualUsesStatement == expectedUsesStatement);
+	REQUIRE(actualUsesProcedure == expectedUsesProcedure);
+	EntityStager::clear();
+}
+
+TEST_CASE("Uses 3.45 - 3 calls forking from top") {
+	EntityStager::clear();
+	DesignExtractor::extractDesignElements(RelationshipASTs::getAST3_45());
+
+	std::vector<std::pair<int, std::unordered_set<std::string>>> expectedUsesStatement{
+		{1, {"x", "y", "z"}}, {2, {"y", "z"}}, {3, {"z"}}, {5, {"z"}}, {6, {"y"}},
+		{8, {"x"}}
+	};
+	std::sort(expectedUsesStatement.begin(), expectedUsesStatement.end(),
+		[](auto& left, auto& right) {return left.first < right.first; });
+
+	std::vector<std::pair<int, std::unordered_set<std::string>>> actualUsesStatement = EntityStager::getStagedUsesStatement();
+	std::sort(actualUsesStatement.begin(), actualUsesStatement.end(),
+		[](auto& left, auto& right) {return left.first < right.first; });
+
+	std::vector<std::pair<std::string, std::unordered_set<std::string>>> expectedUsesProcedure{
+		{"testProgram", {"x", "y", "z"}}
+	};
+	std::sort(expectedUsesProcedure.begin(), expectedUsesProcedure.end(),
+		[](auto& left, auto& right) {return left.first < right.first; });
+
+	std::vector<std::pair<std::string, std::unordered_set<std::string>>> actualUsesProcedure = EntityStager::getStagedUsesProcedure();
+	std::sort(actualUsesProcedure.begin(), actualUsesProcedure.end(),
+		[](auto& left, auto& right) {return left.first < right.first; });
+
+	REQUIRE(actualUsesStatement == expectedUsesStatement);
+	REQUIRE(actualUsesProcedure == expectedUsesProcedure);
+	EntityStager::clear();
+}
+
+TEST_CASE("Uses 3.46 - 3 calls forking from bottom") {
+	EntityStager::clear();
+	DesignExtractor::extractDesignElements(RelationshipASTs::getAST3_46());
+
+	std::vector<std::pair<int, std::unordered_set<std::string>>> expectedUsesStatement{
+		{1, {"x", "y", "z"}}, {2, {"y", "z"}}, {3, {"z"}}, {5, {"z"}}, {6, {"y"}},
+		{8, {"x"}}
+	};
+	std::sort(expectedUsesStatement.begin(), expectedUsesStatement.end(),
+		[](auto& left, auto& right) {return left.first < right.first; });
+
+	std::vector<std::pair<int, std::unordered_set<std::string>>> actualUsesStatement = EntityStager::getStagedUsesStatement();
+	std::sort(actualUsesStatement.begin(), actualUsesStatement.end(),
+		[](auto& left, auto& right) {return left.first < right.first; });
+
+	std::vector<std::pair<std::string, std::unordered_set<std::string>>> expectedUsesProcedure{
+		{"testProgram", {"x", "y", "z"}}
+	};
+	std::sort(expectedUsesProcedure.begin(), expectedUsesProcedure.end(),
+		[](auto& left, auto& right) {return left.first < right.first; });
+
+	std::vector<std::pair<std::string, std::unordered_set<std::string>>> actualUsesProcedure = EntityStager::getStagedUsesProcedure();
+	std::sort(actualUsesProcedure.begin(), actualUsesProcedure.end(),
+		[](auto& left, auto& right) {return left.first < right.first; });
+
+	REQUIRE(actualUsesStatement == expectedUsesStatement);
+	REQUIRE(actualUsesProcedure == expectedUsesProcedure);
+	EntityStager::clear();
+}
+
+TEST_CASE("Uses 3.47 - 3 calls forking from middle") {
+	EntityStager::clear();
+	DesignExtractor::extractDesignElements(RelationshipASTs::getAST3_47());
+
+	std::vector<std::pair<int, std::unordered_set<std::string>>> expectedUsesStatement{
+		{1, {"x", "y", "z"}}, {2, {"y", "z"}}, {3, {"z"}}, {5, {"z"}}, {6, {"y"}},
+		{8, {"x"}}
+	};
+	std::sort(expectedUsesStatement.begin(), expectedUsesStatement.end(),
+		[](auto& left, auto& right) {return left.first < right.first; });
+
+	std::vector<std::pair<int, std::unordered_set<std::string>>> actualUsesStatement = EntityStager::getStagedUsesStatement();
+	std::sort(actualUsesStatement.begin(), actualUsesStatement.end(),
+		[](auto& left, auto& right) {return left.first < right.first; });
+
+	std::vector<std::pair<std::string, std::unordered_set<std::string>>> expectedUsesProcedure{
+		{"testProgram", {"x", "y", "z"}}
+	};
+	std::sort(expectedUsesProcedure.begin(), expectedUsesProcedure.end(),
+		[](auto& left, auto& right) {return left.first < right.first; });
+
+	std::vector<std::pair<std::string, std::unordered_set<std::string>>> actualUsesProcedure = EntityStager::getStagedUsesProcedure();
+	std::sort(actualUsesProcedure.begin(), actualUsesProcedure.end(),
+		[](auto& left, auto& right) {return left.first < right.first; });
+
+	REQUIRE(actualUsesStatement == expectedUsesStatement);
+	REQUIRE(actualUsesProcedure == expectedUsesProcedure);
+	EntityStager::clear();
+}
+
+TEST_CASE("Uses 3.48 - 4 calls sequential call (mix of post and pre declared)") {
+	EntityStager::clear();
+	DesignExtractor::extractDesignElements(RelationshipASTs::getAST3_48());
+
+	std::vector<std::pair<int, std::unordered_set<std::string>>> expectedUsesStatement{
+		{1, {"x", "y", "z"}}, {2, {"y", "z"}}, {3, {"z"}}, {5, {"z"}}, {6, {"y"}},
+		{8, {"x"}}
+	};
+	std::sort(expectedUsesStatement.begin(), expectedUsesStatement.end(),
+		[](auto& left, auto& right) {return left.first < right.first; });
+
+	std::vector<std::pair<int, std::unordered_set<std::string>>> actualUsesStatement = EntityStager::getStagedUsesStatement();
+	std::sort(actualUsesStatement.begin(), actualUsesStatement.end(),
+		[](auto& left, auto& right) {return left.first < right.first; });
+
+	std::vector<std::pair<std::string, std::unordered_set<std::string>>> expectedUsesProcedure{
+		{"testProgram", {"x", "y", "z"}}
+	};
+	std::sort(expectedUsesProcedure.begin(), expectedUsesProcedure.end(),
+		[](auto& left, auto& right) {return left.first < right.first; });
+
+	std::vector<std::pair<std::string, std::unordered_set<std::string>>> actualUsesProcedure = EntityStager::getStagedUsesProcedure();
+	std::sort(actualUsesProcedure.begin(), actualUsesProcedure.end(),
+		[](auto& left, auto& right) {return left.first < right.first; });
+
+	REQUIRE(actualUsesStatement == expectedUsesStatement);
+	REQUIRE(actualUsesProcedure == expectedUsesProcedure);
+	EntityStager::clear();
+}
+
+TEST_CASE("Uses 3.49 - 4 calls - 1 - (2, 3, 4)") {
+	EntityStager::clear();
+	DesignExtractor::extractDesignElements(RelationshipASTs::getAST3_49());
+
+	std::vector<std::pair<int, std::unordered_set<std::string>>> expectedUsesStatement{
+		{1, {"x", "y", "z"}}, {2, {"y", "z"}}, {3, {"z"}}, {5, {"z"}}, {6, {"y"}},
+		{8, {"x"}}
+	};
+	std::sort(expectedUsesStatement.begin(), expectedUsesStatement.end(),
+		[](auto& left, auto& right) {return left.first < right.first; });
+
+	std::vector<std::pair<int, std::unordered_set<std::string>>> actualUsesStatement = EntityStager::getStagedUsesStatement();
+	std::sort(actualUsesStatement.begin(), actualUsesStatement.end(),
+		[](auto& left, auto& right) {return left.first < right.first; });
+
+	std::vector<std::pair<std::string, std::unordered_set<std::string>>> expectedUsesProcedure{
+		{"testProgram", {"x", "y", "z"}}
+	};
+	std::sort(expectedUsesProcedure.begin(), expectedUsesProcedure.end(),
+		[](auto& left, auto& right) {return left.first < right.first; });
+
+	std::vector<std::pair<std::string, std::unordered_set<std::string>>> actualUsesProcedure = EntityStager::getStagedUsesProcedure();
+	std::sort(actualUsesProcedure.begin(), actualUsesProcedure.end(),
+		[](auto& left, auto& right) {return left.first < right.first; });
+
+	REQUIRE(actualUsesStatement == expectedUsesStatement);
+	REQUIRE(actualUsesProcedure == expectedUsesProcedure);
+	EntityStager::clear();
+}
+
+TEST_CASE("Uses 3.50 - 4 calls - (1, 2, 4) - 3") {
+	EntityStager::clear();
+	DesignExtractor::extractDesignElements(RelationshipASTs::getAST3_50());
+
+	std::vector<std::pair<int, std::unordered_set<std::string>>> expectedUsesStatement{
+		{1, {"x", "y", "z"}}, {2, {"y", "z"}}, {3, {"z"}}, {5, {"z"}}, {6, {"y"}},
+		{8, {"x"}}
+	};
+	std::sort(expectedUsesStatement.begin(), expectedUsesStatement.end(),
+		[](auto& left, auto& right) {return left.first < right.first; });
+
+	std::vector<std::pair<int, std::unordered_set<std::string>>> actualUsesStatement = EntityStager::getStagedUsesStatement();
+	std::sort(actualUsesStatement.begin(), actualUsesStatement.end(),
+		[](auto& left, auto& right) {return left.first < right.first; });
+
+	std::vector<std::pair<std::string, std::unordered_set<std::string>>> expectedUsesProcedure{
+		{"testProgram", {"x", "y", "z"}}
+	};
+	std::sort(expectedUsesProcedure.begin(), expectedUsesProcedure.end(),
+		[](auto& left, auto& right) {return left.first < right.first; });
+
+	std::vector<std::pair<std::string, std::unordered_set<std::string>>> actualUsesProcedure = EntityStager::getStagedUsesProcedure();
+	std::sort(actualUsesProcedure.begin(), actualUsesProcedure.end(),
+		[](auto& left, auto& right) {return left.first < right.first; });
+
+	REQUIRE(actualUsesStatement == expectedUsesStatement);
+	REQUIRE(actualUsesProcedure == expectedUsesProcedure);
+	EntityStager::clear();
+}
+
+TEST_CASE("Uses 3.51 - 4 calls - 1 - (3, 4) - 2") {
+	EntityStager::clear();
+	DesignExtractor::extractDesignElements(RelationshipASTs::getAST3_51());
+
+	std::vector<std::pair<int, std::unordered_set<std::string>>> expectedUsesStatement{
+		{1, {"x", "y", "z"}}, {2, {"y", "z"}}, {3, {"z"}}, {5, {"z"}}, {6, {"y"}},
+		{8, {"x"}}
+	};
+	std::sort(expectedUsesStatement.begin(), expectedUsesStatement.end(),
+		[](auto& left, auto& right) {return left.first < right.first; });
+
+	std::vector<std::pair<int, std::unordered_set<std::string>>> actualUsesStatement = EntityStager::getStagedUsesStatement();
+	std::sort(actualUsesStatement.begin(), actualUsesStatement.end(),
+		[](auto& left, auto& right) {return left.first < right.first; });
+
+	std::vector<std::pair<std::string, std::unordered_set<std::string>>> expectedUsesProcedure{
+		{"testProgram", {"x", "y", "z"}}
+	};
+	std::sort(expectedUsesProcedure.begin(), expectedUsesProcedure.end(),
+		[](auto& left, auto& right) {return left.first < right.first; });
+
+	std::vector<std::pair<std::string, std::unordered_set<std::string>>> actualUsesProcedure = EntityStager::getStagedUsesProcedure();
+	std::sort(actualUsesProcedure.begin(), actualUsesProcedure.end(),
+		[](auto& left, auto& right) {return left.first < right.first; });
+
+	REQUIRE(actualUsesStatement == expectedUsesStatement);
+	REQUIRE(actualUsesProcedure == expectedUsesProcedure);
+	EntityStager::clear();
+}
+
+TEST_CASE("Uses 3.52 - 4 calls - 2 - 4 - (3, 1)") {
+	EntityStager::clear();
+	DesignExtractor::extractDesignElements(RelationshipASTs::getAST3_52());
+
+	std::vector<std::pair<int, std::unordered_set<std::string>>> expectedUsesStatement{
+		{1, {"x", "y", "z"}}, {2, {"y", "z"}}, {3, {"z"}}, {5, {"z"}}, {6, {"y"}},
+		{8, {"x"}}
+	};
+	std::sort(expectedUsesStatement.begin(), expectedUsesStatement.end(),
+		[](auto& left, auto& right) {return left.first < right.first; });
+
+	std::vector<std::pair<int, std::unordered_set<std::string>>> actualUsesStatement = EntityStager::getStagedUsesStatement();
+	std::sort(actualUsesStatement.begin(), actualUsesStatement.end(),
+		[](auto& left, auto& right) {return left.first < right.first; });
+
+	std::vector<std::pair<std::string, std::unordered_set<std::string>>> expectedUsesProcedure{
+		{"testProgram", {"x", "y", "z"}}
+	};
+	std::sort(expectedUsesProcedure.begin(), expectedUsesProcedure.end(),
+		[](auto& left, auto& right) {return left.first < right.first; });
+
+	std::vector<std::pair<std::string, std::unordered_set<std::string>>> actualUsesProcedure = EntityStager::getStagedUsesProcedure();
+	std::sort(actualUsesProcedure.begin(), actualUsesProcedure.end(),
+		[](auto& left, auto& right) {return left.first < right.first; });
+
+	REQUIRE(actualUsesStatement == expectedUsesStatement);
+	REQUIRE(actualUsesProcedure == expectedUsesProcedure);
+	EntityStager::clear();
+}
+
+TEST_CASE("Uses 3.53 - 4 calls - (1, 2) - 3 - 4") {
+	EntityStager::clear();
+	DesignExtractor::extractDesignElements(RelationshipASTs::getAST3_53());
+
+	std::vector<std::pair<int, std::unordered_set<std::string>>> expectedUsesStatement{
+		{1, {"x", "y", "z"}}, {2, {"y", "z"}}, {3, {"z"}}, {5, {"z"}}, {6, {"y"}},
+		{8, {"x"}}
+	};
+	std::sort(expectedUsesStatement.begin(), expectedUsesStatement.end(),
+		[](auto& left, auto& right) {return left.first < right.first; });
+
+	std::vector<std::pair<int, std::unordered_set<std::string>>> actualUsesStatement = EntityStager::getStagedUsesStatement();
+	std::sort(actualUsesStatement.begin(), actualUsesStatement.end(),
+		[](auto& left, auto& right) {return left.first < right.first; });
+
+	std::vector<std::pair<std::string, std::unordered_set<std::string>>> expectedUsesProcedure{
+		{"testProgram", {"x", "y", "z"}}
+	};
+	std::sort(expectedUsesProcedure.begin(), expectedUsesProcedure.end(),
+		[](auto& left, auto& right) {return left.first < right.first; });
+
+	std::vector<std::pair<std::string, std::unordered_set<std::string>>> actualUsesProcedure = EntityStager::getStagedUsesProcedure();
+	std::sort(actualUsesProcedure.begin(), actualUsesProcedure.end(),
+		[](auto& left, auto& right) {return left.first < right.first; });
+
+	REQUIRE(actualUsesStatement == expectedUsesStatement);
+	REQUIRE(actualUsesProcedure == expectedUsesProcedure);
+	EntityStager::clear();
+}
+
+TEST_CASE("Uses 3.54 - 4 calls - (3, (2 - 4)) - 1") {
+	EntityStager::clear();
+	DesignExtractor::extractDesignElements(RelationshipASTs::getAST3_54());
+
+	std::vector<std::pair<int, std::unordered_set<std::string>>> expectedUsesStatement{
+		{1, {"x", "y", "z"}}, {2, {"y", "z"}}, {3, {"z"}}, {5, {"z"}}, {6, {"y"}},
+		{8, {"x"}}
+	};
+	std::sort(expectedUsesStatement.begin(), expectedUsesStatement.end(),
+		[](auto& left, auto& right) {return left.first < right.first; });
+
+	std::vector<std::pair<int, std::unordered_set<std::string>>> actualUsesStatement = EntityStager::getStagedUsesStatement();
+	std::sort(actualUsesStatement.begin(), actualUsesStatement.end(),
+		[](auto& left, auto& right) {return left.first < right.first; });
+
+	std::vector<std::pair<std::string, std::unordered_set<std::string>>> expectedUsesProcedure{
+		{"testProgram", {"x", "y", "z"}}
+	};
+	std::sort(expectedUsesProcedure.begin(), expectedUsesProcedure.end(),
+		[](auto& left, auto& right) {return left.first < right.first; });
+
+	std::vector<std::pair<std::string, std::unordered_set<std::string>>> actualUsesProcedure = EntityStager::getStagedUsesProcedure();
+	std::sort(actualUsesProcedure.begin(), actualUsesProcedure.end(),
+		[](auto& left, auto& right) {return left.first < right.first; });
+
+	REQUIRE(actualUsesStatement == expectedUsesStatement);
+	REQUIRE(actualUsesProcedure == expectedUsesProcedure);
+	EntityStager::clear();
+}
+
+TEST_CASE("Uses 3.55 - 4 calls - 2 - ((1 - 4), 3)") {
+	EntityStager::clear();
+	DesignExtractor::extractDesignElements(RelationshipASTs::getAST3_55());
+
+	std::vector<std::pair<int, std::unordered_set<std::string>>> expectedUsesStatement{
+		{1, {"x", "y", "z"}}, {2, {"y", "z"}}, {3, {"z"}}, {5, {"z"}}, {6, {"y"}},
+		{8, {"x"}}
+	};
+	std::sort(expectedUsesStatement.begin(), expectedUsesStatement.end(),
+		[](auto& left, auto& right) {return left.first < right.first; });
+
+	std::vector<std::pair<int, std::unordered_set<std::string>>> actualUsesStatement = EntityStager::getStagedUsesStatement();
+	std::sort(actualUsesStatement.begin(), actualUsesStatement.end(),
+		[](auto& left, auto& right) {return left.first < right.first; });
+
+	std::vector<std::pair<std::string, std::unordered_set<std::string>>> expectedUsesProcedure{
+		{"testProgram", {"x", "y", "z"}}
 	};
 	std::sort(expectedUsesProcedure.begin(), expectedUsesProcedure.end(),
 		[](auto& left, auto& right) {return left.first < right.first; });

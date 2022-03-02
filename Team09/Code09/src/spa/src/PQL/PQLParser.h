@@ -8,12 +8,17 @@
 #include "models/Query.h"
 
 static std::unordered_set<TokenType> keywords = {
+	//declaration entity
 	TokenType::STMT, TokenType::READ, TokenType::PRINT,
 	TokenType::WHILE, TokenType::IF, TokenType::ASSIGN,
 	TokenType::VARIABLE, TokenType::CONST, TokenType::PROC,
+	TokenType::CALL,
+	//clauses keyword
 	TokenType::SUCH, TokenType::THAT, TokenType::USES, 
 	TokenType::MODIFIES, TokenType::FOLLOWS, TokenType::PARENT,
-	TokenType::PATTERN, TokenType::SELECT
+	TokenType::PATTERN, TokenType::SELECT, TokenType::BOOLEAN,
+	TokenType::CALLS, TokenType::NEXT, TokenType::AFFECTS, TokenType::WITH,
+	TokenType::AND,
 };
 
 static std::unordered_map<TokenType, RelationRef> relationTypeMapping = {
@@ -23,6 +28,13 @@ static std::unordered_map<TokenType, RelationRef> relationTypeMapping = {
 	{TokenType::FOLLOWS_T, RelationRef::FOLLOWS_T},
 	{TokenType::MODIFIES, RelationRef::MODIFIES},
 	{TokenType::USES, RelationRef::USES},
+	{TokenType::CALLS, RelationRef::CALLS},
+	{TokenType::CALLS_T, RelationRef::CALLS_T},
+	{TokenType::NEXT, RelationRef::NEXT},
+	{TokenType::NEXT_T, RelationRef::NEXT_T},
+	{TokenType::AFFECTS, RelationRef::AFFECTS},
+	{TokenType::AFFECTS_T, RelationRef::AFFECTS_T},
+	{TokenType::WITH, RelationRef::WITH},
 };
 
 static std::unordered_map<TokenType, EntityType> entityTypeMapping = {
@@ -35,7 +47,8 @@ static std::unordered_map<TokenType, EntityType> entityTypeMapping = {
 	{TokenType::VARIABLE, EntityType::VAR},
 	{TokenType::CONST, EntityType::CONST},
 	{TokenType::PROC, EntityType::PROC},
-
+	{TokenType::CALL, EntityType::CALL},
+	{TokenType::BOOLEAN, EntityType::BOOL},
 	{TokenType::UNDERSCORE, EntityType::WILD},
 	{TokenType::INTEGER, EntityType::INT},
 	{TokenType::STRING, EntityType::STRING},
@@ -44,7 +57,7 @@ static std::unordered_map<TokenType, EntityType> entityTypeMapping = {
 static std::unordered_set<EntityType> stmtRef = {
 	EntityType::STMT, EntityType::READ, EntityType::PRINT,
 	EntityType::WHILE, EntityType::IF, EntityType::ASSIGN,
-	EntityType::WILD, EntityType::INT
+	EntityType::WILD, EntityType::INT, EntityType::CALL,
 };
 
 static std::unordered_set<EntityType> UsesFristArgTypes = {

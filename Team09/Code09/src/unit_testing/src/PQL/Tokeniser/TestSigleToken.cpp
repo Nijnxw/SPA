@@ -127,6 +127,19 @@ TEST_CASE("PQL tokeniser individual token test case 9: procedure") {
 	REQUIRE(result);
 }
 
+TEST_CASE("PQL tokeniser individual token test case 36: call") {
+	std::string queryString = "call";
+	Tokeniser tokeniser = Tokeniser(queryString);
+	std::vector<PQLToken*> PQLTokens = tokeniser.tokenise();
+
+	std::vector<PQLToken*> expectedPQLTokens = {
+		new PQLToken(TokenType::CALL, "call")
+	};
+
+	bool result = compareVectors(PQLTokens, expectedPQLTokens);
+	REQUIRE(result);
+}
+
 //---------------------------------//
 //	     suchthat-cl tokens        //
 //---------------------------------//
@@ -479,7 +492,7 @@ TEST_CASE("PQL tokeniser individual token test case 34: invalid ident (punctuato
 
 
 TEST_CASE("PQL tokeniser individual token test case 35: symbols not in list of allowed symbols") {
-	std::string queryString = ".";
+	std::string queryString = "@";
 	Tokeniser tokeniser = Tokeniser(queryString);
 	std::vector<PQLToken*> tokens = tokeniser.tokenise();
 	REQUIRE(tokens.empty());

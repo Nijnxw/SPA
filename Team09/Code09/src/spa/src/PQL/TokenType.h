@@ -9,6 +9,7 @@ enum class TokenType {
 	SYNONYM,
 	INTEGER,
 	STRING,
+	EXPR,
 
 	//Puncuation tokens
 	SEMICOLON,

@@ -1,5 +1,5 @@
 #include "catch.hpp"
-#include "../../../src/pkb/stores/ParentStore.h"
+#include "pkb/stores/ParentStore.h"
 
 TEST_CASE("ParentStore API") {
 	ParentStore parentStore;
@@ -134,18 +134,18 @@ TEST_CASE("ParentStore API") {
 			REQUIRE(res == expectedRes);
 		}
 
-		// isSecondStatementT()
-		SECTION("isSecondStatementT() positive query") {
-			bool res = parentStore.isSecondStatementT(4);
-			bool expectedRes = true;
-			REQUIRE(res == expectedRes);
-		}
+		//// isSecondStatementT()
+		//SECTION("isSecondStatementT() positive query") {
+		//	bool res = parentStore.isSecondStatementT(4);
+		//	bool expectedRes = true;
+		//	REQUIRE(res == expectedRes);
+		//}
 
-		SECTION("isSecondStatementT() negative query - first statement") {
+		/*SECTION("isSecondStatementT() negative query - first statement") {
 			bool res = parentStore.isSecondStatementT(5);
 			bool expectedRes = false;
 			REQUIRE(res == expectedRes);
-		}
+		}*/
 
 		SECTION("isSecondStatementT() negative query - invalid statement") {
 			bool res = parentStore.isSecondStatementT(-100);
@@ -160,11 +160,11 @@ TEST_CASE("ParentStore API") {
 			REQUIRE(res == expectedSet);
 		}
 
-		SECTION("getFirstStatements(int secondStatement) negative query - first statement as second statement") {
+		/*SECTION("getFirstStatements(int secondStatement) negative query - first statement as second statement") {
 			std::unordered_set<int> res = parentStore.getFirstStatements(4);
 			std::unordered_set<int> expectedSet;
 			REQUIRE(res == expectedSet);
-		}
+		}*/
 
 		// getSecondStatements
 		SECTION("getSecondStatements(int firstStatement) positive query") {
@@ -261,7 +261,7 @@ TEST_CASE("ParentStore API") {
 
 		// getAllRelationshipPairsT
 		SECTION("getAllRelationshipPairsT() positive query") {
-			std::tuple<std::vector<int>, std::vector<int>> res = parentStore.getAllRelationshipPairsT();
+			std::tuple<std::vector<int>, std::vector<int>> res = parentStore.getAllRelationshipTPairs();
 
 			std::vector<int> firstColumn;
 			std::vector<int> secondColumn;

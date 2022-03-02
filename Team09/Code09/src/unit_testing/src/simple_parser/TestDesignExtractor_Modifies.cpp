@@ -1240,7 +1240,7 @@ TEST_CASE("Modifies 3.43 - 3 calls sequential predeclared") {
 	DesignExtractor::extractDesignElements(RelationshipASTs::getAST3_43());
 
 	std::vector<std::pair<int, std::unordered_set<std::string>>> expectedModifiesStatement{
-		{3, {"x"}}, {4, {"y"}}, {6, {"y"}}, {7, {"x", "y"}}
+		{1, {"y"}}, {2, {"x"}}, {5, {"x", "y"}}, {6, {"x"}}, {7, {"x", "y"}}
 	};
 	std::sort(expectedModifiesStatement.begin(), expectedModifiesStatement.end(),
 		[](auto& left, auto& right) {return left.first < right.first; });
@@ -1250,7 +1250,7 @@ TEST_CASE("Modifies 3.43 - 3 calls sequential predeclared") {
 		[](auto& left, auto& right) {return left.first < right.first; });
 
 	std::vector<std::pair<std::string, std::unordered_set<std::string>>> expectedModifiesProcedure{
-		{"testProgram2", {"x", "y"}}, {"testProgram3", {"x", "y"}}
+		{"testProgram1", {"x", "y"}}, {"testProgram2", {"x", "y"}}, {"testProgram3", {"x", "y"}}
 	};
 	std::sort(expectedModifiesProcedure.begin(), expectedModifiesProcedure.end(),
 		[](auto& left, auto& right) {return left.first < right.first; });
@@ -1269,7 +1269,7 @@ TEST_CASE("Modifies 3.44 - 3 calls sequential post declared") {
 	DesignExtractor::extractDesignElements(RelationshipASTs::getAST3_44());
 
 	std::vector<std::pair<int, std::unordered_set<std::string>>> expectedModifiesStatement{
-		{2, {"x", "y"}}, {4, {"x"}}, {5, {"y"}}, {6, {"y"}}, {7, {"y"}}
+		{1, {"y"}}, {2, {"x"}}, {3, {"x"}}, {6, {"x"}}, {7, {"x"}}
 	};
 	std::sort(expectedModifiesStatement.begin(), expectedModifiesStatement.end(),
 		[](auto& left, auto& right) {return left.first < right.first; });
@@ -1279,7 +1279,7 @@ TEST_CASE("Modifies 3.44 - 3 calls sequential post declared") {
 		[](auto& left, auto& right) {return left.first < right.first; });
 
 	std::vector<std::pair<std::string, std::unordered_set<std::string>>> expectedModifiesProcedure{
-		{"testProgram1", {"x", "y"}}, {"testProgram2", {"x", "y"}}, {"testProgram3", {"y"}}
+		{"testProgram1", {"x", "y"}}, {"testProgram2", {"x"}}, {"testProgram3", {"x"}}
 	};
 	std::sort(expectedModifiesProcedure.begin(), expectedModifiesProcedure.end(),
 		[](auto& left, auto& right) {return left.first < right.first; });
@@ -1298,7 +1298,7 @@ TEST_CASE("Modifies 3.45 - 3 calls forking from top") {
 	DesignExtractor::extractDesignElements(RelationshipASTs::getAST3_45());
 
 	std::vector<std::pair<int, std::unordered_set<std::string>>> expectedModifiesStatement{
-		{2, {"x", "y"}}, {4, {"y"}}, {5, {"x"}}, {6, {"y"}}, {7, {"y"}}
+		{1, {"y"}}, {3, {"x"}}, {4, {"x"}}, {7, {"x"}}
 	};
 	std::sort(expectedModifiesStatement.begin(), expectedModifiesStatement.end(),
 		[](auto& left, auto& right) {return left.first < right.first; });
@@ -1308,7 +1308,7 @@ TEST_CASE("Modifies 3.45 - 3 calls forking from top") {
 		[](auto& left, auto& right) {return left.first < right.first; });
 
 	std::vector<std::pair<std::string, std::unordered_set<std::string>>> expectedModifiesProcedure{
-		{"testProgram1", {"x", "y"}}, {"testProgram2", {"x", "y"}}, {"testProgram3", {"y"}}
+		{"testProgram1", {"x", "y"}}, {"testProgram3", {"x"}}
 	};
 	std::sort(expectedModifiesProcedure.begin(), expectedModifiesProcedure.end(),
 		[](auto& left, auto& right) {return left.first < right.first; });
@@ -1327,7 +1327,7 @@ TEST_CASE("Modifies 3.46 - 3 calls forking from bottom") {
 	DesignExtractor::extractDesignElements(RelationshipASTs::getAST3_46());
 
 	std::vector<std::pair<int, std::unordered_set<std::string>>> expectedModifiesStatement{
-		{3, {"x"}}, {4, {"y"}}, {6, {"y"}}, {7, {"x", "y"}}
+		{1, {"y"}}, {2, {"x"}}, {5, {"x", "y"}}, {6, {"x"}}
 	};
 	std::sort(expectedModifiesStatement.begin(), expectedModifiesStatement.end(),
 		[](auto& left, auto& right) {return left.first < right.first; });
@@ -1337,7 +1337,7 @@ TEST_CASE("Modifies 3.46 - 3 calls forking from bottom") {
 		[](auto& left, auto& right) {return left.first < right.first; });
 
 	std::vector<std::pair<std::string, std::unordered_set<std::string>>> expectedModifiesProcedure{
-		{"testProgram2", {"x", "y"}}, {"testProgram3", {"x", "y"}}
+		{"testProgram1", {"x", "y"}}, {"testProgram3", {"x", "y"}}
 	};
 	std::sort(expectedModifiesProcedure.begin(), expectedModifiesProcedure.end(),
 		[](auto& left, auto& right) {return left.first < right.first; });
@@ -1356,7 +1356,7 @@ TEST_CASE("Modifies 3.47 - 3 calls forking from middle") {
 	DesignExtractor::extractDesignElements(RelationshipASTs::getAST3_47());
 
 	std::vector<std::pair<int, std::unordered_set<std::string>>> expectedModifiesStatement{
-		{3, {"x"}}, {5, {"y"}}, {6, {"y"}}, {7, {"y"}}
+		{1, {"y"}}, {2, {"x"}}, {4, {"x", "y"}}, {5, {"x"}}, {7, {"x"}}
 	};
 	std::sort(expectedModifiesStatement.begin(), expectedModifiesStatement.end(),
 		[](auto& left, auto& right) {return left.first < right.first; });
@@ -1366,7 +1366,7 @@ TEST_CASE("Modifies 3.47 - 3 calls forking from middle") {
 		[](auto& left, auto& right) {return left.first < right.first; });
 
 	std::vector<std::pair<std::string, std::unordered_set<std::string>>> expectedModifiesProcedure{
-		{"testProgram2", {"x", "y"}}, {"testProgram3", {"y"}}
+		{"testProgram1", {"x", "y"}}, {"testProgram2", {"x", "y"}}, {"testProgram3", {"x"}}
 	};
 	std::sort(expectedModifiesProcedure.begin(), expectedModifiesProcedure.end(),
 		[](auto& left, auto& right) {return left.first < right.first; });
@@ -1385,8 +1385,8 @@ TEST_CASE("Modifies 3.48 - 4 calls sequential call (mix of post and pre declared
 	DesignExtractor::extractDesignElements(RelationshipASTs::getAST3_48());
 
 	std::vector<std::pair<int, std::unordered_set<std::string>>> expectedModifiesStatement{
-		{2, {"y"}}, {4, {"x"}}, {5, {"y"}}, {6, {"y"}}, {7, {"y"}},
-		{8, {"x", "y", "z"}}, {10, {"x", "y"}}, {11, {"z"}}
+		{1, {"y"}}, {2, {"x"}}, {3, {"x"}}, {5, {"x", "y"}}, {7, {"x"}},
+		{8, {"x", "y", "z"}}, {9, {"z"}}, {10, {"x", "y"}}
 	};
 	std::sort(expectedModifiesStatement.begin(), expectedModifiesStatement.end(),
 		[](auto& left, auto& right) {return left.first < right.first; });
@@ -1396,8 +1396,8 @@ TEST_CASE("Modifies 3.48 - 4 calls sequential call (mix of post and pre declared
 		[](auto& left, auto& right) {return left.first < right.first; });
 
 	std::vector<std::pair<std::string, std::unordered_set<std::string>>> expectedModifiesProcedure{
-		{"testProgram1", {"y"}}, {"testProgram2", {"x", "y"}},
-		{"testProgram3", {"y"}}, {"testProgram4", {"x", "y", "z"}}
+		{"testProgram1", {"x", "y"}}, {"testProgram2", {"x", "y"}},
+		{"testProgram3", {"x"}}, {"testProgram4", {"x", "y", "z"}}
 	};
 	std::sort(expectedModifiesProcedure.begin(), expectedModifiesProcedure.end(),
 		[](auto& left, auto& right) {return left.first < right.first; });
@@ -1416,8 +1416,8 @@ TEST_CASE("Modifies 3.49 - 4 calls - 1 - (2, 3, 4)") {
 	DesignExtractor::extractDesignElements(RelationshipASTs::getAST3_49());
 
 	std::vector<std::pair<int, std::unordered_set<std::string>>> expectedModifiesStatement{
-		{2, {"z"}}, {3, {"y"}}, {5, {"x", "y"}}, {6, {"x"}}, {7, {"y"}},
-		{8, {"y"}}, {9, {"z"}}, {11, {"z"}}
+		{1, {"y"}}, {2, {"z"}}, {3, {"x"}}, {4, {"x"}}, {8, {"x"}},
+		{9, {"z"}}, {10, {"z"}}
 	};
 	std::sort(expectedModifiesStatement.begin(), expectedModifiesStatement.end(),
 		[](auto& left, auto& right) {return left.first < right.first; });
@@ -1427,8 +1427,8 @@ TEST_CASE("Modifies 3.49 - 4 calls - 1 - (2, 3, 4)") {
 		[](auto& left, auto& right) {return left.first < right.first; });
 
 	std::vector<std::pair<std::string, std::unordered_set<std::string>>> expectedModifiesProcedure{
-		{"testProgram1", {"x", "y", "z"}}, {"testProgram2", {"x", "y"}},
-		{"testProgram3", {"y"}}, {"testProgram4", {"z"}}
+		{"testProgram1", {"x", "y", "z"}}, 
+		{"testProgram3", {"x"}}, {"testProgram4", {"z"}}
 	};
 	std::sort(expectedModifiesProcedure.begin(), expectedModifiesProcedure.end(),
 		[](auto& left, auto& right) {return left.first < right.first; });
@@ -1447,8 +1447,8 @@ TEST_CASE("Modifies 3.50 - 4 calls - (1, 2, 4) - 3") {
 	DesignExtractor::extractDesignElements(RelationshipASTs::getAST3_50());
 
 	std::vector<std::pair<int, std::unordered_set<std::string>>> expectedModifiesStatement{
-		{2, {"y"}}, {4, {"x"}}, {5, {"y"}}, {6, {"y"}}, {7, {"y"}},
-		{8, {"y", "z"}}, {9, {"y"}}, {11, {"z"}}
+		{1, {"y"}}, {2, {"x"}}, {3, {"x"}}, {5, {"x"}}, {7, {"x"}},
+		{8, {"x", "z"}}, {9, {"x"}}, {10, {"z"}}
 	};
 	std::sort(expectedModifiesStatement.begin(), expectedModifiesStatement.end(),
 		[](auto& left, auto& right) {return left.first < right.first; });
@@ -1458,8 +1458,8 @@ TEST_CASE("Modifies 3.50 - 4 calls - (1, 2, 4) - 3") {
 		[](auto& left, auto& right) {return left.first < right.first; });
 
 	std::vector<std::pair<std::string, std::unordered_set<std::string>>> expectedModifiesProcedure{
-		{"testProgram1", {"y"}}, {"testProgram2", {"x", "y"}},
-		{"testProgram3", {"y"}}, {"testProgram4", {"y", "z"}}
+		{"testProgram1", {"x", "y"}}, {"testProgram2", {"x"}},
+		{"testProgram3", {"x"}}, {"testProgram4", {"x", "z"}}
 	};
 	std::sort(expectedModifiesProcedure.begin(), expectedModifiesProcedure.end(),
 		[](auto& left, auto& right) {return left.first < right.first; });
@@ -1478,8 +1478,8 @@ TEST_CASE("Modifies 3.51 - 4 calls - 1 - (3, 4) - 2") {
 	DesignExtractor::extractDesignElements(RelationshipASTs::getAST3_51());
 
 	std::vector<std::pair<int, std::unordered_set<std::string>>> expectedModifiesStatement{
-		{1, {"x", "y", "z"}}, {3, {"x", "y"}}, {5, {"x"}}, {6, {"y"}}, {7, {"y"}},
-		{8, {"x", "y"}}, {9, {"x", "y", "z"}}, {11, {"x", "y"}}, {12, {"z"}}
+		{1, {"z"}}, {2, {"y"}}, {3, {"x"}}, {4, {"x"}}, {7, {"x"}},
+		{9, {"z"}}, {10, {"z"}}
 	};
 	std::sort(expectedModifiesStatement.begin(), expectedModifiesStatement.end(),
 		[](auto& left, auto& right) {return left.first < right.first; });
@@ -1489,8 +1489,8 @@ TEST_CASE("Modifies 3.51 - 4 calls - 1 - (3, 4) - 2") {
 		[](auto& left, auto& right) {return left.first < right.first; });
 
 	std::vector<std::pair<std::string, std::unordered_set<std::string>>> expectedModifiesProcedure{
-		{"testProgram1", {"x", "y", "z"}}, {"testProgram2", {"x", "y"}},
-		{"testProgram3", {"x", "y"}}, {"testProgram4", {"x", "y", "z"}}
+		{"testProgram1", {"x", "y", "z"}},
+		{"testProgram3", {"x"}}, {"testProgram4", {"z"}}
 	};
 	std::sort(expectedModifiesProcedure.begin(), expectedModifiesProcedure.end(),
 		[](auto& left, auto& right) {return left.first < right.first; });
@@ -1509,8 +1509,8 @@ TEST_CASE("Modifies 3.52 - 4 calls - 2 - 4 - (3, 1)") {
 	DesignExtractor::extractDesignElements(RelationshipASTs::getAST3_52());
 
 	std::vector<std::pair<int, std::unordered_set<std::string>>> expectedModifiesStatement{
-		{3, {"x"}}, {4, {"y", "z"}}, {5, {"y"}}, {6, {"y"}}, {7, {"y", "z"}},
-		{8, {"y"}}, {10, {"z"}}
+		{1, {"y"}}, {2, {"x"}}, {4, {"x", "y", "z"}}, {6, {"x"}}, {7, {"x", "y", "z"}},
+		{8, {"x"}}, {9, {"z"}}, {11, {"x", "y"}}
 	};
 	std::sort(expectedModifiesStatement.begin(), expectedModifiesStatement.end(),
 		[](auto& left, auto& right) {return left.first < right.first; });
@@ -1520,7 +1520,8 @@ TEST_CASE("Modifies 3.52 - 4 calls - 2 - 4 - (3, 1)") {
 		[](auto& left, auto& right) {return left.first < right.first; });
 
 	std::vector<std::pair<std::string, std::unordered_set<std::string>>> expectedModifiesProcedure{
-		{"testProgram2", {"x", "y", "z"}}, {"testProgram3", {"y"}}, {"testProgram4", {"y", "z"}}
+		{"testProgram1", {"x", "y"}}, {"testProgram2", {"x", "y", "z"}},
+		{"testProgram3", {"x"}}, {"testProgram4", {"x", "y", "z"}}
 	};
 	std::sort(expectedModifiesProcedure.begin(), expectedModifiesProcedure.end(),
 		[](auto& left, auto& right) {return left.first < right.first; });
@@ -1539,8 +1540,8 @@ TEST_CASE("Modifies 3.53 - 4 calls - (1, 2) - 3 - 4") {
 	DesignExtractor::extractDesignElements(RelationshipASTs::getAST3_53());
 
 	std::vector<std::pair<int, std::unordered_set<std::string>>> expectedModifiesStatement{
-		{3, {"y", "z"}}, {4, {"x"}}, {5, {"y", "z"}}, {6, {"y"}}, {7, {"y"}},
-		{8, {"z"}}, {9, {"z"}}, {11, {"z"}}
+		{1, {"y"}}, {2, {"x"}}, {3, {"x", "z"}}, {5, {"x", "z"}}, {7, {"x"}},
+		{8, {"z"}}, {9, {"z"}}, {10, {"z"}}
 	};
 	std::sort(expectedModifiesStatement.begin(), expectedModifiesStatement.end(),
 		[](auto& left, auto& right) {return left.first < right.first; });
@@ -1550,8 +1551,8 @@ TEST_CASE("Modifies 3.53 - 4 calls - (1, 2) - 3 - 4") {
 		[](auto& left, auto& right) {return left.first < right.first; });
 
 	std::vector<std::pair<std::string, std::unordered_set<std::string>>> expectedModifiesProcedure{
-		{"testProgram1", {"y", "z"}}, {"testProgram2", {"x", "y", "z"}},
-		{"testProgram3", {"y", "z"}}, {"testProgram4", {"z"}}
+		{"testProgram1", {"x", "y", "z"}}, {"testProgram2", {"x", "z"}},
+		{"testProgram3", {"x", "z"}}, {"testProgram4", {"z"}}
 	};
 	std::sort(expectedModifiesProcedure.begin(), expectedModifiesProcedure.end(),
 		[](auto& left, auto& right) {return left.first < right.first; });
@@ -1570,8 +1571,8 @@ TEST_CASE("Modifies 3.54 - 4 calls - (3, (2 - 4)) - 1") {
 	DesignExtractor::extractDesignElements(RelationshipASTs::getAST3_54());
 
 	std::vector<std::pair<int, std::unordered_set<std::string>>> expectedModifiesStatement{
-		{3, {"x"}}, {4, {"z"}}, {5, {"y"}}, {6, {"y"}},
-		{8, {"z"}}, {10, {"z"}}
+		{1, {"y"}}, {2, {"x"}}, {4, {"x", "y", "z"}}, {6, {"x"}}, {7, {"x", "y"}},
+		{8, {"x", "y", "z"}}, {9, {"z"}}, {11, {"x", "y"}}
 	};
 	std::sort(expectedModifiesStatement.begin(), expectedModifiesStatement.end(),
 		[](auto& left, auto& right) {return left.first < right.first; });
@@ -1581,7 +1582,8 @@ TEST_CASE("Modifies 3.54 - 4 calls - (3, (2 - 4)) - 1") {
 		[](auto& left, auto& right) {return left.first < right.first; });
 
 	std::vector<std::pair<std::string, std::unordered_set<std::string>>> expectedModifiesProcedure{
-		{"testProgram2", {"x", "y", "z"}}, {"testProgram3", {"y"}}, {"testProgram4", {"z"}}
+		{"testProgram1", {"x", "y"}}, {"testProgram2", {"x", "y", "z"}},
+		{"testProgram3", {"x", "y"}}, {"testProgram4", {"x", "y", "z"}}
 	};
 	std::sort(expectedModifiesProcedure.begin(), expectedModifiesProcedure.end(),
 		[](auto& left, auto& right) {return left.first < right.first; });
@@ -1600,8 +1602,8 @@ TEST_CASE("Modifies 3.55 - 4 calls - 2 - ((1 - 4), 3)") {
 	DesignExtractor::extractDesignElements(RelationshipASTs::getAST3_55());
 
 	std::vector<std::pair<int, std::unordered_set<std::string>>> expectedModifiesStatement{
-		{2, {"z"}}, {4, {"y"}}, {5, {"x"}}, {6, {"z"}}, {7, {"y"}},
-		{8, {"y"}}, {9, {"z"}}, {11, {"z"}}
+		{1, {"y"}}, {2, {"z"}}, {3, {"x"}}, {4, {"x"}}, {6, {"x", "y", "z"}},
+		{8, {"x"}}, {9, {"z"}}, {10, {"z"}}
 	};
 	std::sort(expectedModifiesStatement.begin(), expectedModifiesStatement.end(),
 		[](auto& left, auto& right) {return left.first < right.first; });
@@ -1611,8 +1613,8 @@ TEST_CASE("Modifies 3.55 - 4 calls - 2 - ((1 - 4), 3)") {
 		[](auto& left, auto& right) {return left.first < right.first; });
 
 	std::vector<std::pair<std::string, std::unordered_set<std::string>>> expectedModifiesProcedure{
-		{"testProgram1", {"z"}},{"testProgram2", {"x", "y", "z"}},
-		{"testProgram3", {"y"}}, {"testProgram4", {"z"}}
+		{"testProgram1", {"x", "y", "z"}},{"testProgram2", {"x", "y", "z"}},
+		{"testProgram3", {"x"}}, {"testProgram4", {"z"}}
 	};
 	std::sort(expectedModifiesProcedure.begin(), expectedModifiesProcedure.end(),
 		[](auto& left, auto& right) {return left.first < right.first; });

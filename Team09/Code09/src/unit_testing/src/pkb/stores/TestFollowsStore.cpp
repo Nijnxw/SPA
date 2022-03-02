@@ -178,11 +178,11 @@ TEST_CASE("FollowsStore API") {
 			REQUIRE(res == expectedSet);
 		}
 
-		SECTION("getFirstStatements(int secondStatement) negative query - first statement as second statement") {
-			std::unordered_set<int> res = followsStore.getFirstStatements(1);
-			std::unordered_set<int> expectedSet;
-			REQUIRE(res == expectedSet);
-		}
+		//SECTION("getFirstStatements(int secondStatement) negative query - first statement as second statement") {
+		//	std::unordered_set<int> res = followsStore.getFirstStatements(1);
+		//	std::unordered_set<int> expectedSet;
+		//	REQUIRE(res == expectedSet);
+		//}
 
 		// getSecondStatements
 		SECTION("getSecondStatements(int firstStatement) positive query") {
@@ -204,11 +204,11 @@ TEST_CASE("FollowsStore API") {
 			REQUIRE(res == expectedSet);
 		}
 
-		SECTION("getFirstStatementsT(int secondStatement) positive query - transitive") {
-			std::unordered_set<int> res = followsStore.getFirstStatementsT(9);
-			std::unordered_set<int> expectedSet = { 1, 2, 3, 4, 7 };
-			REQUIRE(res == expectedSet);
-		}
+		//SECTION("getFirstStatementsT(int secondStatement) positive query - transitive") {
+		//	std::unordered_set<int> res = followsStore.getFirstStatementsT(9);
+		//	std::unordered_set<int> expectedSet = { 1, 2, 3, 4, 7 };
+		//	REQUIRE(res == expectedSet);
+		//}
 
 		SECTION("getFirstStatementsT(int secondStatement) negative query - first statement as second statement") {
 			std::unordered_set<int> res = followsStore.getFirstStatementsT(1);
@@ -278,7 +278,7 @@ TEST_CASE("FollowsStore API") {
 
 			firstColumn.push_back(7);
 			secondColumn.push_back(9);
-
+		
 			std::tuple<std::vector<int>, std::vector<int>> expectedRes = { firstColumn, secondColumn };
 			
 			std::unordered_set<std::pair<int, int>, PKBUtil::hashFunction> set = PKBUtil::convertVectorTupleToSetPairs(std::get<0>(res), std::get<1>(res));
@@ -293,7 +293,7 @@ TEST_CASE("FollowsStore API") {
 
 			std::vector<int> firstColumn;
 			std::vector<int> secondColumn;
-
+			
 			firstColumn.push_back(1);
 			secondColumn.push_back(2);
 

@@ -160,12 +160,6 @@ TEST_CASE("ParentStore API") {
 			REQUIRE(res == expectedSet);
 		}
 
-		SECTION("getFirstStatements(int secondStatement) negative query - first statement as second statement") {
-			std::unordered_set<int> res = parentStore.getFirstStatements(4);
-			std::unordered_set<int> expectedSet;
-			REQUIRE(res == expectedSet);
-		}
-
 		// getSecondStatements
 		SECTION("getSecondStatements(int firstStatement) positive query") {
 			std::unordered_set<int> res = parentStore.getSecondStatements(4);

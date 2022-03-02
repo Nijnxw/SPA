@@ -26,7 +26,8 @@ public:
 	std::unordered_set<std::string> getVarByProc(const std::string& procName);
 	std::unordered_set<int> getStmtByVar(const std::string& variable);
 	std::unordered_set<std::string> getProcByVar(const std::string& variable);
-	std::tuple<std::vector<std::string>, std::vector<std::string>> getStmtToVarByStmts(const std::unordered_set<int>& stmts);
+	std::tuple<std::vector<std::string>, std::vector<std::string>>
+		getStmtToVarByStmts(const std::unordered_set<int>& stmts);
 
 	/* Setters called by DE */
 	bool addStmtVarRelationship(int statementNumber, const std::unordered_set<std::string>& variables);

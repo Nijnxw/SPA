@@ -152,15 +152,15 @@ TEST_CASE ("Test parsing of valid procedure") {
 }
 
 TEST_CASE("Test multiple procedures") {
-  // procedure main { read x; } procedure testProgram { read x; }
-  std::vector<Token*> input = generateTokens("main");
-  std::vector<Token*> input1 = generateTokens("testProgram");
-  input.pop_back();
-  input.insert(input.end(), input1.begin(), input1.end());
-  SPParser parser = SPParser(input);
-  AST output = parser.parseProgram();
-  AST expected = generateASTs("main", "testProgram");
-  REQUIRE(*output == *expected);
+	// procedure main { read x; } procedure testProgram { read x; }
+	std::vector<Token*> input = generateTokens("main");
+	std::vector<Token*> input1 = generateTokens("testProgram");
+	input.pop_back();
+	input.insert(input.end(), input1.begin(), input1.end());
+	SPParser parser = SPParser(input);
+	AST output = parser.parseProgram();
+	AST expected = generateASTs("main", "testProgram");
+	REQUIRE(*output == *expected);
 }
 
 // --------------------------------------------------

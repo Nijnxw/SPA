@@ -351,24 +351,25 @@ std::shared_ptr<IfNode> SPParser::parseIf() {
 // program: procedure+
 AST SPParser::parseProgram() {
 	std::unordered_map<std::string, std::shared_ptr<ProcedureNode>> procedureMap;
-  while (true) {
-    if (check(ParserTokenType::END_OF_FILE)) {
-      break;
-    }
-	  std::shared_ptr<ProcedureNode> procedureNode = parseProcedure();
-    if (!procedureNode) {
-      throw std::runtime_error("Expected 'procedure' but got '" + peek()->getValue() + "' instead.\n");
-    }
+	while (true) {
+		if (check(ParserTokenType::END_OF_FILE)) {
+			break;
+		}
 
-    // SEMANTIC RULE: A program cannot have two procedures with the same name
-    if ( procedureMap.find(procedureNode->getProcName()) != procedureMap.end() ) {
-      throw std::runtime_error("There are 2 procedures with the same name '" + procedureNode->getProcName() + "'.\n");
-    }
+		std::shared_ptr<ProcedureNode> procedureNode = parseProcedure();
+		if (!procedureNode) {
+			throw std::runtime_error("Expected 'procedure' but got '" + peek()->getValue() + "' instead.\n");
+		}
 
-    procedureMap.insert(std::make_pair(procedureNode->getProcName(), procedureNode));
-  }
+		// SEMANTIC RULE: A program cannot have two procedures with the same name
+		if ( procedureMap.find(procedureNode->getProcName()) != procedureMap.end() ) {
+			throw std::runtime_error("There are 2 procedures with the same name '" + procedureNode->getProcName() + "'.\n");
+		}
 
-  if (procedureMap.empty()) {
+		procedureMap.insert(std::make_pair(procedureNode->getProcName(), procedureNode));
+	}
+
+	if (procedureMap.empty()) {
 		throw std::runtime_error("There must be at least 1 procedure in a SIMPLE program!\n");
 	}
 

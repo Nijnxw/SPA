@@ -19,18 +19,18 @@ std::shared_ptr<ProcedureNode> ProgramNode::retrieve(std::string procName) {
 }
 
 bool ProgramNode::operator==(const Node& other) const {
-  const ProgramNode* cast = dynamic_cast<const ProgramNode*>(&other);
-  if (cast == nullptr) return false;
+	const ProgramNode* cast = dynamic_cast<const ProgramNode*>(&other);
+	if (cast == nullptr) return false;
 
-  std::unordered_map<std::string, std::shared_ptr<ProcedureNode>> otherProcedureMap = cast->getProcedureMap();
+	std::unordered_map<std::string, std::shared_ptr<ProcedureNode>> otherProcedureMap = cast->getProcedureMap();
 
-  //manual checking
-  if (procedureMap.size() != otherProcedureMap.size()) return false;
-  for (auto& procPair : procedureMap) {
-    //check key
-    if (procedureMap.find(procPair.first) == procedureMap.end()) return false;
-    //check value
-    if (*(procPair.second) != *(otherProcedureMap[procPair.first])) return false;
-  }
-  return true;
+	//manual checking
+	if (procedureMap.size() != otherProcedureMap.size()) return false;
+	for (auto& procPair : procedureMap) {
+		//check key
+		if (procedureMap.find(procPair.first) == procedureMap.end()) return false;
+		//check value
+		if (*(procPair.second) != *(otherProcedureMap[procPair.first])) return false;
+	}
+	return true;
 }

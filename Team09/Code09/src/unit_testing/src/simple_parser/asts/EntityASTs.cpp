@@ -147,3 +147,23 @@ AST EntityASTs::getAST2_36() {
 AST EntityASTs::getAST2_37() {
 	return ContainerStmtASTs::getAST1_78();
 }
+
+AST EntityASTs::getAST2_38() {
+	return ContainerStmtASTs::getAST1_79();
+}
+
+AST EntityASTs::getAST2_39() {
+	return ContainerStmtASTs::getAST1_80();
+}
+
+AST EntityASTs::getAST2_40() {
+	return ContainerStmtASTs::getAST1_81();
+}
+
+AST EntityASTs::getAST2_41() {
+	return ContainerStmtASTs::getAST1_82();
+}
+
+AST EntityASTs::getAST2_42() {
+	return ContainerStmtASTs::getAST1_83();
+}

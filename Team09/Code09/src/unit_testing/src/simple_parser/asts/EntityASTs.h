@@ -42,4 +42,9 @@ public:
 	static AST getAST2_35();
 	static AST getAST2_36();
 	static AST getAST2_37();
+	static AST getAST2_38();
+	static AST getAST2_39();
+	static AST getAST2_40();
+	static AST getAST2_41();
+	static AST getAST2_42();
 };

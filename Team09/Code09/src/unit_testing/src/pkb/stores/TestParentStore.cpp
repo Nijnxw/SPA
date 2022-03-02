@@ -134,18 +134,18 @@ TEST_CASE("ParentStore API") {
 			REQUIRE(res == expectedRes);
 		}
 
-		//// isSecondStatementT()
-		//SECTION("isSecondStatementT() positive query") {
-		//	bool res = parentStore.isSecondStatementT(4);
-		//	bool expectedRes = true;
-		//	REQUIRE(res == expectedRes);
-		//}
-
-		/*SECTION("isSecondStatementT() negative query - first statement") {
+		// isSecondStatementT()
+		SECTION("isSecondStatementT() positive query") {
 			bool res = parentStore.isSecondStatementT(5);
+			bool expectedRes = true;
+			REQUIRE(res == expectedRes);
+		}
+
+		SECTION("isSecondStatementT() negative query - first statement") {
+			bool res = parentStore.isSecondStatementT(4);
 			bool expectedRes = false;
 			REQUIRE(res == expectedRes);
-		}*/
+		}
 
 		SECTION("isSecondStatementT() negative query - invalid statement") {
 			bool res = parentStore.isSecondStatementT(-100);
@@ -159,12 +159,6 @@ TEST_CASE("ParentStore API") {
 			std::unordered_set<int> expectedSet = { 4 };
 			REQUIRE(res == expectedSet);
 		}
-
-		/*SECTION("getFirstStatements(int secondStatement) negative query - first statement as second statement") {
-			std::unordered_set<int> res = parentStore.getFirstStatements(4);
-			std::unordered_set<int> expectedSet;
-			REQUIRE(res == expectedSet);
-		}*/
 
 		// getSecondStatements
 		SECTION("getSecondStatements(int firstStatement) positive query") {
@@ -256,7 +250,11 @@ TEST_CASE("ParentStore API") {
 			secondColumn.push_back(8);
 
 			std::tuple<std::vector<int>, std::vector<int>> expectedRes = { firstColumn, secondColumn };
-			REQUIRE(res == expectedRes);
+			
+			std::unordered_set<std::pair<int, int>, PKBUtil::hashFunction> set = PKBUtil::convertVectorTupleToSetPairs(std::get<0>(res), std::get<1>(res));
+			std::unordered_set<std::pair<int, int>, PKBUtil::hashFunction> expectedSet = PKBUtil::convertVectorTupleToSetPairs(std::get<0>(expectedRes), std::get<1>(expectedRes));
+
+			REQUIRE(set == expectedSet);
 		}
 
 		// getAllRelationshipPairsT
@@ -276,7 +274,11 @@ TEST_CASE("ParentStore API") {
 			secondColumn.push_back(8);
 
 			std::tuple<std::vector<int>, std::vector<int>> expectedRes = { firstColumn, secondColumn };
-			REQUIRE(res == expectedRes);
+			
+			std::unordered_set<std::pair<int, int>, PKBUtil::hashFunction> set = PKBUtil::convertVectorTupleToSetPairs(std::get<0>(res), std::get<1>(res));
+			std::unordered_set<std::pair<int, int>, PKBUtil::hashFunction> expectedSet = PKBUtil::convertVectorTupleToSetPairs(std::get<0>(expectedRes), std::get<1>(expectedRes));
+
+			REQUIRE(set == expectedSet);
 		}
 	}
 	parentStore.clear();

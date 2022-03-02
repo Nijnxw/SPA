@@ -25,6 +25,10 @@ TEST_CASE("FollowsStore API") {
 		followsStore.addRelationshipT(1, 7);
 		followsStore.addRelationshipT(1, 9);
 
+		followsStore.addRelationshipT(2, 4);
+		followsStore.addRelationshipT(2, 7);
+		followsStore.addRelationshipT(2, 9);
+
 		followsStore.addRelationshipT(3, 7);
 		followsStore.addRelationshipT(3, 9);
 
@@ -174,11 +178,11 @@ TEST_CASE("FollowsStore API") {
 			REQUIRE(res == expectedSet);
 		}
 
-		//SECTION("getFirstStatements(int secondStatement) negative query - first statement as second statement") {
-		//	std::unordered_set<int> res = followsStore.getFirstStatements(1);
-		//	std::unordered_set<int> expectedSet;
-		//	REQUIRE(res == expectedSet);
-		//}
+		SECTION("getFirstStatements(int secondStatement) negative query - first statement as second statement") {
+			std::unordered_set<int> res = followsStore.getFirstStatements(1);
+			std::unordered_set<int> expectedSet;
+			REQUIRE(res == expectedSet);
+		}
 
 		// getSecondStatements
 		SECTION("getSecondStatements(int firstStatement) positive query") {
@@ -200,11 +204,11 @@ TEST_CASE("FollowsStore API") {
 			REQUIRE(res == expectedSet);
 		}
 
-		//SECTION("getFirstStatementsT(int secondStatement) positive query - transitive") {
-		//	std::unordered_set<int> res = followsStore.getFirstStatementsT(9);
-		//	std::unordered_set<int> expectedSet = { 1, 2, 3, 4, 7 };
-		//	REQUIRE(res == expectedSet);
-		//}
+		SECTION("getFirstStatementsT(int secondStatement) positive query - transitive") {
+			std::unordered_set<int> res = followsStore.getFirstStatementsT(9);
+			std::unordered_set<int> expectedSet = { 1, 2, 3, 4, 7 };
+			REQUIRE(res == expectedSet);
+		}
 
 		SECTION("getFirstStatementsT(int secondStatement) negative query - first statement as second statement") {
 			std::unordered_set<int> res = followsStore.getFirstStatementsT(1);
@@ -253,78 +257,95 @@ TEST_CASE("FollowsStore API") {
 			REQUIRE(res == expectedSet);
 		}
 
-		//// getAllRelationshipPairs
-		//SECTION("getAllRelationshipPairs() positive query") {
-		//	std::tuple<std::vector<int>, std::vector<int>> res = followsStore.getAllRelationshipPairs();
-		//	
-		//	std::vector<int> firstColumn;
-		//	std::vector<int> secondColumn;
+		// getAllRelationshipPairs
+		SECTION("getAllRelationshipPairs() positive query") {
+			std::tuple<std::vector<int>, std::vector<int>> res = followsStore.getAllRelationshipPairs();
+			
+			std::vector<int> firstColumn;
+			std::vector<int> secondColumn;
 
-		//	firstColumn.push_back(1);
-		//	secondColumn.push_back(2);
+			firstColumn.push_back(1);
+			secondColumn.push_back(2);
 
-		//	firstColumn.push_back(2);
-		//	secondColumn.push_back(3);
+			firstColumn.push_back(2);
+			secondColumn.push_back(3);
 
-		//	firstColumn.push_back(3);
-		//	secondColumn.push_back(4);
+			firstColumn.push_back(3);
+			secondColumn.push_back(4);
 
-		//	firstColumn.push_back(4);
-		//	secondColumn.push_back(7);
+			firstColumn.push_back(4);
+			secondColumn.push_back(7);
 
-		//	firstColumn.push_back(7);
-		//	secondColumn.push_back(9);
+			firstColumn.push_back(7);
+			secondColumn.push_back(9);
+		
+			std::tuple<std::vector<int>, std::vector<int>> expectedRes = { firstColumn, secondColumn };
+			
+			std::unordered_set<std::pair<int, int>, PKBUtil::hashFunction> set = PKBUtil::convertVectorTupleToSetPairs(std::get<0>(res), std::get<1>(res));
+			std::unordered_set<std::pair<int, int>, PKBUtil::hashFunction> expectedSet = PKBUtil::convertVectorTupleToSetPairs(std::get<0>(expectedRes), std::get<1>(expectedRes));
 
-		//	std::tuple<std::vector<int>, std::vector<int>> expectedRes = { firstColumn, secondColumn };
-		//	REQUIRE(res == expectedRes);
-		//}
+			REQUIRE(set == expectedSet);
+		}
 
-		//// getAllRelationshipPairsT
-		//SECTION("getAllRelationshipPairsT() positive query") {
-		//	std::tuple<std::vector<int>, std::vector<int>> res = followsStore.getAllRelationshipTPairs();
+		// getAllRelationshipPairsT
+		SECTION("getAllRelationshipPairsT() positive query") {
+			std::tuple<std::vector<int>, std::vector<int>> res = followsStore.getAllRelationshipTPairs();
 
-		//	std::vector<int> firstColumn;
-		//	std::vector<int> secondColumn;
+			std::vector<int> firstColumn;
+			std::vector<int> secondColumn;
+			
+			firstColumn.push_back(1);
+			secondColumn.push_back(2);
 
-		//	firstColumn.push_back(1);
-		//	secondColumn.push_back(2);
+			firstColumn.push_back(2);
+			secondColumn.push_back(3);
 
-		//	firstColumn.push_back(2);
-		//	secondColumn.push_back(3);
+			firstColumn.push_back(3);
+			secondColumn.push_back(4);
 
-		//	firstColumn.push_back(3);
-		//	secondColumn.push_back(4);
+			firstColumn.push_back(4);
+			secondColumn.push_back(7);
 
-		//	firstColumn.push_back(4);
-		//	secondColumn.push_back(7);
+			firstColumn.push_back(7);
+			secondColumn.push_back(9);
 
-		//	firstColumn.push_back(7);
-		//	secondColumn.push_back(9);
+			firstColumn.push_back(1);
+			secondColumn.push_back(3);
 
-		//	firstColumn.push_back(1);
-		//	secondColumn.push_back(3);
+			firstColumn.push_back(1);
+			secondColumn.push_back(4);
 
-		//	firstColumn.push_back(1);
-		//	secondColumn.push_back(4);
+			firstColumn.push_back(1);
+			secondColumn.push_back(7);
 
-		//	firstColumn.push_back(1);
-		//	secondColumn.push_back(7);
+			firstColumn.push_back(1);
+			secondColumn.push_back(9);
 
-		//	firstColumn.push_back(1);
-		//	secondColumn.push_back(9);
+			firstColumn.push_back(2);
+			secondColumn.push_back(4);
 
-		//	firstColumn.push_back(3);
-		//	secondColumn.push_back(7);
+			firstColumn.push_back(2);
+			secondColumn.push_back(7);
 
-		//	firstColumn.push_back(3);
-		//	secondColumn.push_back(9);
+			firstColumn.push_back(2);
+			secondColumn.push_back(9);
 
-		//	firstColumn.push_back(4);
-		//	secondColumn.push_back(9);
+			firstColumn.push_back(3);
+			secondColumn.push_back(7);
 
-		//	std::tuple<std::vector<int>, std::vector<int>> expectedRes = { firstColumn, secondColumn };
-		//	REQUIRE(res == expectedRes);
-		//}
+			firstColumn.push_back(3);
+			secondColumn.push_back(9);
+
+			firstColumn.push_back(4);
+			secondColumn.push_back(9);
+
+			std::tuple<std::vector<int>, std::vector<int>> expectedRes = { firstColumn, secondColumn };
+			
+			std::unordered_set<std::pair<int, int>, PKBUtil::hashFunction> set = PKBUtil::convertVectorTupleToSetPairs(std::get<0>(res), std::get<1>(res));
+			std::unordered_set<std::pair<int, int>, PKBUtil::hashFunction> expectedSet = PKBUtil::convertVectorTupleToSetPairs(std::get<0>(expectedRes), std::get<1>(expectedRes));
+
+			REQUIRE(set == expectedSet);
+		}
 	}
 	followsStore.clear();
 }

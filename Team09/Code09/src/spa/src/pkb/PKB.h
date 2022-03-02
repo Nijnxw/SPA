@@ -20,6 +20,12 @@
 #include "stores/ModifiesStore.h"
 
 class PKB {
+private:
+	static inline EntityStore entityStore;
+	static inline FollowsStore followsStore;
+	static inline ParentStore parentStore;
+	static inline UsesStore usesStore;
+	static inline ModifiesStore modifiesStore;
 public:
 	PKB();
 
@@ -124,6 +130,7 @@ public:
 	static std::unordered_set<std::string> getVariablesUsedByStatement(int stmtNo);
 	static std::unordered_set<std::string> getVariablesUsedByProcedure(const std::string& procName);
 	static std::unordered_set<int> getStatementsUsingVariable(const std::string& variable);
+	static std::unordered_set<std::string> getProcedureUsingVariable(const std::string& variable);
 	static std::tuple<std::vector<std::string>, std::vector<std::string>>
 		getStmtsToUsedVariable(const std::unordered_set<int>& stmts);
 
@@ -137,6 +144,7 @@ public:
 	static std::unordered_set<std::string> getVariablesModifiedByStatement(int stmtNo);
 	static std::unordered_set<std::string> getVariablesModifiedByProcedure(const std::string& procName);
 	static std::unordered_set<int> getStatementsModifyingVariable(const std::string& variable);
+	static std::unordered_set<std::string> getProcedureModifyingVariable(const std::string& variable);
 	static std::tuple<std::vector<std::string>, std::vector<std::string>>
 		getStmtsToModifiedVariable(const std::unordered_set<int>& stmts);
 };

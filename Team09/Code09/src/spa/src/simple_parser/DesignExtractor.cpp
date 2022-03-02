@@ -190,18 +190,22 @@ NestableRelationships processStmtList(std::vector<std::shared_ptr<StmtNode>> stm
 //procedure (list) processing functions
 NestableRelationships processProcedure(std::shared_ptr<ProcedureNode> proc) {
 	EntityStager::stageProcedure(proc->getProcName());
-	return processStmtList(proc->getStmtList());
+
+	NestableRelationships rs = processStmtList(proc->getStmtList());
+	if (rs.getModifiesSize() > 0) EntityStager::stageModifiesProcedure(proc->getProcName(), rs.getModifies());
+	if (rs.getUsesSize() > 0) EntityStager::stageUsesProcedure(proc->getProcName(), rs.getUses());
+	return rs;
 }
 
-void processProcedureList(std::vector<std::shared_ptr<ProcedureNode>> procList) {
-	for (int i = 0; i < procList.size(); i++) {
-		processProcedure(procList[i]);
+void processProcedureList(std::unordered_map<std::string, std::shared_ptr<ProcedureNode>> procMap) {
+	for (auto& procPair : procMap) {
+		processProcedure(procPair.second);
 	}
 }
 
 void DesignExtractor::extractDesignElements(AST ast) {
 	EntityStager::clear();
-	processProcedureList(ast->getProcedureList());
+	processProcedureList(ast->getProcedureMap());
 }
 
 void DesignExtractor::commit() {

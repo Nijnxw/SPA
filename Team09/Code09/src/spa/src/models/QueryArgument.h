@@ -9,13 +9,14 @@ public:
 
 	const std::string& getValue() const;
 	EntityType getType() const;
+
 	bool operator==(const QueryArgument& other) const {
 		return type == other.getType() && value == other.getValue();
 	}
 
 private:
-    std::string value;  // can either be a literal or variable name (depending on type)
-    EntityType type;
+	std::string value;  // can either be a literal or variable name (depending on type)
+	EntityType type;
 };
 
 struct QueryArgumentHash {

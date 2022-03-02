@@ -1,7 +1,7 @@
-#include "PatternAEvaluator.h"
+#include "PatternAssignEvaluator.h"
 
 QueryClauseResult
-PatternAEvaluator::getPattern(const std::string& LHS, const std::string& RHS, const std::string& clauseSyn,
+PatternAssignEvaluator::getPattern(const std::string& LHS, const std::string& RHS, const std::string& clauseSyn,
 							  EntityType LHSType, EntityType RHSType,
 							  bool isBooleanResult) {
 
@@ -9,11 +9,11 @@ PatternAEvaluator::getPattern(const std::string& LHS, const std::string& RHS, co
 
 	switch (LHSType) {
 		case EntityType::VAR:
-			return PatternAEvaluator::getPatternBySynonym(LHS, RHS, RHSType, clauseSyn, assignStatements);
+			return PatternAssignEvaluator::getPatternBySynonym(LHS, RHS, RHSType, clauseSyn, assignStatements);
 		case EntityType::STRING:
-			return PatternAEvaluator::getPatternByVariable(LHS, RHS, RHSType, clauseSyn, assignStatements);
+			return PatternAssignEvaluator::getPatternByVariable(LHS, RHS, RHSType, clauseSyn, assignStatements);
 		case EntityType::WILD:
-			return PatternAEvaluator::getPatternByUnderscore(RHS, RHSType, clauseSyn, assignStatements);
+			return PatternAssignEvaluator::getPatternByUnderscore(RHS, RHSType, clauseSyn, assignStatements);
 		default:
 			QueryClauseResult emptyQueryResult;
 			return emptyQueryResult;
@@ -21,7 +21,7 @@ PatternAEvaluator::getPattern(const std::string& LHS, const std::string& RHS, co
 }
 
 QueryClauseResult
-PatternAEvaluator::getPatternBySynonym(const std::string& LHS, const std::string& RHS, EntityType RHSType,
+PatternAssignEvaluator::getPatternBySynonym(const std::string& LHS, const std::string& RHS, EntityType RHSType,
 									   const std::string& clauseSyn,
 									   const std::unordered_map<int, AssignStatement> assignStatements) {
 	QueryClauseResult queryResult;
@@ -87,7 +87,7 @@ PatternAEvaluator::getPatternBySynonym(const std::string& LHS, const std::string
 }
 
 QueryClauseResult
-PatternAEvaluator::getPatternByVariable(const std::string& LHS, const std::string& RHS, EntityType RHSType,
+PatternAssignEvaluator::getPatternByVariable(const std::string& LHS, const std::string& RHS, EntityType RHSType,
 										const std::string& clauseSyn,
 										const std::unordered_map<int, AssignStatement> assignStatements) {
 	QueryClauseResult queryResult;
@@ -147,7 +147,7 @@ PatternAEvaluator::getPatternByVariable(const std::string& LHS, const std::strin
 }
 
 QueryClauseResult
-PatternAEvaluator::getPatternByUnderscore(const std::string& RHS, EntityType RHSType, const std::string& clauseSyn,
+PatternAssignEvaluator::getPatternByUnderscore(const std::string& RHS, EntityType RHSType, const std::string& clauseSyn,
 										  const std::unordered_map<int, AssignStatement> assignStatements) {
 	QueryClauseResult queryResult;
 	std::vector<int> statementNumbers;

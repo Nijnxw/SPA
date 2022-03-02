@@ -161,6 +161,6 @@ AST ComplexASTs::getAST4_1() {
 
     };
     std::shared_ptr<ProcedureNode> proc = std::make_shared<ProcedureNode>(stmtList, "testProgram");
-    std::vector<std::shared_ptr<ProcedureNode>> procList{ proc };
-    return std::make_shared<ProgramNode>(procList);
+    std::unordered_map<std::string, std::shared_ptr<ProcedureNode>> procMap{ {"testProgram", proc} };
+    return std::make_shared<ProgramNode>(procMap);
 }

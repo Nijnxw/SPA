@@ -17,17 +17,22 @@ public:
 	const std::unordered_set<std::string>& getUsedSynonyms() const;
 	bool containsSynonym(QueryArgument& synonym) const;
 	bool containsCommonSynonym(QueryClause& other) const;
-	bool operator==(const QueryClause& other) const {
-		bool isRelationRefEqual = clauseType == other.getClauseType(); 
-		bool isclauseSynonymEqual = clauseSynonym == other.getClauseSynonym();
-		bool isArgumentsEqual = std::equal(arguments.begin(), arguments.end(), other.getArguments().begin());
-		bool isUsedSynonymsEqual = std::equal(usedSynonyms.begin(), usedSynonyms.end(), other.getUsedSynonyms().begin());
-		return isRelationRefEqual && isclauseSynonymEqual && isArgumentsEqual && isUsedSynonymsEqual;
-	}
+	bool operator==(const QueryClause& other) const;
 
 private:
 	RelationRef clauseType;
 	std::string clauseSynonym;
 	std::vector<QueryArgument> arguments;
 	std::unordered_set<std::string> usedSynonyms;
+};
+
+template<>
+struct std::hash<QueryClause> {
+	size_t operator()(const QueryClause& clause) {
+		size_t hash = std::hash<std::string>()(ToString(clause.getClauseType()));
+		for (const auto& arg: clause.getArguments()) {
+			hash = hash ^ std::hash<std::string>()(arg.getValue());
+		}
+		return hash;
+	}
 };

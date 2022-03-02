@@ -13,7 +13,7 @@
 
 #include "PatternEvaluator.h"
 
-class PatternAEvaluator : public PatternEvaluator {
+class PatternAssignEvaluator : public PatternEvaluator {
 private:
 	QueryClauseResult
 	getPatternBySynonym(const std::string& LHS, const std::string& RHS, EntityType RHSType, const std::string& clauseSyn,

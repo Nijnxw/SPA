@@ -204,6 +204,21 @@ TEST_CASE("Proc_name validity 5.10 - proc_name cannot have symbols") {
 	REQUIRE_THROWS_WITH(parser.parseProgram(), "Expected '{' but got '*' instead.\n");
 }
 
+TEST_CASE("Proc_name validity 5.12 - proc_name cannot be repeated") {
+  // procedure m*in { read x;}
+  std::vector<Token*> input {
+      new NameToken("procedure"), 	new NameToken("main"),  new PunctuatorToken("{"),
+      new NameToken("read"),		    new NameToken("x"),		  new PunctuatorToken(";"),
+      new PunctuatorToken("}"),
+      new NameToken("procedure"), 	new NameToken("main"),  new PunctuatorToken("{"),
+      new NameToken("read"),		    new NameToken("x"),		  new PunctuatorToken(";"),
+      new PunctuatorToken("}"),
+      new EndOfFileToken(),
+  };
+  SPParser parser = SPParser(input);
+  REQUIRE_THROWS_WITH(parser.parseProgram(), "There are 2 procedures with the same name 'main'.\n");
+}
+
 TEST_CASE ("Test parsing of invalid procedure") {
 	SECTION ("No statement in stmtLst") {
 		std::vector<Token*> input = {

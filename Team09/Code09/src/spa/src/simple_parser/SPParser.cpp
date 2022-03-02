@@ -359,6 +359,12 @@ AST SPParser::parseProgram() {
     if (!procedureNode) {
       throw std::runtime_error("Expected 'procedure' but got '" + peek()->getValue() + "' instead.\n");
     }
+
+    // SEMANTIC RULE: A program cannot have two procedures with the same name
+    if ( procedureMap.find(procedureNode->getProcName()) != procedureMap.end() ) {
+      throw std::runtime_error("There are 2 procedures with the same name '" + procedureNode->getProcName() + "'.\n");
+    }
+
     procedureMap.insert(std::make_pair(procedureNode->getProcName(), procedureNode));
   }
 

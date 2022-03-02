@@ -110,8 +110,9 @@ private:
 	QueryArgument parseArgs(PQLToken* token);
 	void parseRelationshipClause();
 	void parseSuchThatClause();
-	QueryArgument parsePatternLHS();
-	QueryArgument parsePatternRHS();
+	QueryArgument parseAssignPatternLHS();
+	QueryArgument parseAssignPatternRHS();
+	void parseAssignPattern(PQLToken* synonymToken);
 	void parsePatternClause();
 	void parseAfterSelect();
 };

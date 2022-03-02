@@ -21,6 +21,20 @@ AST generateAST(std::string procName) {
 	return std::make_shared<ProgramNode>(procMap);
 }
 
+AST generateASTs(std::string procName1, std::string procName2) {
+  std::vector<std::shared_ptr<StmtNode>> stmts1 {
+      std::make_shared<ReadNode>(1, std::make_shared<VariableNode>("x"))
+  };
+  std::vector<std::shared_ptr<StmtNode>> stmts2 {
+      std::make_shared<ReadNode>(2, std::make_shared<VariableNode>("x"))
+  };
+  std::shared_ptr<ProcedureNode> proc1 = std::make_shared<ProcedureNode>(stmts1, procName1);
+  std::shared_ptr<ProcedureNode> proc2 = std::make_shared<ProcedureNode>(stmts2, procName2);
+  std::unordered_map<std::string, std::shared_ptr<ProcedureNode>> procMap {{procName1, proc1},
+                                                                           {procName2, proc2}};
+  return std::make_shared<ProgramNode>(procMap);
+}
+
 // --------------------------------------------------
 //                  HAPPY PATHS
 // --------------------------------------------------
@@ -137,6 +151,20 @@ TEST_CASE ("Test parsing of valid procedure") {
 	}
 }
 
+TEST_CASE("Test multiple procedures") {
+  // procedure main { read x; } procedure testProgram { read x; }
+  std::vector<Token*> input = generateTokens("main");
+  std::vector<Token*> input1 = generateTokens("testProgram");
+  input.pop_back();
+  input.insert(input.end(), input1.begin(), input1.end());
+  SPParser parser = SPParser(input);
+  AST output = parser.parseProgram();
+  AST expected = generateASTs("main", "testProgram");
+  REQUIRE(output->getProcedureMap().size() == expected->getProcedureMap().size());
+  REQUIRE(*output->getProcedureMap()["main"] == *expected->getProcedureMap()["main"]);
+  REQUIRE(*output->getProcedureMap()["testProgram"] == *expected->getProcedureMap()["testProgram"]);
+}
+
 // --------------------------------------------------
 //                  UNHAPPY PATHS
 // --------------------------------------------------
@@ -194,7 +222,7 @@ TEST_CASE ("Test parsing of invalid procedure") {
 				new PunctuatorToken("}"),	new EndOfFileToken(),
 		};
 		SPParser parser = SPParser(input);
-		REQUIRE_THROWS_WITH(parser.parseProgram(), "There must be at least 1 procedure in a SIMPLE program!\n");
+		REQUIRE_THROWS_WITH(parser.parseProgram(), "Expected 'procedure' but got 'procedur' instead.\n");
 	}
 	SECTION ("'procedure' keyword is case sensitive") {
 		std::vector<Token*> input = {
@@ -204,7 +232,7 @@ TEST_CASE ("Test parsing of invalid procedure") {
 				new PunctuatorToken("}"),	new EndOfFileToken(),
 		};
 		SPParser parser = SPParser(input);
-		REQUIRE_THROWS_WITH(parser.parseProgram(), "There must be at least 1 procedure in a SIMPLE program!\n");
+		REQUIRE_THROWS_WITH(parser.parseProgram(), "Expected 'procedure' but got 'Procedure' instead.\n");
 	}
 	SECTION ("Constants as proc_name") {
 		std::vector<Token*> input = {

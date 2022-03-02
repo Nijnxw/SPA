@@ -348,16 +348,23 @@ std::shared_ptr<IfNode> SPParser::parseIf() {
 }
 
 // Main function driving SPParser class (exposed API)
-// program: procedure
+// program: procedure+
 AST SPParser::parseProgram() {
 	std::unordered_map<std::string, std::shared_ptr<ProcedureNode>> procedureMap;
-	std::shared_ptr<ProcedureNode> procedureNode = parseProcedure();
-	if (!procedureNode) {
+  while (true) {
+    if (check(ParserTokenType::END_OF_FILE)) {
+      break;
+    }
+	  std::shared_ptr<ProcedureNode> procedureNode = parseProcedure();
+    if (!procedureNode) {
+      throw std::runtime_error("Expected 'procedure' but got '" + peek()->getValue() + "' instead.\n");
+    }
+    procedureMap.insert(std::make_pair(procedureNode->getProcName(), procedureNode));
+  }
+
+  if (procedureMap.empty()) {
 		throw std::runtime_error("There must be at least 1 procedure in a SIMPLE program!\n");
 	}
-	if (procedureMap.count(procedureNode->getProcName()) == 1) {
-		//should throw - @wenjin
-	}
-	procedureMap.insert(std::make_pair(procedureNode->getProcName(), procedureNode));
+
 	return std::make_shared<ProgramNode>(procedureMap);
 }

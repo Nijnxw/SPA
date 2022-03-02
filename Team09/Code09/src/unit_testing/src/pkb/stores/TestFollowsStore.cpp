@@ -178,11 +178,11 @@ TEST_CASE("FollowsStore API") {
 			REQUIRE(res == expectedSet);
 		}
 
-		//SECTION("getFirstStatements(int secondStatement) negative query - first statement as second statement") {
-		//	std::unordered_set<int> res = followsStore.getFirstStatements(1);
-		//	std::unordered_set<int> expectedSet;
-		//	REQUIRE(res == expectedSet);
-		//}
+		SECTION("getFirstStatements(int secondStatement) negative query - first statement as second statement") {
+			std::unordered_set<int> res = followsStore.getFirstStatements(1);
+			std::unordered_set<int> expectedSet;
+			REQUIRE(res == expectedSet);
+		}
 
 		// getSecondStatements
 		SECTION("getSecondStatements(int firstStatement) positive query") {
@@ -204,11 +204,11 @@ TEST_CASE("FollowsStore API") {
 			REQUIRE(res == expectedSet);
 		}
 
-		//SECTION("getFirstStatementsT(int secondStatement) positive query - transitive") {
-		//	std::unordered_set<int> res = followsStore.getFirstStatementsT(9);
-		//	std::unordered_set<int> expectedSet = { 1, 2, 3, 4, 7 };
-		//	REQUIRE(res == expectedSet);
-		//}
+		SECTION("getFirstStatementsT(int secondStatement) positive query - transitive") {
+			std::unordered_set<int> res = followsStore.getFirstStatementsT(9);
+			std::unordered_set<int> expectedSet = { 1, 2, 3, 4, 7 };
+			REQUIRE(res == expectedSet);
+		}
 
 		SECTION("getFirstStatementsT(int secondStatement) negative query - first statement as second statement") {
 			std::unordered_set<int> res = followsStore.getFirstStatementsT(1);

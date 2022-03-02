@@ -1,5 +1,5 @@
 #include "catch.hpp"
-#include "../src/pkb/stores/FollowsStore.h"
+#include "pkb/stores/FollowsStore.h"
 
 TEST_CASE("FollowsStore API") {
 	FollowsStore followsStore;

@@ -1,5 +1,5 @@
 #include "catch.hpp"
-#include "../src/pkb/stores/ParentStore.h"
+#include "pkb/stores/ParentStore.h"
 
 TEST_CASE("ParentStore API") {
 	ParentStore parentStore;

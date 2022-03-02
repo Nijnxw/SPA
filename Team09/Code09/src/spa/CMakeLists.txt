@@ -14,8 +14,8 @@ file(GLOB headers "${CMAKE_CURRENT_SOURCE_DIR}/src/*.h"
 	"${CMAKE_CURRENT_SOURCE_DIR}/src/PQL/evaluators/*.h"
 	"${CMAKE_CURRENT_SOURCE_DIR}/src/models/simple_parser/*.h"
 	"${CMAKE_CURRENT_SOURCE_DIR}/src/pkb/*.h"
-	"${CMAKE_CURRENT_SOURCE_DIR}/src/pbl/stores/*.h"
-	"${CMAKE_CURRENT_SOURCE_DIR}/src/pbl/util/*.h"
+	"${CMAKE_CURRENT_SOURCE_DIR}/src/pkb/stores/*.h"
+	"${CMAKE_CURRENT_SOURCE_DIR}/src/pkb/util/*.h"
 	"${CMAKE_CURRENT_SOURCE_DIR}/src/PQL/*.h"
 	"${CMAKE_CURRENT_SOURCE_DIR}/src/simple_parser/*.h"
 	"${CMAKE_CURRENT_SOURCE_DIR}/src/util/*.h"
@@ -33,5 +33,3 @@ file(GLOB headers "${CMAKE_CURRENT_SOURCE_DIR}/src/*.h"
 add_library(spa ${srcs} ${headers})
 # this makes the headers accessible for other projects which uses spa lib
 target_include_directories(spa PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/src)
-
-

@@ -1553,6 +1553,226 @@ TEST_CASE("Entity 2.37 - 2 procedures; First: If Second : Assignment") {
 	EntityStager::clear();
 }
 
+TEST_CASE("Entity 2.38 - Test call statement") {
+	EntityStager::clear();
+	DesignExtractor::extractDesignElements(EntityASTs::getAST2_38());
+
+	std::unordered_set<std::string> expectedProcedureTable{ "testProgram", "testProgram2" };
+	REQUIRE(EntityStager::getStagedProcedures() == expectedProcedureTable);
+
+	std::unordered_set<std::string> expectedVarTable{ "x" };
+	REQUIRE(EntityStager::getStagedVariables() == expectedVarTable);
+
+	std::unordered_set<std::string> expectedConstTable{ };
+	REQUIRE(EntityStager::getStagedConstants() == expectedConstTable);
+
+	std::unordered_set<int> expectedStmtTable{ 1, 2 };
+	REQUIRE(EntityStager::getStagedStatements() == expectedStmtTable);
+
+	std::unordered_set<int> expectedPrintTable{ 2 };
+	REQUIRE(EntityStager::getStagedPrintStatements() == expectedPrintTable);
+
+	std::unordered_set<int> expectedReadTable{ };
+	REQUIRE(EntityStager::getStagedReadStatements() == expectedReadTable);
+
+	std::unordered_set<int> expectedWhileTable{ };
+	REQUIRE(EntityStager::getStagedWhileStatements() == expectedWhileTable);
+
+	std::unordered_set<int> expectedIfTable{ };
+	REQUIRE(EntityStager::getStagedIfStatements() == expectedIfTable);
+
+	std::unordered_set<int> expectedCallsTable{ 1 };
+	REQUIRE(EntityStager::getStagedCallStatements() == expectedCallsTable);
+
+	std::vector<std::tuple<int, std::string, std::string>> expectedAssignTable{ };
+	std::sort(expectedAssignTable.begin(), expectedAssignTable.end(),
+		[](auto& left, auto& right) { return std::get<0>(left) < std::get<0>(right); });
+
+	std::vector<std::tuple<int, std::string, std::string>> actualAssignTable = EntityStager::getStagedAssignStatements();
+	std::sort(actualAssignTable.begin(), actualAssignTable.end(),
+		[](auto& left, auto& right) { return std::get<0>(left) < std::get<0>(right); });
+
+	REQUIRE(actualAssignTable == expectedAssignTable);
+
+	EntityStager::clear();
+}
+
+TEST_CASE("Entity 2.39 - Test call statement (opposite order)") {
+	EntityStager::clear();
+	DesignExtractor::extractDesignElements(EntityASTs::getAST2_39());
+
+	std::unordered_set<std::string> expectedProcedureTable{ "testProgram", "testProgram2" };
+	REQUIRE(EntityStager::getStagedProcedures() == expectedProcedureTable);
+
+	std::unordered_set<std::string> expectedVarTable{ "x" };
+	REQUIRE(EntityStager::getStagedVariables() == expectedVarTable);
+
+	std::unordered_set<std::string> expectedConstTable{ };
+	REQUIRE(EntityStager::getStagedConstants() == expectedConstTable);
+
+	std::unordered_set<int> expectedStmtTable{ 1, 2 };
+	REQUIRE(EntityStager::getStagedStatements() == expectedStmtTable);
+
+	std::unordered_set<int> expectedPrintTable{ 1 };
+	REQUIRE(EntityStager::getStagedPrintStatements() == expectedPrintTable);
+
+	std::unordered_set<int> expectedReadTable{ };
+	REQUIRE(EntityStager::getStagedReadStatements() == expectedReadTable);
+
+	std::unordered_set<int> expectedWhileTable{ };
+	REQUIRE(EntityStager::getStagedWhileStatements() == expectedWhileTable);
+
+	std::unordered_set<int> expectedIfTable{ };
+	REQUIRE(EntityStager::getStagedIfStatements() == expectedIfTable);
+
+	std::unordered_set<int> expectedCallsTable{ 2 };
+	REQUIRE(EntityStager::getStagedCallStatements() == expectedCallsTable);
+
+	std::vector<std::tuple<int, std::string, std::string>> expectedAssignTable{ };
+	std::sort(expectedAssignTable.begin(), expectedAssignTable.end(),
+		[](auto& left, auto& right) { return std::get<0>(left) < std::get<0>(right); });
+
+	std::vector<std::tuple<int, std::string, std::string>> actualAssignTable = EntityStager::getStagedAssignStatements();
+	std::sort(actualAssignTable.begin(), actualAssignTable.end(),
+		[](auto& left, auto& right) { return std::get<0>(left) < std::get<0>(right); });
+
+	REQUIRE(actualAssignTable == expectedAssignTable);
+
+	EntityStager::clear();
+}
+
+TEST_CASE("Entity 2.40 - Call nested in If - second program") {
+	EntityStager::clear();
+	DesignExtractor::extractDesignElements(EntityASTs::getAST2_40());
+
+	std::unordered_set<std::string> expectedProcedureTable{ "testProgram", "testProgram2" };
+	REQUIRE(EntityStager::getStagedProcedures() == expectedProcedureTable);
+
+	std::unordered_set<std::string> expectedVarTable{ "x", "y" };
+	REQUIRE(EntityStager::getStagedVariables() == expectedVarTable);
+
+	std::unordered_set<std::string> expectedConstTable{ "1" };
+	REQUIRE(EntityStager::getStagedConstants() == expectedConstTable);
+
+	std::unordered_set<int> expectedStmtTable{ 1, 2, 3, 4 };
+	REQUIRE(EntityStager::getStagedStatements() == expectedStmtTable);
+
+	std::unordered_set<int> expectedPrintTable{ 2, 4 };
+	REQUIRE(EntityStager::getStagedPrintStatements() == expectedPrintTable);
+
+	std::unordered_set<int> expectedReadTable{ };
+	REQUIRE(EntityStager::getStagedReadStatements() == expectedReadTable);
+
+	std::unordered_set<int> expectedWhileTable{ };
+	REQUIRE(EntityStager::getStagedWhileStatements() == expectedWhileTable);
+
+	std::unordered_set<int> expectedIfTable{ 1 };
+	REQUIRE(EntityStager::getStagedIfStatements() == expectedIfTable);
+
+	std::unordered_set<int> expectedCallsTable{ 3 };
+	REQUIRE(EntityStager::getStagedCallStatements() == expectedCallsTable);
+
+	std::vector<std::tuple<int, std::string, std::string>> expectedAssignTable{ };
+	std::sort(expectedAssignTable.begin(), expectedAssignTable.end(),
+		[](auto& left, auto& right) { return std::get<0>(left) < std::get<0>(right); });
+
+	std::vector<std::tuple<int, std::string, std::string>> actualAssignTable = EntityStager::getStagedAssignStatements();
+	std::sort(actualAssignTable.begin(), actualAssignTable.end(),
+		[](auto& left, auto& right) { return std::get<0>(left) < std::get<0>(right); });
+
+	REQUIRE(actualAssignTable == expectedAssignTable);
+
+	EntityStager::clear();
+}
+
+TEST_CASE("Entity 2.41 - Call nested in If - second program") {
+	EntityStager::clear();
+	DesignExtractor::extractDesignElements(EntityASTs::getAST2_41());
+
+	std::unordered_set<std::string> expectedProcedureTable{ "testProgram", "testProgram2" };
+	REQUIRE(EntityStager::getStagedProcedures() == expectedProcedureTable);
+
+	std::unordered_set<std::string> expectedVarTable{ "x", "y" };
+	REQUIRE(EntityStager::getStagedVariables() == expectedVarTable);
+
+	std::unordered_set<std::string> expectedConstTable{ "1" };
+	REQUIRE(EntityStager::getStagedConstants() == expectedConstTable);
+
+	std::unordered_set<int> expectedStmtTable{ 1, 2, 3, 4 };
+	REQUIRE(EntityStager::getStagedStatements() == expectedStmtTable);
+
+	std::unordered_set<int> expectedPrintTable{ 1, 3 };
+	REQUIRE(EntityStager::getStagedPrintStatements() == expectedPrintTable);
+
+	std::unordered_set<int> expectedReadTable{ };
+	REQUIRE(EntityStager::getStagedReadStatements() == expectedReadTable);
+
+	std::unordered_set<int> expectedWhileTable{ };
+	REQUIRE(EntityStager::getStagedWhileStatements() == expectedWhileTable);
+
+	std::unordered_set<int> expectedIfTable{ 2 };
+	REQUIRE(EntityStager::getStagedIfStatements() == expectedIfTable);
+
+	std::unordered_set<int> expectedCallsTable{ 4 };
+	REQUIRE(EntityStager::getStagedCallStatements() == expectedCallsTable);
+
+	std::vector<std::tuple<int, std::string, std::string>> expectedAssignTable{ };
+	std::sort(expectedAssignTable.begin(), expectedAssignTable.end(),
+		[](auto& left, auto& right) { return std::get<0>(left) < std::get<0>(right); });
+
+	std::vector<std::tuple<int, std::string, std::string>> actualAssignTable = EntityStager::getStagedAssignStatements();
+	std::sort(actualAssignTable.begin(), actualAssignTable.end(),
+		[](auto& left, auto& right) { return std::get<0>(left) < std::get<0>(right); });
+
+	REQUIRE(actualAssignTable == expectedAssignTable);
+
+	EntityStager::clear();
+}
+
+TEST_CASE("Entity 2.42 - Call nested in While") {
+	EntityStager::clear();
+	DesignExtractor::extractDesignElements(EntityASTs::getAST2_42());
+
+	std::unordered_set<std::string> expectedProcedureTable{ "testProgram", "testProgram2" };
+	REQUIRE(EntityStager::getStagedProcedures() == expectedProcedureTable);
+
+	std::unordered_set<std::string> expectedVarTable{ "x", "y" };
+	REQUIRE(EntityStager::getStagedVariables() == expectedVarTable);
+
+	std::unordered_set<std::string> expectedConstTable{ "1" };
+	REQUIRE(EntityStager::getStagedConstants() == expectedConstTable);
+
+	std::unordered_set<int> expectedStmtTable{ 1, 2, 3 };
+	REQUIRE(EntityStager::getStagedStatements() == expectedStmtTable);
+
+	std::unordered_set<int> expectedPrintTable{ 3 };
+	REQUIRE(EntityStager::getStagedPrintStatements() == expectedPrintTable);
+
+	std::unordered_set<int> expectedReadTable{ };
+	REQUIRE(EntityStager::getStagedReadStatements() == expectedReadTable);
+
+	std::unordered_set<int> expectedWhileTable{ 1 };
+	REQUIRE(EntityStager::getStagedWhileStatements() == expectedWhileTable);
+
+	std::unordered_set<int> expectedIfTable{ };
+	REQUIRE(EntityStager::getStagedIfStatements() == expectedIfTable);
+
+	std::unordered_set<int> expectedCallsTable{ 2 };
+	REQUIRE(EntityStager::getStagedCallStatements() == expectedCallsTable);
+
+	std::vector<std::tuple<int, std::string, std::string>> expectedAssignTable{ };
+	std::sort(expectedAssignTable.begin(), expectedAssignTable.end(),
+		[](auto& left, auto& right) { return std::get<0>(left) < std::get<0>(right); });
+
+	std::vector<std::tuple<int, std::string, std::string>> actualAssignTable = EntityStager::getStagedAssignStatements();
+	std::sort(actualAssignTable.begin(), actualAssignTable.end(),
+		[](auto& left, auto& right) { return std::get<0>(left) < std::get<0>(right); });
+
+	REQUIRE(actualAssignTable == expectedAssignTable);
+
+	EntityStager::clear();
+}
+
 TEST_CASE("Entity 4.1 - Complex AST") {
 	EntityStager::clear();
 	DesignExtractor::extractDesignElements(ComplexASTs::getAST4_1());

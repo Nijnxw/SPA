@@ -1062,7 +1062,7 @@ AST ContainerStmtASTs::getAST1_80() {
 	 * }
 	 *
 	 * procedure testProgram2 {
-	 * 2	call testProgram2;
+	 * 2	call testProgram;
 	 * }
 	 */
 	std::vector<std::shared_ptr<StmtNode>> proc1StmtLst{
@@ -1071,7 +1071,7 @@ AST ContainerStmtASTs::getAST1_80() {
 	std::shared_ptr<ProcedureNode> proc1 = std::make_shared<ProcedureNode>(proc1StmtLst, "testProgram");
 
 	std::vector<std::shared_ptr<StmtNode>> proc2StmtLst{
-		std::make_shared<CallNode>(2, "testProgram1")
+		std::make_shared<CallNode>(2, "testProgram")
 	};
 	std::shared_ptr<ProcedureNode> proc2 = std::make_shared<ProcedureNode>(proc2StmtLst, "testProgram2");
 
@@ -1179,12 +1179,12 @@ AST ContainerStmtASTs::getAST1_83() {
 	std::vector<std::shared_ptr<StmtNode>> proc1StmtLst{
 		std::make_shared<WhileNode>(1, predXLtC1, whileStmtLst)
 	};
-	std::shared_ptr<ProcedureNode> proc2 = std::make_shared<ProcedureNode>(proc1StmtLst, "testProgram");
+	std::shared_ptr<ProcedureNode> proc1 = std::make_shared<ProcedureNode>(proc1StmtLst, "testProgram");
 
 	std::vector<std::shared_ptr<StmtNode>> proc2StmtLst{
 		std::make_shared<PrintNode>(3, y)
 	};
-	std::shared_ptr<ProcedureNode> proc1 = std::make_shared<ProcedureNode>(proc2StmtLst, "testProgram2");
+	std::shared_ptr<ProcedureNode> proc2 = std::make_shared<ProcedureNode>(proc2StmtLst, "testProgram2");
 
 	std::unordered_map<std::string, std::shared_ptr<ProcedureNode>> procMap{
 		{"testProgram", proc1},

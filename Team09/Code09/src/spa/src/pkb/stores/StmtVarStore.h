@@ -5,6 +5,7 @@
 class StmtVarStore : public Store {
 private:
 	std::unordered_set<int> stmtInRelationship;
+	std::unordered_set<std::string> procInRelationship;
 	std::unordered_set<std::string> varInRelationship;
 	std::unordered_map<int, std::unordered_set<std::string>> stmtToVarRelationship;
 	std::unordered_map<std::string, std::unordered_set<int>> varToStmtRelationship;
@@ -16,6 +17,7 @@ public:
 
 	/* Getters called by QE */
 	std::unordered_set<int> getStmtInRelationship();
+	std::unordered_set<std::string> getProcInRelationship();
 	std::unordered_set<std::string> getVarInRelationship();
 	std::unordered_map<int, std::unordered_set<std::string>> getStmtToVarRelationship();
 	std::unordered_map<std::string, std::unordered_set<int>> getVarToStmtRelationship();
@@ -27,6 +29,7 @@ public:
 	std::unordered_set<int> getStmtByVar(const std::string& variable);
 	std::unordered_set<std::string> getProcByVar(const std::string& variable);
 	std::tuple<std::vector<std::string>, std::vector<std::string>> getStmtToVarByStmts(const std::unordered_set<int>& stmts);
+	std::tuple<std::vector<std::string>, std::vector<std::string>> getProcToVarByProcs(const std::unordered_set<std::string>& procs);
 
 	/* Setters called by DE */
 	bool addStmtVarRelationship(int statementNumber, const std::unordered_set<std::string>& variables);

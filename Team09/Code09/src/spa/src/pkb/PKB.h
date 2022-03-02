@@ -122,6 +122,7 @@ public:
 
 	/* Uses Getters */
 	static std::unordered_set<int> getUsesStatements();
+	static std::unordered_set<std::string> getUsesProcedures();
 	static std::unordered_set<std::string> getUsedVariables();
 	static std::unordered_map<int, std::unordered_set<std::string>> getStatementNumberToVariablesUsed();
 	static std::unordered_map<std::string, std::unordered_set<int>> getVariableToStatementNumbersUsedBy();
@@ -133,9 +134,12 @@ public:
 	static std::unordered_set<std::string> getProcedureUsingVariable(const std::string& variable);
 	static std::tuple<std::vector<std::string>, std::vector<std::string>>
 		getStmtsToUsedVariable(const std::unordered_set<int>& stmts);
+	static std::tuple<std::vector<std::string>, std::vector<std::string>>
+		getProcsToUsedVariable(const std::unordered_set<std::string>& procs);
 
 	/* Modifies Getters */
 	static std::unordered_set<int> getModifiesStatements();
+	static std::unordered_set<std::string> getModifiesProcedures();
 	static std::unordered_set<std::string> getModifiedVariables();
 	static std::unordered_map<int, std::unordered_set<std::string>> getStatementNumberToVariablesModified();
 	static std::unordered_map<std::string, std::unordered_set<int>> getVariableToStatementNumbersModifiedBy();
@@ -147,4 +151,6 @@ public:
 	static std::unordered_set<std::string> getProcedureModifyingVariable(const std::string& variable);
 	static std::tuple<std::vector<std::string>, std::vector<std::string>>
 		getStmtsToModifiedVariable(const std::unordered_set<int>& stmts);
+	static std::tuple<std::vector<std::string>, std::vector<std::string>>
+		getProcsToModifiedVariable(const std::unordered_set<std::string>& procs);
 };

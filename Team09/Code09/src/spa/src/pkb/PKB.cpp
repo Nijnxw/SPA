@@ -388,6 +388,10 @@ std::unordered_set<int> PKB::getUsesStatements() {
 	return usesStore.getStmtInRelationship();
 }
 
+std::unordered_set<std::string> PKB::getUsesProcedures() {
+	return usesStore.getProcInRelationship();
+}
+
 std::unordered_set<std::string> PKB::getUsedVariables() {
 	return usesStore.getVarInRelationship();
 }
@@ -408,6 +412,7 @@ std::unordered_map<std::string, std::unordered_set<std::string>> PKB::getVariabl
 	return usesStore.getVarToProcRelationship();
 }
 
+// Helpers
 std::unordered_set<std::string> PKB::getVariablesUsedByStatement(int stmtNo) {
 	return usesStore.getVarByStmt(stmtNo);
 }
@@ -425,9 +430,18 @@ PKB::getStmtsToUsedVariable(const std::unordered_set<int>& stmts) {
 	return usesStore.getStmtToVarByStmts(stmts);
 }
 
+std::tuple<std::vector<std::string>, std::vector<std::string>>
+PKB::getProcsToUsedVariable(const std::unordered_set<std::string>& procs) {
+	return usesStore.getProcToVarByProcs(procs);
+}
+
 /* Modifies Getters */
 std::unordered_set<int> PKB::getModifiesStatements() {
 	return modifiesStore.getStmtInRelationship();
+}
+
+std::unordered_set<std::string> PKB::getModifiesProcedures() {
+	return modifiesStore.getProcInRelationship();
 }
 
 std::unordered_set<std::string> PKB::getModifiedVariables() {
@@ -450,6 +464,7 @@ std::unordered_map<std::string, std::unordered_set<std::string>> PKB::getVariabl
 	return modifiesStore.getVarToProcRelationship();
 }
 
+// Helpers
 std::unordered_set<std::string> PKB::getVariablesModifiedByStatement(int stmtNo) {
 	return modifiesStore.getVarByStmt(stmtNo);
 }
@@ -464,7 +479,13 @@ std::unordered_set<int> PKB::getStatementsModifyingVariable(const std::string& v
 std::unordered_set<std::string> PKB::getProcedureModifyingVariable(const std::string& variable) {
 	return modifiesStore.getProcByVar(variable);
 }
+
 std::tuple<std::vector<std::string>, std::vector<std::string>>
 PKB::getStmtsToModifiedVariable(const std::unordered_set<int>& stmts) {
 	return modifiesStore.getStmtToVarByStmts(stmts);
+}
+
+std::tuple<std::vector<std::string>, std::vector<std::string>>
+PKB::getProcsToModifiedVariable(const std::unordered_set<std::string>& procs) {
+	return modifiesStore.getProcToVarByProcs(procs);
 }

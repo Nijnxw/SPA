@@ -196,6 +196,7 @@ void EntityStager::stageModifiesProcedure(std::string proc, std::unordered_set<s
 }
 
 void EntityStager::commit() {
+	//TODO: commit calls
 	for (auto& proc: stagedProcedures) { PKB::addProcedure(proc); }
 	for (auto& var: stagedConstants) { PKB::addConstant(var); }
 	for (auto& con: stagedVariables) { PKB::addVariable(con); }

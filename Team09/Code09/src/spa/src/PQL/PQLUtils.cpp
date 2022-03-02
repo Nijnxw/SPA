@@ -36,21 +36,7 @@ static bool isIdent(std::string str) {
 	return startsWithAlpha(str) && isAlphaNum(str);
 }
 
-static bool isValidString(std::string str) {
-	const std::string content = str.substr(1, str.size() - 2);
-	bool isInStringLiterals = str.size() >= 2 && str[0] == '"' && str[str.size() - 1] == '"';
-	return isInStringLiterals && isIdent(content);
-}
-
-static bool isExpr(std::string str) {
-	const std::string content = str.substr(1, str.size() - 2);
-	bool isInStringLiterals = str.size() >= 2 && str[0] == '"' && str[str.size() - 1] == '"';
-	if (!isInStringLiterals) { return false; }
-	for (const char c : content) {
-		if (isBinaryOp(c)) {
-			return true;
-		}
-	}
-	return false;
+static bool isInStringLiteral(std::string str) {
+	return str.size() >= 2 && str[0] == '"' && str[str.size() - 1] == '"';
 }
 

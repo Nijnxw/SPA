@@ -16,15 +16,10 @@ void Tokeniser::processRawToken(std::string rawToken) {
 	if (stringTokenMap.find(rawToken) != stringTokenMap.end()) {
 		PQLTokens.push_back(new PQLToken(stringTokenMap[rawToken], rawToken));
 	}
-	else if (isValidString(rawToken)) {
+	else if (isInStringLiteral(rawToken)) {
 		const std::string ident = rawToken.substr(1, rawToken.size() - 2);
 		PQLTokens.push_back(new PQLToken(TokenType::STRING, ident));
-	}
-	else if (isExpr(rawToken)) {
-		const std::string infix = RPN::convertToRpn(rawToken.substr(1, rawToken.size() - 2));
-		PQLTokens.push_back(new PQLToken(TokenType::EXPR, infix));
-	}
-	else if (isIdent(rawToken)) {
+	} else if (isIdent(rawToken)) {
 		PQLTokens.push_back(new PQLToken(TokenType::SYNONYM, rawToken));
 	}
 	else if (isInt(rawToken)) {

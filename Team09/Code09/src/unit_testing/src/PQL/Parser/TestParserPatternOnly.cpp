@@ -252,15 +252,15 @@ TEST_CASE("non-var syn as first argument") {
 	REQUIRE(actualQuery.isEmpty());
 }
 
-TEST_CASE("illegal factor first argument") {
-	std::string queryString = "assign a; Select a pattern a(_, _\"1xH3\"_)";
-	Tokeniser tokeniser = Tokeniser(queryString);
-	std::vector<PQLToken*> PQLTokens = tokeniser.tokenise();
-	PQLParser parser = PQLParser(PQLTokens);
-
-	Query actualQuery = parser.parse();
-	REQUIRE(actualQuery.isEmpty());
-}
+//TEST_CASE("illegal factor first argument") {
+//	std::string queryString = "assign a; Select a pattern a(_, _\"1xH3\"_)";
+//	Tokeniser tokeniser = Tokeniser(queryString);
+//	std::vector<PQLToken*> PQLTokens = tokeniser.tokenise();
+//	PQLParser parser = PQLParser(PQLTokens);
+//
+//	Query actualQuery = parser.parse();
+//	REQUIRE(actualQuery.isEmpty());
+//}
 
 TEST_CASE("integer as first argument") {
 	std::string queryString = "assign a; Select a pattern a(1, _\"xH\"_)";

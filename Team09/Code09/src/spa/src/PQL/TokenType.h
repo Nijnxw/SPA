@@ -58,7 +58,10 @@ enum class TokenType {
 
 	//WITH clause
 	WITH,
-	EQUAL
+	EQUAL,
+
+	//AND
+	AND
 };
 
 //unordered map to map raw string tokens to the appropriate token type
@@ -110,5 +113,9 @@ static std::unordered_map<std::string, TokenType> stringTokenMap = {
 
 	//with claue token mapping
 	{"with",	  TokenType::WITH},
-	{"=",		  TokenType::EQUAL}
+	{"=",		  TokenType::EQUAL},
+
+	//And
+	{"and",		  TokenType::AND},
+
 };

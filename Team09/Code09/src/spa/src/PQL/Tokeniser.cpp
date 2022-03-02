@@ -75,7 +75,7 @@ std::vector<PQLToken*> Tokeniser::tokenise() {
 				}
 				break;
 
-			//punctuators that does not appear in string literals at all 
+			//symbols that does not appear in string literals at all 
 			case '_':
 			case ',':
 			case '(':

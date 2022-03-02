@@ -61,4 +61,6 @@ void NestableRelationships::combine(NestableRelationships other) {
 	uses.merge(other.getUses());
 	modifies.merge(other.getModifies());
 	children.merge(other.getChildren());
+	std::vector<std::string> otherCalls = other.getCalls();
+	calls.insert(calls.end(), otherCalls.begin(), otherCalls.end());
 }

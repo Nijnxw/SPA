@@ -1488,8 +1488,8 @@ AST RelationshipASTs::getAST3_44() {
 	std::shared_ptr<ProcedureNode> proc1 = std::make_shared<ProcedureNode>(proc1StmtLst, "testProgram1");
 
 	std::vector<std::shared_ptr<StmtNode>> proc2StmtLst{
-		std::make_shared<PrintNode>(3, x),
-		std::make_shared<PrintNode>(4, y),
+		std::make_shared<PrintNode>(4, x),
+		std::make_shared<PrintNode>(5, y),
 		std::make_shared<CallNode>(6, "testProgram3")
 	};
 	std::shared_ptr<ProcedureNode> proc2 = std::make_shared<ProcedureNode>(proc2StmtLst, "testProgram2");

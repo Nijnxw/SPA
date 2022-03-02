@@ -1448,7 +1448,7 @@ AST RelationshipASTs::getAST3_43() {
 	std::shared_ptr<ProcedureNode> proc2 = std::make_shared<ProcedureNode>(proc2StmtLst, "testProgram2");
 
 	std::vector<std::shared_ptr<StmtNode>> proc3StmtLst{
-		std::make_shared<AssignNode>(6, x, xPlus1, "x 1 +"),
+		std::make_shared<AssignNode>(6, x, yPlus1, "y 1 +"),
 		std::make_shared<CallNode>(7, "testProgram2")
 	};
 	std::shared_ptr<ProcedureNode> proc3 = std::make_shared<ProcedureNode>(proc3StmtLst, "testProgram3");
@@ -1495,7 +1495,7 @@ AST RelationshipASTs::getAST3_44() {
 	std::shared_ptr<ProcedureNode> proc2 = std::make_shared<ProcedureNode>(proc2StmtLst, "testProgram2");
 
 	std::vector<std::shared_ptr<StmtNode>> proc3StmtLst{
-		std::make_shared<AssignNode>(7, x, xPlus1, "x 1 +")
+		std::make_shared<AssignNode>(7, x, yPlus1, "y 1 +")
 	};
 	std::shared_ptr<ProcedureNode> proc3 = std::make_shared<ProcedureNode>(proc3StmtLst, "testProgram3");
 
@@ -1541,7 +1541,7 @@ AST RelationshipASTs::getAST3_45() {
 	std::shared_ptr<ProcedureNode> proc2 = std::make_shared<ProcedureNode>(proc2StmtLst, "testProgram2");
 
 	std::vector<std::shared_ptr<StmtNode>> proc3StmtLst{
-		std::make_shared<AssignNode>(7, x, xPlus1, "x 1 +")
+		std::make_shared<AssignNode>(7, x, yPlus1, "y 1 +")
 	};
 	std::shared_ptr<ProcedureNode> proc3 = std::make_shared<ProcedureNode>(proc3StmtLst, "testProgram3");
 
@@ -1586,7 +1586,7 @@ AST RelationshipASTs::getAST3_46() {
 
 	std::vector<std::shared_ptr<StmtNode>> proc3StmtLst{
 		std::make_shared<CallNode>(5, "testProgram1"),
-		std::make_shared<AssignNode>(6, x, xPlus1, "x 1 +"),
+		std::make_shared<AssignNode>(6, x, yPlus1, "y 1 +"),
 		std::make_shared<CallNode>(7, "testProgram2")
 	};
 	std::shared_ptr<ProcedureNode> proc3 = std::make_shared<ProcedureNode>(proc3StmtLst, "testProgram3");
@@ -1633,7 +1633,7 @@ AST RelationshipASTs::getAST3_47() {
 	std::shared_ptr<ProcedureNode> proc2 = std::make_shared<ProcedureNode>(proc2StmtLst, "testProgram2");
 
 	std::vector<std::shared_ptr<StmtNode>> proc3StmtLst{
-		std::make_shared<AssignNode>(7, x, xPlus1, "x 1 +")
+		std::make_shared<AssignNode>(7, x, yPlus1, "y 1 +")
 	};
 	std::shared_ptr<ProcedureNode> proc3 = std::make_shared<ProcedureNode>(proc3StmtLst, "testProgram3");
 
@@ -1688,7 +1688,7 @@ AST RelationshipASTs::getAST3_48() {
 	std::shared_ptr<ProcedureNode> proc2 = std::make_shared<ProcedureNode>(proc2StmtLst, "testProgram2");
 
 	std::vector<std::shared_ptr<StmtNode>> proc3StmtLst{
-		std::make_shared<AssignNode>(7, x, xPlus1, "x 1 +")
+		std::make_shared<AssignNode>(7, x, yPlus1, "y 1 +")
 	};
 	std::shared_ptr<ProcedureNode> proc3 = std::make_shared<ProcedureNode>(proc3StmtLst, "testProgram3");
 
@@ -1758,7 +1758,7 @@ AST RelationshipASTs::getAST3_49() {
 	std::shared_ptr<ProcedureNode> proc2 = std::make_shared<ProcedureNode>(proc2StmtLst, "testProgram2");
 
 	std::vector<std::shared_ptr<StmtNode>> proc3StmtLst{
-		std::make_shared<AssignNode>(8, x, xPlus1, "x 1 +")
+		std::make_shared<AssignNode>(8, x, yPlus1, "y 1 +")
 	};
 	std::shared_ptr<ProcedureNode> proc3 = std::make_shared<ProcedureNode>(proc3StmtLst, "testProgram3");
 
@@ -1826,7 +1826,7 @@ AST RelationshipASTs::getAST3_50() {
 	std::shared_ptr<ProcedureNode> proc2 = std::make_shared<ProcedureNode>(proc2StmtLst, "testProgram2");
 
 	std::vector<std::shared_ptr<StmtNode>> proc3StmtLst{
-		std::make_shared<AssignNode>(7, x, xPlus1, "x 1 +")
+		std::make_shared<AssignNode>(7, x, yPlus1, "y 1 +")
 	};
 	std::shared_ptr<ProcedureNode> proc3 = std::make_shared<ProcedureNode>(proc3StmtLst, "testProgram3");
 
@@ -1896,7 +1896,7 @@ AST RelationshipASTs::getAST3_51() {
 	std::shared_ptr<ProcedureNode> proc2 = std::make_shared<ProcedureNode>(proc2StmtLst, "testProgram2");
 
 	std::vector<std::shared_ptr<StmtNode>> proc3StmtLst{
-		std::make_shared<AssignNode>(7, x, xPlus1, "x 1 +"),
+		std::make_shared<AssignNode>(7, x, yPlus1, "y 1 +"),
 		std::make_shared<CallNode>(8, "testProgram2")
 	};
 	std::shared_ptr<ProcedureNode> proc3 = std::make_shared<ProcedureNode>(proc3StmtLst, "testProgram3");
@@ -1965,13 +1965,13 @@ AST RelationshipASTs::getAST3_52() {
 	std::shared_ptr<ProcedureNode> proc2 = std::make_shared<ProcedureNode>(proc2StmtLst, "testProgram2");
 
 	std::vector<std::shared_ptr<StmtNode>> proc3StmtLst{
-		std::make_shared<AssignNode>(6, x, xPlus1, "x 1 +"),
+		std::make_shared<AssignNode>(6, x, yPlus1, "y 1 +"),
 	};
 	std::shared_ptr<ProcedureNode> proc3 = std::make_shared<ProcedureNode>(proc3StmtLst, "testProgram3");
 
 	std::vector<std::shared_ptr<StmtNode>> thenStmtList{
-		std::make_shared<ReadNode>(8, z),
-		std::make_shared<CallNode>(9, "testProgram3")
+		std::make_shared<CallNode>(8, "testProgram3"),
+		std::make_shared<ReadNode>(9, z)
 	};
 	std::vector<std::shared_ptr<StmtNode>> elseStmtList{
 		std::make_shared<PrintNode>(10, z),
@@ -2035,7 +2035,7 @@ AST RelationshipASTs::getAST3_53() {
 	std::shared_ptr<ProcedureNode> proc2 = std::make_shared<ProcedureNode>(proc2StmtLst, "testProgram2");
 
 	std::vector<std::shared_ptr<StmtNode>> proc3StmtLst{
-		std::make_shared<AssignNode>(7, x, xPlus1, "x 1 +"),
+		std::make_shared<AssignNode>(7, x, yPlus1, "y 1 +"),
 		std::make_shared<CallNode>(8, "testProgram4")
 	};
 	std::shared_ptr<ProcedureNode> proc3 = std::make_shared<ProcedureNode>(proc3StmtLst, "testProgram3");
@@ -2103,7 +2103,7 @@ AST RelationshipASTs::getAST3_54() {
 	std::shared_ptr<ProcedureNode> proc2 = std::make_shared<ProcedureNode>(proc2StmtLst, "testProgram2");
 
 	std::vector<std::shared_ptr<StmtNode>> proc3StmtLst{
-		std::make_shared<AssignNode>(6, x, xPlus1, "x 1 +"),
+		std::make_shared<AssignNode>(6, x, yPlus1, "y 1 +"),
 		std::make_shared<CallNode>(7, "testProgram1")
 	};
 	std::shared_ptr<ProcedureNode> proc3 = std::make_shared<ProcedureNode>(proc3StmtLst, "testProgram3");
@@ -2174,7 +2174,7 @@ AST RelationshipASTs::getAST3_55() {
 	std::shared_ptr<ProcedureNode> proc2 = std::make_shared<ProcedureNode>(proc2StmtLst, "testProgram2");
 
 	std::vector<std::shared_ptr<StmtNode>> proc3StmtLst{
-		std::make_shared<AssignNode>(8, x, xPlus1, "x 1 +")
+		std::make_shared<AssignNode>(8, x, yPlus1, "y 1 +")
 	};
 	std::shared_ptr<ProcedureNode> proc3 = std::make_shared<ProcedureNode>(proc3StmtLst, "testProgram3");
 

@@ -1236,8 +1236,7 @@ TEST_CASE("Uses 3.43 - 3 calls sequential predeclared") {
 	DesignExtractor::extractDesignElements(RelationshipASTs::getAST3_43());
 
 	std::vector<std::pair<int, std::unordered_set<std::string>>> expectedUsesStatement{
-		{1, {"x", "y", "z"}}, {2, {"y", "z"}}, {3, {"z"}}, {5, {"z"}}, {6, {"y"}},
-		{8, {"x"}}
+		{3, {"x"}}, {4, {"y"}}, {6, {"y"}}, {7, {"x", "y"}}
 	};
 	std::sort(expectedUsesStatement.begin(), expectedUsesStatement.end(),
 		[](auto& left, auto& right) {return left.first < right.first; });
@@ -1247,7 +1246,7 @@ TEST_CASE("Uses 3.43 - 3 calls sequential predeclared") {
 		[](auto& left, auto& right) {return left.first < right.first; });
 
 	std::vector<std::pair<std::string, std::unordered_set<std::string>>> expectedUsesProcedure{
-		{"testProgram", {"x", "y", "z"}}
+		{"testProgram2", {"x", "y"}}, {"testProgram3", {"x", "y"}}
 	};
 	std::sort(expectedUsesProcedure.begin(), expectedUsesProcedure.end(),
 		[](auto& left, auto& right) {return left.first < right.first; });
@@ -1266,8 +1265,7 @@ TEST_CASE("Uses 3.44 - 3 calls sequential post declared") {
 	DesignExtractor::extractDesignElements(RelationshipASTs::getAST3_44());
 
 	std::vector<std::pair<int, std::unordered_set<std::string>>> expectedUsesStatement{
-		{1, {"x", "y", "z"}}, {2, {"y", "z"}}, {3, {"z"}}, {5, {"z"}}, {6, {"y"}},
-		{8, {"x"}}
+		{2, {"x", "y"}}, {4, {"x"}}, {5, {"y"}}, {6, {"y"}}, {7, {"y"}}
 	};
 	std::sort(expectedUsesStatement.begin(), expectedUsesStatement.end(),
 		[](auto& left, auto& right) {return left.first < right.first; });
@@ -1277,7 +1275,7 @@ TEST_CASE("Uses 3.44 - 3 calls sequential post declared") {
 		[](auto& left, auto& right) {return left.first < right.first; });
 
 	std::vector<std::pair<std::string, std::unordered_set<std::string>>> expectedUsesProcedure{
-		{"testProgram", {"x", "y", "z"}}
+		{"testProgram1", {"x", "y"}}, {"testProgram2", {"x", "y"}}, {"testProgram3", {"y"}}
 	};
 	std::sort(expectedUsesProcedure.begin(), expectedUsesProcedure.end(),
 		[](auto& left, auto& right) {return left.first < right.first; });
@@ -1296,8 +1294,7 @@ TEST_CASE("Uses 3.45 - 3 calls forking from top") {
 	DesignExtractor::extractDesignElements(RelationshipASTs::getAST3_45());
 
 	std::vector<std::pair<int, std::unordered_set<std::string>>> expectedUsesStatement{
-		{1, {"x", "y", "z"}}, {2, {"y", "z"}}, {3, {"z"}}, {5, {"z"}}, {6, {"y"}},
-		{8, {"x"}}
+		{2, {"x", "y"}}, {4, {"y"}}, {5, {"x"}}, {6, {"y"}}, {7, {"y"}}
 	};
 	std::sort(expectedUsesStatement.begin(), expectedUsesStatement.end(),
 		[](auto& left, auto& right) {return left.first < right.first; });
@@ -1307,7 +1304,7 @@ TEST_CASE("Uses 3.45 - 3 calls forking from top") {
 		[](auto& left, auto& right) {return left.first < right.first; });
 
 	std::vector<std::pair<std::string, std::unordered_set<std::string>>> expectedUsesProcedure{
-		{"testProgram", {"x", "y", "z"}}
+		{"testProgram1", {"x", "y"}}, {"testProgram2", {"x", "y"}}, {"testProgram3", {"y"}}
 	};
 	std::sort(expectedUsesProcedure.begin(), expectedUsesProcedure.end(),
 		[](auto& left, auto& right) {return left.first < right.first; });
@@ -1326,8 +1323,7 @@ TEST_CASE("Uses 3.46 - 3 calls forking from bottom") {
 	DesignExtractor::extractDesignElements(RelationshipASTs::getAST3_46());
 
 	std::vector<std::pair<int, std::unordered_set<std::string>>> expectedUsesStatement{
-		{1, {"x", "y", "z"}}, {2, {"y", "z"}}, {3, {"z"}}, {5, {"z"}}, {6, {"y"}},
-		{8, {"x"}}
+		{3, {"x"}}, {4, {"y"}}, {6, {"y"}}, {7, {"x", "y"}}
 	};
 	std::sort(expectedUsesStatement.begin(), expectedUsesStatement.end(),
 		[](auto& left, auto& right) {return left.first < right.first; });
@@ -1337,7 +1333,7 @@ TEST_CASE("Uses 3.46 - 3 calls forking from bottom") {
 		[](auto& left, auto& right) {return left.first < right.first; });
 
 	std::vector<std::pair<std::string, std::unordered_set<std::string>>> expectedUsesProcedure{
-		{"testProgram", {"x", "y", "z"}}
+		{"testProgram2", {"x", "y"}}, {"testProgram3", {"x", "y"}}
 	};
 	std::sort(expectedUsesProcedure.begin(), expectedUsesProcedure.end(),
 		[](auto& left, auto& right) {return left.first < right.first; });
@@ -1356,8 +1352,7 @@ TEST_CASE("Uses 3.47 - 3 calls forking from middle") {
 	DesignExtractor::extractDesignElements(RelationshipASTs::getAST3_47());
 
 	std::vector<std::pair<int, std::unordered_set<std::string>>> expectedUsesStatement{
-		{1, {"x", "y", "z"}}, {2, {"y", "z"}}, {3, {"z"}}, {5, {"z"}}, {6, {"y"}},
-		{8, {"x"}}
+		{3, {"x"}}, {5, {"y"}}, {6, {"y"}}, {7, {"y"}}
 	};
 	std::sort(expectedUsesStatement.begin(), expectedUsesStatement.end(),
 		[](auto& left, auto& right) {return left.first < right.first; });
@@ -1367,7 +1362,7 @@ TEST_CASE("Uses 3.47 - 3 calls forking from middle") {
 		[](auto& left, auto& right) {return left.first < right.first; });
 
 	std::vector<std::pair<std::string, std::unordered_set<std::string>>> expectedUsesProcedure{
-		{"testProgram", {"x", "y", "z"}}
+		{"testProgram2", {"x", "y"}}, {"testProgram3", {"y"}}
 	};
 	std::sort(expectedUsesProcedure.begin(), expectedUsesProcedure.end(),
 		[](auto& left, auto& right) {return left.first < right.first; });
@@ -1386,8 +1381,8 @@ TEST_CASE("Uses 3.48 - 4 calls sequential call (mix of post and pre declared)") 
 	DesignExtractor::extractDesignElements(RelationshipASTs::getAST3_48());
 
 	std::vector<std::pair<int, std::unordered_set<std::string>>> expectedUsesStatement{
-		{1, {"x", "y", "z"}}, {2, {"y", "z"}}, {3, {"z"}}, {5, {"z"}}, {6, {"y"}},
-		{8, {"x"}}
+		{2, {"y"}}, {4, {"x"}}, {5, {"y"}}, {6, {"y"}}, {7, {"y"}},
+		{8, {"x", "y", "z"}}, {10, {"x", "y"}}, {11, {"z"}}
 	};
 	std::sort(expectedUsesStatement.begin(), expectedUsesStatement.end(),
 		[](auto& left, auto& right) {return left.first < right.first; });
@@ -1397,7 +1392,8 @@ TEST_CASE("Uses 3.48 - 4 calls sequential call (mix of post and pre declared)") 
 		[](auto& left, auto& right) {return left.first < right.first; });
 
 	std::vector<std::pair<std::string, std::unordered_set<std::string>>> expectedUsesProcedure{
-		{"testProgram", {"x", "y", "z"}}
+		{"testProgram1", {"y"}}, {"testProgram2", {"x", "y"}},
+		{"testProgram3", {"y"}}, {"testProgram4", {"x", "y", "z"}}
 	};
 	std::sort(expectedUsesProcedure.begin(), expectedUsesProcedure.end(),
 		[](auto& left, auto& right) {return left.first < right.first; });
@@ -1416,8 +1412,8 @@ TEST_CASE("Uses 3.49 - 4 calls - 1 - (2, 3, 4)") {
 	DesignExtractor::extractDesignElements(RelationshipASTs::getAST3_49());
 
 	std::vector<std::pair<int, std::unordered_set<std::string>>> expectedUsesStatement{
-		{1, {"x", "y", "z"}}, {2, {"y", "z"}}, {3, {"z"}}, {5, {"z"}}, {6, {"y"}},
-		{8, {"x"}}
+		{2, {"z"}}, {3, {"y"}}, {5, {"x", "y"}}, {6, {"x"}}, {7, {"y"}},
+		{8, {"y"}}, {9, {"z"}}, {11, {"z"}}
 	};
 	std::sort(expectedUsesStatement.begin(), expectedUsesStatement.end(),
 		[](auto& left, auto& right) {return left.first < right.first; });
@@ -1427,7 +1423,8 @@ TEST_CASE("Uses 3.49 - 4 calls - 1 - (2, 3, 4)") {
 		[](auto& left, auto& right) {return left.first < right.first; });
 
 	std::vector<std::pair<std::string, std::unordered_set<std::string>>> expectedUsesProcedure{
-		{"testProgram", {"x", "y", "z"}}
+		{"testProgram1", {"x", "y", "z"}}, {"testProgram2", {"x", "y"}},
+		{"testProgram3", {"y"}}, {"testProgram4", {"z"}}
 	};
 	std::sort(expectedUsesProcedure.begin(), expectedUsesProcedure.end(),
 		[](auto& left, auto& right) {return left.first < right.first; });
@@ -1446,8 +1443,8 @@ TEST_CASE("Uses 3.50 - 4 calls - (1, 2, 4) - 3") {
 	DesignExtractor::extractDesignElements(RelationshipASTs::getAST3_50());
 
 	std::vector<std::pair<int, std::unordered_set<std::string>>> expectedUsesStatement{
-		{1, {"x", "y", "z"}}, {2, {"y", "z"}}, {3, {"z"}}, {5, {"z"}}, {6, {"y"}},
-		{8, {"x"}}
+		{2, {"y"}}, {4, {"x"}}, {5, {"y"}}, {6, {"y"}}, {7, {"y"}},
+		{8, {"y", "z"}}, {9, {"y"}}, {11, {"z"}}
 	};
 	std::sort(expectedUsesStatement.begin(), expectedUsesStatement.end(),
 		[](auto& left, auto& right) {return left.first < right.first; });
@@ -1457,7 +1454,8 @@ TEST_CASE("Uses 3.50 - 4 calls - (1, 2, 4) - 3") {
 		[](auto& left, auto& right) {return left.first < right.first; });
 
 	std::vector<std::pair<std::string, std::unordered_set<std::string>>> expectedUsesProcedure{
-		{"testProgram", {"x", "y", "z"}}
+		{"testProgram1", {"y"}}, {"testProgram2", {"x", "y"}},
+		{"testProgram3", {"y"}}, {"testProgram4", {"y", "z"}}
 	};
 	std::sort(expectedUsesProcedure.begin(), expectedUsesProcedure.end(),
 		[](auto& left, auto& right) {return left.first < right.first; });
@@ -1476,8 +1474,8 @@ TEST_CASE("Uses 3.51 - 4 calls - 1 - (3, 4) - 2") {
 	DesignExtractor::extractDesignElements(RelationshipASTs::getAST3_51());
 
 	std::vector<std::pair<int, std::unordered_set<std::string>>> expectedUsesStatement{
-		{1, {"x", "y", "z"}}, {2, {"y", "z"}}, {3, {"z"}}, {5, {"z"}}, {6, {"y"}},
-		{8, {"x"}}
+		{1, {"x", "y", "z"}}, {3, {"x", "y"}}, {5, {"x"}}, {6, {"y"}}, {7, {"y"}},
+		{8, {"x", "y"}}, {9, {"x", "y", "z"}}, {11, {"x", "y"}}, {12, {"z"}}
 	};
 	std::sort(expectedUsesStatement.begin(), expectedUsesStatement.end(),
 		[](auto& left, auto& right) {return left.first < right.first; });
@@ -1487,7 +1485,8 @@ TEST_CASE("Uses 3.51 - 4 calls - 1 - (3, 4) - 2") {
 		[](auto& left, auto& right) {return left.first < right.first; });
 
 	std::vector<std::pair<std::string, std::unordered_set<std::string>>> expectedUsesProcedure{
-		{"testProgram", {"x", "y", "z"}}
+		{"testProgram1", {"x", "y", "z"}}, {"testProgram2", {"x", "y"}},
+		{"testProgram3", {"x", "y"}}, {"testProgram4", {"x", "y", "z"}}
 	};
 	std::sort(expectedUsesProcedure.begin(), expectedUsesProcedure.end(),
 		[](auto& left, auto& right) {return left.first < right.first; });
@@ -1506,8 +1505,8 @@ TEST_CASE("Uses 3.52 - 4 calls - 2 - 4 - (3, 1)") {
 	DesignExtractor::extractDesignElements(RelationshipASTs::getAST3_52());
 
 	std::vector<std::pair<int, std::unordered_set<std::string>>> expectedUsesStatement{
-		{1, {"x", "y", "z"}}, {2, {"y", "z"}}, {3, {"z"}}, {5, {"z"}}, {6, {"y"}},
-		{8, {"x"}}
+		{3, {"x"}}, {4, {"y", "z"}}, {5, {"y"}}, {6, {"y"}}, {7, {"y", "z"}},
+		{8, {"y"}}, {10, {"z"}}
 	};
 	std::sort(expectedUsesStatement.begin(), expectedUsesStatement.end(),
 		[](auto& left, auto& right) {return left.first < right.first; });
@@ -1517,7 +1516,7 @@ TEST_CASE("Uses 3.52 - 4 calls - 2 - 4 - (3, 1)") {
 		[](auto& left, auto& right) {return left.first < right.first; });
 
 	std::vector<std::pair<std::string, std::unordered_set<std::string>>> expectedUsesProcedure{
-		{"testProgram", {"x", "y", "z"}}
+		{"testProgram2", {"x", "y", "z"}}, {"testProgram3", {"y"}}, {"testProgram4", {"y", "z"}}
 	};
 	std::sort(expectedUsesProcedure.begin(), expectedUsesProcedure.end(),
 		[](auto& left, auto& right) {return left.first < right.first; });
@@ -1536,8 +1535,8 @@ TEST_CASE("Uses 3.53 - 4 calls - (1, 2) - 3 - 4") {
 	DesignExtractor::extractDesignElements(RelationshipASTs::getAST3_53());
 
 	std::vector<std::pair<int, std::unordered_set<std::string>>> expectedUsesStatement{
-		{1, {"x", "y", "z"}}, {2, {"y", "z"}}, {3, {"z"}}, {5, {"z"}}, {6, {"y"}},
-		{8, {"x"}}
+		{3, {"y", "z"}}, {4, {"x"}}, {5, {"y", "z"}}, {6, {"y"}}, {7, {"y"}},
+		{8, {"z"}}, {9, {"z"}}, {11, {"z"}}
 	};
 	std::sort(expectedUsesStatement.begin(), expectedUsesStatement.end(),
 		[](auto& left, auto& right) {return left.first < right.first; });
@@ -1547,7 +1546,8 @@ TEST_CASE("Uses 3.53 - 4 calls - (1, 2) - 3 - 4") {
 		[](auto& left, auto& right) {return left.first < right.first; });
 
 	std::vector<std::pair<std::string, std::unordered_set<std::string>>> expectedUsesProcedure{
-		{"testProgram", {"x", "y", "z"}}
+		{"testProgram1", {"y", "z"}}, {"testProgram2", {"x", "y", "z"}},
+		{"testProgram3", {"y", "z"}}, {"testProgram4", {"z"}}
 	};
 	std::sort(expectedUsesProcedure.begin(), expectedUsesProcedure.end(),
 		[](auto& left, auto& right) {return left.first < right.first; });
@@ -1566,8 +1566,8 @@ TEST_CASE("Uses 3.54 - 4 calls - (3, (2 - 4)) - 1") {
 	DesignExtractor::extractDesignElements(RelationshipASTs::getAST3_54());
 
 	std::vector<std::pair<int, std::unordered_set<std::string>>> expectedUsesStatement{
-		{1, {"x", "y", "z"}}, {2, {"y", "z"}}, {3, {"z"}}, {5, {"z"}}, {6, {"y"}},
-		{8, {"x"}}
+		{3, {"x"}}, {4, {"z"}}, {5, {"y"}}, {6, {"y"}},
+		{8, {"z"}}, {10, {"z"}}
 	};
 	std::sort(expectedUsesStatement.begin(), expectedUsesStatement.end(),
 		[](auto& left, auto& right) {return left.first < right.first; });
@@ -1577,7 +1577,7 @@ TEST_CASE("Uses 3.54 - 4 calls - (3, (2 - 4)) - 1") {
 		[](auto& left, auto& right) {return left.first < right.first; });
 
 	std::vector<std::pair<std::string, std::unordered_set<std::string>>> expectedUsesProcedure{
-		{"testProgram", {"x", "y", "z"}}
+		{"testProgram2", {"x", "y", "z"}}, {"testProgram3", {"y"}}, {"testProgram4", {"z"}}
 	};
 	std::sort(expectedUsesProcedure.begin(), expectedUsesProcedure.end(),
 		[](auto& left, auto& right) {return left.first < right.first; });
@@ -1596,8 +1596,8 @@ TEST_CASE("Uses 3.55 - 4 calls - 2 - ((1 - 4), 3)") {
 	DesignExtractor::extractDesignElements(RelationshipASTs::getAST3_55());
 
 	std::vector<std::pair<int, std::unordered_set<std::string>>> expectedUsesStatement{
-		{1, {"x", "y", "z"}}, {2, {"y", "z"}}, {3, {"z"}}, {5, {"z"}}, {6, {"y"}},
-		{8, {"x"}}
+		{2, {"z"}}, {4, {"y"}}, {5, {"x"}}, {6, {"z"}}, {7, {"y"}},
+		{8, {"y"}}, {9, {"z"}}, {11, {"z"}}
 	};
 	std::sort(expectedUsesStatement.begin(), expectedUsesStatement.end(),
 		[](auto& left, auto& right) {return left.first < right.first; });
@@ -1607,7 +1607,8 @@ TEST_CASE("Uses 3.55 - 4 calls - 2 - ((1 - 4), 3)") {
 		[](auto& left, auto& right) {return left.first < right.first; });
 
 	std::vector<std::pair<std::string, std::unordered_set<std::string>>> expectedUsesProcedure{
-		{"testProgram", {"x", "y", "z"}}
+		{"testProgram1", {"z"}},{"testProgram2", {"x", "y", "z"}},
+		{"testProgram3", {"y"}}, {"testProgram4", {"z"}}
 	};
 	std::sort(expectedUsesProcedure.begin(), expectedUsesProcedure.end(),
 		[](auto& left, auto& right) {return left.first < right.first; });

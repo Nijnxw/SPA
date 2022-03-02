@@ -1,7 +1,7 @@
-#include "UMEvaluator.h"
+#include "StmtVarRelationshipEvaluator.h"
 
 QueryClauseResult
-	UMEvaluator::getRelationship(RelationRef relationship, const std::string& LHS, const std::string& RHS, EntityType LHSType, EntityType RHSType, bool isBooleanResult) {
+	StmtVarRelationshipEvaluator::getRelationship(RelationRef relationship, const std::string& LHS, const std::string& RHS, EntityType LHSType, EntityType RHSType, bool isBooleanResult) {
 
 	switch (RHSType) {
 	case EntityType::STRING:
@@ -16,7 +16,7 @@ QueryClauseResult
 	}
 }
 
-QueryClauseResult UMEvaluator::getRelationshipByUnderscore(
+QueryClauseResult StmtVarRelationshipEvaluator::getRelationshipByUnderscore(
 	RelationRef relationship, const std::string& LHS, const std::string& RHS, EntityType LHSType) {
 	QueryClauseResult queryResult;
 	std::unordered_set<int> relationshipStmts = (relationship == RelationRef::MODIFIES)
@@ -72,7 +72,7 @@ QueryClauseResult UMEvaluator::getRelationshipByUnderscore(
 	return queryResult;
 }
 
-QueryClauseResult UMEvaluator::getRelationshipByVariable(RelationRef relationship, const std::string& LHS, const std::string& RHS, EntityType LHSType) {
+QueryClauseResult StmtVarRelationshipEvaluator::getRelationshipByVariable(RelationRef relationship, const std::string& LHS, const std::string& RHS, EntityType LHSType) {
 	QueryClauseResult queryResult;
 
 	std::unordered_set<int> relationshipStmts = (relationship == RelationRef::MODIFIES)
@@ -126,7 +126,7 @@ QueryClauseResult UMEvaluator::getRelationshipByVariable(RelationRef relationshi
 	return queryResult;
 }
 
-QueryClauseResult UMEvaluator::getRelationshipBySynonym(RelationRef relationship, const std::string& LHS, const std::string& RHS, EntityType LHSType) {
+QueryClauseResult StmtVarRelationshipEvaluator::getRelationshipBySynonym(RelationRef relationship, const std::string& LHS, const std::string& RHS, EntityType LHSType) {
 	QueryClauseResult queryResult;
 	std::vector<std::string> stmts;
 	std::vector<std::string> vars;

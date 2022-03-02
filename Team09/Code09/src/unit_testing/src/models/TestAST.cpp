@@ -93,6 +93,19 @@ TEST_CASE("Test Equality Comparisons") {
 
 	REQUIRE(r1 == r2);
 	REQUIRE(r1 != r3);
+
+	std::unordered_map<std::string, std::shared_ptr<ProcedureNode>> multiProcMap1{
+		{"test", p1}, {"test123", p3}
+	};
+
+	std::unordered_map<std::string, std::shared_ptr<ProcedureNode>> multiProcMap2{
+		{"test", p2}, {"test123", p3}
+	};
+	ProgramNode multi1(multiProcMap1);
+	ProgramNode multi2(multiProcMap2);
+
+	REQUIRE(multi1 == multi1);
+	REQUIRE(multi1 == multi2);
 }
 
 TEST_CASE("Test Expr nodes") {

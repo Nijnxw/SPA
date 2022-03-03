@@ -77,158 +77,158 @@ TEST_CASE("ParentStore API") {
 			REQUIRE(res == expectedRes);
 		}
 
-		// isFirstStatement()
-		SECTION("isFirstStatement() positive query") {
-			bool res = parentStore.isFirstStatement(4);
+		// isFirstSynonym()
+		SECTION("isFirstSynonym() positive query") {
+			bool res = parentStore.isFirstSynonym(4);
 			bool expectedRes = true;
 			REQUIRE(res == expectedRes);
 		}
 
-		SECTION("isFirstStatement() negative query - second statement") {
-			bool res = parentStore.isFirstStatement(5);
+		SECTION("isFirstSynonym() negative query - second statement") {
+			bool res = parentStore.isFirstSynonym(5);
 			bool expectedRes = false;
 			REQUIRE(res == expectedRes);
 		}
 
-		SECTION("isFirstStatement() negative query - invalid statement") {
-			bool res = parentStore.isFirstStatement(-100);
+		SECTION("isFirstSynonym() negative query - invalid statement") {
+			bool res = parentStore.isFirstSynonym(-100);
 			bool expectedRes = false;
 			REQUIRE(res == expectedRes);
 		}
 
-		// isSecondStatement()
-		SECTION("isSecondStatement() positive query") {
-			bool res = parentStore.isSecondStatement(5);
+		// isSecondSynonym()
+		SECTION("isSecondSynonym() positive query") {
+			bool res = parentStore.isSecondSynonym(5);
 			bool expectedRes = true;
 			REQUIRE(res == expectedRes);
 		}
 
-		SECTION("isSecondStatement() negative query - first statement") {
-			bool res = parentStore.isSecondStatement(4);
+		SECTION("isSecondSynonym() negative query - first statement") {
+			bool res = parentStore.isSecondSynonym(4);
 			bool expectedRes = false;
 			REQUIRE(res == expectedRes);
 		}
 
-		SECTION("isSecondStatement() negative query - invalid statement") {
-			bool res = parentStore.isSecondStatement(-100);
+		SECTION("isSecondSynonym() negative query - invalid statement") {
+			bool res = parentStore.isSecondSynonym(-100);
 			bool expectedRes = false;
 			REQUIRE(res == expectedRes);
 		}
 
-		// isFirstStatementT()
-		SECTION("isFirstStatementT() positive query") {
-			bool res = parentStore.isFirstStatementT(4);
+		// isFirstSynonymT()
+		SECTION("isFirstSynonymT() positive query") {
+			bool res = parentStore.isFirstSynonymT(4);
 			bool expectedRes = true;
 			REQUIRE(res == expectedRes);
 		}
 
-		SECTION("isFirstStatementT() negative query - second statement") {
-			bool res = parentStore.isFirstStatementT(5);
+		SECTION("isFirstSynonymT() negative query - second statement") {
+			bool res = parentStore.isFirstSynonymT(5);
 			bool expectedRes = false;
 			REQUIRE(res == expectedRes);
 		}
 
-		SECTION("isFirstStatementT() negative query - invalid statement") {
-			bool res = parentStore.isFirstStatementT(-100);
+		SECTION("isFirstSynonymT() negative query - invalid statement") {
+			bool res = parentStore.isFirstSynonymT(-100);
 			bool expectedRes = false;
 			REQUIRE(res == expectedRes);
 		}
 
-		// isSecondStatementT()
-		SECTION("isSecondStatementT() positive query") {
-			bool res = parentStore.isSecondStatementT(5);
+		// isSecondSynonymT()
+		SECTION("isSecondSynonymT() positive query") {
+			bool res = parentStore.isSecondSynonymT(5);
 			bool expectedRes = true;
 			REQUIRE(res == expectedRes);
 		}
 
-		SECTION("isSecondStatementT() negative query - first statement") {
-			bool res = parentStore.isSecondStatementT(4);
+		SECTION("isSecondSynonymT() negative query - first statement") {
+			bool res = parentStore.isSecondSynonymT(4);
 			bool expectedRes = false;
 			REQUIRE(res == expectedRes);
 		}
 
-		SECTION("isSecondStatementT() negative query - invalid statement") {
-			bool res = parentStore.isSecondStatementT(-100);
+		SECTION("isSecondSynonymT() negative query - invalid statement") {
+			bool res = parentStore.isSecondSynonymT(-100);
 			bool expectedRes = false;
 			REQUIRE(res == expectedRes);
 		}
 
-		// getFirstStatements
-		SECTION("getFirstStatements(int secondStatement) positive query") {
-			std::unordered_set<int> res = parentStore.getFirstStatements(5);
+		// getFirstSynonyms
+		SECTION("getFirstSynonyms(int secondSynonym) positive query") {
+			std::unordered_set<int> res = parentStore.getFirstSynonyms(5);
 			std::unordered_set<int> expectedSet = { 4 };
 			REQUIRE(res == expectedSet);
 		}
 
-		// getSecondStatements
-		SECTION("getSecondStatements(int firstStatement) positive query") {
-			std::unordered_set<int> res = parentStore.getSecondStatements(4);
+		// getSecondSynonyms
+		SECTION("getSecondSynonyms(int firstSynonym) positive query") {
+			std::unordered_set<int> res = parentStore.getSecondSynonyms(4);
 			std::unordered_set<int> expectedSet = { 5, 6 };
 			REQUIRE(res == expectedSet);
 		}
 
-		SECTION("getSecondStatements(int firstStatement) negative query - last statement as first statement") {
-			std::unordered_set<int> res = parentStore.getSecondStatements(5);
+		SECTION("getSecondSynonyms(int firstSynonym) negative query - last statement as first statement") {
+			std::unordered_set<int> res = parentStore.getSecondSynonyms(5);
 			std::unordered_set<int> expectedSet;
 			REQUIRE(res == expectedSet);
 		}
 
-		// getFirstStatementsT
-		SECTION("getFirstStatementsT(int secondStatement) positive query - non-transitive") {
-			std::unordered_set<int> res = parentStore.getFirstStatementsT(5);
+		// getFirstSynonymsT
+		SECTION("getFirstSynonymsT(int secondSynonym) positive query - non-transitive") {
+			std::unordered_set<int> res = parentStore.getFirstSynonymsT(5);
 			std::unordered_set<int> expectedSet = { 4 };
 			REQUIRE(res == expectedSet);
 		}
 
-		SECTION("getFirstStatementsT(int secondStatement) positive query - transitive") {
-			std::unordered_set<int> res = parentStore.getFirstStatementsT(5);
+		SECTION("getFirstSynonymsT(int secondSynonym) positive query - transitive") {
+			std::unordered_set<int> res = parentStore.getFirstSynonymsT(5);
 			std::unordered_set<int> expectedSet = { 4 };
 			REQUIRE(res == expectedSet);
 		}
 
-		SECTION("getFirstStatementsT(int secondStatement) negative query - first statement as second statement") {
-			std::unordered_set<int> res = parentStore.getFirstStatementsT(4);
+		SECTION("getFirstSynonymsT(int secondSynonym) negative query - first statement as second statement") {
+			std::unordered_set<int> res = parentStore.getFirstSynonymsT(4);
 			std::unordered_set<int> expectedSet;
 			REQUIRE(res == expectedSet);
 		}
 
-		// getSecondStatementsT
-		SECTION("getSecondStatementsT(int firstStatement) positive query - transitive") {
-			std::unordered_set<int> res = parentStore.getSecondStatementsT(4);
+		// getSecondSynonymsT
+		SECTION("getSecondSynonymsT(int firstSynonym) positive query - transitive") {
+			std::unordered_set<int> res = parentStore.getSecondSynonymsT(4);
 			std::unordered_set<int> expectedSet = { 5, 6 };
 			REQUIRE(res == expectedSet);
 		}
 
-		SECTION("getSecondStatementsT(int firstStatement) negative query - last statement as first statement") {
-			std::unordered_set<int> res = parentStore.getSecondStatementsT(5);
+		SECTION("getSecondSynonymsT(int firstSynonym) negative query - last statement as first statement") {
+			std::unordered_set<int> res = parentStore.getSecondSynonymsT(5);
 			std::unordered_set<int> expectedSet;
 			REQUIRE(res == expectedSet);
 		}
 
-		// getAllFirstStatements
-		SECTION("getAllFirstStatements() positive query") {
-			std::unordered_set<int> res = parentStore.getAllFirstStatements();
+		// getAllFirstSynonyms
+		SECTION("getAllFirstSynonyms() positive query") {
+			std::unordered_set<int> res = parentStore.getAllFirstSynonyms();
 			std::unordered_set<int> expectedSet = { 4, 7 };
 			REQUIRE(res == expectedSet);
 		}
 
-		// getAllSecondStatements
-		SECTION("getAllSecondStatements() positive query") {
-			std::unordered_set<int> res = parentStore.getAllSecondStatements();
+		// getAllSecondSynonyms
+		SECTION("getAllSecondSynonyms() positive query") {
+			std::unordered_set<int> res = parentStore.getAllSecondSynonyms();
 			std::unordered_set<int> expectedSet = { 5, 6, 8 };
 			REQUIRE(res == expectedSet);
 		}
 
-		// getAllFirstStatementsT
-		SECTION("getAllFirstStatementsT() positive query") {
-			std::unordered_set<int> res = parentStore.getAllFirstStatementsT();
+		// getAllFirstSynonymsT
+		SECTION("getAllFirstSynonymsT() positive query") {
+			std::unordered_set<int> res = parentStore.getAllFirstSynonymsT();
 			std::unordered_set<int> expectedSet = { 4, 7 };
 			REQUIRE(res == expectedSet);
 		}
 
-		// getAllSecondStatementsT
-		SECTION("getAllSecondStatements() positive query") {
-			std::unordered_set<int> res = parentStore.getAllSecondStatementsT();
+		// getAllSecondSynonymsT
+		SECTION("getAllSecondSynonyms() positive query") {
+			std::unordered_set<int> res = parentStore.getAllSecondSynonymsT();
 			std::unordered_set<int> expectedSet = { 5, 6, 8 };
 			REQUIRE(res == expectedSet);
 		}
@@ -251,8 +251,8 @@ TEST_CASE("ParentStore API") {
 
 			std::tuple<std::vector<int>, std::vector<int>> expectedRes = { firstColumn, secondColumn };
 			
-			std::unordered_set<std::pair<int, int>, PKBUtil::hashFunction> set = PKBUtil::convertVectorTupleToSetPairs(std::get<0>(res), std::get<1>(res));
-			std::unordered_set<std::pair<int, int>, PKBUtil::hashFunction> expectedSet = PKBUtil::convertVectorTupleToSetPairs(std::get<0>(expectedRes), std::get<1>(expectedRes));
+			std::unordered_set<std::pair<int, int>, PKBUtil::pairHashFunction> set = PKBUtil::convertVectorTupleToSetPairs(std::get<0>(res), std::get<1>(res));
+			std::unordered_set<std::pair<int, int>, PKBUtil::pairHashFunction> expectedSet = PKBUtil::convertVectorTupleToSetPairs(std::get<0>(expectedRes), std::get<1>(expectedRes));
 
 			REQUIRE(set == expectedSet);
 		}
@@ -275,8 +275,8 @@ TEST_CASE("ParentStore API") {
 
 			std::tuple<std::vector<int>, std::vector<int>> expectedRes = { firstColumn, secondColumn };
 			
-			std::unordered_set<std::pair<int, int>, PKBUtil::hashFunction> set = PKBUtil::convertVectorTupleToSetPairs(std::get<0>(res), std::get<1>(res));
-			std::unordered_set<std::pair<int, int>, PKBUtil::hashFunction> expectedSet = PKBUtil::convertVectorTupleToSetPairs(std::get<0>(expectedRes), std::get<1>(expectedRes));
+			std::unordered_set<std::pair<int, int>, PKBUtil::pairHashFunction> set = PKBUtil::convertVectorTupleToSetPairs(std::get<0>(res), std::get<1>(res));
+			std::unordered_set<std::pair<int, int>, PKBUtil::pairHashFunction> expectedSet = PKBUtil::convertVectorTupleToSetPairs(std::get<0>(expectedRes), std::get<1>(expectedRes));
 
 			REQUIRE(set == expectedSet);
 		}

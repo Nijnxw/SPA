@@ -9,6 +9,10 @@
 
 PQLParser::PQLParser(std::vector<PQLToken*> PQLTokens) : current(0), end(PQLTokens.size()), tokens(PQLTokens) {}
 
+bool PQLParser::isValidSynonym(PQLToken* token) {
+	return token->getType() == TokenType::SYNONYM || keywords.find(token->getType()) != keywords.end();
+}
+
 PQLToken* PQLParser::getNextToken() {
 	if (current == end) {
 		throw "Runtime error : no more tokens to parse";
@@ -28,7 +32,7 @@ PQLToken* PQLParser::getNextExpectedToken(TokenType TokenType) {
 
 PQLToken* PQLParser::getValidSynonymToken() {
 	PQLToken* token = getNextToken();
-	if (token->getType() == TokenType::SYNONYM || keywords.find(token->getType()) != keywords.end()) {
+	if (isValidSynonym(token)) {
 		return token;
 	}
 	throw "unexpected token type.";
@@ -110,7 +114,7 @@ void PQLParser::parseRelationshipClause() {
 			throw "Invalid arguments for relationship clause.";
 		}
 
-		if (isIdent(nextToken->getValue())) {
+		if (isValidSynonym(nextToken)) {
 			usedSynonyms.insert(nextToken->getValue());
 		}
 

@@ -86,6 +86,8 @@ private:
 	std::vector<QueryArgument> resultSynonyms;
 	std::vector<QueryClause> QueryClauses;
 
+	bool isValidSynonym(PQLToken* token);
+
 	PQLToken* getNextToken();
 	PQLToken* getNextExpectedToken(TokenType tokenType);
 	PQLToken* getValidSynonymToken();

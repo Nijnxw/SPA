@@ -144,7 +144,7 @@ std::unordered_set<int> StmtStmtRelationshipEvaluator::filterStatementsByType(st
 
 std::tuple<std::vector<int>, std::vector<int>> StmtStmtRelationshipEvaluator::filterStatementPairsByType(std::vector<int> firstEntities,
 	std::vector<int> secondEntities, EntityType LHSType, EntityType RHSType) {
-	std::unordered_set<std::pair<int, int>, PKBUtil::hashFunction> statementPairs = PKBUtil::convertVectorTupleToSetPairs(firstEntities, secondEntities);
+	std::unordered_set<std::pair<int, int>, PKBUtil::pairHashFunction> statementPairs = PKBUtil::convertVectorTupleToSetPairs(firstEntities, secondEntities);
 
 	std::unordered_set<int> firstTypeStatements;
 	std::unordered_set<int> secondTypeStatements;
@@ -177,7 +177,7 @@ std::tuple<std::vector<int>, std::vector<int>> StmtStmtRelationshipEvaluator::fi
 		break;
 	}
 
-	std::unordered_set<std::pair<int, int>, PKBUtil::hashFunction> firstFilteredStatementPairs;
+	std::unordered_set<std::pair<int, int>, PKBUtil::pairHashFunction> firstFilteredStatementPairs;
 	for (const auto& statement : firstTypeStatements) {
 		for (const auto& pair : statementPairs) {
 			if (pair.first == statement) {
@@ -214,7 +214,7 @@ std::tuple<std::vector<int>, std::vector<int>> StmtStmtRelationshipEvaluator::fi
 		break;
 	}
 
-	std::unordered_set<std::pair<int, int>, PKBUtil::hashFunction> secondFilteredStatementPairs;
+	std::unordered_set<std::pair<int, int>, PKBUtil::pairHashFunction> secondFilteredStatementPairs;
 	for (const auto& statement : secondTypeStatements) {
 		for (const auto& pair : firstFilteredStatementPairs) {
 			if (pair.second == statement) {

@@ -18,6 +18,7 @@ public:
 	bool containsSynonym(QueryArgument& synonym) const;
 	bool containsCommonSynonym(QueryClause& other) const;
 	bool operator==(const QueryClause& other) const;
+	std::string toString() const;
 
 private:
 	RelationRef clauseType;
@@ -28,10 +29,10 @@ private:
 
 template<>
 struct std::hash<QueryClause> {
-	size_t operator()(const QueryClause& clause) {
+	size_t operator()(const QueryClause& clause) const {
 		size_t hash = std::hash<std::string>()(ToString(clause.getClauseType()));
 		for (const auto& arg: clause.getArguments()) {
-			hash = hash ^ std::hash<std::string>()(arg.getValue());
+			hash = std::hash<std::string>()(arg.getValue()) + 0x9e3779b9 + (hash << 6) + (hash >> 2);
 		}
 		return hash;
 	}

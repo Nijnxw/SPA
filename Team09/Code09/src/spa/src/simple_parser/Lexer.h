@@ -8,20 +8,20 @@
 #include <vector>
 
 class Lexer {
-    private:
-        std::string nextStr;
-        std::istream* stream;
+	private:
+		std::string nextStr;
+		std::istream* stream;
 
-        char peek();
-        char next();
-        void readName();
-        void readInteger();
+		char peek();
+		char next();
+		void readName();
+		void readInteger();
 
-    public:
-        std::vector<Token*> lexical_tokens;
+	public:
+		std::vector<Token*> lexical_tokens;
 
-        explicit Lexer(std::istream* new_stream);
+		explicit Lexer(std::istream* new_stream);
 
-        std::vector<Token*> tokenize();
+		std::vector<Token*> tokenize();
 };
 

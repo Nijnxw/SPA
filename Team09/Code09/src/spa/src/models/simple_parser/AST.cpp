@@ -27,9 +27,9 @@ bool ProgramNode::operator==(const Node& other) const {
 	//manual checking
 	if (procedureMap.size() != otherProcedureMap.size()) return false;
 	for (std::pair<std::string, std::shared_ptr<ProcedureNode>> procPair : procedureMap) {
-		//check key
+		//check key on other map
 		if (otherProcedureMap.find(procPair.first) == otherProcedureMap.end()) return false;
-		//check value
+		//check value on other map
 		if (*(procPair.second) != *(otherProcedureMap.at(procPair.first))) return false;
 	}
 	return true;

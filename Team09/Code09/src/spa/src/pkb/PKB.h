@@ -16,6 +16,7 @@
 #include "stores/EntityStore.h"
 #include "stores/FollowsStore.h"
 #include "stores/ParentStore.h"
+#include "stores/CallsStore.h"
 #include "stores/UsesStore.h"
 #include "stores/ModifiesStore.h"
 
@@ -24,6 +25,7 @@ private:
 	static inline EntityStore entityStore;
 	static inline FollowsStore followsStore;
 	static inline ParentStore parentStore;
+	static inline CallsStore callsStore;
 	static inline UsesStore usesStore;
 	static inline ModifiesStore modifiesStore;
 public:
@@ -44,6 +46,8 @@ public:
 	static bool addFollowsT(int follower, int followee);
 	static bool addParent(int parent, int child);
 	static bool addParentT(int parent, int child);
+	static bool addCalls(std::string caller, std::string callee);
+	static bool addCallsT(std::string caller, std::string callee);
 	static bool addUsesStatement(int statementNumber, const std::unordered_set<std::string>& variables);
 	static bool addUsesProcedure(const std::string& procedure, const std::unordered_set<std::string>& variables);
 	static bool addModifiesStatement(int statementNumber, const std::unordered_set<std::string>& variables);
@@ -119,6 +123,30 @@ public:
 
 	static std::tuple<std::vector<int>, std::vector<int>> getAllParentPairs();
 	static std::tuple<std::vector<int>, std::vector<int>> getAllParentTPairs();
+
+	/* Calls Getters */
+	static bool hasCallsRelationship();
+	static bool hasCallsTRelationship();
+
+	static bool isCallsRelationship(std::string caller, std::string callee);
+	static bool isCallsTRelationship(std::string caller, std::string callee);
+	static bool isCaller(std::string caller);
+	static bool isCallee(std::string callee);
+	static bool isCallerT(std::string caller);
+	static bool isCalleeT(std::string callee);
+
+	static std::unordered_set<std::string> getCallees(std::string caller);
+	static std::unordered_set<std::string> getCaller(std::string callee);
+	static std::unordered_set<std::string> getAllCallees();
+	static std::unordered_set<std::string> getAllCallers();
+
+	static std::unordered_set<std::string> getCalleesT(std::string caller);
+	static std::unordered_set<std::string> getCallersT(std::string callee);
+	static std::unordered_set<std::string> getAllCalleesT();
+	static std::unordered_set<std::string> getAllCallersT();
+
+	static std::tuple<std::vector<std::string>, std::vector<std::string>> getAllCallsPairs();
+	static std::tuple<std::vector<std::string>, std::vector<std::string>> getAllCallsTPairs();
 
 	/* Uses Getters */
 	static std::unordered_set<int> getUsesStatements();

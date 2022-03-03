@@ -187,6 +187,7 @@ QueryArgument PQLParser::parseAssignPatternRHS() {
 		case TokenType::STRING:
 			getNextExpectedToken(TokenType::CLOSE_PARAN);
 			infix = RPN::convertToRpn(nextToken->getValue());
+			if (!isValidExpr(infix)) { throw "invalid expression"; }
 			return QueryArgument(infix, entityTypeMapping[TokenType::STRING]);
 		default:
 			throw "Invalid Argument.";

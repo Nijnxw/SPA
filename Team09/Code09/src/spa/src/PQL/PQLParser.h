@@ -34,7 +34,6 @@ static std::unordered_map<TokenType, RelationRef> relationTypeMapping = {
 	{TokenType::NEXT_T, RelationRef::NEXT_T},
 	{TokenType::AFFECTS, RelationRef::AFFECTS},
 	{TokenType::AFFECTS_T, RelationRef::AFFECTS_T},
-	{TokenType::WITH, RelationRef::WITH},
 };
 
 static std::unordered_map<TokenType, EntityType> entityTypeMapping = {
@@ -63,7 +62,7 @@ static std::unordered_set<EntityType> stmtRef = {
 static std::unordered_set<EntityType> UsesFristArgTypes = {
 	EntityType::STMT, EntityType::PRINT, EntityType::INT,
 	EntityType::WHILE, EntityType::IF, EntityType::ASSIGN,
-    EntityType::PROC,
+    EntityType::PROC, EntityType::STRING
 };
 
 static std::unordered_set<EntityType> VarArgTypes = {
@@ -73,9 +72,16 @@ static std::unordered_set<EntityType> VarArgTypes = {
 static std::unordered_set<EntityType> ModifiesFristArgTypes = {
 	EntityType::STMT, EntityType::READ, EntityType::INT,
 	EntityType::WHILE, EntityType::IF, EntityType::ASSIGN,
-	 EntityType::PROC,
+	EntityType::PROC, EntityType::STRING
 };
 
+static std::unordered_set<EntityType> callsArgTypes = {
+	EntityType::STRING, EntityType::PROC, EntityType::WILD
+};
+
+static std::unordered_set<EntityType> AffectsArgTypes = {
+	EntityType::INT, EntityType::ASSIGN, EntityType::WILD, EntityType::STMT
+};
 
 static std::unordered_map < RelationRef, std::vector<std::unordered_set<EntityType>>> relationValidArgsTypeMap = {
 	{RelationRef::USES, {UsesFristArgTypes, VarArgTypes}},
@@ -83,7 +89,13 @@ static std::unordered_map < RelationRef, std::vector<std::unordered_set<EntityTy
 	{RelationRef::FOLLOWS, {stmtRef, stmtRef}},
 	{RelationRef::FOLLOWS_T, {stmtRef, stmtRef}},
 	{RelationRef::PARENT, {stmtRef, stmtRef}},
-	{RelationRef::PARENT_T, {stmtRef, stmtRef}}
+	{RelationRef::PARENT_T, {stmtRef, stmtRef}},
+	{RelationRef::CALLS, {callsArgTypes, callsArgTypes}},
+	{RelationRef::CALLS_T, {callsArgTypes, callsArgTypes}},
+	{RelationRef::NEXT, {stmtRef, stmtRef}},
+	{RelationRef::NEXT_T, {stmtRef, stmtRef}},
+	{RelationRef::AFFECTS, {AffectsArgTypes, AffectsArgTypes}},
+	{RelationRef::AFFECTS_T, {AffectsArgTypes, AffectsArgTypes}},
 };
 
 class PQLParser {
@@ -98,6 +110,10 @@ private:
 	std::unordered_map<std::string, EntityType> Declarations;
 	std::vector<QueryArgument> resultSynonyms;
 	std::vector<QueryClause> QueryClauses;
+
+	bool isValidSynonym(PQLToken* token);
+	bool isDeclaredSynonym(std::string syn);
+	bool nextIsComma();
 
 	PQLToken* getNextToken();
 	PQLToken* getNextExpectedToken(TokenType tokenType);

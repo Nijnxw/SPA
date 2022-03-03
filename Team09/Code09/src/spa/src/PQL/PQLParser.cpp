@@ -10,6 +10,18 @@
 
 PQLParser::PQLParser(std::vector<PQLToken*> PQLTokens) : current(0), end(PQLTokens.size()), tokens(PQLTokens) {}
 
+bool PQLParser::isValidSynonym(PQLToken* token) {
+	return token->getType() == TokenType::SYNONYM || keywords.find(token->getType()) != keywords.end();
+}
+
+bool PQLParser::isDeclaredSynonym(std::string syn) {
+	return Declarations.find(syn) != Declarations.end();
+}
+
+bool PQLParser::nextIsComma() {
+	return (tokens.at(current))->getType() == TokenType::COMMA;
+}
+
 PQLToken* PQLParser::getNextToken() {
 	if (current == end) {
 		throw "Runtime error : no more tokens to parse";
@@ -29,7 +41,7 @@ PQLToken* PQLParser::getNextExpectedToken(TokenType TokenType) {
 
 PQLToken* PQLParser::getValidSynonymToken() {
 	PQLToken* token = getNextToken();
-	if (token->getType() == TokenType::SYNONYM || keywords.find(token->getType()) != keywords.end()) {
+	if (isValidSynonym(token)) {
 		return token;
 	}
 	throw "unexpected token type.";
@@ -42,19 +54,23 @@ void PQLParser::parseEndOfDeclaration() {
 void PQLParser::parseDeclaration() {
 	auto nextToken = getNextToken();
 	auto entityType = entityTypeMapping.find(nextToken->getType());
+
 	if (entityType == entityTypeMapping.end()) {
 		throw "invalid entity type.";
 	}
+
 	auto expectedSynonym = getValidSynonymToken();
-	if (Declarations.find(expectedSynonym->getValue()) != Declarations.end()) {
+
+	if (isDeclaredSynonym(expectedSynonym->getValue())) {
 		throw "Duplicated declarations detected";
 	}
+
 	Declarations[expectedSynonym->getValue()] = entityType->second;
 
-	while (current != end && (tokens.at(current))->getType() == TokenType::COMMA) {
+	while (current != end && nextIsComma()) {
 		getNextExpectedToken(TokenType::COMMA);
 		nextToken = getValidSynonymToken();
-		if (Declarations.find(nextToken->getValue()) != Declarations.end()) {
+		if (isDeclaredSynonym(nextToken->getValue()) ) {
 			throw "Duplicated declarations detected";
 		}
 		Declarations[nextToken->getValue()] = entityType->second;
@@ -65,12 +81,13 @@ void PQLParser::parseDeclaration() {
 
 void PQLParser::parseSelect() {
 	getNextExpectedToken(TokenType::SELECT);
-	parseResultSynonym();
+	parseResultSynonym(); 
 }
 
 void PQLParser::parseResultSynonym() {
+	//todo parse tuple and boolean
 	auto nextToken = getValidSynonymToken();;
-	if (Declarations.find(nextToken->getValue()) == Declarations.end()) {
+	if (!isDeclaredSynonym(nextToken->getValue())) {
 		throw "Result synonym is not declared";
 	}
 	resultSynonyms.push_back(QueryArgument(std::string(nextToken->getValue()), Declarations[nextToken->getValue()]));
@@ -78,13 +95,18 @@ void PQLParser::parseResultSynonym() {
 
 QueryArgument PQLParser::parseArgs(PQLToken* token) {
 	switch (token->getType()) {
-		case TokenType::STRING:
 		case TokenType::UNDERSCORE:
 		case TokenType::INTEGER:
 			return QueryArgument(std::string(token->getValue()), entityTypeMapping[token->getType()]);
 			break;
+		case TokenType::STRING:
+			if (isIdent(token->getValue())) {
+				return QueryArgument(std::string(token->getValue()), entityTypeMapping[token->getType()]);
+				break;
+			}
+			throw "invalid string";
 		default:
-			if (Declarations.find(token->getValue()) != Declarations.end()) {
+			if (isDeclaredSynonym(token->getValue())) {
 				return QueryArgument(std::string(token->getValue()), Declarations[token->getValue()]);
 				break;
 			}
@@ -111,7 +133,7 @@ void PQLParser::parseRelationshipClause() {
 			throw "Invalid arguments for relationship clause.";
 		}
 
-		if (isIdent(nextToken->getValue())) {
+		if (isValidSynonym(nextToken)) {
 			usedSynonyms.insert(nextToken->getValue());
 		}
 

@@ -21,7 +21,7 @@ private:
 	static inline std::unordered_set<int> stagedPrintStatements;
 	static inline std::unordered_set<int> stagedIfStatements;
 	static inline std::unordered_set<int> stagedWhileStatements;
-	static inline std::unordered_set<int> stagedCallStatements;
+	static inline std::unordered_map<int, std::string> stagedCallStatements;
 
 	static inline std::vector<std::tuple<int, std::string, std::string>> stagedAssignStatements;
 
@@ -54,6 +54,7 @@ public:
 	static std::unordered_set<int> getStagedIfStatements();
 	static std::unordered_set<int> getStagedWhileStatements();
 	static std::unordered_set<int> getStagedCallStatements();
+	static std::unordered_map<int, std::string> getStagedCall();
 
 	static std::vector<std::tuple<int, std::string, std::string>> getStagedAssignStatements();
 
@@ -79,7 +80,7 @@ public:
 	static void stageWhileStatement(int stmtNo);
 	static void stageReadStatement(int stmtNo, std::string varName);
 	static void stagePrintStatement(int stmtNo);
-	static void stageCallStatement(int stmtNo);
+	static void stageCallStatement(int stmtNo, std::string procName);
 
 	static void stageAssignStatement(int stmtNo, std::string lhs, std::string rhs);
 

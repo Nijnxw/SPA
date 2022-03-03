@@ -27,6 +27,15 @@ void EntityStager::clear() {
 	stagedModifiesStatement.clear();
 	stagedModifiesProcedure.clear();
 }
+//helper function
+std::unordered_set<int> getStmtNoFromSet(std::unordered_map<int, std::string> store) {
+	std::unordered_set<int> output;
+	for (auto& s : store) {
+		output.insert(s.first);
+	}
+	return output;
+}
+
 
 // getters
 std::unordered_set<std::string> EntityStager::getStagedProcedures() {
@@ -46,11 +55,7 @@ std::unordered_set<int> EntityStager::getStagedStatements() {
 }
 
 std::unordered_set<int> EntityStager::getStagedReadStatements() {
-	std::unordered_set<int> output;
-	for (auto& read : stagedReadStatements) {
-		output.insert(read.first);
-	}
-	return output;
+	return getStmtNoFromSet(stagedReadStatements);
 }
 
 std::unordered_map<int, std::string> EntityStager::getStagedReads() {
@@ -69,6 +74,10 @@ std::unordered_set<int> EntityStager::getStagedWhileStatements() {
 }
 
 std::unordered_set<int> EntityStager::getStagedCallStatements() {
+	return getStmtNoFromSet(stagedCallStatements);
+}
+
+std::unordered_map<int, std::string> EntityStager::getStagedCall() {
 	return stagedCallStatements;
 }
 
@@ -149,8 +158,8 @@ void EntityStager::stagePrintStatement(int stmtNo) {
 	stagedPrintStatements.insert(stmtNo);
 }
 
-void EntityStager::stageCallStatement(int stmtNo) {
-	stagedCallStatements.insert(stmtNo);
+void EntityStager::stageCallStatement(int stmtNo, std::string procName) {
+	stagedCallStatements.insert({ stmtNo, procName });
 }
 
 void EntityStager::stageAssignStatement(int stmtNo, std::string lhs, std::string rhs) {
@@ -215,7 +224,7 @@ void EntityStager::commit() {
 	for (auto& print: stagedPrintStatements) { PKB::addStatementWithType(EntityType::PRINT, print); }
 	for (auto& ifs: stagedIfStatements) { PKB::addStatementWithType(EntityType::IF, ifs); }
 	for (auto& whiles: stagedWhileStatements) { PKB::addStatementWithType(EntityType::WHILE, whiles); }
-	for (auto& call: stagedCallStatements) { PKB::addStatementWithType(EntityType::CALL, call); }
+	for (auto& call: stagedCallStatements) { PKB::addStatementWithType(EntityType::CALL, call.first); }
 
 	for (auto& assign: stagedAssignStatements) {
 		PKB::addAssignStatement(std::get<0>(assign), std::get<1>(assign), std::get<2>(assign));

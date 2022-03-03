@@ -169,7 +169,7 @@ NestableRelationships processIfNode(AST ast, std::vector<std::string> callStack,
 }
 
 NestableRelationships processCallNode(AST ast, std::vector<std::string> callStack, std::shared_ptr<CallNode> call) {
-	EntityStager::stageCallStatement(call->getStmtNumber());
+	EntityStager::stageCallStatement(call->getStmtNumber(), call->getProcedureName());
 
 	if (!ast->contains(call->getProcedureName())) return NestableRelationships::createEmpty();
 

@@ -1,15 +1,12 @@
 #pragma once
 
-#include <unordered_map>
-#include "OptimizerClause.h"
+#include "OptimizerGraph.h"
 
-class OptimizerGroup {
+class OptimizerGroup : public OptimizerGraph {
 public:
 	OptimizerGroup();
-
-	bool addEdge(QueryClause& clause, int weight);
-	std::unordered_map<std::string, std::vector<OptimizerClause>> getAdjList();
-	std::vector<OptimizerGroup> groupClauses();    // perform DFS to extract out groups of clauses
+	OptimizerGroup(const AdjList& adjList);
+	//TODO: algo for retrieving order of evaluation
 private:
-	std::unordered_map<std::string, std::vector<OptimizerClause>> adjList;
+
 };

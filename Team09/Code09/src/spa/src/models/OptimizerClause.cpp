@@ -1,14 +1,14 @@
 #include "OptimizerClause.h"
 
-OptimizerClause::OptimizerClause(const std::string& from, const std::string& to, int weight, QueryClause& clause)
+OptimizerClause::OptimizerClause(const std::string& from, const std::string& to, int weight, const QueryClause& clause)
 	: from(
 	from), to(to), weight(weight), clause(clause) {}
 
-std::string OptimizerClause::getFrom() {
+std::string OptimizerClause::getFrom() const {
 	return from;
 }
 
-std::string OptimizerClause::getTo() {
+std::string OptimizerClause::getTo() const {
 	return to;
 }
 
@@ -21,6 +21,9 @@ QueryClause OptimizerClause::getClause() const {
 }
 
 bool OptimizerClause::operator<(const OptimizerClause& other) const {
+	if (weight == other.weight) {
+		return clause.toString() < other.clause.toString();
+	}
 	return weight < other.weight;
 }
 

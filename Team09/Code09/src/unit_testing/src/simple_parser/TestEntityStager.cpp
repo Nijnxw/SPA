@@ -80,8 +80,8 @@ TEST_CASE("Test EntityStager interaction with PKB") {
 	REQUIRE(PKB::getUsedVariables() == expectedModVar);
 	REQUIRE(PKB::getModifiedVariables() == expectedModVar);
 
-	REQUIRE(PKB::isCallsRelationship("testProgram", "testProgram2"));
-	REQUIRE(PKB::isCallsTRelationship("testProgram", "testProgram2"));
+	REQUIRE(PKB::isCallsRelationship("testProgram1", "testProgram2"));
+	REQUIRE(PKB::isCallsTRelationship("testProgram1", "testProgram2"));
 
 	PKB::clearAllStores();
 }

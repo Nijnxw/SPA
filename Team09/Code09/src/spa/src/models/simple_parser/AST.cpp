@@ -28,7 +28,7 @@ bool ProgramNode::operator==(const Node& other) const {
 	if (procedureMap.size() != otherProcedureMap.size()) return false;
 	for (auto& procPair : procedureMap) {
 		//check key
-		if (procedureMap.find(procPair.first) == procedureMap.end()) return false;
+		if (procedureMap.count(procPair.first) <= 0) return false;
 		//check value
 		if (*(procPair.second) != *(otherProcedureMap[procPair.first])) return false;
 	}

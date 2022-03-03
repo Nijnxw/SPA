@@ -1,5 +1,5 @@
 #include "catch.hpp"
-#include "models/OptimizerQuery.h"
+#include "models/optimizer/OptimizerQuery.h"
 
 TEST_CASE("Group empty adjacency list - should return empty") {
 	OptimizerQuery query;

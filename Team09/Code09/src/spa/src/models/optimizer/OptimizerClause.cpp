@@ -20,11 +20,12 @@ QueryClause OptimizerClause::getClause() const {
 	return clause;
 }
 
+// priorty queue is a max heap
 bool OptimizerClause::operator<(const OptimizerClause& other) const {
 	if (weight == other.weight) {
 		return clause.toString() < other.clause.toString();
 	}
-	return weight < other.weight;
+	return weight > other.weight;
 }
 
 bool OptimizerClause::operator==(const OptimizerClause& other) const {

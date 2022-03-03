@@ -7,11 +7,11 @@ typedef std::unordered_map<std::string, std::vector<OptimizerClause>> AdjList;
 
 class OptimizerGraph {
 public:
-	OptimizerGraph();
+	OptimizerGraph() = default;
 	OptimizerGraph(const AdjList& adjList);
 
 	bool addEdge(const OptimizerClause& clause);
-	bool addEdge(const QueryClause& clause, int weight);
+	virtual bool addEdge(const QueryClause& clause, int weight);
 	AdjList getAdjList();
 	bool operator==(const OptimizerGraph& other) const;
 

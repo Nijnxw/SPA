@@ -8,6 +8,7 @@
 
 class QueryClause {
 public:
+	QueryClause() = default;
 	QueryClause(RelationRef clauseType, std::vector<QueryArgument>& arguments,
 				std::unordered_set<std::string>& usedSynonyms, const std::string& clauseSynonym = "");
 

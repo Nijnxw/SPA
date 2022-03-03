@@ -16,12 +16,6 @@ jobs:
     
     - name: get-cmake
       uses: lukka/get-cmake@v3.22.2
-      
-    - name: Installing HomeBrew
-      run: /usr/bin/ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"
-      
-    - name: Installing CMake
-      run: brew install cmake llvm
     
     - name: mkdir build
       working-directory: ${{github.workspace}}/Team09/Code09

@@ -9,24 +9,27 @@ on:
 jobs:
   build:
 
-    runs-on: ubuntu-latest
+    runs-on: macos-latest
 
     steps:
     - uses: actions/checkout@v2
     
     - name: get-cmake
       uses: lukka/get-cmake@v3.22.2
+      
+    - name: Installing HomeBrew
+      run: /usr/bin/ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"
+      
+    - name: Installing CMake
+      run: brew install cmake llvm
     
-    - name: Setup tmate session
-      uses: mxschmitt/action-tmate@v3
-    
-    - name: "Create build directory and run CMake"
+    - name: mkdir build
       working-directory: ${{github.workspace}}/Team09/Code09
-      run: cmake -S . -B build -G "Unix Makefiles" -DCMAKE_BUILD_TYPE=Release
+      run: mkdir build
         
     - name: "Build Project" 
-      working-directory: ${{github.workspace}}/Team09/Code09
-      run: cmake --build build --target all --config Release -- -j4 
+      working-directory: ${{github.workspace}}/Team09/Code09/build
+      run: cmake ..
 
     - name: once CMake has done its job we just build using make as usual
       working-directory: ${{github.workspace}}/Team09/Code09/build

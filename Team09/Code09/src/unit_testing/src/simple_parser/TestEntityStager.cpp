@@ -29,6 +29,8 @@ TEST_CASE("Test EntityStager interaction with PKB") {
 	EntityStager::stageFollowsT(1, 2);
 	EntityStager::stageParent(1, {2});
 	EntityStager::stageParentT(1, {2});
+	EntityStager::stageCalls("testProgram1", "testProgram2");
+	EntityStager::stageCallsT("testProgram1", "testProgram2");
 
 	std::unordered_set<std::string> varList;
 	varList.insert("var1");
@@ -77,6 +79,9 @@ TEST_CASE("Test EntityStager interaction with PKB") {
 	std::unordered_set<std::string> expectedModVar = { "var1", "var2" };
 	REQUIRE(PKB::getUsedVariables() == expectedModVar);
 	REQUIRE(PKB::getModifiedVariables() == expectedModVar);
+
+	REQUIRE(PKB::isCallsRelationship("testProgram", "testProgram2"));
+	REQUIRE(PKB::isCallsTRelationship("testProgram", "testProgram2"));
 
 	PKB::clearAllStores();
 }

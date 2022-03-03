@@ -1,6 +1,7 @@
 #include "StmtProcTemplateStore.h"
 
-void StmtProcTemplateStore::clear() {
+template <typename T>
+void StmtProcTemplateStore<T>::clear() {
 	firstSynonymToSecondSynonyms.clear();
 	secondSynonymToFirstSynonym.clear();
 	relationshipPairs.clear();
@@ -25,11 +26,13 @@ bool StmtProcTemplateStore<T>::addRelationshipT(T firstSynonym, T secondSynonym)
 		&& PKBUtil::addToMapWithSet(secondSynonymToFirstSynonymsT, secondSynonym, firstSynonym);
 }
 
-bool StmtProcTemplateStore::hasRelationship() {
+template <typename T>
+bool StmtProcTemplateStore<T>::hasRelationship() {
 	return firstSynonymToSecondSynonyms.size() > 0;
 }
 
-bool StmtProcTemplateStore::hasTRelationship() {
+template <typename T>
+bool StmtProcTemplateStore<T>::hasTRelationship() {
 	return firstSynonymToSecondSynonymsT.size() > 0;
 }
 

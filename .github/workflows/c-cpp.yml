@@ -21,21 +21,21 @@ jobs:
       working-directory: ${{github.workspace}}/Team09/Code09
       run: mkdir build
         
-    - name: "Build Project" 
+    - name: cmake using CMakeLists.txt
       working-directory: ${{github.workspace}}/Team09/Code09/build
       run: cmake ..
 
-    - name: once CMake has done its job we just build using make as usual
+    - name: running make...
       working-directory: ${{github.workspace}}/Team09/Code09/build
       shell: bash
       run: make -j4
       
-    - name: run unit test
+    - name: running unit tests...
       working-directory: ${{github.workspace}}/Team09/Code09/build
       shell: bash
       run: ./src/unit_testing/unit_testing
       
-    - name: run integration test
+    - name: running integration tests...
       working-directory: ${{github.workspace}}/Team09/Code09/build
       shell: bash
       run: ./src/integration_testing/integration_testing

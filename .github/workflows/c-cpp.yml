@@ -9,20 +9,20 @@ on:
 jobs:
   build:
 
-    runs-on: ubuntu-latest
+    runs-on: macos-latest
 
     steps:
     - uses: actions/checkout@v2
     
-    - name: Create Build Environment
-      # Some projects don't allow in-source building, so create a separate build directory
-      # We'll use this as our working directory for all subsequent commands
-      run: cmake -E make_directory ${{github.workspace}}/Team09/Code09/build
-
-    - name: Build
+    - name: get-cmake
+      uses: lukka/get-cmake@v3.22.2
+    
+    - name: mkdir build
+      working-directory: ${{github.workspace}}/Team09/Code09
+      run: mkdir build
+        
+    - name: "Build Project" 
       working-directory: ${{github.workspace}}/Team09/Code09/build
-      shell: bash
-      # Execute the build.  You can specify a specific target with "--target <NAME>"
       run: cmake ..
 
     - name: once CMake has done its job we just build using make as usual
@@ -33,9 +33,9 @@ jobs:
     - name: run unit test
       working-directory: ${{github.workspace}}/Team09/Code09/build
       shell: bash
-      run: ../src/unit_testing/unit_testing
+      run: ./src/unit_testing/unit_testing
       
     - name: run integration test
       working-directory: ${{github.workspace}}/Team09/Code09/build
       shell: bash
-      run: ../src/integration_testing/integration_testing
+      run: ./src/integration_testing/integration_testing

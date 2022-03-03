@@ -38,6 +38,7 @@ TEST_CASE("EntityStore API") {
 		entityStore.addStatementNumber(7);
 		entityStore.addStatementNumber(8);
 		entityStore.addStatementNumber(9);
+		entityStore.addStatementNumber(10);
 
 		entityStore.addAssignStatement(1, "a", "a 1 b / 2 * c / + d -");
 		entityStore.addAssignStatement(5, "such", "that team9 +");
@@ -49,6 +50,7 @@ TEST_CASE("EntityStore API") {
 		entityStore.addStatementWithType(EntityType::PRINT, 3);
 		entityStore.addStatementWithType(EntityType::IF, 4);
 		entityStore.addStatementWithType(EntityType::WHILE, 7);
+		entityStore.addStatementWithType(EntityType::CALL, 10);
 
 		// --------------------------------------------------
 		//                  Getters
@@ -78,7 +80,7 @@ TEST_CASE("EntityStore API") {
 		// getStatementNumbers()
 		SECTION("getStatementNumbers() positive query") {
 			std::unordered_set<int> res = entityStore.getStatementNumbers();
-			std::unordered_set<int> expectedSet = { 1, 2, 3, 4, 5, 6, 7, 8, 9 };
+			std::unordered_set<int> expectedSet = { 1, 2, 3, 4, 5, 6, 7, 8, 9, 10 };
 			REQUIRE(res == expectedSet);
 		}
 
@@ -133,7 +135,7 @@ TEST_CASE("EntityStore API") {
 		// getStatementsWithType() CALL
 		SECTION("getStatementsWithType() CALL positive query") {
 			std::unordered_set<int> res = entityStore.getStatementsWithType(EntityType::CALL);
-			std::unordered_set<int> expectedSet;
+			std::unordered_set<int> expectedSet = { 10 };
 			REQUIRE(res == expectedSet);
 		}
 	}

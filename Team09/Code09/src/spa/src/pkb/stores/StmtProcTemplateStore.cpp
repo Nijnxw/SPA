@@ -25,11 +25,11 @@ bool StmtProcTemplateStore<T>::addRelationshipT(T firstSynonym, T secondSynonym)
 		&& PKBUtil::addToMapWithSet(secondSynonymToFirstSynonymsT, secondSynonym, firstSynonym);
 }
 
-bool StmtProcTemplateStore<T>::hasRelationship() {
+bool StmtProcTemplateStore::hasRelationship() {
 	return firstSynonymToSecondSynonyms.size() > 0;
 }
 
-bool StmtProcTemplateStore<T>::hasTRelationship() {
+bool StmtProcTemplateStore::hasTRelationship() {
 	return firstSynonymToSecondSynonymsT.size() > 0;
 }
 

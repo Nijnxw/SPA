@@ -17,40 +17,35 @@ jobs:
     - name: Create Build Environment
       # Some projects don't allow in-source building, so create a separate build directory
       # We'll use this as our working directory for all subsequent commands
-      run: cmake -E make_directory ${{github.workspace}}/build
+      run: cmake -E make_directory ${{github.workspace}}/Team09/Code09/build
 
     - name: Configure CMake
       # Use a bash shell so we can use the same syntax for environment variable
       # access regardless of the host operating system
       shell: bash
-      working-directory: ${{github.workspace}}/build
+      working-directory: ${{github.workspace}}/Team09/Code09/build
       # Note the current convention is to use the -S and -B options here to specify source 
       # and build directories, but this is only available with CMake 3.13 and higher.  
       # The CMake binaries on the Github Actions machines are (as of this writing) 3.12
       run: cmake $GITHUB_WORKSPACE -DCMAKE_BUILD_TYPE=$BUILD_TYPE -DCMAKE_VERBOSE_MAKEFILE:BOOL=ON
 
     - name: Build
-      working-directory: ${{github.workspace}}/build
+      working-directory: ${{github.workspace}}/Team09/Code09/build
       shell: bash
       # Execute the build.  You can specify a specific target with "--target <NAME>"
-      run: cmake --build . --config $BUILD_TYPE
+      run: cmake ..
 
     - name: once CMake has done its job we just build using make as usual
-      working-directory: ${{github.workspace}}/build
+      working-directory: ${{github.workspace}}/Team09/Code09/build
       shell: bash
       run: make -j4
       
-    - name: navigate to .exe directories
-      working-directory: ${{github.workspace}}/build
-      shell: bash
-      run: cd ../tests/
-      
     - name: run unit test
-      working-directory: ${{github.workspace}}/build
+      working-directory: ${{github.workspace}}/Team09/Code09/build
       shell: bash
-      run: ./src/unit_testing/unit_testing
+      run: ../src/unit_testing/unit_testing
       
     - name: run integration test
-      working-directory: ${{github.workspace}}/build
+      working-directory: ${{github.workspace}}/Team09/Code09/build
       shell: bash
-      run: ./src/integration_testing/integration_testing
+      run: ../src/integration_testing/integration_testing

@@ -76,7 +76,7 @@ NestableRelationships processPredicateNode(std::shared_ptr<PredicateNode> expr) 
 //individual stmt node processing functions
 NestableRelationships processPrintNode(std::shared_ptr<PrintNode> print) {
 	processVariableNode(print->getVariable());
-	EntityStager::stagePrintStatement(print->getStmtNumber());
+	EntityStager::stagePrintStatement(print->getStmtNumber(), print->getVariableName());
 
 	//stage relationships
 	NestableRelationships rs = NestableRelationships::createEmpty();

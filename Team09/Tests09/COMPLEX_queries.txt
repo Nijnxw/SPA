@@ -80,12 +80,12 @@ Select ifs such that Modifies(ifs,"newVol")
 5000
 17 - Valid Modifies Query for assign,variableName
 assign a; 
-Select a such that Modifies(a, "counter")
+Select a such that Modifies(a, "counter		")
 38,44
 5000
 18 - Valid Modifies Query for stmtNo,variableName
 variable v;
-Select v such that Modifies(3, "read")
+Select v such that Modifies(3, "read           ")
 none
 5000
 19 - Valid Uses Query for print,syn
@@ -885,7 +885,7 @@ Select a pattern a(v,_)
 5000
 178 - Valid pattern query syn,partialMatchVar
 variable v1; assign a;
-Select a pattern a(v1,_"diameter"_)
+Select a pattern a(v1,_"	diameter            "_)
 4,14
 5000
 179 - Valid pattern query syn,partialMatchInt

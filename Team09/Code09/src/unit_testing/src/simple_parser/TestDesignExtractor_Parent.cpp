@@ -537,7 +537,7 @@ TEST_CASE("Parents 3.36 - Normal Pre Declared") {
 	EntityStager::clear();
 }
 
-TEST_CASE("Parents 3.37 - Normal Pre declared	Nested in If") {
+TEST_CASE("Parents 3.37 - Normal Pre declared Nested in If") {
 	EntityStager::clear();
 	DesignExtractor::extractDesignElements(RelationshipASTs::getAST3_37());
 
@@ -553,7 +553,7 @@ TEST_CASE("Parents 3.37 - Normal Pre declared	Nested in If") {
 	EntityStager::clear();
 }
 
-TEST_CASE("Parents 3.38 - Normal Pre declared	Nested in Else") {
+TEST_CASE("Parents 3.38 - Normal Pre declared Nested in Else") {
 	EntityStager::clear();
 	DesignExtractor::extractDesignElements(RelationshipASTs::getAST3_38());
 

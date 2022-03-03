@@ -5,9 +5,11 @@
 #include <vector>
 
 namespace PKBUtil {
-    struct hashFunction {
-        size_t operator()(const std::pair<int, int>& x) const {
-            return x.first ^ x.second;
+    struct pairHashFunction {
+        template <typename T, typename U>
+        std::size_t operator()(const std::pair<T, U>& x) const
+        {
+            return std::hash<T>()(x.first) ^ std::hash<U>()(x.second);
         }
     };
 
@@ -83,7 +85,7 @@ namespace PKBUtil {
         return { firstColumn, secondColumn };
     }
 
-    static std::tuple<std::vector<int>, std::vector<int>> convertSetPairsToVectorTuple(std::unordered_set<std::pair<int, int>, hashFunction>& set) {
+    static std::tuple<std::vector<int>, std::vector<int>> convertSetPairsToVectorTuple(std::unordered_set<std::pair<int, int>, pairHashFunction>& set) {
         std::vector<int> firstColumn;
         std::vector<int> secondColumn;
 
@@ -95,8 +97,8 @@ namespace PKBUtil {
         return { firstColumn, secondColumn };
     }
 
-    static std::unordered_set<std::pair<int, int>, PKBUtil::hashFunction> convertVectorTupleToSetPairs(std::vector<int> firstEntities, std::vector<int> secondEntities) {
-        std::unordered_set<std::pair<int, int>, PKBUtil::hashFunction> result;
+    static std::unordered_set<std::pair<int, int>, PKBUtil::pairHashFunction> convertVectorTupleToSetPairs(std::vector<int> firstEntities, std::vector<int> secondEntities) {
+        std::unordered_set<std::pair<int, int>, PKBUtil::pairHashFunction> result;
 
         for (int i = 0; i < firstEntities.size(); i++) {
             std::pair<int, int> pair;

@@ -56,6 +56,14 @@ bool PKB::addParentT(int parent, int child) {
 	return parentStore.addRelationshipT(parent, child);
 }
 
+bool PKB::addCalls(std::string caller, std::string callee) {
+	return callsStore.addRelationship(caller, callee);
+}
+
+bool PKB::addCallsT(std::string caller, std::string callee) {
+	return callsStore.addRelationshipT(caller, callee);
+}
+
 bool PKB::addUsesStatement(int statementNumber, const std::unordered_set<std::string>& variables) {
 	return usesStore.addStmtVarRelationship(statementNumber, variables);
 }
@@ -381,6 +389,79 @@ std::tuple<std::vector<int>, std::vector<int>> PKB::getAllParentPairs() {
 
 std::tuple<std::vector<int>, std::vector<int>> PKB::getAllParentTPairs() {
 	return parentStore.getAllRelationshipTPairs();
+}
+
+/* Calls Getters */
+bool PKB::hasCallsRelationship() {
+	return callsStore.hasRelationship();
+}
+
+bool PKB::hasCallsTRelationship() {
+	return callsStore.hasTRelationship();
+}
+
+bool PKB::isCallsRelationship(std::string caller, std::string callee) {
+	return callsStore.isRelationship(caller, callee);
+}
+
+bool PKB::isCallsTRelationship(std::string caller, std::string callee) {
+	return callsStore.isTRelationship(caller, callee);
+}
+
+bool PKB::isCaller(std::string caller) {
+	return callsStore.isFirstSynonym(caller);
+}
+
+bool PKB::isCallee(std::string callee) {
+	return callsStore.isSecondSynonym(callee);
+}
+
+bool PKB::isCallerT(std::string caller) {
+	return callsStore.isFirstSynonymT(caller);
+}
+
+bool PKB::isCalleeT(std::string callee) {
+	return callsStore.isSecondSynonymT(callee);
+}
+
+std::unordered_set<std::string> PKB::getCallees(std::string caller) {
+	return callsStore.getSecondSynonyms(caller);
+}
+
+std::unordered_set<std::string> PKB::getCaller(std::string callee) {
+	return callsStore.getFirstSynonyms(callee);
+}
+
+std::unordered_set<std::string> PKB::getAllCallees() {
+	return callsStore.getAllSecondSynonyms();
+}
+
+std::unordered_set<std::string> PKB::getAllCallers() {
+	return callsStore.getAllFirstSynonyms();
+}
+
+std::unordered_set<std::string> PKB::getCalleesT(std::string caller) {
+	return callsStore.getSecondSynonymsT(caller);
+}
+
+std::unordered_set<std::string> PKB::getCallersT(std::string callee) {
+	return callsStore.getFirstSynonymsT(callee);
+}
+
+std::unordered_set<std::string> PKB::getAllCalleesT() {
+	return callsStore.getAllSecondSynonymsT();
+}
+
+std::unordered_set<std::string> PKB::getAllCallersT() {
+	return callsStore.getAllFirstSynonymsT();
+}
+
+std::tuple<std::vector<std::string>, std::vector<std::string>> PKB::getAllCallsPairs() {
+	return callsStore.getAllRelationshipPairs();
+}
+
+std::tuple<std::vector<std::string>, std::vector<std::string>> PKB::getAllCallsTPairs() {
+	return callsStore.getAllRelationshipTPairs();
 }
 
 /* Uses Getters */

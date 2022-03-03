@@ -75,24 +75,24 @@ TEST_CASE("Test Equality Comparisons") {
 	REQUIRE(*p1 != *p3);
 	REQUIRE(*p1 != *p4);
 
-	//std::unordered_map<std::string, std::shared_ptr<ProcedureNode>> procMap1{
-	//	{ "test", p1 }
-	//};
+	std::unordered_map<std::string, std::shared_ptr<ProcedureNode>> procMap1{
+		{ "test", p1 }
+	};
 
-	//std::unordered_map<std::string, std::shared_ptr<ProcedureNode>> procMap2{
-	//	{ "test", p2 }
-	//};
+	std::unordered_map<std::string, std::shared_ptr<ProcedureNode>> procMap2{
+		{ "test", p2 }
+	};
 
-	//std::unordered_map<std::string, std::shared_ptr<ProcedureNode>> procMap3{
-	//	{ "test123", p3 }
-	//};
+	std::unordered_map<std::string, std::shared_ptr<ProcedureNode>> procMap3{
+		{ "test123", p3 }
+	};
 
-	//ProgramNode r1(procMap1);
-	//ProgramNode r2(procMap2);
-	//ProgramNode r3(procMap3);
+	ProgramNode r1(procMap1);
+	ProgramNode r2(procMap2);
+	ProgramNode r3(procMap3);
 
-	//REQUIRE(r1 == r2);
-	//REQUIRE(r1 != r3);
+	REQUIRE(r1 == r2);
+	REQUIRE(r1 != r3);
 
 	//std::unordered_map<std::string, std::shared_ptr<ProcedureNode>> multiProcMap1{
 	//	{"test", p1}, {"test123", p3}

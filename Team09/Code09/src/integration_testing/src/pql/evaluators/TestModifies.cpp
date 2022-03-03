@@ -4,6 +4,7 @@
 TEST_CASE("Test ModifiesStore and ModifiesEvaluator functionality") {
 	PKB::clearAllStores();
 	ModifiesEvaluator modifiesEvaluator = ModifiesEvaluator();
+
 	SECTION("populate pkb with test simple program and retrieve with") {
 		/*
 			Test Simple Program
@@ -32,24 +33,24 @@ TEST_CASE("Test ModifiesStore and ModifiesEvaluator functionality") {
 		PKB::addModifiesStatement(6, std::unordered_set<std::string>({"w"}));
 
 		// Underscore RHS
-		SECTION("Modifies(1,'_') query") {
+		SECTION("Modifies(1, _) query") {
 			QueryClauseResult res = modifiesEvaluator.getModifies("1", "_", EntityType::INT, EntityType::WILD, false);
 			REQUIRE(res.containsValidResult() == true);
 		}
 
-		SECTION("Modifies(7,'_') query") {
+		SECTION("Modifies(7, _) query") {
 			QueryClauseResult res = modifiesEvaluator.getModifies("7", "_", EntityType::INT, EntityType::WILD, false);
 			REQUIRE(res.containsValidResult() == false);
 		}
 
-		SECTION("Modifies(s,'_') query") {
+		SECTION("Modifies(s, _) query") {
 			QueryClauseResult res = modifiesEvaluator.getModifies("s", "_", EntityType::STMT, EntityType::WILD, false);
 			REQUIRE(res.containsValidResult() == true);
 			Table expectedTable = {{"s", {"1", "2", "3", "4", "5", "6"}}};
 			REQUIRE(res == QueryClauseResult(expectedTable));
 		}
 
-		SECTION("Modifies(a,'_') query") {
+		SECTION("Modifies(a, _) query") {
 			QueryClauseResult res = modifiesEvaluator.getModifies("a", "_", EntityType::ASSIGN, EntityType::WILD,
 																  false);
 			REQUIRE(res.containsValidResult() == true);
@@ -57,26 +58,26 @@ TEST_CASE("Test ModifiesStore and ModifiesEvaluator functionality") {
 			REQUIRE(res == QueryClauseResult(expectedTable));
 		}
 
-		SECTION("Modifies(r,'_') query") {
+		SECTION("Modifies(r, _) query") {
 			QueryClauseResult res = modifiesEvaluator.getModifies("r", "_", EntityType::READ, EntityType::WILD, false);
 			REQUIRE(res.containsValidResult() == true);
 			Table expectedTable = {{"r", {"1"}}};
 			REQUIRE(res == QueryClauseResult(expectedTable));
 		}
 
-		SECTION("Modifies(if,'_') query") {
+		SECTION("Modifies(if, _) query") {
 			QueryClauseResult res = modifiesEvaluator.getModifies("if", "_", EntityType::IF, EntityType::WILD, false);
 			Table expectedTable = {{"if", {"3"}}};
 			REQUIRE(res == QueryClauseResult(expectedTable));
 		}
 
-		SECTION("Modifies(w,'_') query") {
+		SECTION("Modifies(w, _) query") {
 			QueryClauseResult res = modifiesEvaluator.getModifies("w", "_", EntityType::WHILE, EntityType::WILD, false);
 			Table expectedTable = {{"w", {"5"}}};
 			REQUIRE(res == QueryClauseResult(expectedTable));
 		}
 
-			// Synonym RHS
+		// Synonym RHS
 		SECTION("Modifies(3, v) query") {
 			QueryClauseResult res = modifiesEvaluator.getModifies("3", "v", EntityType::INT, EntityType::VAR, false);
 			REQUIRE(res.containsValidResult() == true);
@@ -139,7 +140,7 @@ TEST_CASE("Test ModifiesStore and ModifiesEvaluator functionality") {
 			REQUIRE(res == QueryClauseResult(expectedTable));
 		}
 
-			// Variable RHS
+		// Variable RHS
 		SECTION("Modifies(5, 'w') query") {
 			QueryClauseResult res = modifiesEvaluator.getModifies("5", "w", EntityType::INT, EntityType::STRING, false);
 			REQUIRE(res.containsValidResult() == true);

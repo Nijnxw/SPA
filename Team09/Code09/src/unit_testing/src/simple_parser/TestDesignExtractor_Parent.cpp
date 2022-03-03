@@ -487,6 +487,350 @@ TEST_CASE("Parents 3.33 - 3 levels of nesting - 1 stmt per nest level - if-while
 	EntityStager::clear();
 }
 
+//ITERATION 2
+
+TEST_CASE("Parents 3.34 - Complex two procedure") {
+	EntityStager::clear();
+	DesignExtractor::extractDesignElements(RelationshipASTs::getAST3_34());
+
+	std::vector<std::pair<int, int>> expectedParents{
+		{1, 2}, {1, 6}, {1, 7}, {1, 8}, {1, 9}, {1, 10},
+		{2, 3}, {2, 4}, {2, 5}, {10, 11}, {10, 12}, {10, 13},
+		{14, 15}, {14, 22},
+		{15, 16}, {15, 18}, {15, 19}, {15, 21},
+		{16, 17}, {19, 20}
+	};
+	std::sort(expectedParents.begin(), expectedParents.end());
+
+	std::vector<std::pair<int, int>> actualParents = EntityStager::getStagedParent();
+	std::sort(actualParents.begin(), actualParents.end());
+
+	REQUIRE(actualParents == expectedParents);
+	EntityStager::clear();
+}
+
+TEST_CASE("Parents 3.35 - Normal Post Declared") {
+	EntityStager::clear();
+	DesignExtractor::extractDesignElements(RelationshipASTs::getAST3_35());
+
+	std::vector<std::pair<int, int>> expectedParents{ };
+	std::sort(expectedParents.begin(), expectedParents.end());
+
+	std::vector<std::pair<int, int>> actualParents = EntityStager::getStagedParent();
+	std::sort(actualParents.begin(), actualParents.end());
+
+	REQUIRE(actualParents == expectedParents);
+	EntityStager::clear();
+}
+
+TEST_CASE("Parents 3.36 - Normal Pre Declared") {
+	EntityStager::clear();
+	DesignExtractor::extractDesignElements(RelationshipASTs::getAST3_36());
+
+	std::vector<std::pair<int, int>> expectedParents{ };
+	std::sort(expectedParents.begin(), expectedParents.end());
+
+	std::vector<std::pair<int, int>> actualParents = EntityStager::getStagedParent();
+	std::sort(actualParents.begin(), actualParents.end());
+
+	REQUIRE(actualParents == expectedParents);
+	EntityStager::clear();
+}
+
+TEST_CASE("Parents 3.37 - Normal Pre declared Nested in If") {
+	EntityStager::clear();
+	DesignExtractor::extractDesignElements(RelationshipASTs::getAST3_37());
+
+	std::vector<std::pair<int, int>> expectedParents{
+		{3, 4}, {3, 5}, {3, 6}
+	};
+	std::sort(expectedParents.begin(), expectedParents.end());
+
+	std::vector<std::pair<int, int>> actualParents = EntityStager::getStagedParent();
+	std::sort(actualParents.begin(), actualParents.end());
+
+	REQUIRE(actualParents == expectedParents);
+	EntityStager::clear();
+}
+
+TEST_CASE("Parents 3.38 - Normal Pre declared Nested in Else") {
+	EntityStager::clear();
+	DesignExtractor::extractDesignElements(RelationshipASTs::getAST3_38());
+
+	std::vector<std::pair<int, int>> expectedParents{
+		{3, 4}, {3, 5}, {3, 6}
+	};
+	std::sort(expectedParents.begin(), expectedParents.end());
+
+	std::vector<std::pair<int, int>> actualParents = EntityStager::getStagedParent();
+	std::sort(actualParents.begin(), actualParents.end());
+
+	REQUIRE(actualParents == expectedParents);
+	EntityStager::clear();
+}
+
+TEST_CASE("Parents 3.39 - Normal Post declared Nested in If") {
+	EntityStager::clear();
+	DesignExtractor::extractDesignElements(RelationshipASTs::getAST3_39());
+
+	std::vector<std::pair<int, int>> expectedParents{
+		{1, 2}, {1, 3}, {1, 4}
+	};
+	std::sort(expectedParents.begin(), expectedParents.end());
+
+	std::vector<std::pair<int, int>> actualParents = EntityStager::getStagedParent();
+	std::sort(actualParents.begin(), actualParents.end());
+
+	REQUIRE(actualParents == expectedParents);
+	EntityStager::clear();
+}
+
+TEST_CASE("Parents 3.40 - Normal Post declared Nested in Else") {
+	EntityStager::clear();
+	DesignExtractor::extractDesignElements(RelationshipASTs::getAST3_40());
+
+	std::vector<std::pair<int, int>> expectedParents{
+		{1, 2}, {1, 3}, {1, 4}
+	};
+	std::sort(expectedParents.begin(), expectedParents.end());
+
+	std::vector<std::pair<int, int>> actualParents = EntityStager::getStagedParent();
+	std::sort(actualParents.begin(), actualParents.end());
+
+	REQUIRE(actualParents == expectedParents);
+	EntityStager::clear();
+}
+
+TEST_CASE("Parents 3.41 - Normal Pre declared Nested in While") {
+	EntityStager::clear();
+	DesignExtractor::extractDesignElements(RelationshipASTs::getAST3_41());
+
+	std::vector<std::pair<int, int>> expectedParents{
+		{3, 4}, {3, 5}
+	};
+	std::sort(expectedParents.begin(), expectedParents.end());
+
+	std::vector<std::pair<int, int>> actualParents = EntityStager::getStagedParent();
+	std::sort(actualParents.begin(), actualParents.end());
+
+	REQUIRE(actualParents == expectedParents);
+	EntityStager::clear();
+}
+
+TEST_CASE("Parents 3.42 - Normal Post declared Nested in While") {
+	EntityStager::clear();
+	DesignExtractor::extractDesignElements(RelationshipASTs::getAST3_42());
+
+	std::vector<std::pair<int, int>> expectedParents{
+		{1, 2}, {1, 3}
+	};
+	std::sort(expectedParents.begin(), expectedParents.end());
+
+	std::vector<std::pair<int, int>> actualParents = EntityStager::getStagedParent();
+	std::sort(actualParents.begin(), actualParents.end());
+
+	REQUIRE(actualParents == expectedParents);
+	EntityStager::clear();
+}
+
+TEST_CASE("Parents 3.43 - 3 calls sequential predeclared") {
+	EntityStager::clear();
+	DesignExtractor::extractDesignElements(RelationshipASTs::getAST3_43());
+
+	std::vector<std::pair<int, int>> expectedParents{ };
+	std::sort(expectedParents.begin(), expectedParents.end());
+
+	std::vector<std::pair<int, int>> actualParents = EntityStager::getStagedParent();
+	std::sort(actualParents.begin(), actualParents.end());
+
+	REQUIRE(actualParents == expectedParents);
+	EntityStager::clear();
+}
+
+TEST_CASE("Parents 3.44 - 3 calls sequential post declared") {
+	EntityStager::clear();
+	DesignExtractor::extractDesignElements(RelationshipASTs::getAST3_44());
+
+	std::vector<std::pair<int, int>> expectedParents{ };
+	std::sort(expectedParents.begin(), expectedParents.end());
+
+	std::vector<std::pair<int, int>> actualParents = EntityStager::getStagedParent();
+	std::sort(actualParents.begin(), actualParents.end());
+
+	REQUIRE(actualParents == expectedParents);
+	EntityStager::clear();
+}
+
+TEST_CASE("Parents 3.45 - 3 calls forking from top") {
+	EntityStager::clear();
+	DesignExtractor::extractDesignElements(RelationshipASTs::getAST3_45());
+
+	std::vector<std::pair<int, int>> expectedParents{ };
+	std::sort(expectedParents.begin(), expectedParents.end());
+
+	std::vector<std::pair<int, int>> actualParents = EntityStager::getStagedParent();
+	std::sort(actualParents.begin(), actualParents.end());
+
+	REQUIRE(actualParents == expectedParents);
+	EntityStager::clear();
+}
+
+TEST_CASE("Parents 3.46 - 3 calls forking from bottom") {
+	EntityStager::clear();
+	DesignExtractor::extractDesignElements(RelationshipASTs::getAST3_46());
+
+	std::vector<std::pair<int, int>> expectedParents{ };
+	std::sort(expectedParents.begin(), expectedParents.end());
+
+	std::vector<std::pair<int, int>> actualParents = EntityStager::getStagedParent();
+	std::sort(actualParents.begin(), actualParents.end());
+
+	REQUIRE(actualParents == expectedParents);
+	EntityStager::clear();
+}
+
+TEST_CASE("Parents 3.47 - 3 calls forking from middle") {
+	EntityStager::clear();
+	DesignExtractor::extractDesignElements(RelationshipASTs::getAST3_47());
+
+	std::vector<std::pair<int, int>> expectedParents{ };
+	std::sort(expectedParents.begin(), expectedParents.end());
+
+	std::vector<std::pair<int, int>> actualParents = EntityStager::getStagedParent();
+	std::sort(actualParents.begin(), actualParents.end());
+
+	REQUIRE(actualParents == expectedParents);
+	EntityStager::clear();
+}
+
+TEST_CASE("Parents 3.48 - 4 calls sequential call (mix of post and pre declared)") {
+	EntityStager::clear();
+	DesignExtractor::extractDesignElements(RelationshipASTs::getAST3_48());
+
+	std::vector<std::pair<int, int>> expectedParents{
+		{8, 9}, {8, 10}, {8, 11}
+	};
+	std::sort(expectedParents.begin(), expectedParents.end());
+
+	std::vector<std::pair<int, int>> actualParents = EntityStager::getStagedParent();
+	std::sort(actualParents.begin(), actualParents.end());
+
+	REQUIRE(actualParents == expectedParents);
+	EntityStager::clear();
+}
+
+TEST_CASE("Parents 3.49 - 4 calls - 1 - (2, 3, 4)") {
+	EntityStager::clear();
+	DesignExtractor::extractDesignElements(RelationshipASTs::getAST3_49());
+
+	std::vector<std::pair<int, int>> expectedParents{
+		{9, 10}, {9, 11}
+	};
+	std::sort(expectedParents.begin(), expectedParents.end());
+
+	std::vector<std::pair<int, int>> actualParents = EntityStager::getStagedParent();
+	std::sort(actualParents.begin(), actualParents.end());
+
+	REQUIRE(actualParents == expectedParents);
+	EntityStager::clear();
+}
+
+TEST_CASE("Parents 3.50 - 4 calls - (1, 2, 4) - 3") {
+	EntityStager::clear();
+	DesignExtractor::extractDesignElements(RelationshipASTs::getAST3_50());
+
+	std::vector<std::pair<int, int>> expectedParents{
+		{8, 9}, {8, 10}, {8, 11}
+	};
+	std::sort(expectedParents.begin(), expectedParents.end());
+
+	std::vector<std::pair<int, int>> actualParents = EntityStager::getStagedParent();
+	std::sort(actualParents.begin(), actualParents.end());
+
+	REQUIRE(actualParents == expectedParents);
+	EntityStager::clear();
+}
+
+TEST_CASE("Parents 3.51 - 4 calls - 1 - (3, 4) - 2") {
+	EntityStager::clear();
+	DesignExtractor::extractDesignElements(RelationshipASTs::getAST3_51());
+
+	std::vector<std::pair<int, int>> expectedParents{
+		{9, 10}, {9, 11}, {9, 12}
+	};
+	std::sort(expectedParents.begin(), expectedParents.end());
+
+	std::vector<std::pair<int, int>> actualParents = EntityStager::getStagedParent();
+	std::sort(actualParents.begin(), actualParents.end());
+
+	REQUIRE(actualParents == expectedParents);
+	EntityStager::clear();
+}
+
+TEST_CASE("Parents 3.52 - 4 calls - 2 - 4 - (3, 1)") {
+	EntityStager::clear();
+	DesignExtractor::extractDesignElements(RelationshipASTs::getAST3_52());
+
+	std::vector<std::pair<int, int>> expectedParents{
+		{7, 8}, {7, 9}, {7, 10}, {7, 11}
+	};
+	std::sort(expectedParents.begin(), expectedParents.end());
+
+	std::vector<std::pair<int, int>> actualParents = EntityStager::getStagedParent();
+	std::sort(actualParents.begin(), actualParents.end());
+
+	REQUIRE(actualParents == expectedParents);
+	EntityStager::clear();
+}
+
+TEST_CASE("Parents 3.53 - 4 calls - (1, 2) - 3 - 4") {
+	EntityStager::clear();
+	DesignExtractor::extractDesignElements(RelationshipASTs::getAST3_53());
+
+	std::vector<std::pair<int, int>> expectedParents{
+		{9, 10}, {9, 11}
+	};
+	std::sort(expectedParents.begin(), expectedParents.end());
+
+	std::vector<std::pair<int, int>> actualParents = EntityStager::getStagedParent();
+	std::sort(actualParents.begin(), actualParents.end());
+
+	REQUIRE(actualParents == expectedParents);
+	EntityStager::clear();
+}
+
+TEST_CASE("Parents 3.54 - 4 calls - (3, (2 - 4)) - 1") {
+	EntityStager::clear();
+	DesignExtractor::extractDesignElements(RelationshipASTs::getAST3_54());
+
+	std::vector<std::pair<int, int>> expectedParents{
+		{8, 9}, {8, 10}, {8, 11}
+	};
+	std::sort(expectedParents.begin(), expectedParents.end());
+
+	std::vector<std::pair<int, int>> actualParents = EntityStager::getStagedParent();
+	std::sort(actualParents.begin(), actualParents.end());
+
+	REQUIRE(actualParents == expectedParents);
+	EntityStager::clear();
+}
+
+TEST_CASE("Parents 3.55 - 4 calls - 2 - ((1 - 4), 3)") {
+	EntityStager::clear();
+	DesignExtractor::extractDesignElements(RelationshipASTs::getAST3_55());
+
+	std::vector<std::pair<int, int>> expectedParents{
+		{9, 10}, {9, 11}
+	};
+	std::sort(expectedParents.begin(), expectedParents.end());
+
+	std::vector<std::pair<int, int>> actualParents = EntityStager::getStagedParent();
+	std::sort(actualParents.begin(), actualParents.end());
+
+	REQUIRE(actualParents == expectedParents);
+	EntityStager::clear();
+}
+
 TEST_CASE("Parents 4.1 - Complex AST") {
 	EntityStager::clear();
 	DesignExtractor::extractDesignElements(ComplexASTs::getAST4_1());

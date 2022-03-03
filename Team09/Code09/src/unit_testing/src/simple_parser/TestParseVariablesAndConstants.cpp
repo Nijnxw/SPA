@@ -19,7 +19,7 @@ std::vector<Token*> generateTokens(std::string varName, bool isReadStmt = true) 
 	};
 }
 
-AST generateAST(std::string varName, bool isReadStmt = true) {
+AST generateBasicAST(std::string varName, bool isReadStmt = true) {
 	std::vector<std::shared_ptr<StmtNode>> stmts;
 	if (isReadStmt) {
 		stmts.push_back(std::make_shared<ReadNode>(1, std::make_shared<VariableNode>(varName)));
@@ -32,8 +32,8 @@ AST generateAST(std::string varName, bool isReadStmt = true) {
 		);
 	}
 	std::shared_ptr<ProcedureNode> proc = std::make_shared<ProcedureNode>(stmts, "main");
-	std::vector<std::shared_ptr<ProcedureNode>> procList{ proc };
-	return std::make_shared<ProgramNode>(procList);
+	std::unordered_map<std::string, std::shared_ptr<ProcedureNode>> procMap{ {"main", proc} };
+	return std::make_shared<ProgramNode>(procMap);
 }
 
 // --------------------------------------------------
@@ -44,7 +44,7 @@ TEST_CASE("Var_name validity 6.1 - Lowercase") {
 	std::vector<Token*> input = generateTokens("main");
 	SPParser parser = SPParser(input);
 	AST output = parser.parseProgram();
-	REQUIRE(*output == *generateAST("main"));
+	REQUIRE(*output == *generateBasicAST("main"));
 }
 
 TEST_CASE("Var_name validity 6.2 - Uppercase") {
@@ -52,7 +52,7 @@ TEST_CASE("Var_name validity 6.2 - Uppercase") {
 	std::vector<Token*> input = generateTokens("MAIN");
 	SPParser parser = SPParser(input);
 	AST output = parser.parseProgram();
-	REQUIRE(*output == *generateAST("MAIN"));
+	REQUIRE(*output == *generateBasicAST("MAIN"));
 }
 
 TEST_CASE("Var_name validity 6.3 - Mixed case") {
@@ -60,7 +60,7 @@ TEST_CASE("Var_name validity 6.3 - Mixed case") {
 	std::vector<Token*> input = generateTokens("mAiN");
 	SPParser parser = SPParser(input);
 	AST output = parser.parseProgram();
-	REQUIRE(*output == *generateAST("mAiN"));
+	REQUIRE(*output == *generateBasicAST("mAiN"));
 }
 
 TEST_CASE("Var_name validity 6.4 - Alphanumeric") {
@@ -68,7 +68,7 @@ TEST_CASE("Var_name validity 6.4 - Alphanumeric") {
 	std::vector<Token*> input = generateTokens("main1");
 	SPParser parser = SPParser(input);
 	AST output = parser.parseProgram();
-	REQUIRE(*output == *generateAST("main1"));
+	REQUIRE(*output == *generateBasicAST("main1"));
 }
 
 TEST_CASE("Var_name validity 6.5 - procedure as var_name") {
@@ -76,7 +76,7 @@ TEST_CASE("Var_name validity 6.5 - procedure as var_name") {
 	std::vector<Token*> input = generateTokens("procedure", false);
 	SPParser parser = SPParser(input);
 	AST output = parser.parseProgram();
-	REQUIRE(*output == *generateAST("procedure", false));
+	REQUIRE(*output == *generateBasicAST("procedure", false));
 }
 
 TEST_CASE("Var_name validity 6.6 - read as var_name") {
@@ -84,7 +84,7 @@ TEST_CASE("Var_name validity 6.6 - read as var_name") {
 	std::vector<Token*> input = generateTokens("read", false);
 	SPParser parser = SPParser(input);
 	AST output = parser.parseProgram();
-	REQUIRE(*output == *generateAST("read", false));
+	REQUIRE(*output == *generateBasicAST("read", false));
 }
 
 TEST_CASE("Var_name validity 6.7 - print as var_name") {
@@ -92,7 +92,7 @@ TEST_CASE("Var_name validity 6.7 - print as var_name") {
 	std::vector<Token*> input = generateTokens("print", false);
 	SPParser parser = SPParser(input);
 	AST output = parser.parseProgram();
-	REQUIRE(*output == *generateAST("print", false));
+	REQUIRE(*output == *generateBasicAST("print", false));
 }
 
 TEST_CASE("Var_name validity 6.8 - while as var_name") {
@@ -100,7 +100,7 @@ TEST_CASE("Var_name validity 6.8 - while as var_name") {
 	std::vector<Token*> input = generateTokens("while", false);
 	SPParser parser = SPParser(input);
 	AST output = parser.parseProgram();
-	REQUIRE(*output == *generateAST("while", false));
+	REQUIRE(*output == *generateBasicAST("while", false));
 }
 
 TEST_CASE("Var_name validity 6.9 - if as var_name") {
@@ -108,7 +108,7 @@ TEST_CASE("Var_name validity 6.9 - if as var_name") {
 	std::vector<Token*> input = generateTokens("if", false);
 	SPParser parser = SPParser(input);
 	AST output = parser.parseProgram();
-	REQUIRE(*output == *generateAST("if", false));
+	REQUIRE(*output == *generateBasicAST("if", false));
 }
 
 TEST_CASE("Var_name validity 6.10 - else as var_name") {
@@ -116,7 +116,7 @@ TEST_CASE("Var_name validity 6.10 - else as var_name") {
 	std::vector<Token*> input = generateTokens("else", false);
 	SPParser parser = SPParser(input);
 	AST output = parser.parseProgram();
-	REQUIRE(*output == *generateAST("else", false));
+	REQUIRE(*output == *generateBasicAST("else", false));
 }
 
 TEST_CASE("Var_name validity 6.11 - then as var_name") {
@@ -124,7 +124,7 @@ TEST_CASE("Var_name validity 6.11 - then as var_name") {
 	std::vector<Token*> input = generateTokens("then", false);
 	SPParser parser = SPParser(input);
 	AST output = parser.parseProgram();
-	REQUIRE(*output == *generateAST("then", false));
+	REQUIRE(*output == *generateBasicAST("then", false));
 }
 
 TEST_CASE("Var_name validity 6.12 - var_name can be as long as possible") {
@@ -132,7 +132,7 @@ TEST_CASE("Var_name validity 6.12 - var_name can be as long as possible") {
 	std::vector<Token*> input = generateTokens("supercalifragilisticexpialidocious");
 	SPParser parser = SPParser(input);
 	AST output = parser.parseProgram();
-	REQUIRE(*output == *generateAST("supercalifragilisticexpialidocious"));
+	REQUIRE(*output == *generateBasicAST("supercalifragilisticexpialidocious"));
 }
 
 TEST_CASE("Const validity 7.1 - constant") {
@@ -153,8 +153,8 @@ TEST_CASE("Const validity 7.1 - constant") {
 	};
 
 	std::shared_ptr<ProcedureNode> proc = std::make_shared<ProcedureNode>(stmts, "main");
-	std::vector<std::shared_ptr<ProcedureNode>> procList{ proc };
-	AST expected = std::make_shared<ProgramNode>(procList);
+	std::unordered_map<std::string, std::shared_ptr<ProcedureNode>> procMap{ {"main", proc} };
+	AST expected = std::make_shared<ProgramNode>(procMap);
 
 	REQUIRE(*output == *expected);
 }
@@ -177,8 +177,8 @@ TEST_CASE("Const validity 7.2 - const can be as long as possible") {
 	};
 
 	std::shared_ptr<ProcedureNode> proc = std::make_shared<ProcedureNode>(stmts, "main");
-	std::vector<std::shared_ptr<ProcedureNode>> procList{ proc };
-	AST expected = std::make_shared<ProgramNode>(procList);
+	std::unordered_map<std::string, std::shared_ptr<ProcedureNode>> procMap{ {"main", proc} };
+	AST expected = std::make_shared<ProgramNode>(procMap);
 
 	REQUIRE(*output == *expected);
 }

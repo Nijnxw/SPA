@@ -35,8 +35,8 @@ TEST_CASE ("Print 1.2a - A few print statements") {
 	std::shared_ptr<PrintNode> printNode2 = std::make_shared<PrintNode>(2, std::make_shared<VariableNode>("y"));
 	std::vector<std::shared_ptr<StmtNode>> stmtLst {printNode1, printNode2};
 	std::shared_ptr<ProcedureNode> procedureNode = std::make_shared<ProcedureNode>(stmtLst, "testProgram");
-	std::vector<std::shared_ptr<ProcedureNode>> procLst {procedureNode};
-	AST expected = std::make_shared<ProgramNode>(procLst);
+	std::unordered_map<std::string, std::shared_ptr<ProcedureNode>> procMap{ {"testProgram", procedureNode} };
+	AST expected = std::make_shared<ProgramNode>(procMap);
 
 	REQUIRE(*output == *expected);
 }

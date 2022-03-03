@@ -348,13 +348,30 @@ std::shared_ptr<IfNode> SPParser::parseIf() {
 }
 
 // Main function driving SPParser class (exposed API)
-// program: procedure
+// program: procedure+
 AST SPParser::parseProgram() {
-	std::vector<std::shared_ptr<ProcedureNode>> procedureList;
-	std::shared_ptr<ProcedureNode> procedureNode = parseProcedure();
-	if (!procedureNode) {
+	std::unordered_map<std::string, std::shared_ptr<ProcedureNode>> procedureMap;
+	while (true) {
+		if (check(ParserTokenType::END_OF_FILE)) {
+			break;
+		}
+
+		std::shared_ptr<ProcedureNode> procedureNode = parseProcedure();
+		if (!procedureNode) {
+			throw std::runtime_error("Expected 'procedure' but got '" + peek()->getValue() + "' instead.\n");
+		}
+
+		// SEMANTIC RULE: A program cannot have two procedures with the same name
+		if ( procedureMap.find(procedureNode->getProcName()) != procedureMap.end() ) {
+			throw std::runtime_error("There are 2 procedures with the same name '" + procedureNode->getProcName() + "'.\n");
+		}
+
+		procedureMap.insert(std::make_pair(procedureNode->getProcName(), procedureNode));
+	}
+
+	if (procedureMap.empty()) {
 		throw std::runtime_error("There must be at least 1 procedure in a SIMPLE program!\n");
 	}
-	procedureList.push_back(procedureNode);
-	return std::make_shared<ProgramNode>(procedureList);
+
+	return std::make_shared<ProgramNode>(procedureMap);
 }

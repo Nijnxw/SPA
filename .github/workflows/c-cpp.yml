@@ -14,7 +14,7 @@ jobs:
     steps:
     - uses: actions/checkout@v2
     - name: navigate to correct CMakeLists directory
-      run: cd Team09/Code09
+      run: cd ../../Team09/Code09
     - name: create a build folder for the out-of-source build
       run: mkdir build
     - name: switch to build directory

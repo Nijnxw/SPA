@@ -14,16 +14,13 @@ jobs:
     steps:
     - uses: actions/checkout@v2
     
-    - name: Create Build Environment
-      # Some projects don't allow in-source building, so create a separate build directory
-      # We'll use this as our working directory for all subsequent commands
-      run: cmake -E make_directory ${{github.workspace}}/Team09/Code09/build
-
-    - name: Build
-      working-directory: ${{github.workspace}}/Team09/Code09/build
-      shell: bash
-      # Execute the build.  You can specify a specific target with "--target <NAME>"
-      run: cmake ..
+    - name: "Create build directory and run CMake"
+      working-directory: ${{github.workspace}}/Team09/Code09
+      run: cmake -S . -B build -G "Unix Makefiles" -DCMAKE_BUILD_TYPE=Release
+        
+    - name: "Build Project" 
+      working-directory: ${{github.workspace}}/Team09/Code09
+      run: cmake --build build --target all --config Release -- -j4 
 
     - name: once CMake has done its job we just build using make as usual
       working-directory: ${{github.workspace}}/Team09/Code09/build

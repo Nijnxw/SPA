@@ -14,6 +14,12 @@ jobs:
     steps:
     - uses: actions/checkout@v2
     
+    - name: get-cmake
+      uses: lukka/get-cmake@v3.22.2
+    
+    - name: Setup tmate session
+      uses: mxschmitt/action-tmate@v3
+    
     - name: "Create build directory and run CMake"
       working-directory: ${{github.workspace}}/Team09/Code09
       run: cmake -S . -B build -G "Unix Makefiles" -DCMAKE_BUILD_TYPE=Release

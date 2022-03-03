@@ -1,0 +1,31 @@
+name: C/C++ CI
+
+on:
+  push:
+    branches: [ master ]
+  pull_request:
+    branches: [ master ]
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v2
+    - name: navigate to correct CMakeLists directory
+      run: cd Team09/Code09
+    - name: create a build folder for the out-of-source build
+      run: mkdir build
+    - name: switch to build directory
+      run: cd build
+    - name: run cmake
+      run: cmake ..
+    - name: once CMake has done its job we just build using make as usual
+      run: make -j4
+    - name: navigate to .exe directories
+      run: cd ../tests/
+    - name: run unit test
+      run: ../build/src/unit_testing/unit_testing
+    - name: run integration test
+      run: ../build/src/integration_testing/integration_testing

@@ -43,10 +43,20 @@ std::vector<PQLToken*> Tokeniser::tokenise() {
 		char nextChar = rawQuery->get();
 		while (!rawQuery->eof()) {
 			switch (nextChar) {
+			//Start of string
+			case '"':
+				isWithinStringLiterals = !isWithinStringLiterals;
+				rawToken += nextChar;
+				break;
+
+			//White spaces
 			case ' ':
 			case '\t':
 			case '\n':
-				pushToken();
+				// ignore whitespaceif its within string literals
+				if (!isWithinStringLiterals) {
+					pushToken();
+				}
 				break;
 
 			case '_':

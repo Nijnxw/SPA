@@ -2,11 +2,13 @@
 
 #include <string>
 #include <unordered_set>
+#include <vector>
 
 class NestableRelationships {
 private:
 	std::unordered_set<std::string> uses;
 	std::unordered_set<std::string> modifies;
+	std::vector<std::string> calls;
 	std::unordered_set<int> children;
 
 public:
@@ -14,14 +16,18 @@ public:
 
 	void addUses(std::string used);
 	void addModifies(std::string modified);
+	void addCalls(std::string procedure);
 	void addChildren(int child);
+	void clearChildren();
 
 	std::unordered_set<std::string> getUses();
 	std::unordered_set<std::string> getModifies();
+	std::vector<std::string> getCalls();
 	std::unordered_set<int> getChildren();
 
 	int getUsesSize();
 	int getModifiesSize();
+	int getCallsSize();
 	int getChildrenSize();
 
 	void combine(NestableRelationships other);

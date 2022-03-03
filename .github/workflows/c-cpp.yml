@@ -1,0 +1,41 @@
+name: C/C++ CI
+
+on:
+  push:
+    branches: [ master ]
+  pull_request:
+    branches: [ master ]
+
+jobs:
+  build:
+
+    runs-on: macos-latest
+
+    steps:
+    - uses: actions/checkout@v2
+    
+    - name: get-cmake
+      uses: lukka/get-cmake@v3.22.2
+    
+    - name: mkdir build
+      working-directory: ${{github.workspace}}/Team09/Code09
+      run: mkdir build
+        
+    - name: cmake using CMakeLists.txt
+      working-directory: ${{github.workspace}}/Team09/Code09/build
+      run: cmake ..
+
+    - name: running make...
+      working-directory: ${{github.workspace}}/Team09/Code09/build
+      shell: bash
+      run: make -j4
+      
+    - name: running unit tests...
+      working-directory: ${{github.workspace}}/Team09/Code09/build
+      shell: bash
+      run: ./src/unit_testing/unit_testing
+      
+    - name: running integration tests...
+      working-directory: ${{github.workspace}}/Team09/Code09/build
+      shell: bash
+      run: ./src/integration_testing/integration_testing

@@ -17,6 +17,8 @@ TEST_CASE("Follows Relationship API") {
 		PKB::addFollowsT(1, 3);
 		PKB::addFollowsT(4, 5);
 
+		PKB::addStatementWithType(EntityType::CALL, 1);
+
 		// --------------------------------------------------
 		//                  LHS int
 		// --------------------------------------------------
@@ -34,6 +36,11 @@ TEST_CASE("Follows Relationship API") {
 		SECTION("Follows(4, 5) positive query") {
 			QueryClauseResult res = followsEvaluator.getFollows("4", "5", EntityType::INT, EntityType::INT, false);
 			REQUIRE(res.containsValidResult() == true);
+		}
+
+		SECTION("Follows(1, 1) negative query") {
+			QueryClauseResult res = followsEvaluator.getFollows("1", "1", EntityType::INT, EntityType::INT, false);
+			REQUIRE(res.containsValidResult() == false);
 		}
 
 		SECTION("Follows(1, 3) negative query") {
@@ -60,6 +67,11 @@ TEST_CASE("Follows Relationship API") {
 		SECTION("FollowsT(1, 3) positive query") {
 			QueryClauseResult res = followsEvaluator.getFollowsT("1", "3", EntityType::INT, EntityType::INT, false);
 			REQUIRE(res.containsValidResult() == true);
+		}
+
+		SECTION("FollowsT(1, 1) negative query") {
+			QueryClauseResult res = followsEvaluator.getFollowsT("1", "1", EntityType::INT, EntityType::INT, false);
+			REQUIRE(res.containsValidResult() == false);
 		}
 
 		SECTION("FollowsT(1, 4) negative query") {
@@ -171,6 +183,13 @@ TEST_CASE("Follows Relationship API") {
 			QueryClauseResult res = followsEvaluator.getFollows("s", "2", EntityType::STMT, EntityType::INT, false);
 			REQUIRE(res.containsValidResult() == true);
 			Table expectedTable = {{"s", {"1"}}};
+			REQUIRE(res == QueryClauseResult(expectedTable));
+		}
+
+		SECTION("Follows(c, 2) positive query") {
+			QueryClauseResult res = followsEvaluator.getFollows("c", "2", EntityType::CALL, EntityType::INT, false);
+			REQUIRE(res.containsValidResult() == true);
+			Table expectedTable = { {"c", {"1"}} };
 			REQUIRE(res == QueryClauseResult(expectedTable));
 		}
 

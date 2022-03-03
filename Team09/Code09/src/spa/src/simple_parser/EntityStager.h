@@ -28,6 +28,8 @@ private:
 	static inline std::vector<std::pair<int, int>> stagedFollowsT;
 	static inline std::vector<std::pair<int, int>> stagedParent;
 	static inline std::vector<std::pair<int, int>> stagedParentT;
+	static inline std::vector<std::pair<std::string, std::string>> stagedCalls;
+	static inline std::vector<std::pair<std::string, std::string>> stagedCallsT;
 
 	static inline std::vector<std::pair<int, std::unordered_set<std::string>>> stagedUsesStatement;
 	static inline std::vector<std::pair<std::string, std::unordered_set<std::string>>> stagedUsesProcedure;
@@ -57,6 +59,8 @@ public:
 	static std::vector<std::pair<int, int>> getStagedFollowsT();
 	static std::vector<std::pair<int, int>> getStagedParent();
 	static std::vector<std::pair<int, int>> getStagedParentT();
+	static std::vector<std::pair<std::string, std::string>> getStagedCalls();
+	static std::vector<std::pair<std::string, std::string>> getStagedCallsT();
 
 	static std::vector<std::pair<int, std::unordered_set<std::string>>> getStagedUsesStatement();
 	static std::vector<std::pair<std::string, std::unordered_set<std::string>>> getStagedUsesProcedure();
@@ -81,6 +85,8 @@ public:
 	static void stageFollowsT(int follower, int followee);
 	static void stageParent(int parent, std::unordered_set<int> children);
 	static void stageParentT(int parent, std::unordered_set<int> children);
+	static void stageCalls(std::string caller, std::string callee);
+	static void stageCallsT(std::string caller, std::string callee);
 
 	static void stageUsesStatements(int stmt, std::unordered_set<std::string> variables);
 	static void stageUsesProcedure(std::string proc, std::unordered_set<std::string> variables);

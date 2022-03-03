@@ -12,9 +12,10 @@ protected:
 	static std::shared_ptr<ConstantNode> c3;
 
 	static std::shared_ptr<VariableNode> a;
+	static std::shared_ptr<VariableNode> b;
 	static std::shared_ptr<VariableNode> x;
 	static std::shared_ptr<VariableNode> y;
 	static std::shared_ptr<VariableNode> z;
 public:
-	static AST generateAST(std::vector<std::shared_ptr<StmtNode>> stmts);
+	static AST generateBasicAST(std::vector<std::shared_ptr<StmtNode>> stmts);
 };

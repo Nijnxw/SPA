@@ -3,6 +3,7 @@
 #include "CommonNodes.h"
 #include "models/simple_parser/AST.h"
 #include "models/simple_parser/AssignNode.h"
+#include "models/simple_parser/CallNode.h"
 #include "models/simple_parser/ExprNodes.h"
 #include "models/simple_parser/IfNode.h"
 #include "models/simple_parser/IoNodes.h"
@@ -77,6 +78,19 @@ public:
 	static AST getAST1_72();
 	static AST getAST1_73();
 
+	// multiple procedures
+	static AST getAST1_74();
+	static AST getAST1_75();
+	static AST getAST1_76();
+	static AST getAST1_77();
+	static AST getAST1_78();
+
+	// call statement
+	static AST getAST1_79();
+	static AST getAST1_80();
+	static AST getAST1_81();
+	static AST getAST1_82();
+	static AST getAST1_83();
 };
 
 

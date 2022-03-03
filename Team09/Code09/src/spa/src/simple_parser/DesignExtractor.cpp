@@ -87,7 +87,7 @@ NestableRelationships processPrintNode(std::shared_ptr<PrintNode> print) {
 
 NestableRelationships processReadNode(std::shared_ptr<ReadNode> read) {
 	processVariableNode(read->getVariable());
-	EntityStager::stageReadStatement(read->getStmtNumber());
+	EntityStager::stageReadStatement(read->getStmtNumber(), read->getVariableName());
 
 	//stage relationships
 	NestableRelationships rs = NestableRelationships::createEmpty();

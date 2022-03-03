@@ -46,9 +46,16 @@ std::unordered_set<int> EntityStager::getStagedStatements() {
 }
 
 std::unordered_set<int> EntityStager::getStagedReadStatements() {
-	return stagedReadStatements;
+	std::unordered_set<int> output;
+	for (auto& read : stagedReadStatements) {
+		output.insert(read.first);
+	}
+	return output;
 }
 
+std::unordered_map<int, std::string> EntityStager::getStagedReads() {
+	return stagedReadStatements;
+}
 std::unordered_set<int> EntityStager::getStagedPrintStatements() {
 	return stagedPrintStatements;
 }
@@ -134,8 +141,8 @@ void EntityStager::stageWhileStatement(int stmtNo) {
 	stagedWhileStatements.insert(stmtNo);
 }
 
-void EntityStager::stageReadStatement(int stmtNo) {
-	stagedReadStatements.insert(stmtNo);
+void EntityStager::stageReadStatement(int stmtNo, std::string varName) {
+	stagedReadStatements.insert({stmtNo, varName});
 }
 
 void EntityStager::stagePrintStatement(int stmtNo) {
@@ -202,7 +209,9 @@ void EntityStager::commit() {
 	for (auto& con: stagedVariables) { PKB::addVariable(con); }
 
 	for (auto& stmt: stagedStatements) { PKB::addStatementNumber(stmt); }
-	for (auto& read: stagedReadStatements) { PKB::addStatementWithType(EntityType::READ, read); }
+	for (auto& read: stagedReadStatements) {
+		PKB::addStatementWithType(EntityType::READ, read.first);
+	}
 	for (auto& print: stagedPrintStatements) { PKB::addStatementWithType(EntityType::PRINT, print); }
 	for (auto& ifs: stagedIfStatements) { PKB::addStatementWithType(EntityType::IF, ifs); }
 	for (auto& whiles: stagedWhileStatements) { PKB::addStatementWithType(EntityType::WHILE, whiles); }

@@ -5,6 +5,7 @@
 
 #include <string>
 #include <tuple>
+#include <unordered_map>
 #include <unordered_set>
 #include <utility>
 #include <vector>
@@ -16,7 +17,7 @@ private:
 	static inline std::unordered_set<std::string> stagedConstants;
 
 	static inline std::unordered_set<int> stagedStatements;
-	static inline std::unordered_set<int> stagedReadStatements;
+	static inline std::unordered_map<int, std::string> stagedReadStatements;
 	static inline std::unordered_set<int> stagedPrintStatements;
 	static inline std::unordered_set<int> stagedIfStatements;
 	static inline std::unordered_set<int> stagedWhileStatements;
@@ -48,6 +49,7 @@ public:
 
 	static std::unordered_set<int> getStagedStatements();
 	static std::unordered_set<int> getStagedReadStatements();
+	static std::unordered_map<int, std::string> getStagedReads();
 	static std::unordered_set<int> getStagedPrintStatements();
 	static std::unordered_set<int> getStagedIfStatements();
 	static std::unordered_set<int> getStagedWhileStatements();
@@ -75,7 +77,7 @@ public:
 	static void stageStatement(int stmtNo);
 	static void stageIfStatement(int stmtNo);
 	static void stageWhileStatement(int stmtNo);
-	static void stageReadStatement(int stmtNo);
+	static void stageReadStatement(int stmtNo, std::string varName);
 	static void stagePrintStatement(int stmtNo);
 	static void stageCallStatement(int stmtNo);
 

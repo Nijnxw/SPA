@@ -20,7 +20,7 @@ TEST_CASE("Test EntityStager interaction with PKB") {
 	EntityStager::stageStatement(1);
 	EntityStager::stageIfStatement(1);
 	EntityStager::stageWhileStatement(1);
-	EntityStager::stageReadStatement(1);
+	EntityStager::stageReadStatement(1, "var1");
 	EntityStager::stagePrintStatement(1);
 	EntityStager::stageCallStatement(1);
 	EntityStager::stageAssignStatement(1, "var1", "var2 + var3");

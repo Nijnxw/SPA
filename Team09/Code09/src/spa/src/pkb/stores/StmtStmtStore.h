@@ -3,7 +3,7 @@
 #include "pkb/stores/Store.h"
 
 class StmtStmtStore : public Store {
-private:
+protected:
 	std::unordered_map<int, std::unordered_set<int>> firstStatementToSecondStatements;
 	std::unordered_map<int, int> secondStatementToFirstStatement;
 	std::unordered_set<std::pair<int, int>, PKBUtil::hashFunction> relationshipPairs;

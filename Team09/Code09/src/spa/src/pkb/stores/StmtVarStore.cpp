@@ -2,6 +2,7 @@
 
 void StmtVarStore::clear() {
 	stmtInRelationship.clear();
+	procInRelationship.clear();
 	varInRelationship.clear();
 	stmtToVarRelationship.clear();
 	varToStmtRelationship.clear();
@@ -13,6 +14,9 @@ void StmtVarStore::clear() {
 
 std::unordered_set<int> StmtVarStore::getStmtInRelationship() {
 	return stmtInRelationship;
+}
+std::unordered_set<std::string> StmtVarStore::getProcInRelationship() {
+	return procInRelationship;
 }
 std::unordered_set<std::string> StmtVarStore::getVarInRelationship() {
 	return varInRelationship;
@@ -74,6 +78,19 @@ StmtVarStore::getStmtToVarByStmts(const std::unordered_set<int>& stmts) {
 	return { resultStmts, resultVars };
 }
 
+std::tuple<std::vector<std::string>, std::vector<std::string>>
+StmtVarStore::getProcToVarByProcs(const std::unordered_set<std::string>& procs) {
+	std::vector<std::string> resultProcs;
+	std::vector<std::string> resultVars;
+	for (std::string proc : procs) {
+		for (const std::string& var : getVarByProc(proc)) {
+			resultProcs.push_back(proc);
+			resultVars.push_back(var);
+		}
+	}
+	return { resultProcs, resultVars };
+}
+
 // ============ STORE METHODS ==============
 
 bool StmtVarStore::addStmtVarRelationship(int statementNumber, const std::unordered_set<std::string>& variables) {
@@ -94,6 +111,7 @@ bool StmtVarStore::addStmtVarRelationship(int statementNumber, const std::unorde
 }
 
 bool StmtVarStore::addProcVarRelationship(const std::string& procedure, const std::unordered_set<std::string>& variables) {
+	procInRelationship.insert(procedure);
 
 	if (!procToVarRelationship.emplace(procedure, variables).second) {
 		procToVarRelationship.at(procedure).insert(variables.begin(), variables.end());

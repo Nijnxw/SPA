@@ -1,5 +1,8 @@
 #include "PatternAssignEvaluator.h"
 
+PatternAssignEvaluator::PatternAssignEvaluator()
+	: PatternEvaluator() {}
+
 QueryClauseResult
 PatternAssignEvaluator::getPattern(const std::string& LHS, const std::string& RHS, const std::string& clauseSyn,
 							  EntityType LHSType, EntityType RHSType,

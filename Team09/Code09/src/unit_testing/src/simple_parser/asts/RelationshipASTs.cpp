@@ -9,7 +9,7 @@ std::shared_ptr<ConstantNode> generateConstant(int conValue) {
 	return std::make_shared<ConstantNode>(std::to_string(conValue));
 }
 
-AST generateAST(std::vector<std::shared_ptr<StmtNode>> stmts, std::string progName) {
+AST generateBasicAST(std::vector<std::shared_ptr<StmtNode>> stmts, std::string progName) {
 	std::shared_ptr<ProcedureNode> proc = std::make_shared<ProcedureNode>(stmts, progName);
 	std::unordered_map<std::string, std::shared_ptr<ProcedureNode>> procMap{ {progName, proc} };
 	return std::make_shared<ProgramNode>(procMap);
@@ -81,7 +81,7 @@ AST RelationshipASTs::getAST3_5() {
 		std::make_shared<ReadNode>(1, x),
 		std::make_shared<PrintNode>(2, x)
 	};
-	return generateAST(stmtList, "testProgram");
+	return generateBasicAST(stmtList, "testProgram");
 }
 
 AST RelationshipASTs::getAST3_6() {
@@ -95,7 +95,7 @@ AST RelationshipASTs::getAST3_6() {
 		std::make_shared<ReadNode>(1, x),
 		std::make_shared<AssignNode>(2, x, xPlus1, "x 1 +")
 	};
-	return generateAST(stmtList, "testProgram");
+	return generateBasicAST(stmtList, "testProgram");
 }
 
 AST RelationshipASTs::getAST3_7() {
@@ -109,7 +109,7 @@ AST RelationshipASTs::getAST3_7() {
 		std::make_shared<PrintNode>(1, x),
 		std::make_shared<AssignNode>(2, x, xPlus1, "x 1 +")
 	};
-	return generateAST(stmtList, "testProgram");
+	return generateBasicAST(stmtList, "testProgram");
 }
 
 AST RelationshipASTs::getAST3_8() {
@@ -125,7 +125,7 @@ AST RelationshipASTs::getAST3_8() {
 		std::make_shared<PrintNode>(2, x),
 		std::make_shared<AssignNode>(3, x, xPlus1, "x 1 +")
 	};
-	return generateAST(stmtList, "testProgram");
+	return generateBasicAST(stmtList, "testProgram");
 }
 
 AST RelationshipASTs::getAST3_9() {
@@ -141,7 +141,7 @@ AST RelationshipASTs::getAST3_9() {
 		std::make_shared<ReadNode>(2, y),
 		std::make_shared<ReadNode>(3, z)
 	};
-	return generateAST(stmtList, "testProgram");
+	return generateBasicAST(stmtList, "testProgram");
 }
 
 AST RelationshipASTs::getAST3_10() {
@@ -157,7 +157,7 @@ AST RelationshipASTs::getAST3_10() {
 		std::make_shared<PrintNode>(2, x),
 		std::make_shared<ReadNode>(3, x)
 	};
-	return generateAST(stmtList, "testProgram");
+	return generateBasicAST(stmtList, "testProgram");
 }
 
 AST RelationshipASTs::getAST3_11() {
@@ -180,7 +180,7 @@ AST RelationshipASTs::getAST3_11() {
 		std::make_shared<PrintNode>(2, x),
 		std::make_shared<WhileNode>(3, predXLt1, whileStmtList)
 	};
-	return generateAST(stmtList, "testProgram");
+	return generateBasicAST(stmtList, "testProgram");
 }
 
 AST RelationshipASTs::getAST3_12() {
@@ -203,7 +203,7 @@ AST RelationshipASTs::getAST3_12() {
 		std::make_shared<ReadNode>(3, x),
 		std::make_shared<PrintNode>(4, x)
 	};
-	return generateAST(stmtList, "testProgram");
+	return generateBasicAST(stmtList, "testProgram");
 }
 
 AST RelationshipASTs::getAST3_13() {
@@ -226,7 +226,7 @@ AST RelationshipASTs::getAST3_13() {
 		std::make_shared<WhileNode>(2, predXLt1, whileStmtList),
 		std::make_shared<PrintNode>(4, x)
 	};
-	return generateAST(stmtList, "testProgram");
+	return generateBasicAST(stmtList, "testProgram");
 }
 
 AST RelationshipASTs::getAST3_14() {
@@ -254,7 +254,7 @@ AST RelationshipASTs::getAST3_14() {
 		std::make_shared<PrintNode>(2, x),
 		std::make_shared<IfNode>(3, predXLt1, thenStmtList, elseStmtList)
 	};
-	return generateAST(stmtList, "testProgram");
+	return generateBasicAST(stmtList, "testProgram");
 }
 
 AST RelationshipASTs::getAST3_15() {
@@ -282,7 +282,7 @@ AST RelationshipASTs::getAST3_15() {
 		std::make_shared<ReadNode>(4, x),
 		std::make_shared<PrintNode>(5, x)
 	};
-	return generateAST(stmtList, "testProgram");
+	return generateBasicAST(stmtList, "testProgram");
 }
 
 AST RelationshipASTs::getAST3_16() {
@@ -310,7 +310,7 @@ AST RelationshipASTs::getAST3_16() {
 		std::make_shared<IfNode>(2, predXLt1, thenStmtList, elseStmtList),
 		std::make_shared<PrintNode>(5, x)
 	};
-	return generateAST(stmtList, "testProgram");
+	return generateBasicAST(stmtList, "testProgram");
 }
 
 AST RelationshipASTs::getAST3_17() {
@@ -342,7 +342,7 @@ AST RelationshipASTs::getAST3_17() {
 		std::make_shared<WhileNode>(1, predXLt1, whileStmtList),
 		std::make_shared<IfNode>(3, predXLt1, thenStmtList, elseStmtList)
 	};
-	return generateAST(stmtList, "testProgram");
+	return generateBasicAST(stmtList, "testProgram");
 }
 
 AST RelationshipASTs::getAST3_18() {
@@ -365,7 +365,7 @@ AST RelationshipASTs::getAST3_18() {
 	std::vector<std::shared_ptr<StmtNode>> stmtList{
 		std::make_shared<WhileNode>(1, predXLt1, whileStmtList)
 	};
-	return generateAST(stmtList, "testProgram");
+	return generateBasicAST(stmtList, "testProgram");
 }
 
 AST RelationshipASTs::getAST3_19() {
@@ -397,7 +397,7 @@ AST RelationshipASTs::getAST3_19() {
 	std::vector<std::shared_ptr<StmtNode>> stmtList{
 		std::make_shared<IfNode>(1, predXLt1, thenStmtList, elseStmtList)
 	};
-	return generateAST(stmtList, "testProgram");
+	return generateBasicAST(stmtList, "testProgram");
 }
 
 AST RelationshipASTs::getAST3_20() {
@@ -437,7 +437,7 @@ AST RelationshipASTs::getAST3_20() {
 	std::vector<std::shared_ptr<StmtNode>> stmtList{
 		std::make_shared<IfNode>(1, predXLt1, thenStmtList, elseStmtList)
 	};
-	return generateAST(stmtList, "testProgram");
+	return generateBasicAST(stmtList, "testProgram");
 }
 
 AST RelationshipASTs::getAST3_21() {
@@ -487,7 +487,7 @@ AST RelationshipASTs::getAST3_21() {
 	std::vector<std::shared_ptr<StmtNode>> stmtList{
 		std::make_shared<IfNode>(1, predXLt1, thenStmtList, elseStmtList)
 	};
-	return generateAST(stmtList, "testProgram");
+	return generateBasicAST(stmtList, "testProgram");
 }
 
 AST RelationshipASTs::getAST3_22() {
@@ -518,7 +518,7 @@ AST RelationshipASTs::getAST3_22() {
 	std::vector<std::shared_ptr<StmtNode>> stmtList{
 		std::make_shared<WhileNode>(1, predXLt1, whileStmtList)
 	};
-	return generateAST(stmtList, "testProgram");
+	return generateBasicAST(stmtList, "testProgram");
 }
 
 AST RelationshipASTs::getAST3_23() {
@@ -544,7 +544,7 @@ AST RelationshipASTs::getAST3_23() {
 	std::vector<std::shared_ptr<StmtNode>> stmtList{
 		std::make_shared<WhileNode>(1, predXLt1, whileStmtList)
 	};
-	return generateAST(stmtList, "testProgram");
+	return generateBasicAST(stmtList, "testProgram");
 }
 
 AST RelationshipASTs::getAST3_24() {
@@ -594,7 +594,7 @@ AST RelationshipASTs::getAST3_24() {
 	std::vector<std::shared_ptr<StmtNode>> stmtList{
 		std::make_shared<IfNode>(1, predXLt1, thenStmtList, elseStmtList)
 	};
-	return generateAST(stmtList, "testProgram");
+	return generateBasicAST(stmtList, "testProgram");
 }
 
 AST RelationshipASTs::getAST3_25() {
@@ -644,7 +644,7 @@ AST RelationshipASTs::getAST3_25() {
 	std::vector<std::shared_ptr<StmtNode>> stmtList{
 		std::make_shared<IfNode>(1, predXLt1, thenStmtList, elseStmtList)
 	};
-	return generateAST(stmtList, "testProgram");
+	return generateBasicAST(stmtList, "testProgram");
 }
 
 AST RelationshipASTs::getAST3_26() {
@@ -694,7 +694,7 @@ AST RelationshipASTs::getAST3_26() {
 	std::vector<std::shared_ptr<StmtNode>> stmtList{
 		std::make_shared<IfNode>(1, predXLt1, thenStmtList, elseStmtList)
 	};
-	return generateAST(stmtList, "testProgram");
+	return generateBasicAST(stmtList, "testProgram");
 }
 
 AST RelationshipASTs::getAST3_27() {
@@ -736,7 +736,7 @@ AST RelationshipASTs::getAST3_27() {
 		std::make_shared<WhileNode>(1, predXLt1, whileStmtList)
 	};
 
-	return generateAST(stmtList, "testProgram");
+	return generateBasicAST(stmtList, "testProgram");
 }
 
 AST RelationshipASTs::getAST3_28() {
@@ -778,7 +778,7 @@ AST RelationshipASTs::getAST3_28() {
 		std::make_shared<WhileNode>(1, predXLt1, whileStmtList)
 	};
 
-	return generateAST(stmtList, "testProgram");
+	return generateBasicAST(stmtList, "testProgram");
 }
 
 AST RelationshipASTs::getAST3_29() {
@@ -820,7 +820,7 @@ AST RelationshipASTs::getAST3_29() {
 		std::make_shared<WhileNode>(1, predXLt1, whileStmtList)
 	};
 
-	return generateAST(stmtList, "testProgram");
+	return generateBasicAST(stmtList, "testProgram");
 }
 
 AST RelationshipASTs::getAST3_30() {
@@ -870,7 +870,7 @@ AST RelationshipASTs::getAST3_30() {
 	std::vector<std::shared_ptr<StmtNode>> stmtList{
 		std::make_shared<IfNode>(1, predXLt1, thenStmtList, elseStmtList)
 	};
-	return generateAST(stmtList, "testProgram");
+	return generateBasicAST(stmtList, "testProgram");
 }
 
 AST RelationshipASTs::getAST3_31() {
@@ -905,7 +905,7 @@ AST RelationshipASTs::getAST3_31() {
 	std::vector<std::shared_ptr<StmtNode>> stmtList{
 		std::make_shared<WhileNode>(1, predXLt1, whileStmtList)
 	};
-	return generateAST(stmtList, "testProgram");
+	return generateBasicAST(stmtList, "testProgram");
 }
 
 AST RelationshipASTs::getAST3_32() {
@@ -952,7 +952,7 @@ AST RelationshipASTs::getAST3_32() {
 	std::vector<std::shared_ptr<StmtNode>> stmtList{
 		std::make_shared<WhileNode>(1, predXLt1, whileStmtList)
 	};
-	return generateAST(stmtList, "testProgram");
+	return generateBasicAST(stmtList, "testProgram");
 }
 
 AST RelationshipASTs::getAST3_33() {
@@ -996,5 +996,1205 @@ AST RelationshipASTs::getAST3_33() {
 	std::vector<std::shared_ptr<StmtNode>> stmtList{
 		std::make_shared<IfNode>(1, predXLt1, thenStmtList, elseStmtList)
 	};
-	return generateAST(stmtList, "testProgram");
+	return generateBasicAST(stmtList, "testProgram");
+}
+
+AST RelationshipASTs::getAST3_34() {
+	/*
+	 * procedure testProgram {
+	 * 1   if (x < 1) then {
+	 * 2     while (y < 1) {
+	 * 3       read y;
+	 * 4       print x;
+	 * 5       x = x + 1;
+	 *       }
+	 * 6     read x;
+	 * 7     x = x + 1;
+	 *     } else {
+	 * 8     read z;
+	 * 9     print y;
+	 * 10    while (y < 1) {
+	 * 11      read y;
+	 * 12      print x;
+	 * 13      x = x + 1;
+	 *       }
+	 *     }
+	 *   }
+	 * 
+	 *   procedure testProgram2 {
+	 * 14  while (x < 1) {
+	 * 15    if (y < 2) then {
+	 * 16      while (z < 3) {
+	 * 17        read z;
+	 *         }
+	 * 18      read y;
+	 *       } else {
+	 * 19      while (w < 3) {
+	 * 20         read w;
+	 *         }
+	 * 21      read w;
+	 *       }
+	 * 22    read x;
+	 *     }
+	 *   }
+
+	 */
+
+	std::vector<std::shared_ptr<StmtNode>> thenWhileStmtList{
+		std::make_shared<ReadNode>(3, y),
+		std::make_shared<PrintNode>(4, x),
+		std::make_shared<AssignNode>(5, x, xPlus1, "x 1 +")
+	};
+	std::vector<std::shared_ptr<StmtNode>> thenStmtList{
+		std::make_shared<WhileNode>(2, predYLt1, thenWhileStmtList),
+		std::make_shared<ReadNode>(6, x),
+		std::make_shared<AssignNode>(7, x, xPlus1, "x 1 +")
+	};
+
+	std::vector<std::shared_ptr<StmtNode>> elseWhileStmtList{
+		std::make_shared<ReadNode>(11, y),
+		std::make_shared<PrintNode>(12, x),
+		std::make_shared<AssignNode>(13, x, xPlus1, "x 1 +")
+	};
+	std::vector<std::shared_ptr<StmtNode>> elseStmtList{
+		std::make_shared<ReadNode>(8, z),
+		std::make_shared<PrintNode>(9, y),
+		std::make_shared<WhileNode>(10, predYLt1, elseWhileStmtList)
+	};
+	std::vector<std::shared_ptr<StmtNode>> proc1StmtLst{
+		std::make_shared<IfNode>(1, predXLt1, thenStmtList, elseStmtList)
+	};
+
+	std::shared_ptr<ProcedureNode> proc1 = std::make_shared<ProcedureNode>(proc1StmtLst, "testProgram");
+
+	std::vector<std::shared_ptr<StmtNode>> whileThenWhileStmtList{
+	std::make_shared<ReadNode>(17, z)
+	};
+	std::vector<std::shared_ptr<StmtNode>> whileThenStmtList{
+		std::make_shared<WhileNode>(16, predZLt3, whileThenWhileStmtList),
+		std::make_shared<ReadNode>(18, y)
+	};
+
+	std::vector<std::shared_ptr<StmtNode>> whileElseWhileStmtList{
+		std::make_shared<ReadNode>(20, w)
+	};
+	std::vector<std::shared_ptr<StmtNode>> whileElseStmtList{
+		std::make_shared<WhileNode>(19, predWLt3, whileElseWhileStmtList),
+		std::make_shared<ReadNode>(21, w)
+	};
+
+	std::vector<std::shared_ptr<StmtNode>> whileStmtList{
+		std::make_shared<IfNode>(15, predYLt2, whileThenStmtList, whileElseStmtList),
+		std::make_shared<ReadNode>(22, x)
+	};
+
+	std::vector<std::shared_ptr<StmtNode>> proc2StmtLst{
+		std::make_shared<WhileNode>(14, predXLt1, whileStmtList)
+	};
+
+	std::shared_ptr<ProcedureNode> proc2 = std::make_shared<ProcedureNode>(proc2StmtLst, "testProgram2");
+	std::unordered_map<std::string, std::shared_ptr<ProcedureNode>> procMap{
+		{"testProgram", proc1},
+		{"testProgram2", proc2},
+	};
+
+	return std::make_shared<ProgramNode>(procMap);
+}
+
+AST RelationshipASTs::getAST3_35() {
+	/*
+	 *  procedure testProgram1 {
+	 * 1  read y;
+	 * 2  read x;
+	 * 3  call testProgram2;
+	 *  }
+	 *
+	 *  procedure testProgram2 {
+	 * 4  print x;
+	 * 5  print y;
+	 *  }
+     */
+
+	std::vector<std::shared_ptr<StmtNode>> proc1StmtLst{
+		std::make_shared<ReadNode>(1, y),
+		std::make_shared<ReadNode>(2, x),
+		std::make_shared<CallNode>(3, "testProgram2")
+	};
+	std::shared_ptr<ProcedureNode> proc1 = std::make_shared<ProcedureNode>(proc1StmtLst, "testProgram1");
+
+	std::vector<std::shared_ptr<StmtNode>> proc2StmtLst{
+		std::make_shared<PrintNode>(4, x),
+		std::make_shared<PrintNode>(5, y)
+	};
+	std::shared_ptr<ProcedureNode> proc2 = std::make_shared<ProcedureNode>(proc2StmtLst, "testProgram2");
+
+	std::unordered_map<std::string, std::shared_ptr<ProcedureNode>> procMap{
+		{"testProgram1", proc1},
+		{"testProgram2", proc2}
+	};
+	return std::make_shared<ProgramNode>(procMap);
+}
+
+AST RelationshipASTs::getAST3_36() {
+	/*
+	 *  procedure testProgram1 {
+	 * 1  read y;
+	 * 2  read x;
+	 *  }
+	 *
+	 *  procedure testProgram2 {
+	 * 3  print x;
+	 * 4  print y;
+	 * 5  call testProgram1;
+	 *  }
+	 */
+
+	std::vector<std::shared_ptr<StmtNode>> proc1StmtLst{
+		std::make_shared<ReadNode>(1, y),
+		std::make_shared<ReadNode>(2, x)
+	};
+	std::shared_ptr<ProcedureNode> proc1 = std::make_shared<ProcedureNode>(proc1StmtLst, "testProgram1");
+
+	std::vector<std::shared_ptr<StmtNode>> proc2StmtLst{
+		std::make_shared<PrintNode>(3, x),
+		std::make_shared<PrintNode>(4, y),
+		std::make_shared<CallNode>(5, "testProgram1")
+	};
+	std::shared_ptr<ProcedureNode> proc2 = std::make_shared<ProcedureNode>(proc2StmtLst, "testProgram2");
+
+	std::unordered_map<std::string, std::shared_ptr<ProcedureNode>> procMap{
+		{"testProgram1", proc1},
+		{"testProgram2", proc2}
+	};
+	return std::make_shared<ProgramNode>(procMap);
+}
+
+AST RelationshipASTs::getAST3_37() {
+	/*
+	 *  procedure testProgram1 {
+	 * 1  read y;
+	 * 2  print x;
+	 *  }
+	 *
+	 *  procedure testProgram2 {
+	 * 3  if (y < 2) then {
+	 * 4    call testProgram1;
+	 * 5    read y;
+	 *    } else {
+	 * 6    read w;
+	 *    }
+	 *  }
+	 */
+
+	std::vector<std::shared_ptr<StmtNode>> proc1StmtLst{
+		std::make_shared<ReadNode>(1, y),
+		std::make_shared<PrintNode>(2, x)
+	};
+	std::shared_ptr<ProcedureNode> proc1 = std::make_shared<ProcedureNode>(proc1StmtLst, "testProgram1");
+
+	std::vector<std::shared_ptr<StmtNode>> thenStmtList{
+		std::make_shared<CallNode>(4, "testProgram1"),
+		std::make_shared<ReadNode>(5, y)
+	};
+	std::vector<std::shared_ptr<StmtNode>> elseStmtList{
+		std::make_shared<ReadNode>(6, w)
+	};
+
+	std::vector<std::shared_ptr<StmtNode>> proc2StmtLst{
+		std::make_shared<IfNode>(3, predYLt2, thenStmtList, elseStmtList)
+	};
+	std::shared_ptr<ProcedureNode> proc2 = std::make_shared<ProcedureNode>(proc2StmtLst, "testProgram2");
+
+	std::unordered_map<std::string, std::shared_ptr<ProcedureNode>> procMap{
+		{"testProgram1", proc1},
+		{"testProgram2", proc2}
+	};
+	return std::make_shared<ProgramNode>(procMap);
+}
+
+AST RelationshipASTs::getAST3_38() {
+	/*
+	 *  procedure testProgram1 {
+	 * 1  read y;
+	 * 2  print x;
+	 *  }
+	 *
+	 *  procedure testProgram2 {
+	 * 3  if (y < 2) then {
+	 * 4    read y;
+	 *    } else {
+	 * 5    call testProgram1;
+	 * 6    read w;
+	 *    }
+	 *  }
+	 */
+
+	std::vector<std::shared_ptr<StmtNode>> proc1StmtLst{
+		std::make_shared<ReadNode>(1, y),
+		std::make_shared<PrintNode>(2, x)
+	};
+	std::shared_ptr<ProcedureNode> proc1 = std::make_shared<ProcedureNode>(proc1StmtLst, "testProgram1");
+
+	std::vector<std::shared_ptr<StmtNode>> thenStmtList{
+		std::make_shared<ReadNode>(4, y)
+	};
+	std::vector<std::shared_ptr<StmtNode>> elseStmtList{
+		std::make_shared<CallNode>(5, "testProgram1"),
+		std::make_shared<ReadNode>(6, w)
+	};
+
+	std::vector<std::shared_ptr<StmtNode>> proc2StmtLst{
+		std::make_shared<IfNode>(3, predYLt2, thenStmtList, elseStmtList)
+	};
+	std::shared_ptr<ProcedureNode> proc2 = std::make_shared<ProcedureNode>(proc2StmtLst, "testProgram2");
+
+	std::unordered_map<std::string, std::shared_ptr<ProcedureNode>> procMap{
+		{"testProgram1", proc1},
+		{"testProgram2", proc2}
+	};
+	return std::make_shared<ProgramNode>(procMap);
+}
+
+AST RelationshipASTs::getAST3_39() {
+	/*
+	 *  procedure testProgram1 {
+	 * 1  if (y < 2) then {
+	 * 2    call testProgram2;
+	 * 3    read y;
+	 *    } else {
+	 * 4    read w;
+	 *    }
+	 *  }
+	 * 
+	 *  procedure testProgram2 {
+	 * 5  read y;
+	 * 6  print x;
+	 *  }
+	 */
+
+	std::vector<std::shared_ptr<StmtNode>> thenStmtList{
+		std::make_shared<CallNode>(2, "testProgram2"),
+		std::make_shared<ReadNode>(3, y)
+	};
+	std::vector<std::shared_ptr<StmtNode>> elseStmtList{
+		std::make_shared<ReadNode>(4, w)
+	};
+
+	std::vector<std::shared_ptr<StmtNode>> proc1StmtLst{
+		std::make_shared<IfNode>(1, predYLt2, thenStmtList, elseStmtList)
+	};
+	std::shared_ptr<ProcedureNode> proc1 = std::make_shared<ProcedureNode>(proc1StmtLst, "testProgram1");
+
+	std::vector<std::shared_ptr<StmtNode>> proc2StmtLst{
+		std::make_shared<ReadNode>(5, y),
+		std::make_shared<PrintNode>(6, x)
+	};
+	std::shared_ptr<ProcedureNode> proc2 = std::make_shared<ProcedureNode>(proc2StmtLst, "testProgram2");
+
+	std::unordered_map<std::string, std::shared_ptr<ProcedureNode>> procMap{
+		{"testProgram1", proc1},
+		{"testProgram2", proc2}
+	};
+	return std::make_shared<ProgramNode>(procMap);
+}
+
+AST RelationshipASTs::getAST3_40() {
+	/*
+	 *  procedure testProgram1 {
+	 * 1  if (y < 2) then {
+	 * 2    read y;
+	 *    } else {
+	 * 3    call testProgram2;
+	 * 4    read w;
+	 *    }
+	 *  }
+	 *
+	 *  procedure testProgram2 {
+	 * 5  read y;
+	 * 6  print x;
+	 *  }
+	 */
+
+	std::vector<std::shared_ptr<StmtNode>> thenStmtList{
+		std::make_shared<ReadNode>(2, y)
+	};
+	std::vector<std::shared_ptr<StmtNode>> elseStmtList{
+		std::make_shared<CallNode>(3, "testProgram2"),
+		std::make_shared<ReadNode>(4, w)
+	};
+
+	std::vector<std::shared_ptr<StmtNode>> proc1StmtLst{
+		std::make_shared<IfNode>(1, predYLt2, thenStmtList, elseStmtList)
+	};
+	std::shared_ptr<ProcedureNode> proc1 = std::make_shared<ProcedureNode>(proc1StmtLst, "testProgram1");
+
+	std::vector<std::shared_ptr<StmtNode>> proc2StmtLst{
+		std::make_shared<ReadNode>(5, y),
+		std::make_shared<PrintNode>(6, x)
+	};
+	std::shared_ptr<ProcedureNode> proc2 = std::make_shared<ProcedureNode>(proc2StmtLst, "testProgram2");
+
+	std::unordered_map<std::string, std::shared_ptr<ProcedureNode>> procMap{
+		{"testProgram1", proc1},
+		{"testProgram2", proc2}
+	};
+	return std::make_shared<ProgramNode>(procMap);
+}
+
+AST RelationshipASTs::getAST3_41() {
+	/*
+	 *  procedure testProgram1 {
+	 * 1  print x;
+	 *  }
+	 *  procedure testProgram2 {
+	 * 2  read z;
+	 * 3  while (x < 1) {
+	 * 4    call testProgram1;
+	 * 5    read x;
+	 *    }
+	 *  }
+	 */
+
+	std::vector<std::shared_ptr<StmtNode>> proc1StmtLst{
+		std::make_shared<PrintNode>(1, x)
+	};
+	std::shared_ptr<ProcedureNode> proc1 = std::make_shared<ProcedureNode>(proc1StmtLst, "testProgram1");
+
+	std::vector<std::shared_ptr<StmtNode>> whileStmtList{
+		std::make_shared<CallNode>(4, "testProgram1"),
+		std::make_shared<ReadNode>(5, x)
+	};
+	std::vector<std::shared_ptr<StmtNode>> proc2StmtLst{
+		std::make_shared<ReadNode>(2, z),
+		std::make_shared<WhileNode>(3, predXLt1, whileStmtList)
+	};
+	std::shared_ptr<ProcedureNode> proc2 = std::make_shared<ProcedureNode>(proc2StmtLst, "testProgram2");
+
+
+	std::unordered_map<std::string, std::shared_ptr<ProcedureNode>> procMap{
+		{"testProgram1", proc1},
+		{"testProgram2", proc2}
+	};
+	return std::make_shared<ProgramNode>(procMap);
+}
+
+AST RelationshipASTs::getAST3_42() {
+	/*
+	 *  procedure testProgram1 {
+	 * 1  while (x < 1) {
+	 * 2    read x;
+	 * 3    call testProgram2;
+	 *    }
+	 * 4  read z;
+	 *  }
+	 *
+	 *  procedure testProgram2 {
+	 * 5  print x;
+	 *  }
+	 */
+
+	std::vector<std::shared_ptr<StmtNode>> whileStmtList{
+		std::make_shared<ReadNode>(2, x),
+		std::make_shared<CallNode>(3, "testProgram2")
+	};
+	std::vector<std::shared_ptr<StmtNode>> proc1StmtLst{
+		std::make_shared<WhileNode>(1, predXLt1, whileStmtList),
+		std::make_shared<ReadNode>(4, z)
+	};
+	std::shared_ptr<ProcedureNode> proc1 = std::make_shared<ProcedureNode>(proc1StmtLst, "testProgram1");
+
+	std::vector<std::shared_ptr<StmtNode>> proc2StmtLst{
+		std::make_shared<PrintNode>(5, x)
+	};
+	std::shared_ptr<ProcedureNode> proc2 = std::make_shared<ProcedureNode>(proc2StmtLst, "testProgram2");
+
+	std::unordered_map<std::string, std::shared_ptr<ProcedureNode>> procMap{
+		{"testProgram1", proc1},
+		{"testProgram2", proc2}
+	};
+	return std::make_shared<ProgramNode>(procMap);
+}
+
+AST RelationshipASTs::getAST3_43() {
+	/*
+	 *  procedure testProgram1 {
+	 * 1  read y;
+	 * 2  read x;
+	 *  }
+	 *
+	 *  procedure testProgram2 {
+	 * 3  print x;
+	 * 4  print y;
+	 * 5  call testProgram1;
+	 *  }
+	 *
+	 *  procedure testProgram3 {
+	 * 6  x = y + 1;
+	 * 7  call testProgram2;
+	 *  }
+	 */
+
+	std::vector<std::shared_ptr<StmtNode>> proc1StmtLst{
+		std::make_shared<ReadNode>(1, y),
+		std::make_shared<ReadNode>(2, x)
+	};
+	std::shared_ptr<ProcedureNode> proc1 = std::make_shared<ProcedureNode>(proc1StmtLst, "testProgram1");
+
+	std::vector<std::shared_ptr<StmtNode>> proc2StmtLst{
+		std::make_shared<PrintNode>(3, x),
+		std::make_shared<PrintNode>(4, y),
+		std::make_shared<CallNode>(5, "testProgram1")
+	};
+	std::shared_ptr<ProcedureNode> proc2 = std::make_shared<ProcedureNode>(proc2StmtLst, "testProgram2");
+
+	std::vector<std::shared_ptr<StmtNode>> proc3StmtLst{
+		std::make_shared<AssignNode>(6, x, yPlus1, "y 1 +"),
+		std::make_shared<CallNode>(7, "testProgram2")
+	};
+	std::shared_ptr<ProcedureNode> proc3 = std::make_shared<ProcedureNode>(proc3StmtLst, "testProgram3");
+
+	std::unordered_map<std::string, std::shared_ptr<ProcedureNode>> procMap{
+		{"testProgram1", proc1},
+		{"testProgram2", proc2},
+		{"testProgram3", proc3}
+	};
+	return std::make_shared<ProgramNode>(procMap);
+}
+
+AST RelationshipASTs::getAST3_44() {
+	/*
+	 *  procedure testProgram1 {
+	 * 1  read y;
+	 * 2  call testProgram2;
+	 * 3  read x;
+	 *  }
+	 *
+	 *  procedure testProgram2 {
+	 * 4  print x;
+	 * 5  print y;
+	 * 6  call testProgram3;
+	 *  }
+	 *
+	 *  procedure testProgram3 {
+	 * 7  x = y + 1;
+	 *  }
+	 */
+
+	std::vector<std::shared_ptr<StmtNode>> proc1StmtLst{
+		std::make_shared<ReadNode>(1, y),
+		std::make_shared<CallNode>(2, "testProgram2"),
+		std::make_shared<ReadNode>(3, x)
+	};
+	std::shared_ptr<ProcedureNode> proc1 = std::make_shared<ProcedureNode>(proc1StmtLst, "testProgram1");
+
+	std::vector<std::shared_ptr<StmtNode>> proc2StmtLst{
+		std::make_shared<PrintNode>(4, x),
+		std::make_shared<PrintNode>(5, y),
+		std::make_shared<CallNode>(6, "testProgram3")
+	};
+	std::shared_ptr<ProcedureNode> proc2 = std::make_shared<ProcedureNode>(proc2StmtLst, "testProgram2");
+
+	std::vector<std::shared_ptr<StmtNode>> proc3StmtLst{
+		std::make_shared<AssignNode>(7, x, yPlus1, "y 1 +")
+	};
+	std::shared_ptr<ProcedureNode> proc3 = std::make_shared<ProcedureNode>(proc3StmtLst, "testProgram3");
+
+	std::unordered_map<std::string, std::shared_ptr<ProcedureNode>> procMap{
+		{"testProgram1", proc1},
+		{"testProgram2", proc2},
+		{"testProgram3", proc3}
+	};
+	return std::make_shared<ProgramNode>(procMap);
+}
+
+AST RelationshipASTs::getAST3_45() {
+	/*
+	 *  procedure testProgram1 {
+	 * 1  read y;
+	 * 2  call testProgram2;
+	 * 3  read x;
+	 * 4  call testProgram3;
+	 *  }
+	 *
+	 *  procedure testProgram2 {
+	 * 5  print x;
+	 * 6  print y;
+	 *  }
+	 *
+	 *  procedure testProgram3 {
+	 * 7  x = y + 1;
+	 *  }
+	 */
+
+	std::vector<std::shared_ptr<StmtNode>> proc1StmtLst{
+		std::make_shared<ReadNode>(1, y),
+		std::make_shared<CallNode>(2, "testProgram2"),
+		std::make_shared<ReadNode>(3, x),
+		std::make_shared<CallNode>(4, "testProgram3")
+	};
+	std::shared_ptr<ProcedureNode> proc1 = std::make_shared<ProcedureNode>(proc1StmtLst, "testProgram1");
+
+	std::vector<std::shared_ptr<StmtNode>> proc2StmtLst{
+		std::make_shared<PrintNode>(5, x),
+		std::make_shared<PrintNode>(6, y),
+	};
+	std::shared_ptr<ProcedureNode> proc2 = std::make_shared<ProcedureNode>(proc2StmtLst, "testProgram2");
+
+	std::vector<std::shared_ptr<StmtNode>> proc3StmtLst{
+		std::make_shared<AssignNode>(7, x, yPlus1, "y 1 +")
+	};
+	std::shared_ptr<ProcedureNode> proc3 = std::make_shared<ProcedureNode>(proc3StmtLst, "testProgram3");
+
+	std::unordered_map<std::string, std::shared_ptr<ProcedureNode>> procMap{
+		{"testProgram1", proc1},
+		{"testProgram2", proc2},
+		{"testProgram3", proc3}
+	};
+	return std::make_shared<ProgramNode>(procMap);
+}
+
+AST RelationshipASTs::getAST3_46() {
+	/*
+	 *  procedure testProgram1 {
+	 * 1  read y;
+	 * 2  read x;
+	 *  }
+	 *
+	 *  procedure testProgram2 {
+	 * 3  print x;
+	 * 4  print y;
+	 *  }
+	 *
+	 *  procedure testProgram3 {
+	 * 5  call testProgram1;
+	 * 6  x = y + 1;
+	 * 7  call testProgram2;
+	 *  }
+	 */
+
+	std::vector<std::shared_ptr<StmtNode>> proc1StmtLst{
+		std::make_shared<ReadNode>(1, y),
+		std::make_shared<ReadNode>(2, x),
+	};
+	std::shared_ptr<ProcedureNode> proc1 = std::make_shared<ProcedureNode>(proc1StmtLst, "testProgram1");
+
+	std::vector<std::shared_ptr<StmtNode>> proc2StmtLst{
+		std::make_shared<PrintNode>(3, x),
+		std::make_shared<PrintNode>(4, y),
+	};
+	std::shared_ptr<ProcedureNode> proc2 = std::make_shared<ProcedureNode>(proc2StmtLst, "testProgram2");
+
+	std::vector<std::shared_ptr<StmtNode>> proc3StmtLst{
+		std::make_shared<CallNode>(5, "testProgram1"),
+		std::make_shared<AssignNode>(6, x, yPlus1, "y 1 +"),
+		std::make_shared<CallNode>(7, "testProgram2")
+	};
+	std::shared_ptr<ProcedureNode> proc3 = std::make_shared<ProcedureNode>(proc3StmtLst, "testProgram3");
+
+	std::unordered_map<std::string, std::shared_ptr<ProcedureNode>> procMap{
+		{"testProgram1", proc1},
+		{"testProgram2", proc2},
+		{"testProgram3", proc3}
+	};
+	return std::make_shared<ProgramNode>(procMap);
+}
+
+AST RelationshipASTs::getAST3_47() {
+	/*
+	 *  procedure testProgram1 {
+	 * 1  read y;
+	 * 2  read x;
+	 *  }
+	 *
+	 *  procedure testProgram2 {
+	 * 3  print x;
+	 * 4  call testProgram1;
+	 * 5  call testProgram3;
+	 * 6  print y;
+	 *  }
+	 *
+	 *  procedure testProgram3 {
+	 * 7  x = y + 1;
+	 *  }
+	 */
+
+	std::vector<std::shared_ptr<StmtNode>> proc1StmtLst{
+		std::make_shared<ReadNode>(1, y),
+		std::make_shared<ReadNode>(2, x),
+	};
+	std::shared_ptr<ProcedureNode> proc1 = std::make_shared<ProcedureNode>(proc1StmtLst, "testProgram1");
+
+	std::vector<std::shared_ptr<StmtNode>> proc2StmtLst{
+		std::make_shared<PrintNode>(3, x),
+		std::make_shared<CallNode>(4, "testProgram1"),
+		std::make_shared<CallNode>(5, "testProgram3"),
+		std::make_shared<PrintNode>(6, y),
+	};
+	std::shared_ptr<ProcedureNode> proc2 = std::make_shared<ProcedureNode>(proc2StmtLst, "testProgram2");
+
+	std::vector<std::shared_ptr<StmtNode>> proc3StmtLst{
+		std::make_shared<AssignNode>(7, x, yPlus1, "y 1 +")
+	};
+	std::shared_ptr<ProcedureNode> proc3 = std::make_shared<ProcedureNode>(proc3StmtLst, "testProgram3");
+
+	std::unordered_map<std::string, std::shared_ptr<ProcedureNode>> procMap{
+		{"testProgram1", proc1},
+		{"testProgram2", proc2},
+		{"testProgram3", proc3}
+	};
+	return std::make_shared<ProgramNode>(procMap);
+}
+
+AST RelationshipASTs::getAST3_48() {
+	/*
+	 *   procedure testProgram1 {
+	 * 1   read y;
+	 * 2   call testProgram3;
+	 * 3   read x;
+	 *   }
+	 *
+	 *   procedure testProgram2 {
+	 * 4   print x;
+	 * 5   call testProgram1;
+	 * 6   print y;
+	 *   }
+	 *
+	 *   procedure testProgram3 {
+	 * 7   x = y + 1;
+	 *   }
+	 * 
+	 *   procedure testProgram4 {
+	 * 8   if (z < 3) then {
+	 * 9     read z;
+	 *     } else {
+	 * 10    call testProgram2;
+	 * 11    print z;
+	 *     }
+	 *   }
+	 */
+
+	std::vector<std::shared_ptr<StmtNode>> proc1StmtLst{
+		std::make_shared<ReadNode>(1, y),
+		std::make_shared<CallNode>(2, "testProgram3"),
+		std::make_shared<ReadNode>(3, x),
+	};
+	std::shared_ptr<ProcedureNode> proc1 = std::make_shared<ProcedureNode>(proc1StmtLst, "testProgram1");
+
+	std::vector<std::shared_ptr<StmtNode>> proc2StmtLst{
+		std::make_shared<PrintNode>(4, x),
+		std::make_shared<CallNode>(5, "testProgram1"),
+		std::make_shared<PrintNode>(6, y),
+	};
+	std::shared_ptr<ProcedureNode> proc2 = std::make_shared<ProcedureNode>(proc2StmtLst, "testProgram2");
+
+	std::vector<std::shared_ptr<StmtNode>> proc3StmtLst{
+		std::make_shared<AssignNode>(7, x, yPlus1, "y 1 +")
+	};
+	std::shared_ptr<ProcedureNode> proc3 = std::make_shared<ProcedureNode>(proc3StmtLst, "testProgram3");
+
+	std::vector<std::shared_ptr<StmtNode>> thenStmtList{
+		std::make_shared<ReadNode>(9, z)
+	};
+	std::vector<std::shared_ptr<StmtNode>> elseStmtList{
+		std::make_shared<CallNode>(10, "testProgram2"),
+		std::make_shared<PrintNode>(11, z)
+	};
+
+	std::vector<std::shared_ptr<StmtNode>> proc4StmtLst{
+		std::make_shared<IfNode>(8, predZLt3, thenStmtList, elseStmtList)
+	};
+	std::shared_ptr<ProcedureNode> proc4 = std::make_shared<ProcedureNode>(proc4StmtLst, "testProgram4");
+
+	std::unordered_map<std::string, std::shared_ptr<ProcedureNode>> procMap{
+		{"testProgram1", proc1},
+		{"testProgram2", proc2},
+		{"testProgram3", proc3},
+		{"testProgram4", proc4}
+	};
+	return std::make_shared<ProgramNode>(procMap);
+}
+
+AST RelationshipASTs::getAST3_49() {
+	/*
+	 *   procedure testProgram1 {
+	 * 1   read y;
+	 * 2   call testProgram4;
+	 * 3   call testProgram3;
+	 * 4   read x;
+	 * 5   call testProgram2;
+	 *   }
+	 *
+	 *   procedure testProgram2 {
+	 * 6   print x;
+	 * 7   print y;
+	 *   }
+	 *
+	 *   procedure testProgram3 {
+	 * 8   x = y + 1;
+	 *   }
+	 *
+	 *   procedure testProgram4 {
+	 * 9   if (z < 3) then {
+	 * 10     read z;
+	 *     } else {
+	 * 11    print z;
+	 *     }
+	 *   }
+	 */
+
+	std::vector<std::shared_ptr<StmtNode>> proc1StmtLst{
+		std::make_shared<ReadNode>(1, y),
+		std::make_shared<CallNode>(2, "testProgram4"),
+		std::make_shared<CallNode>(3, "testProgram3"),
+		std::make_shared<ReadNode>(4, x),
+		std::make_shared<CallNode>(5, "testProgram2")
+	};
+	std::shared_ptr<ProcedureNode> proc1 = std::make_shared<ProcedureNode>(proc1StmtLst, "testProgram1");
+
+	std::vector<std::shared_ptr<StmtNode>> proc2StmtLst{
+		std::make_shared<PrintNode>(6, x),
+		std::make_shared<PrintNode>(7, y)
+	};
+	std::shared_ptr<ProcedureNode> proc2 = std::make_shared<ProcedureNode>(proc2StmtLst, "testProgram2");
+
+	std::vector<std::shared_ptr<StmtNode>> proc3StmtLst{
+		std::make_shared<AssignNode>(8, x, yPlus1, "y 1 +")
+	};
+	std::shared_ptr<ProcedureNode> proc3 = std::make_shared<ProcedureNode>(proc3StmtLst, "testProgram3");
+
+	std::vector<std::shared_ptr<StmtNode>> thenStmtList{
+		std::make_shared<ReadNode>(10, z)
+	};
+	std::vector<std::shared_ptr<StmtNode>> elseStmtList{
+		std::make_shared<PrintNode>(11, z)
+	};
+
+	std::vector<std::shared_ptr<StmtNode>> proc4StmtLst{
+		std::make_shared<IfNode>(9, predZLt3, thenStmtList, elseStmtList)
+	};
+	std::shared_ptr<ProcedureNode> proc4 = std::make_shared<ProcedureNode>(proc4StmtLst, "testProgram4");
+
+	std::unordered_map<std::string, std::shared_ptr<ProcedureNode>> procMap{
+		{"testProgram1", proc1},
+		{"testProgram2", proc2},
+		{"testProgram3", proc3},
+		{"testProgram4", proc4}
+	};
+	return std::make_shared<ProgramNode>(procMap);
+}
+
+AST RelationshipASTs::getAST3_50() {
+	/*
+	 *   procedure testProgram1 {
+	 * 1   read y;
+	 * 2   call testProgram3;
+	 * 3   read x;
+	 *   }
+	 *
+	 *   procedure testProgram2 {
+	 * 4   print x;
+	 * 5   call testProgram3;
+	 * 6   print y;
+	 *   }
+	 *
+	 *   procedure testProgram3 {
+	 * 7   x = y + 1;
+	 *   }
+	 *
+	 *   procedure testProgram4 {
+	 * 8   if (z < 3) then {
+	 * 9      call testProgram3;
+	 * 10     read z;
+	 *     } else {
+	 * 11    print z;
+	 *     }
+	 *   }
+	 */
+
+	std::vector<std::shared_ptr<StmtNode>> proc1StmtLst{
+		std::make_shared<ReadNode>(1, y),
+		std::make_shared<CallNode>(2, "testProgram3"),
+		std::make_shared<ReadNode>(3, x),
+	};
+	std::shared_ptr<ProcedureNode> proc1 = std::make_shared<ProcedureNode>(proc1StmtLst, "testProgram1");
+
+	std::vector<std::shared_ptr<StmtNode>> proc2StmtLst{
+		std::make_shared<PrintNode>(4, x),
+		std::make_shared<CallNode>(5, "testProgram3"),
+		std::make_shared<PrintNode>(6, y)
+	};
+	std::shared_ptr<ProcedureNode> proc2 = std::make_shared<ProcedureNode>(proc2StmtLst, "testProgram2");
+
+	std::vector<std::shared_ptr<StmtNode>> proc3StmtLst{
+		std::make_shared<AssignNode>(7, x, yPlus1, "y 1 +")
+	};
+	std::shared_ptr<ProcedureNode> proc3 = std::make_shared<ProcedureNode>(proc3StmtLst, "testProgram3");
+
+	std::vector<std::shared_ptr<StmtNode>> thenStmtList{
+		std::make_shared<CallNode>(9, "testProgram3"),
+		std::make_shared<ReadNode>(10, z)
+	};
+	std::vector<std::shared_ptr<StmtNode>> elseStmtList{
+		std::make_shared<PrintNode>(11, z)
+	};
+
+	std::vector<std::shared_ptr<StmtNode>> proc4StmtLst{
+		std::make_shared<IfNode>(8, predZLt3, thenStmtList, elseStmtList)
+	};
+	std::shared_ptr<ProcedureNode> proc4 = std::make_shared<ProcedureNode>(proc4StmtLst, "testProgram4");
+
+	std::unordered_map<std::string, std::shared_ptr<ProcedureNode>> procMap{
+		{"testProgram1", proc1},
+		{"testProgram2", proc2},
+		{"testProgram3", proc3},
+		{"testProgram4", proc4}
+	};
+	return std::make_shared<ProgramNode>(procMap);
+}
+
+AST RelationshipASTs::getAST3_51() {
+	/*
+	 *   procedure testProgram1 {
+	 * 1   call testProgram4;
+	 * 2   read y;
+	 * 3   call testProgram3;
+	 * 4   read x;
+	 *   }
+	 *
+	 *   procedure testProgram2 {
+	 * 5   print x;
+	 * 6   print y;
+	 *   }
+	 *
+	 *   procedure testProgram3 {
+	 * 7   x = y + 1;
+	 * 8   call testProgram2;
+	 *   }
+	 *
+	 *   procedure testProgram4 {
+	 * 9   if (z < 3) then {
+	 * 10     read z;
+	 * 11     call testProgram2;
+	 *     } else {
+	 * 12    print z;
+	 *     }
+	 *   }
+	 */
+
+	std::vector<std::shared_ptr<StmtNode>> proc1StmtLst{
+		std::make_shared<CallNode>(1, "testProgram4"),
+		std::make_shared<ReadNode>(2, y),
+		std::make_shared<CallNode>(3, "testProgram3"),
+		std::make_shared<ReadNode>(4, x),
+	};
+	std::shared_ptr<ProcedureNode> proc1 = std::make_shared<ProcedureNode>(proc1StmtLst, "testProgram1");
+
+	std::vector<std::shared_ptr<StmtNode>> proc2StmtLst{
+		std::make_shared<PrintNode>(5, x),
+		std::make_shared<PrintNode>(6, y)
+	};
+	std::shared_ptr<ProcedureNode> proc2 = std::make_shared<ProcedureNode>(proc2StmtLst, "testProgram2");
+
+	std::vector<std::shared_ptr<StmtNode>> proc3StmtLst{
+		std::make_shared<AssignNode>(7, x, yPlus1, "y 1 +"),
+		std::make_shared<CallNode>(8, "testProgram2")
+	};
+	std::shared_ptr<ProcedureNode> proc3 = std::make_shared<ProcedureNode>(proc3StmtLst, "testProgram3");
+
+	std::vector<std::shared_ptr<StmtNode>> thenStmtList{
+		std::make_shared<ReadNode>(10, z),
+		std::make_shared<CallNode>(11, "testProgram2")
+	};
+	std::vector<std::shared_ptr<StmtNode>> elseStmtList{
+		std::make_shared<PrintNode>(12, z)
+	};
+
+	std::vector<std::shared_ptr<StmtNode>> proc4StmtLst{
+		std::make_shared<IfNode>(9, predZLt3, thenStmtList, elseStmtList)
+	};
+	std::shared_ptr<ProcedureNode> proc4 = std::make_shared<ProcedureNode>(proc4StmtLst, "testProgram4");
+
+	std::unordered_map<std::string, std::shared_ptr<ProcedureNode>> procMap{
+		{"testProgram1", proc1},
+		{"testProgram2", proc2},
+		{"testProgram3", proc3},
+		{"testProgram4", proc4}
+	};
+	return std::make_shared<ProgramNode>(procMap);
+}
+
+AST RelationshipASTs::getAST3_52() {
+	/*
+	 *   procedure testProgram1 {
+	 * 1   read y;
+	 * 2   read x;
+	 *   }
+	 *
+	 *   procedure testProgram2 {
+	 * 3   print x;
+	 * 4   call testProgram4;
+	 * 5   print y;
+	 *   }
+	 *
+	 *   procedure testProgram3 {
+	 * 6   x = y + 1;
+	 *   }
+	 *
+	 *   procedure testProgram4 {
+	 * 7   if (z < 3) then {
+	 * 8      call testProgram3;
+	 * 9      read z;
+	 *     } else {
+	 * 10    print z;
+	 * 11    call testProgram1;
+	 *     }
+	 *   }
+	 */
+
+	std::vector<std::shared_ptr<StmtNode>> proc1StmtLst{
+		std::make_shared<ReadNode>(1, y),
+		std::make_shared<ReadNode>(2, x),
+	};
+	std::shared_ptr<ProcedureNode> proc1 = std::make_shared<ProcedureNode>(proc1StmtLst, "testProgram1");
+
+	std::vector<std::shared_ptr<StmtNode>> proc2StmtLst{
+		std::make_shared<PrintNode>(3, x),
+		std::make_shared<CallNode>(4, "testProgram4"),
+		std::make_shared<PrintNode>(5, y)
+	};
+	std::shared_ptr<ProcedureNode> proc2 = std::make_shared<ProcedureNode>(proc2StmtLst, "testProgram2");
+
+	std::vector<std::shared_ptr<StmtNode>> proc3StmtLst{
+		std::make_shared<AssignNode>(6, x, yPlus1, "y 1 +"),
+	};
+	std::shared_ptr<ProcedureNode> proc3 = std::make_shared<ProcedureNode>(proc3StmtLst, "testProgram3");
+
+	std::vector<std::shared_ptr<StmtNode>> thenStmtList{
+		std::make_shared<CallNode>(8, "testProgram3"),
+		std::make_shared<ReadNode>(9, z)
+	};
+	std::vector<std::shared_ptr<StmtNode>> elseStmtList{
+		std::make_shared<PrintNode>(10, z),
+		std::make_shared<CallNode>(11, "testProgram1")
+	};
+
+	std::vector<std::shared_ptr<StmtNode>> proc4StmtLst{
+		std::make_shared<IfNode>(7, predZLt3, thenStmtList, elseStmtList)
+	};
+	std::shared_ptr<ProcedureNode> proc4 = std::make_shared<ProcedureNode>(proc4StmtLst, "testProgram4");
+
+	std::unordered_map<std::string, std::shared_ptr<ProcedureNode>> procMap{
+		{"testProgram1", proc1},
+		{"testProgram2", proc2},
+		{"testProgram3", proc3},
+		{"testProgram4", proc4}
+	};
+	return std::make_shared<ProgramNode>(procMap);
+}
+
+AST RelationshipASTs::getAST3_53() {
+	/*
+	 *   procedure testProgram1 {
+	 * 1   read y;
+	 * 2   read x;
+	 * 3   call testProgram3;
+	 *   }
+	 *
+	 *   procedure testProgram2 {
+	 * 4   print x;
+	 * 5   call testProgram3;
+	 * 6   print y;
+	 *   }
+	 *
+	 *   procedure testProgram3 {
+	 * 7   x = y + 1;
+	 * 8   call testProgram4;
+	 *   }
+	 *
+	 *   procedure testProgram4 {
+	 * 9   if (z < 3) then {
+	 * 10     read z;
+	 *     } else {
+	 * 11    print z;
+	 *     }
+	 *   }
+	 */
+
+	std::vector<std::shared_ptr<StmtNode>> proc1StmtLst{
+		std::make_shared<ReadNode>(1, y),
+		std::make_shared<ReadNode>(2, x),
+		std::make_shared<CallNode>(3, "testProgram3")
+	};
+	std::shared_ptr<ProcedureNode> proc1 = std::make_shared<ProcedureNode>(proc1StmtLst, "testProgram1");
+
+	std::vector<std::shared_ptr<StmtNode>> proc2StmtLst{
+		std::make_shared<PrintNode>(4, x),
+		std::make_shared<CallNode>(5, "testProgram3"),
+		std::make_shared<PrintNode>(6, y)
+	};
+	std::shared_ptr<ProcedureNode> proc2 = std::make_shared<ProcedureNode>(proc2StmtLst, "testProgram2");
+
+	std::vector<std::shared_ptr<StmtNode>> proc3StmtLst{
+		std::make_shared<AssignNode>(7, x, yPlus1, "y 1 +"),
+		std::make_shared<CallNode>(8, "testProgram4")
+	};
+	std::shared_ptr<ProcedureNode> proc3 = std::make_shared<ProcedureNode>(proc3StmtLst, "testProgram3");
+
+	std::vector<std::shared_ptr<StmtNode>> thenStmtList{
+		std::make_shared<ReadNode>(10, z)
+	};
+	std::vector<std::shared_ptr<StmtNode>> elseStmtList{
+		std::make_shared<PrintNode>(11, z)
+	};
+
+	std::vector<std::shared_ptr<StmtNode>> proc4StmtLst{
+		std::make_shared<IfNode>(9, predZLt3, thenStmtList, elseStmtList)
+	};
+	std::shared_ptr<ProcedureNode> proc4 = std::make_shared<ProcedureNode>(proc4StmtLst, "testProgram4");
+
+	std::unordered_map<std::string, std::shared_ptr<ProcedureNode>> procMap{
+		{"testProgram1", proc1},
+		{"testProgram2", proc2},
+		{"testProgram3", proc3},
+		{"testProgram4", proc4}
+	};
+	return std::make_shared<ProgramNode>(procMap);
+}
+
+AST RelationshipASTs::getAST3_54() {
+	/*
+	 *   procedure testProgram1 {
+	 * 1   read y;
+	 * 2   read x;
+	 *   }
+	 *
+	 *   procedure testProgram2 {
+	 * 3   print x;
+	 * 4   call testProgram4;
+	 * 5   print y;
+	 *   }
+	 *
+	 *   procedure testProgram3 {
+	 * 6   x = y + 1;
+	 * 7   call testProgram1;
+	 *   }
+	 *
+	 *   procedure testProgram4 {
+	 * 8   if (z < 3) then {
+	 * 9      read z;
+	 *     } else {
+	 * 10    print z;
+	 * 11    call testProgram1;
+	 *     }
+	 *   }
+	 */
+
+	std::vector<std::shared_ptr<StmtNode>> proc1StmtLst{
+		std::make_shared<ReadNode>(1, y),
+		std::make_shared<ReadNode>(2, x)
+	};
+	std::shared_ptr<ProcedureNode> proc1 = std::make_shared<ProcedureNode>(proc1StmtLst, "testProgram1");
+
+	std::vector<std::shared_ptr<StmtNode>> proc2StmtLst{
+		std::make_shared<PrintNode>(3, x),
+		std::make_shared<CallNode>(4, "testProgram4"),
+		std::make_shared<PrintNode>(5, y)
+	};
+	std::shared_ptr<ProcedureNode> proc2 = std::make_shared<ProcedureNode>(proc2StmtLst, "testProgram2");
+
+	std::vector<std::shared_ptr<StmtNode>> proc3StmtLst{
+		std::make_shared<AssignNode>(6, x, yPlus1, "y 1 +"),
+		std::make_shared<CallNode>(7, "testProgram1")
+	};
+	std::shared_ptr<ProcedureNode> proc3 = std::make_shared<ProcedureNode>(proc3StmtLst, "testProgram3");
+
+	std::vector<std::shared_ptr<StmtNode>> thenStmtList{
+		std::make_shared<ReadNode>(9, z)
+	};
+	std::vector<std::shared_ptr<StmtNode>> elseStmtList{
+		std::make_shared<PrintNode>(10, z),
+		std::make_shared<CallNode>(11, "testProgram1")
+	};
+
+	std::vector<std::shared_ptr<StmtNode>> proc4StmtLst{
+		std::make_shared<IfNode>(8, predZLt3, thenStmtList, elseStmtList)
+	};
+	std::shared_ptr<ProcedureNode> proc4 = std::make_shared<ProcedureNode>(proc4StmtLst, "testProgram4");
+
+	std::unordered_map<std::string, std::shared_ptr<ProcedureNode>> procMap{
+		{"testProgram1", proc1},
+		{"testProgram2", proc2},
+		{"testProgram3", proc3},
+		{"testProgram4", proc4}
+	};
+	return std::make_shared<ProgramNode>(procMap);
+}
+
+AST RelationshipASTs::getAST3_55() {
+	/*
+	 *   procedure testProgram1 {
+	 * 1   read y;
+	 * 2   call testProgram4;
+	 * 3   read x;
+	 *   }
+	 *
+	 *   procedure testProgram2 {
+	 * 4   call testProgram3;
+	 * 5   print x;
+	 * 6   call testProgram1;
+	 * 7   print y;
+	 *   }
+	 *
+	 *   procedure testProgram3 {
+	 * 8   x = y + 1;
+	 *   }
+	 *
+	 *   procedure testProgram4 {
+	 * 9   if (z < 3) then {
+	 * 10      read z;
+	 *     } else {
+	 * 11    print z;
+	 *     }
+	 *   }
+	 */
+
+	std::vector<std::shared_ptr<StmtNode>> proc1StmtLst{
+		std::make_shared<ReadNode>(1, y),
+		std::make_shared<CallNode>(2, "testProgram4"),
+		std::make_shared<ReadNode>(3, x)
+	};
+	std::shared_ptr<ProcedureNode> proc1 = std::make_shared<ProcedureNode>(proc1StmtLst, "testProgram1");
+
+	std::vector<std::shared_ptr<StmtNode>> proc2StmtLst{
+		std::make_shared<CallNode>(4, "testProgram3"),
+		std::make_shared<PrintNode>(5, x),
+		std::make_shared<CallNode>(6, "testProgram1"),
+		std::make_shared<PrintNode>(7, y)
+	};
+	std::shared_ptr<ProcedureNode> proc2 = std::make_shared<ProcedureNode>(proc2StmtLst, "testProgram2");
+
+	std::vector<std::shared_ptr<StmtNode>> proc3StmtLst{
+		std::make_shared<AssignNode>(8, x, yPlus1, "y 1 +")
+	};
+	std::shared_ptr<ProcedureNode> proc3 = std::make_shared<ProcedureNode>(proc3StmtLst, "testProgram3");
+
+	std::vector<std::shared_ptr<StmtNode>> thenStmtList{
+		std::make_shared<ReadNode>(10, z)
+	};
+	std::vector<std::shared_ptr<StmtNode>> elseStmtList{
+		std::make_shared<PrintNode>(11, z)
+	};
+
+	std::vector<std::shared_ptr<StmtNode>> proc4StmtLst{
+		std::make_shared<IfNode>(9, predZLt3, thenStmtList, elseStmtList)
+	};
+	std::shared_ptr<ProcedureNode> proc4 = std::make_shared<ProcedureNode>(proc4StmtLst, "testProgram4");
+
+	std::unordered_map<std::string, std::shared_ptr<ProcedureNode>> procMap{
+		{"testProgram1", proc1},
+		{"testProgram2", proc2},
+		{"testProgram3", proc3},
+		{"testProgram4", proc4}
+	};
+	return std::make_shared<ProgramNode>(procMap);
 }

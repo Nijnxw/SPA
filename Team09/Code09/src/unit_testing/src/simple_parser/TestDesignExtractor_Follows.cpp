@@ -465,6 +465,361 @@ TEST_CASE("Follows 3.33 - 3 levels of nesting - 1 stmt per nest level - if-while
 	EntityStager::clear();
 }
 
+//ITERATION 2
+
+TEST_CASE("Follows 3.34 - Complex two procedure") {
+	EntityStager::clear();
+	DesignExtractor::extractDesignElements(RelationshipASTs::getAST3_34());
+
+	std::vector<std::pair<int, int>> expectedFollows{
+		{2, 6}, {3, 4}, {4, 5}, {6, 7}, {8, 9}, {9, 10}, {11, 12}, {12, 13},
+		{16, 18}, {19, 21}, {15, 22}
+	};
+	std::sort(expectedFollows.begin(), expectedFollows.end());
+
+	std::vector<std::pair<int, int>> actualFollows = EntityStager::getStagedFollows();
+	std::sort(actualFollows.begin(), actualFollows.end());
+
+	REQUIRE(actualFollows == expectedFollows);
+	EntityStager::clear();
+}
+
+TEST_CASE("Follows 3.35 - Normal Post Declared") {
+	EntityStager::clear();
+	DesignExtractor::extractDesignElements(RelationshipASTs::getAST3_35());
+
+	std::vector<std::pair<int, int>> expectedFollows{
+		{1, 2}, {2, 3}, {4, 5}
+	};
+	std::sort(expectedFollows.begin(), expectedFollows.end());
+
+	std::vector<std::pair<int, int>> actualFollows = EntityStager::getStagedFollows();
+	std::sort(actualFollows.begin(), actualFollows.end());
+
+	REQUIRE(actualFollows == expectedFollows);
+	EntityStager::clear();
+}
+
+TEST_CASE("Follows 3.36 - Normal Pre Declared") {
+	EntityStager::clear();
+	DesignExtractor::extractDesignElements(RelationshipASTs::getAST3_36());
+
+	std::vector<std::pair<int, int>> expectedFollows{
+		{1, 2}, {3, 4}, {4, 5}
+	};
+	std::sort(expectedFollows.begin(), expectedFollows.end());
+
+	std::vector<std::pair<int, int>> actualFollows = EntityStager::getStagedFollows();
+	std::sort(actualFollows.begin(), actualFollows.end());
+
+	REQUIRE(actualFollows == expectedFollows);
+	EntityStager::clear();
+}
+
+TEST_CASE("Follows 3.37 - Normal Pre declared Nested in If") {
+	EntityStager::clear();
+	DesignExtractor::extractDesignElements(RelationshipASTs::getAST3_37());
+
+	std::vector<std::pair<int, int>> expectedFollows{
+		{1, 2}, {4, 5}
+	};
+	std::sort(expectedFollows.begin(), expectedFollows.end());
+
+	std::vector<std::pair<int, int>> actualFollows = EntityStager::getStagedFollows();
+	std::sort(actualFollows.begin(), actualFollows.end());
+
+	REQUIRE(actualFollows == expectedFollows);
+	EntityStager::clear();
+}
+
+TEST_CASE("Follows 3.38 - Normal Pre declared Nested in Else") {
+	EntityStager::clear();
+	DesignExtractor::extractDesignElements(RelationshipASTs::getAST3_38());
+
+	std::vector<std::pair<int, int>> expectedFollows{
+		{1, 2}, {5, 6}
+	};
+	std::sort(expectedFollows.begin(), expectedFollows.end());
+
+	std::vector<std::pair<int, int>> actualFollows = EntityStager::getStagedFollows();
+	std::sort(actualFollows.begin(), actualFollows.end());
+
+	REQUIRE(actualFollows == expectedFollows);
+	EntityStager::clear();
+}
+
+TEST_CASE("Follows 3.39 - Normal Post declared Nested in If") {
+	EntityStager::clear();
+	DesignExtractor::extractDesignElements(RelationshipASTs::getAST3_39());
+
+	std::vector<std::pair<int, int>> expectedFollows{
+		{2, 3}, {5, 6}
+	};
+	std::sort(expectedFollows.begin(), expectedFollows.end());
+
+	std::vector<std::pair<int, int>> actualFollows = EntityStager::getStagedFollows();
+	std::sort(actualFollows.begin(), actualFollows.end());
+
+	REQUIRE(actualFollows == expectedFollows);
+	EntityStager::clear();
+}
+
+TEST_CASE("Follows 3.40 - Normal Post declared Nested in Else") {
+	EntityStager::clear();
+	DesignExtractor::extractDesignElements(RelationshipASTs::getAST3_40());
+
+	std::vector<std::pair<int, int>> expectedFollows{
+		{3, 4}, {5, 6}
+	};
+	std::sort(expectedFollows.begin(), expectedFollows.end());
+
+	std::vector<std::pair<int, int>> actualFollows = EntityStager::getStagedFollows();
+	std::sort(actualFollows.begin(), actualFollows.end());
+
+	REQUIRE(actualFollows == expectedFollows);
+	EntityStager::clear();
+}
+
+TEST_CASE("Follows 3.41 - Normal Pre declared Nested in While") {
+	EntityStager::clear();
+	DesignExtractor::extractDesignElements(RelationshipASTs::getAST3_41());
+
+	std::vector<std::pair<int, int>> expectedFollows{
+		{2, 3}, {4, 5}
+	};
+	std::sort(expectedFollows.begin(), expectedFollows.end());
+
+	std::vector<std::pair<int, int>> actualFollows = EntityStager::getStagedFollows();
+	std::sort(actualFollows.begin(), actualFollows.end());
+
+	REQUIRE(actualFollows == expectedFollows);
+	EntityStager::clear();
+}
+
+TEST_CASE("Follows 3.42 - Normal Post declared Nested in While") {
+	EntityStager::clear();
+	DesignExtractor::extractDesignElements(RelationshipASTs::getAST3_42());
+
+	std::vector<std::pair<int, int>> expectedFollows{
+		{1, 4}, {2, 3}
+	};
+	std::sort(expectedFollows.begin(), expectedFollows.end());
+
+	std::vector<std::pair<int, int>> actualFollows = EntityStager::getStagedFollows();
+	std::sort(actualFollows.begin(), actualFollows.end());
+
+	REQUIRE(actualFollows == expectedFollows);
+	EntityStager::clear();
+}
+
+TEST_CASE("Follows 3.43 - 3 calls sequential predeclared") {
+	EntityStager::clear();
+	DesignExtractor::extractDesignElements(RelationshipASTs::getAST3_43());
+
+	std::vector<std::pair<int, int>> expectedFollows{
+		{1, 2}, {3, 4}, {4, 5}, {6, 7}
+	};
+	std::sort(expectedFollows.begin(), expectedFollows.end());
+
+	std::vector<std::pair<int, int>> actualFollows = EntityStager::getStagedFollows();
+	std::sort(actualFollows.begin(), actualFollows.end());
+
+	REQUIRE(actualFollows == expectedFollows);
+	EntityStager::clear();
+}
+
+TEST_CASE("Follows 3.44 - 3 calls sequential post declared") {
+	EntityStager::clear();
+	DesignExtractor::extractDesignElements(RelationshipASTs::getAST3_44());
+
+	std::vector<std::pair<int, int>> expectedFollows{
+		{1, 2}, {2, 3}, {4, 5}, {5, 6}
+	};
+	std::sort(expectedFollows.begin(), expectedFollows.end());
+
+	std::vector<std::pair<int, int>> actualFollows = EntityStager::getStagedFollows();
+	std::sort(actualFollows.begin(), actualFollows.end());
+
+	REQUIRE(actualFollows == expectedFollows);
+	EntityStager::clear();
+}
+
+TEST_CASE("Follows 3.45 - 3 calls forking from top") {
+	EntityStager::clear();
+	DesignExtractor::extractDesignElements(RelationshipASTs::getAST3_45());
+
+	std::vector<std::pair<int, int>> expectedFollows{
+		{1, 2}, {2, 3}, {3, 4}, {5, 6}
+	};
+	std::sort(expectedFollows.begin(), expectedFollows.end());
+
+	std::vector<std::pair<int, int>> actualFollows = EntityStager::getStagedFollows();
+	std::sort(actualFollows.begin(), actualFollows.end());
+
+	REQUIRE(actualFollows == expectedFollows);
+	EntityStager::clear();
+}
+
+TEST_CASE("Follows 3.46 - 3 calls forking from bottom") {
+	EntityStager::clear();
+	DesignExtractor::extractDesignElements(RelationshipASTs::getAST3_46());
+
+	std::vector<std::pair<int, int>> expectedFollows{
+		{1, 2}, {3, 4}, {5, 6}, {6, 7}
+	};
+	std::sort(expectedFollows.begin(), expectedFollows.end());
+
+	std::vector<std::pair<int, int>> actualFollows = EntityStager::getStagedFollows();
+	std::sort(actualFollows.begin(), actualFollows.end());
+
+	REQUIRE(actualFollows == expectedFollows);
+	EntityStager::clear();
+}
+
+TEST_CASE("Follows 3.47 - 3 calls forking from middle") {
+	EntityStager::clear();
+	DesignExtractor::extractDesignElements(RelationshipASTs::getAST3_47());
+
+	std::vector<std::pair<int, int>> expectedFollows{
+		{1, 2}, {3, 4}, {4, 5}, {5, 6}
+	};
+	std::sort(expectedFollows.begin(), expectedFollows.end());
+
+	std::vector<std::pair<int, int>> actualFollows = EntityStager::getStagedFollows();
+	std::sort(actualFollows.begin(), actualFollows.end());
+
+	REQUIRE(actualFollows == expectedFollows);
+	EntityStager::clear();
+}
+
+TEST_CASE("Follows 3.48 - 4 calls sequential call (mix of post and pre declared)") {
+	EntityStager::clear();
+	DesignExtractor::extractDesignElements(RelationshipASTs::getAST3_48());
+
+	std::vector<std::pair<int, int>> expectedFollows{
+		{1, 2}, {2, 3}, {4, 5}, {5, 6}, {10, 11}
+	};
+	std::sort(expectedFollows.begin(), expectedFollows.end());
+
+	std::vector<std::pair<int, int>> actualFollows = EntityStager::getStagedFollows();
+	std::sort(actualFollows.begin(), actualFollows.end());
+
+	REQUIRE(actualFollows == expectedFollows);
+	EntityStager::clear();
+}
+
+TEST_CASE("Follows 3.49 - 4 calls - 1 - (2, 3, 4)") {
+	EntityStager::clear();
+	DesignExtractor::extractDesignElements(RelationshipASTs::getAST3_49());
+
+	std::vector<std::pair<int, int>> expectedFollows{
+		{1, 2}, {2, 3}, {3, 4}, {4, 5}, {6, 7}
+	};
+	std::sort(expectedFollows.begin(), expectedFollows.end());
+
+	std::vector<std::pair<int, int>> actualFollows = EntityStager::getStagedFollows();
+	std::sort(actualFollows.begin(), actualFollows.end());
+
+	REQUIRE(actualFollows == expectedFollows);
+	EntityStager::clear();
+}
+
+TEST_CASE("Follows 3.50 - 4 calls - (1, 2, 4) - 3") {
+	EntityStager::clear();
+	DesignExtractor::extractDesignElements(RelationshipASTs::getAST3_50());
+
+	std::vector<std::pair<int, int>> expectedFollows{
+		{1, 2}, {2, 3}, {4, 5}, {5, 6}, {9, 10}
+	};
+	std::sort(expectedFollows.begin(), expectedFollows.end());
+
+	std::vector<std::pair<int, int>> actualFollows = EntityStager::getStagedFollows();
+	std::sort(actualFollows.begin(), actualFollows.end());
+
+	REQUIRE(actualFollows == expectedFollows);
+	EntityStager::clear();
+}
+
+TEST_CASE("Follows 3.51 - 4 calls - 1 - (3, 4) - 2") {
+	EntityStager::clear();
+	DesignExtractor::extractDesignElements(RelationshipASTs::getAST3_51());
+
+	std::vector<std::pair<int, int>> expectedFollows{
+		{1, 2}, {2, 3}, {3, 4}, {5, 6}, {7, 8}, {10, 11}
+	};
+	std::sort(expectedFollows.begin(), expectedFollows.end());
+
+	std::vector<std::pair<int, int>> actualFollows = EntityStager::getStagedFollows();
+	std::sort(actualFollows.begin(), actualFollows.end());
+
+	REQUIRE(actualFollows == expectedFollows);
+	EntityStager::clear();
+}
+
+TEST_CASE("Follows 3.52 - 4 calls - 2 - 4 - (3, 1)") {
+	EntityStager::clear();
+	DesignExtractor::extractDesignElements(RelationshipASTs::getAST3_52());
+
+	std::vector<std::pair<int, int>> expectedFollows{
+		{1, 2}, {3, 4}, {4, 5}, {8, 9}, {10, 11}
+	};
+	std::sort(expectedFollows.begin(), expectedFollows.end());
+
+	std::vector<std::pair<int, int>> actualFollows = EntityStager::getStagedFollows();
+	std::sort(actualFollows.begin(), actualFollows.end());
+
+	REQUIRE(actualFollows == expectedFollows);
+	EntityStager::clear();
+}
+
+TEST_CASE("Follows 3.53 - 4 calls - (1, 2) - 3 - 4") {
+	EntityStager::clear();
+	DesignExtractor::extractDesignElements(RelationshipASTs::getAST3_53());
+
+	std::vector<std::pair<int, int>> expectedFollows{
+		{1, 2}, {2, 3}, {4, 5}, {5, 6}, {7, 8}
+	};
+	std::sort(expectedFollows.begin(), expectedFollows.end());
+
+	std::vector<std::pair<int, int>> actualFollows = EntityStager::getStagedFollows();
+	std::sort(actualFollows.begin(), actualFollows.end());
+
+	REQUIRE(actualFollows == expectedFollows);
+	EntityStager::clear();
+}
+
+TEST_CASE("Follows 3.54 - 4 calls - (3, (2 - 4)) - 1") {
+	EntityStager::clear();
+	DesignExtractor::extractDesignElements(RelationshipASTs::getAST3_54());
+
+	std::vector<std::pair<int, int>> expectedFollows{
+		{1, 2}, {3, 4}, {4, 5}, {6, 7}, {10, 11}
+	};
+	std::sort(expectedFollows.begin(), expectedFollows.end());
+
+	std::vector<std::pair<int, int>> actualFollows = EntityStager::getStagedFollows();
+	std::sort(actualFollows.begin(), actualFollows.end());
+
+	REQUIRE(actualFollows == expectedFollows);
+	EntityStager::clear();
+}
+
+TEST_CASE("Follows 3.55 - 4 calls - 2 - ((1 - 4), 3)") {
+	EntityStager::clear();
+	DesignExtractor::extractDesignElements(RelationshipASTs::getAST3_55());
+
+	std::vector<std::pair<int, int>> expectedFollows{
+		{1, 2}, {2, 3}, {4, 5}, {5, 6}, {6, 7}
+	};
+	std::sort(expectedFollows.begin(), expectedFollows.end());
+
+	std::vector<std::pair<int, int>> actualFollows = EntityStager::getStagedFollows();
+	std::sort(actualFollows.begin(), actualFollows.end());
+
+	REQUIRE(actualFollows == expectedFollows);
+	EntityStager::clear();
+}
+
 TEST_CASE("Follows 4.1 - Complex AST") {
 	EntityStager::clear();
 	DesignExtractor::extractDesignElements(ComplexASTs::getAST4_1());

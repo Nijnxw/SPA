@@ -12,9 +12,9 @@
 #include "models/QueryClauseResult.h"
 #include "models/QueryClause.h"
 
-#include "UMEvaluator.h"
+#include "StmtVarRelationshipEvaluator.h"
 
-class ModifiesEvaluator : public UMEvaluator {
+class ModifiesEvaluator : public StmtVarRelationshipEvaluator {
 public:
 	ModifiesEvaluator();
 

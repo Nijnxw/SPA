@@ -14,7 +14,7 @@
 
 #include "RelationshipEvaluator.h"
 
-class UMEvaluator : public RelationshipEvaluator {
+class StmtVarRelationshipEvaluator : public RelationshipEvaluator {
 public:
 	QueryClauseResult
 		getRelationship(RelationRef relationship, const std::string& LHS, const std::string& RHS, EntityType LHSType, EntityType RHSType, bool isBooleanResult);

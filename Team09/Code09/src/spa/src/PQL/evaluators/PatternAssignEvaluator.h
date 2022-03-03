@@ -25,6 +25,8 @@ private:
 											 const std::unordered_map<int, AssignStatement> assignStatements);
 
 public:
+	PatternAssignEvaluator();
+
 	QueryClauseResult getPattern(const std::string& LHS, const std::string& RHS, const std::string& clauseSyn, EntityType LHSType, EntityType RHSType,
 								 bool isBooleanResult);
 };

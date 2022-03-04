@@ -57,5 +57,5 @@ void OptimizerGroup::orderingHelper(std::string& syn, std::unordered_set<std::st
 }
 
 bool OptimizerGroup::operator==(const OptimizerGroup& other) const {
-	return adjList == other.adjList && startPoint == other.startPoint;
+	return adjList == other.adjList;
 }

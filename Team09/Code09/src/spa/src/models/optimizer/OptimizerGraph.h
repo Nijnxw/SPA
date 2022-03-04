@@ -3,7 +3,7 @@
 #include <unordered_map>
 #include "OptimizerClause.h"
 
-typedef std::unordered_map<std::string, std::vector<OptimizerClause>> AdjList;
+typedef std::unordered_map<std::string, std::unordered_set<OptimizerClause, std::hash<OptimizerClause>>> AdjList;
 
 class OptimizerGraph {
 public:

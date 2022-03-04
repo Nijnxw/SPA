@@ -15,8 +15,8 @@ TEST_CASE("Separate single group of connected clauses - should return single opt
 	QueryClause clause1 = {RelationRef::MODIFIES, args1, usedSyn1};
 
 	std::vector<QueryArgument> args2 = {{"s", EntityType::STMT},
-										{"v", EntityType::VAR}};
-	std::unordered_set<std::string> usedSyn2 = {"s", "v"};
+										{"c", EntityType::VAR}};
+	std::unordered_set<std::string> usedSyn2 = {"s", "c"};
 	QueryClause clause2 = {RelationRef::MODIFIES, args2, usedSyn2};
 
 	OptimizerGroup expected = {{
@@ -27,7 +27,7 @@ TEST_CASE("Separate single group of connected clauses - should return single opt
 
 	OptimizerQuery query;
 	REQUIRE(query.addEdge(clause1, 0));
-	REQUIRE_FALSE(query.addEdge(clause2, 0));
+	REQUIRE(query.addEdge(clause2, 0));
 
 	auto actual = query.groupClauses();
 	REQUIRE(actual.size() == 1);

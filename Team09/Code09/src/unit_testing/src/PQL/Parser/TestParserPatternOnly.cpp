@@ -264,6 +264,33 @@ TEST_CASE("pattern - different assign-syn") {
 	REQUIRE((isClausesEqual && isResultSynonymEqual));
 }
 
+TEST_CASE("pattern - expr pattern 1") {
+	std::vector<QueryArgument> expectedResultSynonms;
+	std::vector<QueryClause> expectedClauses;
+	std::vector<QueryArgument> clauseArgs;
+	std::unordered_set<std::string> usedSynonyms;
+
+	std::string queryString = "assign a1; variable v;Select a1 pattern a1(v, _\"((((((879))))))\"_)";
+	Tokeniser tokeniser = Tokeniser(queryString);
+	std::vector<PQLToken*> PQLTokens = tokeniser.tokenise();
+	PQLParser parser = PQLParser(PQLTokens);
+
+	expectedResultSynonms.push_back(QueryArgument(std::string("a1"), EntityType::ASSIGN));
+	clauseArgs.push_back(QueryArgument(std::string("v"), EntityType::VAR));
+	clauseArgs.push_back(QueryArgument(std::string("_879_"), EntityType::STRING));
+	usedSynonyms.insert("a1");
+	usedSynonyms.insert("v");
+	expectedClauses.push_back(QueryClause(RelationRef::PATTERN_A, clauseArgs, usedSynonyms, "a1"));
+
+	Query actualQuery = parser.parse();
+	std::vector<QueryArgument> actualResultSynonms = actualQuery.getResultSynonyms();
+	std::vector<QueryClause> actualClauses = actualQuery.getClauses();
+	bool isClausesEqual = std::equal(expectedClauses.begin(), expectedClauses.end(), actualClauses.begin());
+	bool isResultSynonymEqual = std::equal(expectedResultSynonms.begin(), expectedResultSynonms.end(),
+		actualResultSynonms.begin());
+	REQUIRE((isClausesEqual && isResultSynonymEqual));
+}
+
 TEST_CASE("invalid expr 1") {
 	std::string queryString = "assign a; variable v; Select a pattern a(v, _\"xH 123 + 456\"_)";
 	Tokeniser tokeniser = Tokeniser(queryString);

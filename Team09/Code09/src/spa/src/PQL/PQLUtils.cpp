@@ -87,6 +87,9 @@ static std::string trimWhitespacesBetween(std::string str) {
 		}
 
 		if (!isspace(c) && !isalnum(c)) {
+			if (!isPrevCharWhiteSpace) {
+				output.push_back(' ');
+			}
 			output.push_back(c);
 			output.push_back(' ');
 			isPrevCharWhiteSpace = true;
@@ -99,6 +102,7 @@ static std::string trimWhitespacesBetween(std::string str) {
 static std::string trimWhitespaces(std::string str) {
 	int idx = 0;
 	int id = 0;
+	str = trimWhitespacesBetween(str);
 	//trim front 
 	while (isspace(str.at(idx))) { idx++; }
 	if (idx > 0) { str.erase(0, idx); }
@@ -106,7 +110,7 @@ static std::string trimWhitespaces(std::string str) {
 	idx = str.size()-1;
 	while (isspace(str.at(idx))) { idx--; }
 	if (idx < str.size() - 1) { str.erase(idx + 1, str.size() - 1); } 
-	return trimWhitespacesBetween(str);
+	return str;
 }
 
 

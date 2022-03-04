@@ -634,4 +634,3 @@ TEST_CASE("PQL tokeniser individual token test case 35: symbols not in list of a
 	std::vector<PQLToken*> tokens = tokeniser.tokenise();
 	REQUIRE(tokens.empty());
 }
-

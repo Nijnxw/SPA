@@ -8,6 +8,7 @@
 
 #include "PQL/Tokeniser.h"
 #include "PQL/PQLUtils.cpp"
+#include "util/RPN.h"
 
 Tokeniser::Tokeniser(std::string rawQueryString) : rawQuery(new std::stringstream(rawQueryString)) {}
 
@@ -15,11 +16,10 @@ void Tokeniser::processRawToken(std::string rawToken) {
 	if (stringTokenMap.find(rawToken) != stringTokenMap.end()) {
 		PQLTokens.push_back(new PQLToken(stringTokenMap[rawToken], rawToken));
 	}
-	else if (isValidString(rawToken)) {
+	else if (isInStringLiteral(rawToken)) {
 		const std::string ident = rawToken.substr(1, rawToken.size() - 2);
 		PQLTokens.push_back(new PQLToken(TokenType::STRING, ident));
-	}
-	else if (isIdent(rawToken)) {
+	} else if (isIdent(rawToken)) {
 		PQLTokens.push_back(new PQLToken(TokenType::SYNONYM, rawToken));
 	}
 	else if (isInt(rawToken)) {
@@ -35,6 +35,12 @@ void Tokeniser::pushToken() {
 		processRawToken(rawToken);
 	}
 	rawToken = "";
+}
+
+void Tokeniser::pushSymbolToken(char nextChar) {
+	pushToken();
+	rawToken += nextChar;
+	pushToken();
 }
 
 
@@ -53,27 +59,44 @@ std::vector<PQLToken*> Tokeniser::tokenise() {
 			case ' ':
 			case '\t':
 			case '\n':
-				// ignore whitespaceif its within string literals
+				// ignore whitespace if its within string literals
 				if (!isWithinStringLiterals) {
 					pushToken();
 				}
 				break;
 
+			//operator symbols that only appear within string literals
+			case '+':
+			case '-':
+			case '/':
+			case '%':
+				if (isWithinStringLiterals) {
+					rawToken += nextChar;
+				}
+				break;
+
+			//symbols that does not appear in string literals at all 
 			case '_':
 			case ',':
 			case '(':
 			case ')':
 			case ';':
-				pushToken();
-				rawToken += nextChar;
-				pushToken();
+			case '.':
+			case '<':
+			case '>':
+			case '=':
+				pushSymbolToken(nextChar);
 				break;
 
 			default:
+				// characters, numbers and symbols that can appear in and outside string literals (i.e *) goes here 
 				rawToken += nextChar;
 				break;
 			}
 			nextChar = rawQuery->get();
+		}
+		if (isWithinStringLiterals) {
+			throw "Unclosed string in query.";
 		}
 		pushToken();
 	}

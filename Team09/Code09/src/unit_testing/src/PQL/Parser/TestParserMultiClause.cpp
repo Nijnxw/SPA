@@ -55,6 +55,7 @@ TEST_CASE("Modifies + pattern") {
 
 		//pattern
 		patternUsedSynonyms.insert("a1");
+		patternUsedSynonyms.insert("v");
 		patternArgs.push_back(QueryArgument(std::string("v"), EntityType::VAR));
 		patternArgs.push_back(QueryArgument(std::string("z"), EntityType::STRING));
 		expectedClauses.push_back(QueryClause(RelationRef::PATTERN_A, patternArgs, patternUsedSynonyms, "a1"));
@@ -270,6 +271,7 @@ TEST_CASE("Uses + pattern") {
 
 		//pattern
 		patternUsedSynonyms.insert("an");
+		patternUsedSynonyms.insert("vd");
 		patternArgs.push_back(QueryArgument(std::string("vd"), EntityType::VAR));
 		patternArgs.push_back(QueryArgument(std::string("Cx"), EntityType::STRING));
 		expectedClauses.push_back(QueryClause(RelationRef::PATTERN_A, patternArgs, patternUsedSynonyms, "an"));

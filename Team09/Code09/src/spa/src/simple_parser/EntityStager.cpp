@@ -20,6 +20,8 @@ void EntityStager::clear() {
 	stagedFollowsT.clear();
 	stagedParent.clear();
 	stagedParentT.clear();
+	stagedCalls.clear();
+	stagedCallsT.clear();
 	stagedUsesStatement.clear();
 	stagedUsesProcedure.clear();
 	stagedModifiesStatement.clear();
@@ -81,6 +83,14 @@ std::vector<std::pair<int, int>> EntityStager::getStagedParent() {
 
 std::vector<std::pair<int, int>> EntityStager::getStagedParentT() {
 	return stagedParentT;
+}
+
+std::vector<std::pair<std::string, std::string>> EntityStager::getStagedCalls() {
+	return stagedCalls;
+}
+
+std::vector<std::pair<std::string, std::string>> EntityStager::getStagedCallsT() {
+	return stagedCallsT;
 }
 
 std::vector<std::pair<int, std::unordered_set<std::string>>> EntityStager::getStagedUsesStatement() {
@@ -160,6 +170,14 @@ void EntityStager::stageParentT(int parent, std::unordered_set<int> children) {
 	}
 }
 
+void EntityStager::stageCalls(std::string caller, std::string callee) {
+	stagedCalls.emplace_back(caller, callee);
+}
+
+void EntityStager::stageCallsT(std::string caller, std::string callee) {
+	stagedCallsT.emplace_back(caller, callee);
+}
+
 void EntityStager::stageUsesStatements(int stmt, std::unordered_set<std::string> variables) {
 	stagedUsesStatement.emplace_back(stmt, variables);
 }
@@ -178,6 +196,7 @@ void EntityStager::stageModifiesProcedure(std::string proc, std::unordered_set<s
 }
 
 void EntityStager::commit() {
+	//TODO: commit calls
 	for (auto& proc: stagedProcedures) { PKB::addProcedure(proc); }
 	for (auto& var: stagedConstants) { PKB::addConstant(var); }
 	for (auto& con: stagedVariables) { PKB::addVariable(con); }

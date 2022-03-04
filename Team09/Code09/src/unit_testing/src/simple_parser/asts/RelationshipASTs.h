@@ -2,6 +2,7 @@
 
 #include "models/simple_parser/AST.h"
 #include "models/simple_parser/AssignNode.h"
+#include "models/simple_parser/CallNode.h"
 #include "models/simple_parser/ExprNodes.h"
 #include "models/simple_parser/IoNodes.h"
 #include "models/simple_parser/IfNode.h"
@@ -69,4 +70,26 @@ public:
 	static AST getAST3_31();
 	static AST getAST3_32();
 	static AST getAST3_33();
+	static AST getAST3_34();
+	static AST getAST3_35();
+	static AST getAST3_36();
+	static AST getAST3_37();
+	static AST getAST3_38();
+	static AST getAST3_39();
+	static AST getAST3_40();
+	static AST getAST3_41();
+	static AST getAST3_42();
+	static AST getAST3_43();
+	static AST getAST3_44();
+	static AST getAST3_45();
+	static AST getAST3_46();
+	static AST getAST3_47();
+	static AST getAST3_48();
+	static AST getAST3_49();
+	static AST getAST3_50();
+	static AST getAST3_51();
+	static AST getAST3_52();
+	static AST getAST3_53();
+	static AST getAST3_54();
+	static AST getAST3_55();
 };

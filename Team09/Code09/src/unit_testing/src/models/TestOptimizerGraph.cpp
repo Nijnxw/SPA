@@ -1,6 +1,6 @@
 #include "catch.hpp"
 #include "models/QueryClause.h"
-#include "models/OptimizerGraph.h"
+#include "models/optimizer/OptimizerGraph.h"
 
 TEST_CASE("Add no synonym clause - should fail") {
 	std::vector<QueryArgument> args = {{"1", EntityType::INT},

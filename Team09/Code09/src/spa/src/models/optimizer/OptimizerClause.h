@@ -1,6 +1,6 @@
 #pragma once
 
-#include "QueryClause.h"
+#include "models/QueryClause.h"
 
 /*
  * A wrapper class for the QueryClause class, each OptimizerClause represents an
@@ -8,6 +8,7 @@
  */
 class OptimizerClause {
 public:
+	OptimizerClause() = default;
 	OptimizerClause(const std::string& from, const std::string& to, int weight, const QueryClause& clause);
 
 	std::string getFrom() const;

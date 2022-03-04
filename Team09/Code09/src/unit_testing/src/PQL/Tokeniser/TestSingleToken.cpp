@@ -127,6 +127,19 @@ TEST_CASE("PQL tokeniser individual token test case 9: procedure") {
 	REQUIRE(result);
 }
 
+TEST_CASE("PQL tokeniser individual token test case 36: call") {
+	std::string queryString = "call";
+	Tokeniser tokeniser = Tokeniser(queryString);
+	std::vector<PQLToken*> PQLTokens = tokeniser.tokenise();
+
+	std::vector<PQLToken*> expectedPQLTokens = {
+		new PQLToken(TokenType::CALL, "call")
+	};
+
+	bool result = compareVectors(PQLTokens, expectedPQLTokens);
+	REQUIRE(result);
+}
+
 //---------------------------------//
 //	     suchthat-cl tokens        //
 //---------------------------------//
@@ -235,6 +248,85 @@ TEST_CASE("PQL tokeniser individual token test case 17: Modifies") {
 	REQUIRE(result);
 }
 
+TEST_CASE("PQL tokeniser individual token test case 37: Calls") {
+	std::string queryString = "Calls";
+	Tokeniser tokeniser = Tokeniser(queryString);
+	std::vector<PQLToken*> PQLTokens = tokeniser.tokenise();
+
+	std::vector<PQLToken*> expectedPQLTokens = {
+		new PQLToken(TokenType::CALLS, "Calls")
+	};
+
+	bool result = compareVectors(PQLTokens, expectedPQLTokens);
+	REQUIRE(result);
+}
+
+TEST_CASE("PQL tokeniser individual token test case 38: Calls*") {
+	std::string queryString = "Calls*";
+	Tokeniser tokeniser = Tokeniser(queryString);
+	std::vector<PQLToken*> PQLTokens = tokeniser.tokenise();
+
+	std::vector<PQLToken*> expectedPQLTokens = {
+		new PQLToken(TokenType::CALLS_T, "Calls*")
+	};
+
+	bool result = compareVectors(PQLTokens, expectedPQLTokens);
+	REQUIRE(result);
+}
+
+TEST_CASE("PQL tokeniser individual token test case 39: Next") {
+	std::string queryString = "Next";
+	Tokeniser tokeniser = Tokeniser(queryString);
+	std::vector<PQLToken*> PQLTokens = tokeniser.tokenise();
+
+	std::vector<PQLToken*> expectedPQLTokens = {
+		new PQLToken(TokenType::NEXT, "Next")
+	};
+
+	bool result = compareVectors(PQLTokens, expectedPQLTokens);
+	REQUIRE(result);
+}
+
+TEST_CASE("PQL tokeniser individual token test case 40: Next*") {
+	std::string queryString = "Next*";
+	Tokeniser tokeniser = Tokeniser(queryString);
+	std::vector<PQLToken*> PQLTokens = tokeniser.tokenise();
+
+	std::vector<PQLToken*> expectedPQLTokens = {
+		new PQLToken(TokenType::NEXT_T, "Next*")
+	};
+
+	bool result = compareVectors(PQLTokens, expectedPQLTokens);
+	REQUIRE(result);
+}
+
+TEST_CASE("PQL tokeniser individual token test case 39: Affects") {
+	std::string queryString = "Affects";
+	Tokeniser tokeniser = Tokeniser(queryString);
+	std::vector<PQLToken*> PQLTokens = tokeniser.tokenise();
+
+	std::vector<PQLToken*> expectedPQLTokens = {
+		new PQLToken(TokenType::AFFECTS, "Affects")
+	};
+
+	bool result = compareVectors(PQLTokens, expectedPQLTokens);
+	REQUIRE(result);
+}
+
+TEST_CASE("PQL tokeniser individual token test case 40: Affects*") {
+	std::string queryString = "Affects*";
+	Tokeniser tokeniser = Tokeniser(queryString);
+	std::vector<PQLToken*> PQLTokens = tokeniser.tokenise();
+
+	std::vector<PQLToken*> expectedPQLTokens = {
+		new PQLToken(TokenType::AFFECTS_T, "Affects*")
+	};
+
+	bool result = compareVectors(PQLTokens, expectedPQLTokens);
+	REQUIRE(result);
+}
+
+
 //---------------------------------//
 //	      pattern-cl tokens        //
 //---------------------------------//
@@ -282,6 +374,32 @@ TEST_CASE("PQL tokeniser individual token test case 20: close paranthesis") {
 	REQUIRE(result);
 }
 
+TEST_CASE("PQL tokeniser individual token test case 41: open angled") {
+	std::string queryString = "<";
+	Tokeniser tokeniser = Tokeniser(queryString);
+	std::vector<PQLToken*> PQLTokens = tokeniser.tokenise();
+
+	std::vector<PQLToken*> expectedPQLTokens = {
+		new PQLToken(TokenType::OPEN_ANGLED, "<")
+	};
+
+	bool result = compareVectors(PQLTokens, expectedPQLTokens);
+	REQUIRE(result);
+}
+
+TEST_CASE("PQL tokeniser individual token test case 42: close angled") {
+	std::string queryString = ">";
+	Tokeniser tokeniser = Tokeniser(queryString);
+	std::vector<PQLToken*> PQLTokens = tokeniser.tokenise();
+
+	std::vector<PQLToken*> expectedPQLTokens = {
+		new PQLToken(TokenType::CLOSE_ANGLED, ">")
+	};
+
+	bool result = compareVectors(PQLTokens, expectedPQLTokens);
+	REQUIRE(result);
+}
+
 TEST_CASE("PQL tokeniser individual token test case 21: comma") {
 	std::string queryString = ",";
 	Tokeniser tokeniser = Tokeniser(queryString);
@@ -321,6 +439,19 @@ TEST_CASE("PQL tokeniser individual token test case 23: underscore") {
 	REQUIRE(result);
 }
 
+TEST_CASE("PQL tokeniser individual token test case 43: period") {
+	std::string queryString = ".";
+	Tokeniser tokeniser = Tokeniser(queryString);
+	std::vector<PQLToken*> PQLTokens = tokeniser.tokenise();
+
+	std::vector<PQLToken*> expectedPQLTokens = {
+		new PQLToken(TokenType::PERIOD, ".")
+	};
+
+	bool result = compareVectors(PQLTokens, expectedPQLTokens);
+	REQUIRE(result);
+}
+
 //---------------------------------//
 //	        select tokens          //
 //---------------------------------//
@@ -332,6 +463,66 @@ TEST_CASE("PQL tokeniser individual token test case 24: select") {
 
 	std::vector<PQLToken*> expectedPQLTokens = {
 		new PQLToken(TokenType::SELECT, "Select")
+	};
+
+	bool result = compareVectors(PQLTokens, expectedPQLTokens);
+	REQUIRE(result);
+}
+
+TEST_CASE("PQL tokeniser individual token test case 44: boolean") {
+	std::string queryString = "BOOLEAN";
+	Tokeniser tokeniser = Tokeniser(queryString);
+	std::vector<PQLToken*> PQLTokens = tokeniser.tokenise();
+
+	std::vector<PQLToken*> expectedPQLTokens = {
+		new PQLToken(TokenType::BOOLEAN, "BOOLEAN")
+	};
+
+	bool result = compareVectors(PQLTokens, expectedPQLTokens);
+	REQUIRE(result);
+}
+
+//---------------------------------//
+//	        with clause            //
+//---------------------------------//
+
+TEST_CASE("PQL tokeniser individual token test case 45: with") {
+	std::string queryString = "with";
+	Tokeniser tokeniser = Tokeniser(queryString);
+	std::vector<PQLToken*> PQLTokens = tokeniser.tokenise();
+
+	std::vector<PQLToken*> expectedPQLTokens = {
+		new PQLToken(TokenType::WITH, "with")
+	};
+
+	bool result = compareVectors(PQLTokens, expectedPQLTokens);
+	REQUIRE(result);
+}
+
+TEST_CASE("PQL tokeniser individual token test case 46: =") {
+	std::string queryString = "=";
+	Tokeniser tokeniser = Tokeniser(queryString);
+	std::vector<PQLToken*> PQLTokens = tokeniser.tokenise();
+
+	std::vector<PQLToken*> expectedPQLTokens = {
+		new PQLToken(TokenType::EQUAL, "=")
+	};
+
+	bool result = compareVectors(PQLTokens, expectedPQLTokens);
+	REQUIRE(result);
+}
+
+//---------------------------------//
+//				and		           //
+//---------------------------------//
+
+TEST_CASE("PQL tokeniser individual token test case 46: and") {
+	std::string queryString = "and";
+	Tokeniser tokeniser = Tokeniser(queryString);
+	std::vector<PQLToken*> PQLTokens = tokeniser.tokenise();
+
+	std::vector<PQLToken*> expectedPQLTokens = {
+		new PQLToken(TokenType::AND, "and")
 	};
 
 	bool result = compareVectors(PQLTokens, expectedPQLTokens);
@@ -429,42 +620,6 @@ TEST_CASE("PQL tokeniser individual token test case 29: factor (string) digits")
 //							UNHAPPY PATHS						  //
 //----------------------------------------------------------------//
 
-//---------------------------------//
-//	        invalid strings        //
-//---------------------------------//
-
-
-TEST_CASE("PQL tokeniser individual token test case 30: invalid string (invalid punctuator present)") {
-	std::string queryString = "\"!\"";
-	Tokeniser tokeniser = Tokeniser(queryString);
-	std::vector<PQLToken*> tokens = tokeniser.tokenise();
-	REQUIRE(tokens.empty());
-}
-
-TEST_CASE("PQL tokeniser individual token test case 31: invalid string (valid punctuator present)") {
-	std::string queryString = "\",\"";
-	Tokeniser tokeniser = Tokeniser(queryString);
-	std::vector<PQLToken*> tokens = tokeniser.tokenise();
-	REQUIRE(tokens.empty());
-}
-
-TEST_CASE("PQL tokeniser individual token test case 32: invalid string (invalid ident") {
-	std::string queryString = "\"1234qwerty\"";
-	Tokeniser tokeniser = Tokeniser(queryString);
-	std::vector<PQLToken*> tokens = tokeniser.tokenise();
-	REQUIRE(tokens.empty());
-}
-
-//---------------------------------//
-//	        invalid ident		   //
-//---------------------------------//
-
-TEST_CASE("PQL tokeniser individual token test case 33: invalid ident (DIGIT|LETTER) ") {
-	std::string queryString = "1234qwerty";
-	Tokeniser tokeniser = Tokeniser(queryString);
-	std::vector<PQLToken*> tokens = tokeniser.tokenise();
-	REQUIRE(tokens.empty());
-}
 
 TEST_CASE("PQL tokeniser individual token test case 34: invalid ident (punctuator present)") {
 	std::string queryString = "q@werty";
@@ -473,13 +628,8 @@ TEST_CASE("PQL tokeniser individual token test case 34: invalid ident (punctuato
 	REQUIRE(tokens.empty());
 }
 
-//---------------------------------//
-//	             misc			   //
-//---------------------------------//
-
-
 TEST_CASE("PQL tokeniser individual token test case 35: symbols not in list of allowed symbols") {
-	std::string queryString = ".";
+	std::string queryString = "@";
 	Tokeniser tokeniser = Tokeniser(queryString);
 	std::vector<PQLToken*> tokens = tokeniser.tokenise();
 	REQUIRE(tokens.empty());

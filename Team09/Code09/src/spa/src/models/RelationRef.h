@@ -9,7 +9,12 @@ enum class RelationRef {
 	FOLLOWS_T,
 	PATTERN_A,
 	CALLS,
-	CALLS_T
+	CALLS_T,
+	NEXT,
+	NEXT_T,
+	AFFECTS,
+	AFFECTS_T,
+	WITH
 };
 
 inline const char* ToString(RelationRef ref) {

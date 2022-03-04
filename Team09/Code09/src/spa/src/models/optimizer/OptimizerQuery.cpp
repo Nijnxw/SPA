@@ -23,17 +23,17 @@ OptimizerQuery::groupingHelper(const std::string& synonym, std::unordered_set<st
 	visited.emplace(synonym);
 
 	OptimizerGroup resultGroup;
-	std::queue<std::string> queue;
-	queue.push(synonym);
+	std::queue<std::string> synQueue;
+	synQueue.push(synonym);
 
-	while (!queue.empty()) {
-		std::string currSyn = queue.front();
-		queue.pop();
+	while (!synQueue.empty()) {
+		std::string currSyn = synQueue.front();
+		synQueue.pop();
 		for (const auto& clause: adjList.at(currSyn)) {
 			resultGroup.addEdge(clause);
 			if (!visited.count(clause.getTo())) {
 				visited.emplace(clause.getTo());
-				queue.push(clause.getTo());
+				synQueue.push(clause.getTo());
 			}
 		}
 	}

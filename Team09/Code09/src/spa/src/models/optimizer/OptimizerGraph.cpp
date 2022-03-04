@@ -1,7 +1,5 @@
 #include "OptimizerGraph.h"
 
-OptimizerGraph::OptimizerGraph() {}
-
 OptimizerGraph::OptimizerGraph(const AdjList& adjList) : adjList(adjList) {}
 
 bool OptimizerGraph::addEdge(const OptimizerClause& clause) {
@@ -25,6 +23,7 @@ bool OptimizerGraph::addEdge(const QueryClause& clause, int weight) {
 		adjList[firstSynonym].emplace_back(firstSynonym, secondSynonym, weight, clause);
 		adjList[secondSynonym].emplace_back(secondSynonym, firstSynonym, weight, clause);
 	}
+	clauses.insert(clause);
 	return true;
 }
 

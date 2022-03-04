@@ -4,6 +4,8 @@
 #include <vector>
 #include <unordered_map>
 #include <unordered_set>
+#include <stdexcept>
+#include <assert.h> 
 
 class CallStmtValidator {
 private:

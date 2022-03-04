@@ -1,5 +1,5 @@
 #include "catch.hpp"
-#include "models/OptimizerQuery.h"
+#include "models/optimizer/OptimizerQuery.h"
 
 TEST_CASE("Group empty adjacency list - should return empty") {
 	OptimizerQuery query;
@@ -27,7 +27,7 @@ TEST_CASE("Separate single group of connected clauses - should return single opt
 
 	OptimizerQuery query;
 	REQUIRE(query.addEdge(clause1, 0));
-	REQUIRE(query.addEdge(clause2, 0));
+	REQUIRE_FALSE(query.addEdge(clause2, 0));
 
 	auto actual = query.groupClauses();
 	REQUIRE(actual.size() == 1);

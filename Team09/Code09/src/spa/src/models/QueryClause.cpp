@@ -49,4 +49,3 @@ std::string QueryClause::toString() const {
 	}
 	return str;
 }
-

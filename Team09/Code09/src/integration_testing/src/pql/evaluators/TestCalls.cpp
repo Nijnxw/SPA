@@ -53,6 +53,16 @@ TEST_CASE("Calls Relationship API") {
 			REQUIRE(res.containsValidResult() == true);
 		}
 
+		SECTION("Calls(First, First) negative query - same procedure name") {
+			QueryClauseResult res = callsEvaluator.getCalls("First", "First", EntityType::STRING, EntityType::STRING, false);
+			REQUIRE(res.containsValidResult() == false);
+		}
+
+		SECTION("Calls(First, Fourth) negative query - invalid procedure name") {
+			QueryClauseResult res = callsEvaluator.getCalls("First", "Fourth", EntityType::STRING, EntityType::STRING, false);
+			REQUIRE(res.containsValidResult() == false);
+		}
+
 		SECTION("Calls(Second, First) negative query - invalid ordering") {
 			QueryClauseResult res = callsEvaluator.getCalls("Second", "First", EntityType::STRING, EntityType::STRING, false);
 			REQUIRE(res.containsValidResult() == false);
@@ -74,6 +84,16 @@ TEST_CASE("Calls Relationship API") {
 			REQUIRE(res.containsValidResult() == true);
 		}
 
+		SECTION("CallsT(First, First) negative query - same procedure name") {
+			QueryClauseResult res = callsEvaluator.getCallsT("First", "First", EntityType::STRING, EntityType::STRING, false);
+			REQUIRE(res.containsValidResult() == false);
+		}
+
+		SECTION("CallsT(First, Fourth) negative query - invalid procedure name") {
+			QueryClauseResult res = callsEvaluator.getCallsT("First", "Fourth", EntityType::STRING, EntityType::STRING, false);
+			REQUIRE(res.containsValidResult() == false);
+		}
+
 		SECTION("CallsT(Second, First) negative query - invalid ordering") {
 			QueryClauseResult res = callsEvaluator.getCallsT("Second", "First", EntityType::STRING, EntityType::STRING, false);
 			REQUIRE(res.containsValidResult() == false);
@@ -85,6 +105,11 @@ TEST_CASE("Calls Relationship API") {
 			REQUIRE(res.containsValidResult() == true);
 			Table expectedTable = {{"p", {"Second"}}};
 			REQUIRE(res == QueryClauseResult(expectedTable));
+		}
+
+		SECTION("Calls(Fourth, p) negative query - invalid procedure name") {
+			QueryClauseResult res = callsEvaluator.getCalls("Fourth", "p", EntityType::STRING, EntityType::PROC, false);
+			REQUIRE(res.containsValidResult() == false);
 		}
 
 		SECTION("Calls(Third, p) negative query") {
@@ -100,6 +125,11 @@ TEST_CASE("Calls Relationship API") {
 			REQUIRE(res == QueryClauseResult(expectedTable));
 		}
 
+		SECTION("CallsT(Fourth, p) negative query - invalid procedure name") {
+			QueryClauseResult res = callsEvaluator.getCallsT("Fourth", "p", EntityType::STRING, EntityType::PROC, false);
+			REQUIRE(res.containsValidResult() == false);
+		}
+
 		SECTION("CallsT(Third, p) negative query") {
 			QueryClauseResult res = callsEvaluator.getCallsT("Third", "p", EntityType::STRING, EntityType::PROC, false);
 			REQUIRE(res.containsValidResult() == false);
@@ -111,6 +141,11 @@ TEST_CASE("Calls Relationship API") {
 			REQUIRE(res.containsValidResult() == true);
 		}
 
+		SECTION("Calls(Fourth, _) negative query - invalid procedure name") {
+			QueryClauseResult res = callsEvaluator.getCalls("Fourth", "_", EntityType::STRING, EntityType::WILD, false);
+			REQUIRE(res.containsValidResult() == false);
+		}
+
 		SECTION("Calls(Third, _) negative query") {
 			QueryClauseResult res = callsEvaluator.getCalls("Third", "_", EntityType::STRING, EntityType::WILD, false);
 			REQUIRE(res.containsValidResult() == false);
@@ -120,6 +155,11 @@ TEST_CASE("Calls Relationship API") {
 		SECTION("CallsT(First, _) positive query") {
 			QueryClauseResult res = callsEvaluator.getCallsT("First", "_", EntityType::STRING, EntityType::WILD, false);
 			REQUIRE(res.containsValidResult() == true);
+		}
+
+		SECTION("CallsT(Fourth, _) negative query - invalid procedure name") {
+			QueryClauseResult res = callsEvaluator.getCallsT("Fourth", "_", EntityType::STRING, EntityType::WILD, false);
+			REQUIRE(res.containsValidResult() == false);
 		}
 
 		SECTION("CallsT(Third, _) negative query") {
@@ -138,6 +178,11 @@ TEST_CASE("Calls Relationship API") {
 			REQUIRE(res == QueryClauseResult(expectedTable));
 		}
 
+		SECTION("Calls(p, Fourth) negative query - invalid procedure name") {
+			QueryClauseResult res = callsEvaluator.getCalls("p", "Fourth", EntityType::PROC, EntityType::STRING, false);
+			REQUIRE(res.containsValidResult() == false);
+		}
+
 		SECTION("Calls(p, First) negative query - invalid ordering") {
 			QueryClauseResult res = callsEvaluator.getCalls("p", "First", EntityType::PROC, EntityType::STRING, false);
 			REQUIRE(res.containsValidResult() == false);
@@ -149,6 +194,11 @@ TEST_CASE("Calls Relationship API") {
 			REQUIRE(res.containsValidResult() == true);
 			Table expectedTable = { {"p", {"First", "Second"}}};
 			REQUIRE(res == QueryClauseResult(expectedTable));
+		}
+
+		SECTION("CallsT(p, Fourth) negative query - invalid procedure name") {
+			QueryClauseResult res = callsEvaluator.getCallsT("p", "Fourth", EntityType::PROC, EntityType::STRING, false);
+			REQUIRE(res.containsValidResult() == false);
 		}
 
 		SECTION("CallsT(p, First) negative query - invalid ordering") {
@@ -167,6 +217,11 @@ TEST_CASE("Calls Relationship API") {
 			REQUIRE(res == QueryClauseResult(expectedTable));
 		}
 
+		SECTION("Calls(p, p) negative query - same procedure synonym") {
+			QueryClauseResult res = callsEvaluator.getCalls("p", "p", EntityType::PROC, EntityType::PROC, false);
+			REQUIRE(res.containsValidResult() == false);
+		}
+
 		// getCallsT(LHS proc, RHS proc)
 		SECTION("CallsT(p1, p2) positive query") {
 			QueryClauseResult res = callsEvaluator.getCallsT("p1", "p2", EntityType::PROC, EntityType::PROC, false);
@@ -176,6 +231,11 @@ TEST_CASE("Calls Relationship API") {
 				{"p2", {"Second", "Third", "Third"}}
 			};
 			REQUIRE(res == QueryClauseResult(expectedTable));
+		}
+
+		SECTION("CallsT(p, p) negative query - same procedure synonym") {
+			QueryClauseResult res = callsEvaluator.getCallsT("p", "p", EntityType::PROC, EntityType::PROC, false);
+			REQUIRE(res.containsValidResult() == false);
 		}
 
 		// getCalls(LHS proc, RHS wild)
@@ -203,6 +263,11 @@ TEST_CASE("Calls Relationship API") {
 			REQUIRE(res.containsValidResult() == true);
 		}
 
+		SECTION("Calls(_, Fourth) negative query - invalid procedure name") {
+			QueryClauseResult res = callsEvaluator.getCalls("_", "Fourth", EntityType::WILD, EntityType::STRING, false);
+			REQUIRE(res.containsValidResult() == false);
+		}
+
 		SECTION("Calls(_, First) negative query") {
 			QueryClauseResult res = callsEvaluator.getCalls("_", "First", EntityType::WILD, EntityType::STRING, false);
 			REQUIRE(res.containsValidResult() == false);
@@ -212,6 +277,11 @@ TEST_CASE("Calls Relationship API") {
 		SECTION("CallsT(_, Second) positive query") {
 			QueryClauseResult res = callsEvaluator.getCallsT("_", "Second", EntityType::WILD, EntityType::STRING, false);
 			REQUIRE(res.containsValidResult() == true);
+		}
+
+		SECTION("CallsT(_, Fourth) negative query - invalid procedure name") {
+			QueryClauseResult res = callsEvaluator.getCallsT("_", "Fourth", EntityType::WILD, EntityType::STRING, false);
+			REQUIRE(res.containsValidResult() == false);
 		}
 
 		SECTION("CallsT(_, First) negative query") {

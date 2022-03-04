@@ -42,6 +42,11 @@ TEST_CASE("Parent Relationship API") {
 			REQUIRE(res.containsValidResult() == false);
 		}
 
+		SECTION("Parent(3, 3) negative query - same stmt") {
+			QueryClauseResult res = parentEvaluator.getParent("3", "3", EntityType::INT, EntityType::INT, false);
+			REQUIRE(res.containsValidResult() == false);
+		}
+
 			// getParentT(LHS int, RHS int)
 		SECTION("ParentT(3, 4) positive query") {
 			QueryClauseResult res = parentEvaluator.getParentT("3", "4", EntityType::INT, EntityType::INT, false);
@@ -65,6 +70,11 @@ TEST_CASE("Parent Relationship API") {
 
 		SECTION("ParentT(1, 2) negative query") {
 			QueryClauseResult res = parentEvaluator.getParentT("1", "2", EntityType::INT, EntityType::INT, false);
+			REQUIRE(res.containsValidResult() == false);
+		}
+
+		SECTION("ParentT(3, 3) negative query - same stmt") {
+			QueryClauseResult res = parentEvaluator.getParentT("3", "3", EntityType::INT, EntityType::INT, false);
 			REQUIRE(res.containsValidResult() == false);
 		}
 
@@ -208,6 +218,11 @@ TEST_CASE("Parent Relationship API") {
 			REQUIRE(res == QueryClauseResult(expectedTable));
 		}
 
+		SECTION("Parent(s, s) negative query - same synonym") {
+			QueryClauseResult res = parentEvaluator.getParent("s", "s", EntityType::STMT, EntityType::STMT, false);
+			REQUIRE(res.containsValidResult() == false);
+		}
+
 			// getParentT(LHS stmt, RHS stmt)
 		SECTION("ParentT(s1, s2) positive query") {
 			QueryClauseResult res = parentEvaluator.getParentT("s1", "s2", EntityType::STMT, EntityType::STMT, false);
@@ -217,6 +232,11 @@ TEST_CASE("Parent Relationship API") {
 				{"s2", {"4", "5", "6", "6"}}
 			};
 			REQUIRE(res == QueryClauseResult(expectedTable));
+		}
+
+		SECTION("ParentT(s, s) negative query - same synonym") {
+			QueryClauseResult res = parentEvaluator.getParentT("s", "s", EntityType::STMT, EntityType::STMT, false);
+			REQUIRE(res.containsValidResult() == false);
 		}
 
 			// getParent(LHS stmt, RHS wild)

@@ -73,6 +73,28 @@ TEST_CASE("pattern - variable synonym as first arg") {
 											   actualResultSynonms.begin());
 		REQUIRE((isClausesEqual && isResultSynonymEqual));
 	}
+
+	SECTION("expr as second arg") {
+		std::string queryString = "assign a1; variable v2; Select a1 pattern a1(v2,_\"1 + 2 + x + x1 * x2 - x3\"_)";
+		Tokeniser tokeniser = Tokeniser(queryString);
+		std::vector<PQLToken*> PQLTokens = tokeniser.tokenise();
+		PQLParser parser = PQLParser(PQLTokens);
+
+		expectedResultSynonms.push_back(QueryArgument(std::string("a1"), EntityType::ASSIGN));
+		clauseArgs.push_back(QueryArgument(std::string("v2"), EntityType::VAR));
+		clauseArgs.push_back(QueryArgument(std::string("_1 2 + x + x1 x2 * + x3 -_"), EntityType::STRING));
+		usedSynonyms.insert("a1");
+		usedSynonyms.insert("v2");
+		expectedClauses.push_back(QueryClause(RelationRef::PATTERN_A, clauseArgs, usedSynonyms, "a1"));
+
+		Query actualQuery = parser.parse();
+		std::vector<QueryArgument> actualResultSynonms = actualQuery.getResultSynonyms();
+		std::vector<QueryClause> actualClauses = actualQuery.getClauses();
+		bool isClausesEqual = std::equal(expectedClauses.begin(), expectedClauses.end(), actualClauses.begin());
+		bool isResultSynonymEqual = std::equal(expectedResultSynonms.begin(), expectedResultSynonms.end(),
+			actualResultSynonms.begin());
+		REQUIRE((isClausesEqual && isResultSynonymEqual));
+	}
 }
 
 TEST_CASE("pattern - string (which represents a variable in SIMPLE) as first arg") {

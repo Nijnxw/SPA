@@ -99,3 +99,62 @@ TEST_CASE("PQL tokeniser declaration statement test case 6: multi declaration, r
 	REQUIRE(result);
 }
 
+TEST_CASE("PQL tokeniser declaration statement test case 7: single declaration, call") {
+	std::string queryString = "call c;";
+	auto tokeniser = Tokeniser(queryString);
+	std::vector<PQLToken*> PQLTokens = tokeniser.tokenise();
+
+	std::vector<PQLToken*> expectedPQLTokens = {
+		new PQLToken(TokenType::CALL, "call"),
+		new PQLToken(TokenType::SYNONYM, "c"),
+		new PQLToken(TokenType::SEMICOLON, ";")
+	};
+
+	bool result = compareVectors(PQLTokens, expectedPQLTokens);
+	REQUIRE(result);
+}
+
+TEST_CASE("PQL tokeniser declaration statement test case 8: single declaration, if") {
+	std::string queryString = "if ifs;";
+	auto tokeniser = Tokeniser(queryString);
+	std::vector<PQLToken*> PQLTokens = tokeniser.tokenise();
+
+	std::vector<PQLToken*> expectedPQLTokens = {
+		new PQLToken(TokenType::IF, "if"),
+		new PQLToken(TokenType::SYNONYM, "ifs"),
+		new PQLToken(TokenType::SEMICOLON, ";")
+	};
+
+	bool result = compareVectors(PQLTokens, expectedPQLTokens);
+	REQUIRE(result);
+}
+
+TEST_CASE("PQL tokeniser declaration statement test case 9: single declaration, assign") {
+	std::string queryString = "assign a;";
+	auto tokeniser = Tokeniser(queryString);
+	std::vector<PQLToken*> PQLTokens = tokeniser.tokenise();
+
+	std::vector<PQLToken*> expectedPQLTokens = {
+		new PQLToken(TokenType::ASSIGN, "assign"),
+		new PQLToken(TokenType::SYNONYM, "a"),
+		new PQLToken(TokenType::SEMICOLON, ";")
+	};
+
+	bool result = compareVectors(PQLTokens, expectedPQLTokens);
+	REQUIRE(result);
+}
+
+TEST_CASE("PQL tokeniser declaration statement test case 1: single declaration, procedure") {
+	std::string queryString = "procedure proc;";
+	auto tokeniser = Tokeniser(queryString);
+	std::vector<PQLToken*> PQLTokens = tokeniser.tokenise();
+
+	std::vector<PQLToken*> expectedPQLTokens = {
+		new PQLToken(TokenType::PROC, "procedure"),
+		new PQLToken(TokenType::SYNONYM, "proc"),
+		new PQLToken(TokenType::SEMICOLON, ";")
+	};
+
+	bool result = compareVectors(PQLTokens, expectedPQLTokens);
+	REQUIRE(result);
+}

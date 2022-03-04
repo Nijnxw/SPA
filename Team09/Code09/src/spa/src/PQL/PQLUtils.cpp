@@ -1,4 +1,9 @@
 #include <string>
+#include <unordered_set>
+#include <sstream>
+#include <vector>
+
+static std::unordered_set<std::string> exprSym = { "+" , "-", "*", "/", "%", "(" , ")"};
 
 static bool isAlphaNum(std::string str) {
 	for (const char c : str) {
@@ -16,6 +21,10 @@ static bool startsWithAlpha(std::string str) {
 	return isalpha(str[0]);
 }
 
+static bool isMathSym(std::string c) {
+	return exprSym.find(c) != exprSym.end();
+}
+
 static bool isInt(std::string str) {
 	for (const char c : str) {
 		if (!isdigit(c)) {
@@ -25,13 +34,32 @@ static bool isInt(std::string str) {
 	return true;
 }
 
+static std::vector<std::string> splitExpr(const std::string& s, char delim) {
+	std::vector<std::string> output;
+	std::istringstream iss(s);
+	std::string item;
+	while (std::getline(iss, item, delim)) {
+		output.push_back(item);
+	}
+	return output;
+}
+
 static bool isIdent(std::string str) {
 	return startsWithAlpha(str) && isAlphaNum(str);
 }
 
-static bool isValidString(std::string str) {
-	const std::string content = str.substr(1, str.size() - 2);
-	bool isInStringLiterals = str.size() >= 2 && str[0] == '"' && str[str.size() - 1] == '"';
-	bool isEitherIdentOrIntButNotBoth = (isIdent(content) && !isInt(content)) || (!isIdent(content) && isInt(content));
-	return isInStringLiterals && isEitherIdentOrIntButNotBoth;
+static bool isValidExpr(std::string expr) {
+	std::vector<std::string> exprTokens = splitExpr(expr, ' ');
+	for (std::string str : exprTokens) {
+		if (!isMathSym(str) && !isIdent(str) && !isInt(str)) {
+			return false;
+		}
+	}
+	return true;
 }
+
+
+static bool isInStringLiteral(std::string str) {
+	return str.size() >= 2 && str[0] == '"' && str[str.size() - 1] == '"';
+}
+

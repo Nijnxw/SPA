@@ -3,8 +3,6 @@
 #include <sstream>
 #include <vector>
 
-static std::unordered_set<std::string> exprSym = { "+" , "-", "*", "/", "%", "(" , ")"};
-
 static bool isAlphaNum(std::string str) {
 	for (const char c : str) {
 		if (!isalnum(c)) {
@@ -22,6 +20,7 @@ static bool startsWithAlpha(std::string str) {
 }
 
 static bool isMathSym(std::string c) {
+	static std::unordered_set<std::string> exprSym = { "+" , "-", "*", "/", "%"};
 	return exprSym.find(c) != exprSym.end();
 }
 
@@ -50,12 +49,64 @@ static bool isIdent(std::string str) {
 
 static bool isValidExpr(std::string expr) {
 	std::vector<std::string> exprTokens = splitExpr(expr, ' ');
+	bool isExpectingOperator = false;
+	int numOpenParan = 0;
 	for (std::string str : exprTokens) {
-		if (!isMathSym(str) && !isIdent(str) && !isInt(str)) {
-			return false;
+		if (isInt(str) || isIdent(str)) {
+			if (isExpectingOperator) { return false;}
+			isExpectingOperator = true;
+		} else if (isMathSym(str)) {
+			if (!isExpectingOperator) { return false; }
+			isExpectingOperator = false;
+		} else {
+			if (str == "(") {
+				numOpenParan++;
+				isExpectingOperator = false;
+			} else {
+				if (!isExpectingOperator) { return false; }
+				numOpenParan--;
+				isExpectingOperator = true;
+			}
 		}
 	}
-	return true;
+	return numOpenParan == 0 && isExpectingOperator;
+}
+
+static std::string trimWhitespacesBetween(std::string str) {
+	std::string output;
+	bool isPrevCharWhiteSpace = false;
+	for (char c : str) {
+		if (isspace(c) && !isPrevCharWhiteSpace) {
+			output.push_back(' ');
+			isPrevCharWhiteSpace = !isPrevCharWhiteSpace;
+		}
+
+		if (!isspace(c) && isalnum(c)) {
+			output.push_back(c);
+			isPrevCharWhiteSpace = false;
+		}
+
+		if (!isspace(c) && !isalnum(c)) {
+			output.push_back(c);
+			output.push_back(' ');
+			isPrevCharWhiteSpace = true;
+		}
+
+	}
+	return output;
+}
+
+static std::string trimWhitespaces(std::string str) {
+	int idx = 0;
+	int id = 0;
+	//trim front 
+	while (isspace(str.at(idx))) { idx++; }
+	if (idx > 0) { str.erase(0, idx); }
+	//trim back
+	idx = str.size()-1;
+	while (isspace(str.at(idx))) { idx--; }
+	if (idx < str.size() - 1) { str.erase(idx + 1, str.size() - 1); } 
+	return trimWhitespacesBetween(str);
 }
 
 

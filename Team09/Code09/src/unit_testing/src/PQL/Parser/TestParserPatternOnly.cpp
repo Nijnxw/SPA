@@ -264,6 +264,46 @@ TEST_CASE("pattern - different assign-syn") {
 	REQUIRE((isClausesEqual && isResultSynonymEqual));
 }
 
+TEST_CASE("invalid expr 1") {
+	std::string queryString = "assign a; variable v; Select a pattern a(v, _\"xH 123 + 456\"_)";
+	Tokeniser tokeniser = Tokeniser(queryString);
+	std::vector<PQLToken*> PQLTokens = tokeniser.tokenise();
+	PQLParser parser = PQLParser(PQLTokens);
+
+	Query actualQuery = parser.parse();
+	REQUIRE(actualQuery.isEmpty());
+}
+
+TEST_CASE("invalid expr 2") {
+	std::string queryString = "assign a; variable v; Select a pattern a(v, _\"xH - ( 123 + 456\"_)";
+	Tokeniser tokeniser = Tokeniser(queryString);
+	std::vector<PQLToken*> PQLTokens = tokeniser.tokenise();
+	PQLParser parser = PQLParser(PQLTokens);
+
+	Query actualQuery = parser.parse();
+	REQUIRE(actualQuery.isEmpty());
+}
+
+TEST_CASE("invalid expr 3") {
+	std::string queryString = "assign a; variable v; Select a pattern a(v, _\"xH + () + 123 + 456\"_)";
+	Tokeniser tokeniser = Tokeniser(queryString);
+	std::vector<PQLToken*> PQLTokens = tokeniser.tokenise();
+	PQLParser parser = PQLParser(PQLTokens);
+
+	Query actualQuery = parser.parse();
+	REQUIRE(actualQuery.isEmpty());
+}
+
+TEST_CASE("invalid expr 4") {
+	std::string queryString = "assign a; variable v; Select a pattern a(v, _\"xH  123 + 456)\"_)";
+	Tokeniser tokeniser = Tokeniser(queryString);
+	std::vector<PQLToken*> PQLTokens = tokeniser.tokenise();
+	PQLParser parser = PQLParser(PQLTokens);
+
+	Query actualQuery = parser.parse();
+	REQUIRE(actualQuery.isEmpty());
+}
+
 TEST_CASE("non-var syn as first argument") {
 	std::string queryString = "assign a; read re; Select a pattern a(re, _\"xH\"_)";
 	Tokeniser tokeniser = Tokeniser(queryString);

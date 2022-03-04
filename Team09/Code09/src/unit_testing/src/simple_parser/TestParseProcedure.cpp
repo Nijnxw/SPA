@@ -475,3 +475,10 @@ TEST_CASE ("Test parsing of invalid procedure") {
 		REQUIRE_THROWS_WITH(parser.parseProgram(), "Invalid statement syntax at statement 2.\n");
 	}
 }
+
+TEST_CASE("ProgramNode validity - A program need to have at least 1 procedure") {
+	// procedure m*in { read x;}
+	std::vector<Token*> input{new EndOfFileToken()};
+	SPParser parser = SPParser(input);
+	REQUIRE_THROWS_WITH(parser.parseProgram(), "There must be at least 1 procedure in a SIMPLE program!\n");
+}

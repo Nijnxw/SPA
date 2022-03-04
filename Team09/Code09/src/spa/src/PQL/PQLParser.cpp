@@ -182,6 +182,8 @@ QueryArgument PQLParser::parseAssignPatternRHS() {
 					return QueryArgument(std::string("_" + infix + "_"), entityTypeMapping[followingToken->getType()]);
 				case TokenType::CLOSE_PARAN:
 					return QueryArgument(std::string("_"), entityTypeMapping[nextToken->getType()]);
+				default:
+					throw "unexpected Token encountered";
 			}
 		}
 		case TokenType::STRING:
@@ -202,9 +204,9 @@ void PQLParser::parseAssignPattern(PQLToken* synonymToken) {
 	if (LHS.getType() != EntityType::STRING && LHS.getType() != EntityType::WILD) {
 		usedSynonyms.insert(LHS.getValue());
 	}
-	patternArgs.push_back(LHS);
+	patternArgs.emplace_back(LHS);
 	getNextExpectedToken(TokenType::COMMA);
-	patternArgs.push_back(parseAssignPatternRHS());
+	patternArgs.emplace_back(parseAssignPatternRHS());
 	QueryClauses.push_back(QueryClause(RelationRef::PATTERN_A, patternArgs, usedSynonyms, synonymToken->getValue()));
 }
 
@@ -212,7 +214,7 @@ void PQLParser::parsePatternClause() {
 	getNextExpectedToken(TokenType::PATTERN);
 	auto synonymToken = getValidSynonymToken();
 	auto synonymType = Declarations.find(synonymToken->getValue());
-	if (Declarations.find(synonymToken->getValue()) == Declarations.end()) {
+	if (synonymType == Declarations.end()) {
 		throw "invalid syn-assign";
 	}
 	getNextExpectedToken(TokenType::OPEN_PARAN);

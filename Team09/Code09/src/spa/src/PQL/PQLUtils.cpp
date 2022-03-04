@@ -1,6 +1,7 @@
 #include <string>
 #include <unordered_set>
 #include <sstream>
+#include <vector>
 
 static std::unordered_set<std::string> exprSym = { "+" , "-", "*", "/", "%", "(" , ")"};
 

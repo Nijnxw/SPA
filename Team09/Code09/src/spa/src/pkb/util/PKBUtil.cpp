@@ -6,8 +6,12 @@
 
 namespace PKBUtil {
     struct hashFunction {
-        size_t operator()(const std::pair<int, int>& x) const {
-            return x.first ^ x.second;
+        template <class T1, class T2>
+        size_t operator()(const std::pair<T1, T2>& p) const
+        {
+            auto hash1 = std::hash<T1>{}(p.first);
+            auto hash2 = std::hash<T2>{}(p.second);
+            return hash1 ^ hash2;
         }
     };
 
@@ -95,11 +99,12 @@ namespace PKBUtil {
         return { firstColumn, secondColumn };
     }
 
-    static std::unordered_set<std::pair<int, int>, PKBUtil::hashFunction> convertVectorTupleToSetPairs(std::vector<int> firstEntities, std::vector<int> secondEntities) {
-        std::unordered_set<std::pair<int, int>, PKBUtil::hashFunction> result;
+    template <typename T>
+    static std::unordered_set<std::pair<T, T>, PKBUtil::hashFunction> convertVectorTupleToSetPairs(std::vector<T> firstEntities, std::vector<T> secondEntities) {
+        std::unordered_set<std::pair<T, T>, PKBUtil::hashFunction> result;
 
         for (int i = 0; i < firstEntities.size(); i++) {
-            std::pair<int, int> pair;
+            std::pair<T, T> pair;
             pair = std::make_pair(firstEntities[i], secondEntities[i]);
             result.insert(pair);
         }

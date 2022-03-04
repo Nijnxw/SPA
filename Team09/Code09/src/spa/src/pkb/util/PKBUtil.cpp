@@ -5,13 +5,11 @@
 #include <vector>
 
 namespace PKBUtil {
-    struct hashFunction {
-        template <class T1, class T2>
-        size_t operator()(const std::pair<T1, T2>& p) const
+    struct pairHashFunction {
+        template <typename T, typename U>
+        std::size_t operator()(const std::pair<T, U>& x) const
         {
-            auto hash1 = std::hash<T1>{}(p.first);
-            auto hash2 = std::hash<T2>{}(p.second);
-            return hash1 ^ hash2;
+            return std::hash<T>()(x.first) ^ std::hash<U>()(x.second);
         }
     };
 
@@ -33,32 +31,34 @@ namespace PKBUtil {
         return resultSet;
     }
 
-    static bool addToMapWithSet(std::unordered_map<int, std::unordered_set<int>>& map, const int key, const int value) {
+    template <typename T>
+    static bool addToMapWithSet(std::unordered_map<T, std::unordered_set<T>>& map, const T key, const T value) {
         bool isAdded = true;
 
         if (map.count(key) <= 0) {
-            std::unordered_set<int> newSet;
+            std::unordered_set<T> newSet;
             isAdded = isAdded && newSet.insert(value).second;
             isAdded = isAdded && map.insert({ key, newSet }).second;
         }
         else {
-            std::unordered_set<int>& set = map[key];
+            std::unordered_set<T>& set = map[key];
             isAdded = isAdded && set.insert(value).second;
         }
 
         return isAdded;
     }
 
-    static bool addToMapWithVector(std::unordered_map<int, std::vector<int>>& map, const int key, const int value) {
+    template <typename T>
+    static bool addToMapWithVector(std::unordered_map<T, std::vector<T>>& map, const T key, const T value) {
         bool isAdded = true;
 
         if (map.count(key) <= 0) {
-            std::vector<int> newVector;
+            std::vector<T> newVector;
             newVector.push_back(value);
             isAdded = isAdded && map.insert({ key, newVector }).second;
         }
         else {
-            std::vector<int> set = map.at(key);
+            std::vector<T> set = map.at(key);
             map.at(key).push_back(value);
         }
 
@@ -87,9 +87,10 @@ namespace PKBUtil {
         return { firstColumn, secondColumn };
     }
 
-    static std::tuple<std::vector<int>, std::vector<int>> convertSetPairsToVectorTuple(std::unordered_set<std::pair<int, int>, hashFunction>& set) {
-        std::vector<int> firstColumn;
-        std::vector<int> secondColumn;
+    template <typename T>
+    static std::tuple<std::vector<T>, std::vector<T>> convertSetPairsToVectorTuple(std::unordered_set<std::pair<T, T>, pairHashFunction>& set) {
+        std::vector<T> firstColumn;
+        std::vector<T> secondColumn;
 
         for (auto const& pair : set) {
             firstColumn.push_back(pair.first);
@@ -100,8 +101,8 @@ namespace PKBUtil {
     }
 
     template <typename T>
-    static std::unordered_set<std::pair<T, T>, PKBUtil::hashFunction> convertVectorTupleToSetPairs(std::vector<T> firstEntities, std::vector<T> secondEntities) {
-        std::unordered_set<std::pair<T, T>, PKBUtil::hashFunction> result;
+    static std::unordered_set<std::pair<T, T>, PKBUtil::pairHashFunction> convertVectorTupleToSetPairs(std::vector<T> firstEntities, std::vector<T> secondEntities) {
+        std::unordered_set<std::pair<T, T>, PKBUtil::pairHashFunction> result;
 
         for (int i = 0; i < firstEntities.size(); i++) {
             std::pair<T, T> pair;

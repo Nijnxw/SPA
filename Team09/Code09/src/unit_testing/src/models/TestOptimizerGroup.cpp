@@ -1,46 +1,59 @@
 #include "catch.hpp"
+#include "models/QueryArgument.h"
 #include "models/QueryClause.h"
-#include "models/OptimizerGroup.h"
+#include "models/optimizer/OptimizerGroup.h"
 
-TEST_CASE("Test correctness of adjacency list building") {
-	OptimizerGroup query;
+TEST_CASE("") {
+	std::vector<QueryArgument> args1 = {{"ifs", EntityType::IF},
+										{"s1",  EntityType::STMT}};
+	std::unordered_set<std::string> usedSyn1 = {"ifs",
+												"s1"};
+	QueryClause clause1 = {RelationRef::PARENT_T,
+						   args1,
+						   usedSyn1};
 
-	std::vector<QueryArgument> args1 = {{"1", EntityType::INT},
-										{"x", EntityType::STRING}};
-	std::unordered_set<std::string> usedSyn1 = {};
-	QueryClause clause1 = {RelationRef::MODIFIES, args1, usedSyn1};
+	std::vector<QueryArgument> args2 = {{"s1", EntityType::STMT},
+										{"pn", EntityType::PRINT}};
+	std::unordered_set<std::string> usedSyn2 = {"s1",
+												"pn"};
+	QueryClause clause2 = {RelationRef::PARENT,
+						   args2,
+						   usedSyn2};
 
-	REQUIRE_FALSE(query.addEdge(clause1, 0));
-	REQUIRE(query.getAdjList().empty());
+	std::vector<QueryArgument> args3 = {{"s1", EntityType::STMT},
+										{"pn", EntityType::PRINT}};
+	std::unordered_set<std::string> usedSyn3 = {"s1",
+												"pn"};
+	QueryClause clause3 = {RelationRef::FOLLOWS,
+						   args3,
+						   usedSyn3};
 
-	std::vector<QueryArgument> args2 = {{"s", EntityType::STMT},
-										{"x", EntityType::STRING}};
-	std::unordered_set<std::string> usedSyn2 = {"s"};
-	QueryClause clause2 = {RelationRef::MODIFIES, args2, usedSyn2};
-
-	REQUIRE(query.addEdge(clause2, 0));
-
-	std::vector<QueryArgument> args3 = {{"s", EntityType::STMT},
-										{"v", EntityType::VAR}};
-	std::unordered_set<std::string> usedSyn3 = {"s", "v"};
-	QueryClause clause3 = {RelationRef::MODIFIES, args3, usedSyn3};
-
-	REQUIRE(query.addEdge(clause3, 0));
-
-	std::vector<QueryArgument> args4 = {{"s1", EntityType::STMT},
+	std::vector<QueryArgument> args4 = {{"pn", EntityType::PRINT},
 										{"v1", EntityType::VAR}};
-	std::unordered_set<std::string> usedSyn4 = {"s1", "v1"};
-	QueryClause clause4 = {RelationRef::MODIFIES, args4, usedSyn4};
+	std::unordered_set<std::string> usedSyn4 = {"pn",
+												"v1"};
+	QueryClause clause4 = {RelationRef::USES,
+						   args4,
+						   usedSyn4};
 
-	REQUIRE(query.addEdge(clause4, 0));
+	std::vector<QueryArgument> args5 = {{"s1", EntityType::STMT},
+										{"v1", EntityType::VAR}};
+	std::unordered_set<std::string> usedSyn5 = {"s1",
+												"v1"};
+	QueryClause clause5 = {RelationRef::MODIFIES,
+						   args5,
+						   usedSyn5};
 
-	std::unordered_map<std::string, std::vector<OptimizerClause>> expected = {
-		{"s",  {{"s",  "s",  0, clause2}, {"s", "v", 0, clause3}}},
-		{"v",  {{"v",  "s",  0, clause3}}},
-		{"s1", {{"s1", "v1", 0, clause4}}},
-		{"v1", {{"v1", "s1", 0, clause4}}}
-	};
-	std::unordered_map<std::string, std::vector<OptimizerClause>> actual = query.getAdjList();
+	OptimizerGroup group;
+
+	REQUIRE(group.addEdge(clause1, 74));
+	REQUIRE(group.addEdge(clause2, 12));
+	REQUIRE(group.addEdge(clause3, 12));
+	REQUIRE(group.addEdge(clause4, 12));
+	REQUIRE(group.addEdge(clause5, 100));
+
+	std::vector<QueryClause> expected = {clause2, clause4, clause3, clause1, clause5};
+	std::vector<QueryClause> actual = group.getClauses();
 
 	REQUIRE(actual == expected);
 }

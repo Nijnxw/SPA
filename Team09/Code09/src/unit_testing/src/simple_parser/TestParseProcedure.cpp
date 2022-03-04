@@ -1,5 +1,6 @@
 #include "simple_parser/SPParser.h"
 #include "simple_parser/Token.h"
+#include "asts/ContainerStmtASTs.h"
 
 #include "catch.hpp"
 #include <vector>
@@ -161,6 +162,192 @@ TEST_CASE("Test multiple procedures") {
 	AST output = parser.parseProgram();
 	AST expected = generateASTs("main", "testProgram");
 	REQUIRE(*output == *expected);
+}
+
+TEST_CASE("Multiple procedures 1.74 - Read-if") {
+	/*
+	 * procedure testProgram {
+	 * 1    read z;
+	 * }
+	 *
+	 * procedure testProgram2 {
+	 * 2	if (x < 1) then {
+	 * 3		read x;
+	 * 		} else {
+	 * 4		if (y < 1) then {
+	 * 5			read y;
+	 * 			} else {
+	 * 6			print y; } } }
+	 */
+	std::vector<Token*> input = {
+			new NameToken("procedure"), new NameToken("testProgram"),	new PunctuatorToken("{"),
+			new NameToken("read"),		new NameToken("z"),				new PunctuatorToken(";"),
+			new PunctuatorToken("}"),
+
+			new NameToken("procedure"), new NameToken("testProgram2"),	new PunctuatorToken("{"),
+			new NameToken("if"),		new PunctuatorToken("("),
+			new NameToken("x"),			new OperatorToken("<"),			new IntegerToken("1"),
+			new PunctuatorToken(")"),	new NameToken("then"),			new PunctuatorToken("{"),
+			new NameToken("read"),		new NameToken("x"),				new PunctuatorToken(";"),
+			new PunctuatorToken("}"),	new NameToken("else"),			new PunctuatorToken("{"),
+
+			new NameToken("if"),			new PunctuatorToken("("),
+			new NameToken("y"),			new OperatorToken("<"),			new IntegerToken("1"),
+			new PunctuatorToken(")"),	new NameToken("then"),			new PunctuatorToken("{"),
+			new NameToken("read"),		new NameToken("y"),				new PunctuatorToken(";"),
+			new PunctuatorToken("}"),	new NameToken("else"),			new PunctuatorToken("{"),
+			new NameToken("print"),		new NameToken("y"),				new PunctuatorToken(";"),
+			new PunctuatorToken("}"),
+
+			new PunctuatorToken("}"),	new PunctuatorToken("}"),		new EndOfFileToken(),
+	};
+	SPParser parser = SPParser(input);
+	AST output = parser.parseProgram();
+	REQUIRE(*output == *ContainerStmtASTs::getAST1_74());
+}
+
+TEST_CASE("Multiple procedures 1.75 - Print-while") {
+	/*
+	 * procedure testProgram {
+	 * 1	print z;
+	 *  }
+	 *
+	 * procedure testProgram2 {
+	 * 2	while (!((y + 1 < x) && ((x == 2) || (1 != 1)))) {
+	 * 3		read x; } }
+	 */
+	std::vector<Token*> input = {
+			new NameToken("procedure"), new NameToken("testProgram"),	new PunctuatorToken("{"),
+			new NameToken("print"),		new NameToken("z"),				new PunctuatorToken(";"),
+			new PunctuatorToken("}"),
+
+			new NameToken("procedure"), 	new NameToken("testProgram2"),	new PunctuatorToken("{"),
+			new NameToken("while"),		new PunctuatorToken("("),
+			new OperatorToken("!"),		new PunctuatorToken("("),		new PunctuatorToken("("),
+			new NameToken("y"),			new OperatorToken("+"),			new IntegerToken("1"),
+			new OperatorToken("<"),		new NameToken("x"),
+			new PunctuatorToken(")"),	new OperatorToken("&&"),			new PunctuatorToken("("),
+			new PunctuatorToken("("),
+			new NameToken("x"),			new OperatorToken("=="),			new IntegerToken("2"),
+			new PunctuatorToken(")"),	new OperatorToken("||"),			new PunctuatorToken("("),
+			new IntegerToken("1"),		new OperatorToken("!="),			new IntegerToken("1"),
+			new PunctuatorToken(")"),	new PunctuatorToken(")"),		new PunctuatorToken(")"),
+			new PunctuatorToken(")"),	new PunctuatorToken("{"),
+			new NameToken("read"),		new NameToken("x"),				new PunctuatorToken(";"),
+			new PunctuatorToken("}"),	new PunctuatorToken("}"),		new EndOfFileToken(),
+
+	};
+	SPParser parser = SPParser(input);
+	AST output = parser.parseProgram();
+	REQUIRE(*output == *ContainerStmtASTs::getAST1_75());
+}
+
+TEST_CASE("Multiple procedures 1.76 - Assignment-print") {
+	/*
+	 * procedure testProgram {
+	 * 1	a = 1 + (x * (y - 2) / (z % 3));
+	 * }
+	 *
+	 * procedure testProgram2 {
+	 * 2	print b;
+	 * }
+	 */
+	std::vector<Token*> input = {
+			new NameToken("procedure"), new NameToken("testProgram"),	new PunctuatorToken("{"),
+			new NameToken("a"),			new OperatorToken("="),			new IntegerToken("1"),
+			new OperatorToken("+"),		new PunctuatorToken("("),		new NameToken("x"),
+			new OperatorToken("*"),		new PunctuatorToken("("),		new NameToken("y"),
+			new OperatorToken("-"),		new IntegerToken("2"),			new PunctuatorToken(")"),
+			new OperatorToken("/"),		new PunctuatorToken("("),		new NameToken("z"),
+			new OperatorToken("%"),		new IntegerToken("3"),			new PunctuatorToken(")"),
+			new PunctuatorToken(")"),	new PunctuatorToken(";"),		new PunctuatorToken("}"),
+
+			new NameToken("procedure"), new NameToken("testProgram2"),	new PunctuatorToken("{"),
+			new NameToken("print"),		new NameToken("b"),				new PunctuatorToken(";"),
+			new PunctuatorToken("}"),	new EndOfFileToken(),
+
+	};
+	SPParser parser = SPParser(input);
+	AST output = parser.parseProgram();
+	REQUIRE(*output == *ContainerStmtASTs::getAST1_76());
+}
+
+TEST_CASE("Multiple procedures 1.77 - While-read") {
+	/*
+	 * procedure testProgram {
+	 * 1	while (x < 1) {
+	 * 2		while (y < 1) {
+	 * 3        	read y; } } }
+	 *
+	 * procedure testProgram2 {
+	 * 4	read x; }
+	 */
+	std::vector<Token*> input = {
+			new NameToken("procedure"), new NameToken("testProgram"),	new PunctuatorToken("{"),
+			new NameToken("while"),		new PunctuatorToken("("),
+			new NameToken("x"),			new OperatorToken("<"),			new IntegerToken("1"),
+			new PunctuatorToken(")"),	new PunctuatorToken("{"),
+			new NameToken("while"),		new PunctuatorToken("("),
+			new NameToken("y"),			new OperatorToken("<"),			new IntegerToken("1"),
+			new PunctuatorToken(")"),	new PunctuatorToken("{"),
+			new NameToken("read"),		new NameToken("y"),				new PunctuatorToken(";"),
+			new PunctuatorToken("}"),	new PunctuatorToken("}"),		new PunctuatorToken("}"),
+
+			new NameToken("procedure"), new NameToken("testProgram2"),	new PunctuatorToken("{"),
+			new NameToken("read"),		new NameToken("x"),				new PunctuatorToken(";"),
+			new PunctuatorToken("}"),	
+			
+			new EndOfFileToken(),
+	};
+	SPParser parser = SPParser(input);
+	AST output = parser.parseProgram();
+	REQUIRE(*output == *ContainerStmtASTs::getAST1_77());
+}
+
+TEST_CASE("Multiple procedures 1.78 - If-assign") {
+	/*
+	 * procedure testProgram {
+	 * 1	if (x < 1) then {
+	 * 2		read x;
+	 * 		} else {
+	 * 3		if (y < 1) then {
+	 * 4			read y;
+	 * 			} else {
+	 * 5			print y; } } }
+	 *
+	 * procedure testProgram2 {
+	 * 6	a = (1 + x * 3) % (y);
+	 * }
+	 */
+	std::vector<Token*> input = {
+			new NameToken("procedure"), new NameToken("testProgram"),	new PunctuatorToken("{"),
+			new NameToken("if"),		new PunctuatorToken("("),
+			new NameToken("x"),			new OperatorToken("<"),			new IntegerToken("1"),
+			new PunctuatorToken(")"),	new NameToken("then"),			new PunctuatorToken("{"),
+			new NameToken("read"),		new NameToken("x"),				new PunctuatorToken(";"),
+			new PunctuatorToken("}"),	new NameToken("else"),			new PunctuatorToken("{"),
+
+			new NameToken("if"),		new PunctuatorToken("("),
+			new NameToken("y"),			new OperatorToken("<"),			new IntegerToken("1"),
+			new PunctuatorToken(")"),	new NameToken("then"),			new PunctuatorToken("{"),
+			new NameToken("read"),		new NameToken("y"),				new PunctuatorToken(";"),
+			new PunctuatorToken("}"),	new NameToken("else"),			new PunctuatorToken("{"),
+			new NameToken("print"),		new NameToken("y"),				new PunctuatorToken(";"),
+			new PunctuatorToken("}"),	new PunctuatorToken("}"),		new PunctuatorToken("}"),
+
+			new NameToken("procedure"), new NameToken("testProgram2"),	new PunctuatorToken("{"),
+			new NameToken("a"),			new OperatorToken("="),			new PunctuatorToken("("),
+			new IntegerToken("1"),		new OperatorToken("+"),			new NameToken("x"),
+			new OperatorToken("*"),		new IntegerToken("3"),			new PunctuatorToken(")"),
+			new OperatorToken("%"),		new PunctuatorToken("("),		new NameToken("y"),
+			new PunctuatorToken(")"),
+			new PunctuatorToken(";"),	new PunctuatorToken("}"),
+			
+			new EndOfFileToken(),
+	};
+	SPParser parser = SPParser(input);
+	AST output = parser.parseProgram();
+	REQUIRE(*output == *ContainerStmtASTs::getAST1_78());
 }
 
 // --------------------------------------------------

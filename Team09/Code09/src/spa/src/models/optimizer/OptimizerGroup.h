@@ -6,6 +6,7 @@
 class OptimizerGroup : public OptimizerGraph {
 public:
 	OptimizerGroup() = default;
+	OptimizerGroup(AdjList adjList);
 	std::vector<QueryClause> getClauses();
 	bool operator==(const OptimizerGroup& other) const;
 protected:

@@ -1,5 +1,7 @@
 #include "OptimizerGroup.h"
 
+OptimizerGroup::OptimizerGroup(AdjList adjList) : OptimizerGraph(adjList) {}
+
 void OptimizerGroup::setStartPoint(const OptimizerClause& clause) {
 	if (clauses.empty()) {
 		startPoint = clause;

@@ -17,20 +17,30 @@ TEST_CASE("Test UsesStore and UsesEvaluator functionality") {
 				else {
 			5        read k;
 				}
+			6	call testProg2;
+			}
+			procedure testProg2 {
+			7	k = ifs + var;
 			}
 		*/
 		// Assumed calls from SP/DE
 		PKB::addProcedure("testProg");
-		PKB::addUsesProcedure("testProg", { "p", "c", "k", "a", "ifs", "w" });
+		PKB::addProcedure("testProg2");
 		PKB::addStatementWithType(EntityType::PRINT, 1);
-		PKB::addAssignStatement(2, "LHS", "RHS");
+		PKB::addAssignStatement(2, "<LHS>", "<RHS>");
 		PKB::addStatementWithType(EntityType::IF, 3);
-		PKB::addAssignStatement(4, "LHS", "RHS");
+		PKB::addAssignStatement(4, "<LHS>", "<RHS>");
 		PKB::addStatementWithType(EntityType::READ, 5);
-		PKB::addUsesStatement(1, std::unordered_set<std::string>({"p"}));
-		PKB::addUsesStatement(2, std::unordered_set<std::string>({"p"}));
-		PKB::addUsesStatement(3, std::unordered_set<std::string>({"c", "k", "a", "p", "ifs", "w"}));
-		PKB::addUsesStatement(4, std::unordered_set<std::string>({"a", "p", "ifs", "w"}));
+		PKB::addStatementWithType(EntityType::CALL, 6);
+		PKB::addAssignStatement(7, "<LHS>", "<RHS>");
+		PKB::addUsesStatement(1,{"p"});
+		PKB::addUsesStatement(2,{"p"});
+		PKB::addUsesStatement(3,{"c", "k", "a", "p", "ifs", "w"});
+		PKB::addUsesStatement(4,{"a", "p", "ifs", "w"});
+		PKB::addUsesStatement(6,{"ifs", "var"});
+		PKB::addUsesStatement(7,{"ifs", "var"});
+		PKB::addUsesProcedure("testProg", {"p", "c", "k", "a", "ifs", "w", "var"});
+		PKB::addUsesProcedure("testProg2", {"ifs", "var"});
 
 		// Underscore RHS
 		SECTION("Uses(1, _) query") {
@@ -46,14 +56,14 @@ TEST_CASE("Test UsesStore and UsesEvaluator functionality") {
 		SECTION("Uses(s, _) query") {
 			QueryClauseResult res = usesEvaluator.getUses("s", "_", EntityType::STMT, EntityType::WILD, false);
 			REQUIRE(res.containsValidResult() == true);
-			Table expectedTable = {{"s", {"1", "2", "3", "4"}}};
+			Table expectedTable = {{"s", {"1", "2", "3", "4", "6", "7"}}};
 			REQUIRE(res == QueryClauseResult(expectedTable));
 		}
 
 		SECTION("Uses(a, _) query") {
 			QueryClauseResult res = usesEvaluator.getUses("a", "_", EntityType::ASSIGN, EntityType::WILD, false);
 			REQUIRE(res.containsValidResult() == true);
-			Table expectedTable = {{"a", {"2", "4"}}};
+			Table expectedTable = {{"a", {"2", "4", "7"}}};
 			REQUIRE(res == QueryClauseResult(expectedTable));
 		}
 
@@ -76,11 +86,17 @@ TEST_CASE("Test UsesStore and UsesEvaluator functionality") {
 			REQUIRE(res.containsValidResult() == false);
 		}
 
+		SECTION("Uses(c, _) query") {
+			QueryClauseResult res = usesEvaluator.getUses("c", "_", EntityType::CALL, EntityType::WILD, false);
+			Table expectedTable = { {"c", {"6"}} };
+			REQUIRE(res.containsValidResult() == true);
+		}
+
 		SECTION("Uses(proc, _) query") {
 			QueryClauseResult res = usesEvaluator.getUses("proc", "_", EntityType::PROC, EntityType::WILD, false);
 			REQUIRE(res.containsValidResult() == true);
 			Table expectedTable = {
-				{"proc", { "testProg" }},
+				{"proc", { "testProg", "testProg2"}},
 			};
 			REQUIRE(res == QueryClauseResult(expectedTable));
 		}
@@ -107,18 +123,17 @@ TEST_CASE("Test UsesStore and UsesEvaluator functionality") {
 			QueryClauseResult res = usesEvaluator.getUses("s", "v", EntityType::STMT, EntityType::VAR, false);
 			REQUIRE(res.containsValidResult() == true);
 			Table expectedTable = {
-				{"s", {"1", "2", "3", "3", "3", "3", "3",   "3", "4", "4", "4",   "4"}},
-				{"v", {"p", "p", "c", "k", "a", "p", "ifs", "w", "a", "p", "ifs", "w"}}
+				{"s", {"1", "2", "3", "3", "3", "3", "3",   "3", "4", "4", "4",   "4", "6",   "6",   "7",   "7"  }},
+				{"v", {"p", "p", "c", "k", "a", "p", "ifs", "w", "a", "p", "ifs", "w", "ifs", "var", "ifs", "var"}}
 			};
 			REQUIRE(res == QueryClauseResult(expectedTable));
 		}
-
 		SECTION("Uses(a, v) query") {
 			QueryClauseResult res = usesEvaluator.getUses("a", "v", EntityType::ASSIGN, EntityType::VAR, false);
 			REQUIRE(res.containsValidResult() == true);
 			Table expectedTable = {
-				{"a", {"2", "4", "4", "4",   "4"}},
-				{"v", {"p", "a", "p", "ifs", "w"}}
+				{"a", {"2", "4", "4", "4",   "4", "7",   "7"}},
+				{"v", {"p", "a", "p", "ifs", "w", "ifs", "var"}}
 			};
 			REQUIRE(res == QueryClauseResult(expectedTable));
 		}
@@ -148,12 +163,21 @@ TEST_CASE("Test UsesStore and UsesEvaluator functionality") {
 			REQUIRE(res.containsValidResult() == false);
 		}
 
+		SECTION("Uses(c, v1) query") {
+			QueryClauseResult res = usesEvaluator.getUses("c", "v", EntityType::CALL, EntityType::VAR, false);
+			Table expectedTable = {
+				{"c",  {"6",   "6"}},
+				{"v1", {"ifs", "var"}}
+			};
+			REQUIRE(res.containsValidResult() == true);
+		}
+
 		SECTION("Uses(proc, v) query") {
 			QueryClauseResult res = usesEvaluator.getUses("proc", "v", EntityType::PROC, EntityType::VAR, false);
 			REQUIRE(res.containsValidResult() == true);
 			Table expectedTable = {
-				{"proc", {"testProg", "testProg", "testProg", "testProg", "testProg", "testProg"}},
-				{"v",    {"p"       , "c"       , "k"       , "a"       , "ifs"     , "w"       }}
+				{"proc", {"testProg", "testProg", "testProg", "testProg", "testProg", "testProg", "testProg", "testProg2", "testProg2"}},
+				{"v",    {"p"       , "c"       , "k"       , "a"       , "ifs"     , "w"       , "var",      "ifs",       "var"}}
 			};
 			REQUIRE(res == QueryClauseResult(expectedTable));
 		}
@@ -162,7 +186,7 @@ TEST_CASE("Test UsesStore and UsesEvaluator functionality") {
 			QueryClauseResult res = usesEvaluator.getUses("testProg", "v", EntityType::STRING, EntityType::VAR, false);
 			REQUIRE(res.containsValidResult() == true);
 			Table expectedTable = {
-				{"v", { "p", "c", "k", "a", "ifs", "w" }}
+				{"v", { "p", "c", "k", "a", "ifs", "w", "var"}}
 			};
 			REQUIRE(res == QueryClauseResult(expectedTable));
 		}
@@ -191,7 +215,7 @@ TEST_CASE("Test UsesStore and UsesEvaluator functionality") {
 			QueryClauseResult res = usesEvaluator.getUses("a", "ifs", EntityType::ASSIGN, EntityType::STRING, false);
 			REQUIRE(res.containsValidResult() == true);
 			Table expectedTable = {
-				{"a", {"4"}},
+				{"a", {"4", "7"}},
 			};
 			REQUIRE(res == QueryClauseResult(expectedTable));
 		}
@@ -219,11 +243,16 @@ TEST_CASE("Test UsesStore and UsesEvaluator functionality") {
 			REQUIRE(res.containsValidResult() == false);
 		}
 
+		SECTION("Uses(c, 'ifs') query") {
+			QueryClauseResult res = usesEvaluator.getUses("c", "ifs", EntityType::CALL, EntityType::STRING, false);
+			REQUIRE(res.containsValidResult() == true);
+		}
+
 		SECTION("Uses(proc, 'x') query") {
 			QueryClauseResult res = usesEvaluator.getUses("proc", "ifs", EntityType::PROC, EntityType::STRING, false);
 			REQUIRE(res.containsValidResult() == true);
 			Table expectedTable = {
-				{"proc", { "testProg" }},
+				{"proc", {"testProg", "testProg2"}},
 			};
 			REQUIRE(res == QueryClauseResult(expectedTable));
 		}

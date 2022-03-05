@@ -1103,3 +1103,13 @@ assign a;variable v;
 Select a such that Uses(a,v) pattern a(v,_)
 13,42,44
 5000
+222 - uses + 4 syn + 2 common syn + pattern matching
+assign a;variable v; 
+Select a such that Uses(a,v) pattern a(_,_"pi         * diameter *		pi"_)
+14
+5000
+223 - uses + 4 syn + 2 common syn + exact pattern matching
+assign a;variable v; 
+Select a such that Uses(a,v) pattern a(_,"pi         * diameter *		pi / 12345")
+14
+5000

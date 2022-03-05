@@ -17,5 +17,6 @@ private:
 	
 	void processRawToken(std::string rawToken);
 	void pushToken();
+	void pushSymbolToken(char nextChar);
 };
 

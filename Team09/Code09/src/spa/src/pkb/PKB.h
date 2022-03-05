@@ -62,19 +62,33 @@ public:
 	static std::unordered_map<int, AssignStatement> getAssignStatements();
 	static std::unordered_set<int> getStatementsWithType(EntityType statementType);
 
-	/* Follows and Parent Getters */
-	static bool hasRelationship(RelationRef relationship);
-	static bool isRelationship(RelationRef relationship, int statementOne, int statementTwo);
-	static bool isFirstEntity(RelationRef relationship, int statementOne);
-	static bool isSecondEntity(RelationRef relationship, int statementTwo);
+	/* StmtStmt Getters */
+	static bool hasStmtStmtRelationship(RelationRef relationship);
+	static bool isStmtStmtRelationship(RelationRef relationship, int statementOne, int statementTwo);
+	static bool isStmtStmtFirstEntity(RelationRef relationship, int statementOne);
+	static bool isStmtStmtSecondEntity(RelationRef relationship, int statementTwo);
 
-	static std::unordered_set<int> getFirstEntities(RelationRef relationship, int statementTwo);
-	static std::unordered_set<int> getSecondEntities(RelationRef relationship, int statementOne);
+	static std::unordered_set<int> getStmtStmtFirstEntities(RelationRef relationship, int statementTwo);
+	static std::unordered_set<int> getStmtStmtSecondEntities(RelationRef relationship, int statementOne);
 
-	static std::unordered_set<int> getAllFirstEntities(RelationRef relationship);
-	static std::unordered_set<int> getAllSecondEntities(RelationRef relationship);
+	static std::unordered_set<int> getAllStmtStmtFirstEntities(RelationRef relationship);
+	static std::unordered_set<int> getAllStmtStmtSecondEntities(RelationRef relationship);
 
-	static std::tuple<std::vector<int>, std::vector<int>> getAllRelationshipPairs(RelationRef relationship);
+	static std::tuple<std::vector<int>, std::vector<int>> getAllStmtStmtRelationshipPairs(RelationRef relationship);
+
+	/* ProcProc Getters */
+	static bool hasProcProcRelationship(RelationRef relationship);
+	static bool isProcProcRelationship(RelationRef relationship, std::string procOne, std::string procTwo);
+	static bool isProcProcFirstEntity(RelationRef relationship, std::string procOne);
+	static bool isProcProcSecondEntity(RelationRef relationship, std::string procTwo);
+
+	static std::unordered_set<std::string> getProcProcFirstEntities(RelationRef relationship, std::string procTwo);
+	static std::unordered_set<std::string> getProcProcSecondEntities(RelationRef relationship, std::string procOne);
+
+	static std::unordered_set<std::string> getAllProcProcFirstEntities(RelationRef relationship);
+	static std::unordered_set<std::string> getAllProcProcSecondEntities(RelationRef relationship);
+
+	static std::tuple<std::vector<std::string>, std::vector<std::string>> getAllProcProcRelationshipPairs(RelationRef relationship);
 
 	/* Follows Getters */
 	static bool hasFollowsRelationship();

@@ -150,6 +150,7 @@ TEST_CASE("Parse SIMPLE file into AST") {
 // Basic test for SPManager::designExtractor()
 // Comprehensive test in TestDesignExtractor.cpp
 TEST_CASE("Extract design from SIMPLE program") {
+	PKB::clearAllStores();
 	std::shared_ptr<PrintNode> printNode1 = std::make_shared<PrintNode>(1, std::make_shared<VariableNode>("x"));
 	std::shared_ptr<ReadNode> readNode1 = std::make_shared<ReadNode>(2, std::make_shared<VariableNode>("y"));
 	std::shared_ptr<PrintNode> printNode2 = std::make_shared<PrintNode>(3, std::make_shared<VariableNode>("y"));

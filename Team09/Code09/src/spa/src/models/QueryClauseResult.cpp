@@ -54,11 +54,11 @@ bool QueryClauseResult::addColumn(const std::string& header, const It& rows) {
 	return true;
 }
 
-Table QueryClauseResult::getTable() {
+Table QueryClauseResult::getTable() const {
 	return table;
 }
 
-bool QueryClauseResult::containsValidResult() {
+bool QueryClauseResult::containsValidResult() const {
 	return booleanResult || !table.empty();
 }
 
@@ -67,7 +67,7 @@ void QueryClauseResult::setBooleanResult(bool inputBool) {
 }
 
 template bool QueryClauseResult::addColumn<std::unordered_set<std::string>>(const std::string& header,
-																		   const std::unordered_set<std::string>& rows);
+																			const std::unordered_set<std::string>& rows);
 template bool
 QueryClauseResult::addColumn<std::unordered_set<int>>(const std::string& header, const std::unordered_set<int>& rows);
 template bool

@@ -89,11 +89,11 @@ TEST_CASE("Test optimizer extraction logic") {
 	OptimizerGroup group2 = OptimizerGroup();
 	group2.addEdge(clause8);
 	OptimizerGroup group3 = OptimizerGroup();
-	group3.addEdge(clause4);
-	group3.addEdge(clause5);
+	group3.addEdge(clause1);
 	group3.addEdge(clause2);
 	group3.addEdge(clause3);
-	group3.addEdge(clause1);
+	group3.addEdge(clause4);
+	group3.addEdge(clause5);
 
 	std::vector<QueryArgument> expectedSynNotInClauses = {{"s", EntityType::STMT}};
 	std::vector<QueryClause> expectedClausesWithoutSyn = {clause9};

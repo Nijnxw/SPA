@@ -5,7 +5,7 @@
 
 class EntityEvaluator {
 public:
-	static QueryClauseResult evaluate(QueryArgument& entity);
+	static QueryClauseResult evaluate(const QueryArgument& entity);
 
 private:
 	template<typename T>

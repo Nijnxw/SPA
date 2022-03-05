@@ -6,10 +6,10 @@
 #include "ModifiesEvaluator.h"
 #include "PatternAssignEvaluator.h"
 
-QueryClauseResult ClauseEvaluator::evaluate(QueryClause& clause, bool isBooleanResult) {
+QueryClauseResult ClauseEvaluator::evaluate(const QueryClause& clause, bool isBooleanResult) {
 	QueryArgument firstArg = clause.getArguments().at(0);
 	QueryArgument secondArg = clause.getArguments().at(1);
-	
+
 	FollowsEvaluator followsEvaluator = FollowsEvaluator();
 	ParentEvaluator parentEvaluator = ParentEvaluator();
 	UsesEvaluator usesEvaluator = UsesEvaluator();
@@ -36,8 +36,9 @@ QueryClauseResult ClauseEvaluator::evaluate(QueryClause& clause, bool isBooleanR
 			return usesEvaluator.getUses(firstArg.getValue(), secondArg.getValue(), firstArg.getType(),
 										 secondArg.getType(), isBooleanResult);
 		case RelationRef::PATTERN_A:
-			return patternAssignEvaluator.getPattern(firstArg.getValue(), secondArg.getValue(), clause.getClauseSynonym(), firstArg.getType(),
-												secondArg.getType(), isBooleanResult);
+			return patternAssignEvaluator.getPattern(firstArg.getValue(), secondArg.getValue(),
+													 clause.getClauseSynonym(), firstArg.getType(),
+													 secondArg.getType(), isBooleanResult);
 		default:
 			return {};
 	}

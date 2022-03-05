@@ -10,7 +10,7 @@ void OptimizerGroup::setStartPoint(const OptimizerClause& clause) {
 	}
 }
 
-std::vector<QueryClause> OptimizerGroup::getClauses() {
+std::vector<QueryClause> OptimizerGroup::getClauses() const {
 	std::vector<QueryClause> orderedClauses;
 	std::unordered_set<OptimizerClause, std::hash<OptimizerClause>> visitedClauses;
 	std::unordered_set<std::string> visitedSyns;
@@ -46,7 +46,7 @@ std::vector<QueryClause> OptimizerGroup::getClauses() {
 
 void OptimizerGroup::orderingHelper(std::string& syn, std::unordered_set<std::string>& visitedSyns,
 									std::unordered_set<OptimizerClause>& visitedClauses,
-									std::priority_queue<OptimizerClause>& toAdd) {
+									std::priority_queue<OptimizerClause>& toAdd) const {
 	visitedSyns.insert(syn);
 	for (const auto& clause: adjList.at(syn)) {
 		if (visitedClauses.find(clause) == visitedClauses.end()) {

@@ -31,6 +31,10 @@ inline const char* ToString(RelationRef ref) {
 			return "Follows";
 		case RelationRef::FOLLOWS_T:
 			return "Follows*";
+		case RelationRef::CALLS:
+			return "Calls";
+		case RelationRef::CALLS_T:
+			return "Calls*";
 		case RelationRef::PATTERN_A:
 			return "PatternA";
 		default:

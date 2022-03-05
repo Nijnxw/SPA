@@ -5,6 +5,7 @@
 #include "ParentEvaluator.h"
 #include "ModifiesEvaluator.h"
 #include "PatternAssignEvaluator.h"
+#include "CallsEvaluator.h"
 
 QueryClauseResult ClauseEvaluator::evaluate(const QueryClause& clause, bool isBooleanResult) {
 	QueryArgument firstArg = clause.getArguments().at(0);
@@ -15,6 +16,7 @@ QueryClauseResult ClauseEvaluator::evaluate(const QueryClause& clause, bool isBo
 	UsesEvaluator usesEvaluator = UsesEvaluator();
 	ModifiesEvaluator modifiesEvaluator = ModifiesEvaluator();
 	PatternAssignEvaluator patternAssignEvaluator = PatternAssignEvaluator();
+	CallsEvaluator callsEvaluator = CallsEvaluator();
 
 	switch (clause.getClauseType()) {
 		case RelationRef::FOLLOWS:
@@ -39,6 +41,12 @@ QueryClauseResult ClauseEvaluator::evaluate(const QueryClause& clause, bool isBo
 			return patternAssignEvaluator.getPattern(firstArg.getValue(), secondArg.getValue(),
 													 clause.getClauseSynonym(), firstArg.getType(),
 													 secondArg.getType(), isBooleanResult);
+		case RelationRef::CALLS:
+			return callsEvaluator.getCalls(firstArg.getValue(), secondArg.getValue(), firstArg.getType(),
+										   secondArg.getType(), isBooleanResult);
+		case RelationRef::CALLS_T:
+			return callsEvaluator.getCallsT(firstArg.getValue(), secondArg.getValue(), firstArg.getType(),
+											secondArg.getType(), isBooleanResult);
 		default:
 			return {};
 	}

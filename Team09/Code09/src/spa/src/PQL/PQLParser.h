@@ -115,15 +115,21 @@ private:
 	bool isDeclaredSynonym(std::string syn);
 	bool nextIsComma();
 
-	PQLToken* peekCurrentToken();
+	PQLToken* peekNextToken();
 	PQLToken* getNextToken();
 	PQLToken* getNextExpectedToken(TokenType tokenType);
 	PQLToken* getValidSynonymToken();
 
 	void parseEndOfDeclaration();
 	void parseDeclaration();
+
 	void parseSelect();
+	void parseResultClause();
 	void parseResultSynonym();
+	void parseResultTuple();
+	void parseResultBoolean();
+
+
 	QueryArgument parseArgs(PQLToken* token);
 	void parseSingleRelationshipClause();
 	void parseRelationshipClause();

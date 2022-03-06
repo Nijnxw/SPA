@@ -478,7 +478,7 @@ TEST_CASE("QueryEvaluator evaluate") {
 
 		std::vector<QueryArgument> selectSynonyms = {{"a", EntityType::ASSIGN}};
 		std::vector<QueryClause> clauses = {callsClause, pAClause, usesClause};
-		Query query = Query(selectSynonyms, clauses);
+		Query query = Query(selectSynonyms, clauses, false);
 
 		QueryClauseResult expected = {{{"p", {"proc1", "proc1"}}, {"v", {"x", "y"}}, {"a", {"2", "3"}}}};
 		QueryClauseResult actual = {QueryEvaluator::evaluate(query)};
@@ -529,9 +529,10 @@ TEST_CASE("QueryEvaluator evaluate") {
 		std::unordered_set<std::string> modifiesUsedSynonyms = {"a", "v"};
 		QueryClause modifiesClause = QueryClause(RelationRef::MODIFIES, modifiesClauseArguments, modifiesUsedSynonyms);
 
-		std::vector<QueryArgument> selectSynonyms = {{"a", EntityType::ASSIGN}, {"p", EntityType::PROC}};
+		std::vector<QueryArgument> selectSynonyms = {{"a", EntityType::ASSIGN},
+													 {"p", EntityType::PROC}};
 		std::vector<QueryClause> clauses = {usesClause, pAClause, modifiesClause};
-		Query query = Query(selectSynonyms, clauses);
+		Query query = Query(selectSynonyms, clauses, false);
 
 		QueryClauseResult expected = {{
 										  {"p", {"proc1", "proc1", "proc1", "proc2", "proc2", "proc2"}},
@@ -584,9 +585,10 @@ TEST_CASE("QueryEvaluator evaluate") {
 		std::unordered_set<std::string> modifiesUsedSynonyms = {"a", "v"};
 		QueryClause modifiesClause = QueryClause(RelationRef::MODIFIES, modifiesClauseArguments, modifiesUsedSynonyms);
 
-		std::vector<QueryArgument> selectSynonyms = {{"a", EntityType::ASSIGN}, {"s", EntityType::STMT}};
+		std::vector<QueryArgument> selectSynonyms = {{"a", EntityType::ASSIGN},
+													 {"s", EntityType::STMT}};
 		std::vector<QueryClause> clauses = {usesClause, pAClause, modifiesClause};
-		Query query = Query(selectSynonyms, clauses);
+		Query query = Query(selectSynonyms, clauses, false);
 
 		QueryClauseResult expected = {{
 										  {"s", {"2", "2", "2", "3", "3", "3", "4", "4", "4"}},

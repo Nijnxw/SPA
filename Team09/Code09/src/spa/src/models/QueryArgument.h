@@ -19,7 +19,8 @@ private:
 	EntityType type;
 };
 
-struct QueryArgumentHash {
+template<>
+struct std::hash<QueryArgument> {
 	std::size_t operator()(const QueryArgument& arg) const {
 		return std::hash<std::string>()(arg.getValue());
 	}

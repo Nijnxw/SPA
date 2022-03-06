@@ -18,6 +18,7 @@ class QueryUtils {
 
 public:
 	static Table hashJoin(const Table& firstResult, const Table& secondResult);
+	static Table crossProduct(const Table& firstResult, const Table& secondResult);
 
 	static std::unordered_set<std::string> stringifyRows(Table table, std::vector<std::string> colOrder);
 	// always order the headers in ascending order before converting each row value to space separated string
@@ -35,8 +36,8 @@ private:
 	static std::string selectTupleToString(const std::vector<std::string>& headers, size_t rowNum, const Table& table);
 
 	static void
-	crossProduct(const std::unordered_set<int>& firstTupleSet, const std::unordered_set<int>& secondTupleSet,
-				 std::unordered_set<std::pair<int, int>, PairHash>& tuplePairings);
+	crossProductHelper(const std::unordered_set<int>& firstTupleSet, const std::unordered_set<int>& secondTupleSet,
+					   std::unordered_set<std::pair<int, int>, PairHash>& tuplePairings);
 
 	static Table
 	joinRows(const std::unordered_set<std::pair<int, int>, PairHash>& tuplePairings, const Table& firstTable,

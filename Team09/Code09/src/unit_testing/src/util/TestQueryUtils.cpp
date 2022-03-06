@@ -129,6 +129,65 @@ TEST_CASE("join with exactly same columns returns intersection of table") {
 	REQUIRE(actual == expected);
 }
 
+TEST_CASE("cross product with some empty table returns empty table") {
+	Table firstTable = {
+		{"a", {"1", "2",  "3",  "4"}},
+		{"c", {"9", "10", "11", "12"}},
+	};
+
+	Table secondTable = {
+		{"a", {"2", "3", "5", "6"}},
+		{"b", {"3", "4", "6", "7"}},
+	};
+
+	Table expectedTable = {};
+	Table actualTable = QueryUtils::crossProduct(firstTable, secondTable);
+
+	REQUIRE(actualTable.empty());
+}
+
+TEST_CASE("cross product with some common column returns empty table") {
+	Table firstTable = {
+		{"a", {"2", "3", "5", "6"}},
+		{"b", {"3", "4", "6", "7"}},
+	};
+
+	Table secondTable = {
+		{"a", {"1", "2",  "3",  "4"}},
+		{"c", {"9", "10", "11", "12"}},
+	};
+
+	Table expectedTable = {};
+	Table actualTable = QueryUtils::crossProduct(firstTable, secondTable);
+
+	REQUIRE(actualTable.empty());
+}
+
+TEST_CASE("cross product with no common column returns cross product table") {
+	Table firstTable = {
+		{"a", {"1", "2", "3", "4"}},
+		{"b", {"5", "6", "7", "8"}},
+	};
+
+	Table secondTable = {
+		{"c", {"9",  "10", "11", "12"}},
+		{"d", {"13", "14", "15", "16"}},
+	};
+
+	Table expectedTable = {
+		{"a", {"1",  "2",  "3",  "4",  "1",  "2",  "3",  "4",  "1",  "2",  "3",  "4",  "1",  "2",  "3",  "4"}},
+		{"b", {"5",  "6",  "7",  "8",  "5",  "6",  "7",  "8",  "5",  "6",  "7",  "8",  "5",  "6",  "7",  "8"}},
+		{"c", {"9",  "9",  "9",  "9",  "10", "10", "10", "10", "11", "11", "11", "11", "12", "12", "12", "12"}},
+		{"d", {"13", "13", "13", "13", "14", "14", "14", "14", "15", "15", "15", "15", "16", "16", "16", "16"}},
+	};
+	Table actualTable = QueryUtils::crossProduct(firstTable, secondTable);
+
+	QueryClauseResult expected = QueryClauseResult(expectedTable);
+	QueryClauseResult actual = QueryClauseResult(actualTable);
+
+	REQUIRE(actual == expected);
+}
+
 TEST_CASE("stringify rows of table with single column with valid column order returns space separated values") {
 	Table table = {
 		{"a", {"1", "2", "3", "4"}}

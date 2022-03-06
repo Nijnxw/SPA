@@ -1,29 +1,6 @@
 #include "OptimizerGroup.h"
 
-OptimizerGroup::OptimizerGroup(const AdjList& adjList) : OptimizerGraph(adjList) {}
-
-bool OptimizerGroup::addEdge(const QueryClause& clause, int weight) {
-	const std::unordered_set<std::string>& synonyms = clause.getUsedSynonyms();
-
-	if (synonyms.empty() || clauses.count(clause) != 0) {
-		return false;
-	}
-
-	if (synonyms.size() == 1) {
-		std::string synonym = *synonyms.begin();
-		adjList[synonym].emplace_back(synonym, synonym, weight, clause);
-		setStartPoint({synonym, synonym, weight, clause});
-	} else {
-		std::string firstSynonym = *synonyms.begin();
-		std::string secondSynonym = *next(synonyms.begin());
-
-		adjList[firstSynonym].emplace_back(firstSynonym, secondSynonym, weight, clause);
-		adjList[secondSynonym].emplace_back(secondSynonym, firstSynonym, weight, clause);
-		setStartPoint({firstSynonym, secondSynonym, weight, clause});
-	}
-	clauses.insert(clause);
-	return true;
-}
+OptimizerGroup::OptimizerGroup(AdjList adjList) : OptimizerGraph(adjList) {}
 
 void OptimizerGroup::setStartPoint(const OptimizerClause& clause) {
 	if (clauses.empty()) {
@@ -33,7 +10,7 @@ void OptimizerGroup::setStartPoint(const OptimizerClause& clause) {
 	}
 }
 
-std::vector<QueryClause> OptimizerGroup::getClauses() {
+std::vector<QueryClause> OptimizerGroup::getClauses() const {
 	std::vector<QueryClause> orderedClauses;
 	std::unordered_set<OptimizerClause, std::hash<OptimizerClause>> visitedClauses;
 	std::unordered_set<std::string> visitedSyns;
@@ -69,7 +46,7 @@ std::vector<QueryClause> OptimizerGroup::getClauses() {
 
 void OptimizerGroup::orderingHelper(std::string& syn, std::unordered_set<std::string>& visitedSyns,
 									std::unordered_set<OptimizerClause>& visitedClauses,
-									std::priority_queue<OptimizerClause>& toAdd) {
+									std::priority_queue<OptimizerClause>& toAdd) const {
 	visitedSyns.insert(syn);
 	for (const auto& clause: adjList.at(syn)) {
 		if (visitedClauses.find(clause) == visitedClauses.end()) {
@@ -79,3 +56,6 @@ void OptimizerGroup::orderingHelper(std::string& syn, std::unordered_set<std::st
 	}
 }
 
+bool OptimizerGroup::operator==(const OptimizerGroup& other) const {
+	return adjList == other.adjList;
+}

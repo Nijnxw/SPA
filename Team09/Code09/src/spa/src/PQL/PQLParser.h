@@ -106,6 +106,7 @@ public:
 private:
 	int current;
 	int end;
+	bool isBooleanQuery = false;
 	std::vector<PQLToken*> tokens;
 	std::unordered_map<std::string, EntityType> Declarations;
 	std::vector<QueryArgument> resultSynonyms;
@@ -115,15 +116,21 @@ private:
 	bool isDeclaredSynonym(std::string syn);
 	bool nextIsComma();
 
-	PQLToken* peekCurrentToken();
+	PQLToken* peekNextToken();
 	PQLToken* getNextToken();
 	PQLToken* getNextExpectedToken(TokenType tokenType);
 	PQLToken* getValidSynonymToken();
 
 	void parseEndOfDeclaration();
 	void parseDeclaration();
+
 	void parseSelect();
+	void parseResultClause();
 	void parseResultSynonym();
+	void parseResultTuple();
+	void parseResultBoolean();
+
+
 	QueryArgument parseArgs(PQLToken* token);
 	void parseSingleRelationshipClause();
 	void parseRelationshipClause();

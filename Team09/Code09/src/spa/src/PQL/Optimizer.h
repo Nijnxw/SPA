@@ -1,6 +1,7 @@
 #pragma once
 
 #include <algorithm>
+#include <iterator>
 #include <tuple>
 #include "models/QueryClause.h"
 #include "models/Query.h"

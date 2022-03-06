@@ -11,6 +11,12 @@ Table QueryEvaluator::evaluate(Query& query) {
 	std::vector<OptimizerGroup> groupsWithSelect;
 	std::vector<OptimizerGroup> groupsWithoutSelect;
 
+	std::vector<QueryArgument> resSyns = query.getResultSynonyms();
+	std::vector<QueryClause> clauses = query.getClauses();
+	if (clauses.empty() && resSyns.empty()) {
+		return {};
+	}
+
 	std::tie(synNotInClauses, clausesWithoutSyn, groupsWithSelect, groupsWithoutSelect) = Optimizer::optimize(query);
 
 	if (!clausesWithoutSyn.empty() && !evaluateBooleanClauses(clausesWithoutSyn)) {

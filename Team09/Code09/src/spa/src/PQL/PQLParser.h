@@ -115,6 +115,7 @@ private:
 	bool isDeclaredSynonym(std::string syn);
 	bool nextIsComma();
 
+	PQLToken* peekCurrentToken();
 	PQLToken* getNextToken();
 	PQLToken* getNextExpectedToken(TokenType tokenType);
 	PQLToken* getValidSynonymToken();
@@ -124,11 +125,13 @@ private:
 	void parseSelect();
 	void parseResultSynonym();
 	QueryArgument parseArgs(PQLToken* token);
+	void parseSingleRelationshipClause();
 	void parseRelationshipClause();
 	void parseSuchThatClause();
 	QueryArgument parseAssignPatternLHS();
 	QueryArgument parseAssignPatternRHS();
 	void parseAssignPattern(PQLToken* synonymToken);
+	void parseSinglePatternClause();
 	void parsePatternClause();
 	void parseAfterSelect();
 };

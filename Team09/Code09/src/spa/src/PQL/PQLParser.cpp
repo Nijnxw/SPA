@@ -18,9 +18,17 @@ bool PQLParser::isDeclaredSynonym(std::string syn) {
 	return Declarations.find(syn) != Declarations.end();
 }
 
-bool PQLParser::nextIsComma() {
-	return (tokens.at(current))->getType() == TokenType::COMMA;
+PQLToken* PQLParser::peekNextToken() {
+	if (current == end) {
+		throw "Runtime error : no more tokens to parse";
+	}
+	return tokens[current];
 }
+
+bool PQLParser::nextIsComma() {
+	return (peekNextToken())->getType() == TokenType::COMMA;
+}
+
 
 PQLToken* PQLParser::getNextToken() {
 	if (current == end) {
@@ -81,11 +89,38 @@ void PQLParser::parseDeclaration() {
 
 void PQLParser::parseSelect() {
 	getNextExpectedToken(TokenType::SELECT);
-	parseResultSynonym(); 
+	parseResultClause(); 
+}
+
+void PQLParser::parseResultTuple() {
+	getNextExpectedToken(TokenType::OPEN_ANGLED);
+	parseResultSynonym();
+	while (current != end && peekNextToken()->getType() != TokenType::CLOSE_ANGLED) {
+		getNextExpectedToken(TokenType::COMMA);
+		parseResultSynonym();
+	}
+	getNextExpectedToken(TokenType::CLOSE_ANGLED);
+}
+
+void PQLParser::parseResultBoolean() {
+	getNextExpectedToken(TokenType::BOOLEAN);
+	isBooleanQuery = true;
+}
+
+void PQLParser::parseResultClause() {
+	PQLToken* currToken = peekNextToken();
+	if (currToken->getType() == TokenType::BOOLEAN && !isDeclaredSynonym(currToken->getValue())) {
+		parseResultBoolean();
+	} else if (currToken->getType() == TokenType::OPEN_ANGLED) {
+		parseResultTuple();
+	} else if (isValidSynonym(currToken)) {
+		parseResultSynonym();
+	}else {
+		throw "invalid result clause";
+	}
 }
 
 void PQLParser::parseResultSynonym() {
-	//todo parse tuple and boolean
 	auto nextToken = getValidSynonymToken();;
 	if (!isDeclaredSynonym(nextToken->getValue())) {
 		throw "Result synonym is not declared";
@@ -114,14 +149,16 @@ QueryArgument PQLParser::parseArgs(PQLToken* token) {
 	}
 }
 
-void PQLParser::parseRelationshipClause() {
+void PQLParser::parseSingleRelationshipClause() {
 	auto nextToken = getNextToken();
 	auto relationType = relationTypeMapping.find(nextToken->getType());
 	if (relationType == relationTypeMapping.end()) {
 		throw "invalid relation type.";
 	}
-	auto validArgTypes = relationValidArgsTypeMap.at(relationType->second);
+
 	getNextExpectedToken(TokenType::OPEN_PARAN);
+
+	auto validArgTypes = relationValidArgsTypeMap.at(relationType->second);
 	std::vector<QueryArgument> relArgs;
 	std::unordered_set<std::string> usedSynonyms;
 	for (int i = 0; i < validArgTypes.size(); i++) {
@@ -148,7 +185,16 @@ void PQLParser::parseRelationshipClause() {
 	if (relArgs.size() != validArgTypes.size()) {
 		throw "Invalid number of arguments.";
 	}
+
 	QueryClauses.push_back(QueryClause(relationType->second, relArgs, usedSynonyms));
+}
+
+void PQLParser::parseRelationshipClause() {
+	parseSingleRelationshipClause();
+	while (current != end && peekNextToken()->getType() == TokenType::AND) {
+		getNextExpectedToken(TokenType::AND);
+		parseSingleRelationshipClause();
+	}
 }
 
 void PQLParser::parseSuchThatClause() {
@@ -210,8 +256,7 @@ void PQLParser::parseAssignPattern(PQLToken* synonymToken) {
 	QueryClauses.push_back(QueryClause(RelationRef::PATTERN_A, patternArgs, usedSynonyms, synonymToken->getValue()));
 }
 
-void PQLParser::parsePatternClause() {
-	getNextExpectedToken(TokenType::PATTERN);
+void PQLParser::parseSinglePatternClause() {
 	auto synonymToken = getValidSynonymToken();
 	auto synonymType = Declarations.find(synonymToken->getValue());
 	if (synonymType == Declarations.end()) {
@@ -219,17 +264,35 @@ void PQLParser::parsePatternClause() {
 	}
 	getNextExpectedToken(TokenType::OPEN_PARAN);
 	switch (synonymType->second) {
-		case (EntityType::ASSIGN): {
+		case (EntityType::ASSIGN):
 			parseAssignPattern(synonymToken);
-		}
+			break;
+		//todo ifs and while pattern 
+		//case (EntityType::IF):
+		//	parseIfPattern(synonymToken);
+		//	break;
+		//case (EntityType::WHILE):
+		//	parseWhilePattern(synonymToken);
+		//	break;
 		default:
+			throw "invalid pattern syn";
 			break;
 	}
 }
 
+void PQLParser::parsePatternClause() {
+	getNextExpectedToken(TokenType::PATTERN);
+	parseSinglePatternClause();
+	while (current != end && peekNextToken()->getType() == TokenType::AND) {
+		getNextExpectedToken(TokenType::AND);
+		parseSinglePatternClause();
+	}
+}
+
+
 void PQLParser::parseAfterSelect() {
 	while (current != end) {
-		switch (tokens.at(current)->getType()) {
+		switch (peekNextToken()->getType()) {
 			case TokenType::SUCH:
 				parseSuchThatClause();
 				break;
@@ -244,12 +307,12 @@ void PQLParser::parseAfterSelect() {
 
 Query PQLParser::parse() {
 	try {
-		while (current != end && entityTypeMapping.find(tokens.at(current)->getType()) != entityTypeMapping.end()) {
+		while (current != end && entityTypeMapping.find(peekNextToken()->getType()) != entityTypeMapping.end()) {
 			parseDeclaration();
 		}
 		parseSelect();
 		parseAfterSelect();
-		return Query(resultSynonyms, QueryClauses);
+		return Query(resultSynonyms, QueryClauses, isBooleanQuery);
 	} catch (...) {
 		return Query();
 	}

@@ -17,7 +17,7 @@ void Tokeniser::processRawToken(std::string rawToken) {
 		PQLTokens.push_back(new PQLToken(stringTokenMap[rawToken], rawToken));
 	}
 	else if (isInStringLiteral(rawToken)) {
-		const std::string ident = rawToken.substr(1, rawToken.size() - 2);
+		const std::string ident = trimWhitespaces(rawToken.substr(1, rawToken.size() - 2));
 		PQLTokens.push_back(new PQLToken(TokenType::STRING, ident));
 	} else if (isIdent(rawToken)) {
 		PQLTokens.push_back(new PQLToken(TokenType::SYNONYM, rawToken));
@@ -62,6 +62,8 @@ std::vector<PQLToken*> Tokeniser::tokenise() {
 				// ignore whitespace if its within string literals
 				if (!isWithinStringLiterals) {
 					pushToken();
+				} else {
+					rawToken += nextChar;
 				}
 				break;
 
@@ -75,11 +77,19 @@ std::vector<PQLToken*> Tokeniser::tokenise() {
 				}
 				break;
 
+			//symbols that can appear in and outside string literals
+			case '(':
+			case ')':
+				if (isWithinStringLiterals) {
+					rawToken += nextChar;
+				} else {
+					pushSymbolToken(nextChar);
+				}
+				break;
+			
 			//symbols that does not appear in string literals at all 
 			case '_':
 			case ',':
-			case '(':
-			case ')':
 			case ';':
 			case '.':
 			case '<':
@@ -89,7 +99,6 @@ std::vector<PQLToken*> Tokeniser::tokenise() {
 				break;
 
 			default:
-				// characters, numbers and symbols that can appear in and outside string literals (i.e *) goes here 
 				rawToken += nextChar;
 				break;
 			}

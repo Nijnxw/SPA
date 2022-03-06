@@ -177,8 +177,8 @@ QueryArgument PQLParser::parseAssignPatternRHS() {
 				case TokenType::STRING:
 					getNextExpectedToken(TokenType::UNDERSCORE);
 					getNextExpectedToken(TokenType::CLOSE_PARAN);
+					if (!isValidExpr(followingToken->getValue())) { throw "invalid expression"; }
 					infix = RPN::convertToRpn(followingToken->getValue());
-					if (!isValidExpr(infix)) { throw "invalid expression"; }
 					return QueryArgument(std::string("_" + infix + "_"), entityTypeMapping[followingToken->getType()]);
 				case TokenType::CLOSE_PARAN:
 					return QueryArgument(std::string("_"), entityTypeMapping[nextToken->getType()]);
@@ -188,8 +188,8 @@ QueryArgument PQLParser::parseAssignPatternRHS() {
 		}
 		case TokenType::STRING:
 			getNextExpectedToken(TokenType::CLOSE_PARAN);
+			if (!isValidExpr(nextToken->getValue())) { throw "invalid expression"; }
 			infix = RPN::convertToRpn(nextToken->getValue());
-			if (!isValidExpr(infix)) { throw "invalid expression"; }
 			return QueryArgument(infix, entityTypeMapping[TokenType::STRING]);
 		default:
 			throw "Invalid Argument.";

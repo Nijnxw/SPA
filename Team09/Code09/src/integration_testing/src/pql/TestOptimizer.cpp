@@ -73,7 +73,7 @@ TEST_CASE("Test optimizer extraction logic") {
 		clause8,
 		clause9
 	};
-	Query query = {resultSyns, clauses};
+	Query query = {resultSyns, clauses, false};
 
 	std::vector<QueryArgument> actualSynNotInClauses;
 	std::vector<QueryClause> actualClausesWithoutSyn;

@@ -437,4 +437,166 @@ TEST_CASE("QueryEvaluator evaluate") {
 
 		REQUIRE(actual == expected);
 	}
+
+	SECTION("multi clause - single group - single select synonym") {
+		PKB::clearAllStores();
+		/*
+		 * assign a; procedure p; stmt s;
+		 * select a such that Calls(p,_) pattern a(v,_) such that Uses (p,v)
+		 */
+
+		PKB::addProcedure("proc1");
+		PKB::addProcedure("proc2");
+		PKB::addCalls("proc1", "proc2");
+		PKB::addAssignStatement(2, "x", "x 1 +");
+		PKB::addAssignStatement(3, "y", "y x +");
+		PKB::addAssignStatement(4, "z", "y x +");
+		PKB::addUsesProcedure("proc1", {"x", "y"});
+
+		std::vector<QueryArgument> callsClauseArguments = {
+			{"p", EntityType::PROC},
+			{"_", EntityType::WILD}
+		};
+		std::unordered_set<std::string> callsUsedSynonyms = {"p"};
+		QueryClause callsClause = QueryClause(RelationRef::CALLS, callsClauseArguments, callsUsedSynonyms);
+
+		std::vector<QueryArgument> pAClauseArguments = {
+			{"v", EntityType::VAR},
+			{"_", EntityType::WILD}
+		};
+		std::unordered_set<std::string> pAUsedSynonyms = {"a",
+														  "v"};
+		QueryClause pAClause = QueryClause(RelationRef::PATTERN_A, pAClauseArguments, pAUsedSynonyms, "a");
+
+		std::vector<QueryArgument> usesClauseArguments = {
+			{"p", EntityType::PROC},
+			{"v", EntityType::VAR}
+		};
+		std::unordered_set<std::string> usesUsedSynonyms = {"p",
+															"v"};
+		QueryClause usesClause = QueryClause(RelationRef::USES, usesClauseArguments, usesUsedSynonyms);
+
+		std::vector<QueryArgument> selectSynonyms = {{"a", EntityType::ASSIGN}};
+		std::vector<QueryClause> clauses = {callsClause, pAClause, usesClause};
+		Query query = Query(selectSynonyms, clauses);
+
+		QueryClauseResult expected = {{{"p", {"proc1", "proc1"}}, {"v", {"x", "y"}}, {"a", {"2", "3"}}}};
+		QueryClauseResult actual = {QueryEvaluator::evaluate(query)};
+
+		REQUIRE(actual == expected);
+	}
+
+	SECTION("multi clause groups - multi select synonym, 1 not in clauses") {
+		PKB::clearAllStores();
+		/*
+		 * assign a; procedure p; stmt s;
+		 * select <a, p> such that Uses(s,_) pattern a(v,_) such that Modifies (a,v)
+		 */
+
+		PKB::addProcedure("proc1");
+		PKB::addProcedure("proc2");
+		PKB::addStatementNumber(2);
+		PKB::addStatementNumber(3);
+		PKB::addStatementNumber(4);
+		PKB::addUsesStatement(2, {"x"});
+		PKB::addUsesStatement(3, {"y", "x"});
+		PKB::addUsesStatement(4, {"y", "x"});
+		PKB::addAssignStatement(2, "x", "x 1 +");
+		PKB::addAssignStatement(3, "y", "y x +");
+		PKB::addAssignStatement(4, "z", "y x +");
+		PKB::addModifiesStatement(2, {"x"});
+		PKB::addModifiesStatement(3, {"y"});
+		PKB::addModifiesStatement(4, {"z"});
+
+		std::vector<QueryArgument> usesClauseArguments = {
+			{"s", EntityType::STMT},
+			{"_", EntityType::WILD}
+		};
+		std::unordered_set<std::string> usesUsedSynonyms = {"s"};
+		QueryClause usesClause = QueryClause(RelationRef::USES, usesClauseArguments, usesUsedSynonyms);
+
+		std::vector<QueryArgument> pAClauseArguments = {
+			{"v", EntityType::VAR},
+			{"_", EntityType::WILD}
+		};
+		std::unordered_set<std::string> pAUsedSynonyms = {"v"};
+		QueryClause pAClause = QueryClause(RelationRef::PATTERN_A, pAClauseArguments, pAUsedSynonyms, "a");
+
+		std::vector<QueryArgument> modifiesClauseArguments = {
+			{"a", EntityType::ASSIGN},
+			{"v", EntityType::VAR}
+		};
+		std::unordered_set<std::string> modifiesUsedSynonyms = {"a", "v"};
+		QueryClause modifiesClause = QueryClause(RelationRef::MODIFIES, modifiesClauseArguments, modifiesUsedSynonyms);
+
+		std::vector<QueryArgument> selectSynonyms = {{"a", EntityType::ASSIGN}, {"p", EntityType::PROC}};
+		std::vector<QueryClause> clauses = {usesClause, pAClause, modifiesClause};
+		Query query = Query(selectSynonyms, clauses);
+
+		QueryClauseResult expected = {{
+										  {"p", {"proc1", "proc1", "proc1", "proc2", "proc2", "proc2"}},
+										  {"v", {"x", "y", "z", "x", "y", "z"}},
+										  {"a", {"2", "3", "4", "2", "3", "4"}}
+									  }};
+		QueryClauseResult actual = {QueryEvaluator::evaluate(query)};
+
+		REQUIRE(actual == expected);
+	}
+
+	SECTION("multi clause groups - multi select synonym") {
+		PKB::clearAllStores();
+		/*
+		 * assign a; stmt s;
+		 * select <a, s> such that Uses(s,_) pattern a(v,_) such that Modifies (a,v)
+		 */
+
+		PKB::addStatementNumber(2);
+		PKB::addStatementNumber(3);
+		PKB::addStatementNumber(4);
+		PKB::addUsesStatement(2, {"x"});
+		PKB::addUsesStatement(3, {"y", "x"});
+		PKB::addUsesStatement(4, {"y", "x"});
+		PKB::addAssignStatement(2, "x", "x 1 +");
+		PKB::addAssignStatement(3, "y", "y x +");
+		PKB::addAssignStatement(4, "z", "y x +");
+		PKB::addModifiesStatement(2, {"x"});
+		PKB::addModifiesStatement(3, {"y"});
+		PKB::addModifiesStatement(4, {"z"});
+
+		std::vector<QueryArgument> usesClauseArguments = {
+			{"s", EntityType::STMT},
+			{"_", EntityType::WILD}
+		};
+		std::unordered_set<std::string> usesUsedSynonyms = {"s"};
+		QueryClause usesClause = QueryClause(RelationRef::USES, usesClauseArguments, usesUsedSynonyms);
+
+		std::vector<QueryArgument> pAClauseArguments = {
+			{"v", EntityType::VAR},
+			{"_", EntityType::WILD}
+		};
+		std::unordered_set<std::string> pAUsedSynonyms = {"v"};
+		QueryClause pAClause = QueryClause(RelationRef::PATTERN_A, pAClauseArguments, pAUsedSynonyms, "a");
+
+		std::vector<QueryArgument> modifiesClauseArguments = {
+			{"a", EntityType::ASSIGN},
+			{"v", EntityType::VAR}
+		};
+		std::unordered_set<std::string> modifiesUsedSynonyms = {"a", "v"};
+		QueryClause modifiesClause = QueryClause(RelationRef::MODIFIES, modifiesClauseArguments, modifiesUsedSynonyms);
+
+		std::vector<QueryArgument> selectSynonyms = {{"a", EntityType::ASSIGN}, {"s", EntityType::STMT}};
+		std::vector<QueryClause> clauses = {usesClause, pAClause, modifiesClause};
+		Query query = Query(selectSynonyms, clauses);
+
+		QueryClauseResult expected = {{
+										  {"s", {"2", "2", "2", "3", "3", "3", "4", "4", "4"}},
+										  {"v", {"x", "y", "z", "x", "y", "z", "x", "y", "z"}},
+										  {"a", {"2", "3", "4", "2", "3", "4", "2", "3", "4"}}
+									  }};
+		QueryClauseResult actual = {QueryEvaluator::evaluate(query)};
+
+		REQUIRE(actual == expected);
+	}
+
+	PKB::clearAllStores();
 }

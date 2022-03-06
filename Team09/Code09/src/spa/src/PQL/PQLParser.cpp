@@ -104,7 +104,7 @@ void PQLParser::parseResultTuple() {
 
 void PQLParser::parseResultBoolean() {
 	getNextExpectedToken(TokenType::BOOLEAN);
-	resultSynonyms.push_back(QueryArgument("BOOLEAN", EntityType::BOOL));
+	isBooleanQuery = true;
 }
 
 void PQLParser::parseResultClause() {
@@ -312,7 +312,7 @@ Query PQLParser::parse() {
 		}
 		parseSelect();
 		parseAfterSelect();
-		return Query(resultSynonyms, QueryClauses);
+		return Query(resultSynonyms, QueryClauses, isBooleanQuery);
 	} catch (...) {
 		return Query();
 	}

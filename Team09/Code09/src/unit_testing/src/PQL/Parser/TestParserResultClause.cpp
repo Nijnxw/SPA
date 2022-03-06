@@ -39,13 +39,8 @@ TEST_CASE("BOOLEAN result clause") {
 		std::vector<PQLToken*> PQLTokens = tokeniser.tokenise();
 		PQLParser parser = PQLParser(PQLTokens);
 
-		expectedResultSynonms.push_back(QueryArgument(std::string("BOOLEAN"), EntityType::BOOL));
-
 		Query actualQuery = parser.parse();
-		std::vector<QueryArgument> actualResultSynonms = actualQuery.getResultSynonyms();
-		std::vector<QueryClause> actualClauses = actualQuery.getClauses();
-		bool isClausesEqual = std::equal(expectedClauses.begin(), expectedClauses.end(), actualClauses.begin());
-		bool isResultSynonymEqual = std::equal(expectedResultSynonms.begin(), expectedResultSynonms.end(), actualResultSynonms.begin());
-		REQUIRE((isClausesEqual && isResultSynonymEqual));
+		bool isBooleanQuery = actualQuery.isBooleanQuery();
+		REQUIRE(isBooleanQuery);
 	}
 }

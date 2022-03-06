@@ -106,6 +106,7 @@ public:
 private:
 	int current;
 	int end;
+	bool isBooleanQuery = false;
 	std::vector<PQLToken*> tokens;
 	std::unordered_map<std::string, EntityType> Declarations;
 	std::vector<QueryArgument> resultSynonyms;

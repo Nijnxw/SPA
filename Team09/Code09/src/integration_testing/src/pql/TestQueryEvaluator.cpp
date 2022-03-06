@@ -15,7 +15,7 @@ TEST_CASE("QueryEvaluator evaluate") {
 
 		std::vector<QueryArgument> selectSynonyms = {{"s", EntityType::READ}};
 		std::vector<QueryClause> clauses;
-		Query query = Query(selectSynonyms, clauses);
+		Query query = Query(selectSynonyms, clauses, false);
 
 		QueryClauseResult expected = {{{"s", {"3", "4"}}}};
 		QueryClauseResult actual = {QueryEvaluator::evaluate(query)};
@@ -45,7 +45,7 @@ TEST_CASE("QueryEvaluator evaluate") {
 		QueryClause stClause = QueryClause(RelationRef::MODIFIES, clauseArguments, usedSynonyms);
 
 		std::vector<QueryClause> clauses = {stClause};
-		Query query = Query(selectSynonyms, clauses);
+		Query query = Query(selectSynonyms, clauses, false);
 
 		QueryClauseResult expected = {{{"s", {"1", "2", "3"}}}};
 		QueryClauseResult actual = {QueryEvaluator::evaluate(query)};
@@ -69,7 +69,7 @@ TEST_CASE("QueryEvaluator evaluate") {
 		QueryClause stClause = QueryClause(RelationRef::USES, clauseArguments, usedSynonyms);
 
 		std::vector<QueryClause> clauses = {stClause};
-		Query query = Query(selectSynonyms, clauses);
+		Query query = Query(selectSynonyms, clauses, false);
 
 		QueryClauseResult expected = {{{"s", {"1", "2", "2"}}, {"v", {"a", "a", "c"}}}};
 		QueryClauseResult actual = {QueryEvaluator::evaluate(query)};
@@ -98,7 +98,7 @@ TEST_CASE("QueryEvaluator evaluate") {
 		QueryClause pAClause = QueryClause(RelationRef::PATTERN_A, clauseArguments, usedSynonyms, "a");
 
 		std::vector<QueryClause> clauses = {pAClause};
-		Query query = Query(selectSynonyms, clauses);
+		Query query = Query(selectSynonyms, clauses, false);
 
 		QueryClauseResult expected = {{{"pn", {"1", "2", "3", "4"}}}};
 		QueryClauseResult actual = {QueryEvaluator::evaluate(query)};
@@ -124,7 +124,7 @@ TEST_CASE("QueryEvaluator evaluate") {
 		QueryClause pAClause = QueryClause(RelationRef::PATTERN_A, clauseArguments, usedSynonyms, "a");
 
 		std::vector<QueryClause> clauses = {pAClause};
-		Query query = Query(selectSynonyms, clauses);
+		Query query = Query(selectSynonyms, clauses, false);
 
 		QueryClauseResult expected = {{{"a", {"1"}}}};
 		QueryClauseResult actual = {QueryEvaluator::evaluate(query)};
@@ -168,7 +168,7 @@ TEST_CASE("QueryEvaluator evaluate") {
 		QueryClause pAClause = QueryClause(RelationRef::PATTERN_A, pAClauseArguments, pAUsedSynonyms, "a");
 
 		std::vector<QueryClause> clauses = {stClause, pAClause};
-		Query query = Query(selectSynonyms, clauses);
+		Query query = Query(selectSynonyms, clauses, false);
 
 		QueryClauseResult expected = {{{"ifs", {"4", "9"}}}};
 		QueryClauseResult actual = {QueryEvaluator::evaluate(query)};
@@ -210,7 +210,7 @@ TEST_CASE("QueryEvaluator evaluate") {
 		QueryClause pAClause = QueryClause(RelationRef::PATTERN_A, pAClauseArguments, pAUsedSynonyms, "a");
 
 		std::vector<QueryClause> clauses = {stClause, pAClause};
-		Query query = Query(selectSynonyms, clauses);
+		Query query = Query(selectSynonyms, clauses, false);
 
 		QueryClauseResult expected = {{{"ifs", {"1", "1", "1"}}, {"s", {"5", "6", "7"}}}};
 		QueryClauseResult actual = {QueryEvaluator::evaluate(query)};
@@ -251,7 +251,7 @@ TEST_CASE("QueryEvaluator evaluate") {
 		QueryClause pAClause = QueryClause(RelationRef::PATTERN_A, pAClauseArguments, pAUsedSynonyms, "a");
 
 		std::vector<QueryClause> clauses = {stClause, pAClause};
-		Query query = Query(selectSynonyms, clauses);
+		Query query = Query(selectSynonyms, clauses, false);
 
 		QueryClauseResult expected = {{{"a", {"2"}}}};
 		QueryClauseResult actual = {QueryEvaluator::evaluate(query)};
@@ -290,7 +290,7 @@ TEST_CASE("QueryEvaluator evaluate") {
 		QueryClause pAClause = QueryClause(RelationRef::PATTERN_A, pAClauseArguments, pAUsedSynonyms, "a");
 
 		std::vector<QueryClause> clauses = {stClause, pAClause};
-		Query query = Query(selectSynonyms, clauses);
+		Query query = Query(selectSynonyms, clauses, false);
 
 		QueryClauseResult expected = {{{"s", {"1", "2", "3"}}}};
 		QueryClauseResult actual = {QueryEvaluator::evaluate(query)};
@@ -340,7 +340,7 @@ TEST_CASE("QueryEvaluator evaluate") {
 		QueryClause pAClause = QueryClause(RelationRef::PATTERN_A, pAClauseArguments, pAUsedSynonyms, "a");
 
 		std::vector<QueryClause> clauses = {stClause, pAClause};
-		Query query = Query(selectSynonyms, clauses);
+		Query query = Query(selectSynonyms, clauses, false);
 
 		QueryClauseResult expected = {{{"s", {"1", "1"}}, {"a", {"4", "6"}}}};
 		QueryClauseResult actual = {QueryEvaluator::evaluate(query)};
@@ -383,7 +383,7 @@ TEST_CASE("QueryEvaluator evaluate") {
 		QueryClause pAClause = QueryClause(RelationRef::PATTERN_A, pAClauseArguments, pAUsedSynonyms, "a");
 
 		std::vector<QueryClause> clauses = {stClause, pAClause};
-		Query query = Query(selectSynonyms, clauses);
+		Query query = Query(selectSynonyms, clauses, false);
 
 		QueryClauseResult expected = {
 			{{"s", {"2", "2", "4", "4", "1", "1", "4", "3"}},
@@ -430,7 +430,7 @@ TEST_CASE("QueryEvaluator evaluate") {
 		QueryClause pAClause = QueryClause(RelationRef::PATTERN_A, pAClauseArguments, pAUsedSynonyms, "a");
 
 		std::vector<QueryClause> clauses = {stClause, pAClause};
-		Query query = Query(selectSynonyms, clauses);
+		Query query = Query(selectSynonyms, clauses, false);
 
 		QueryClauseResult expected = {{{"a", {"1", "3", "4"}}, {"v", {"y", "x", "y"}}}};
 		QueryClauseResult actual = {QueryEvaluator::evaluate(query)};

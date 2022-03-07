@@ -1,15 +1,16 @@
 #include "TestWrapper.h"
+#include "AbstractWrapper.h"
+
 
 // implementation code of WrapperFactory - do NOT modify the next 5 lines
 AbstractWrapper* WrapperFactory::wrapper = 0;
-
 AbstractWrapper* WrapperFactory::createWrapper() {
     if (wrapper == 0) wrapper = new TestWrapper;
     return wrapper;
 }
-
 // Do not modify the following line
 volatile bool AbstractWrapper::GlobalStop = false;
+AbstractWrapper::~AbstractWrapper() = default;
 
 // a default constructor
 TestWrapper::TestWrapper() {
@@ -17,32 +18,30 @@ TestWrapper::TestWrapper() {
     // as well as any initialization required for your spa program
 }
 
+TestWrapper::~TestWrapper() {
+    PKB::clearAllStores();
+}
+
 // method for parsing the SIMPLE source
 void TestWrapper::parse(std::string filename) {
     // call your parser to do the parsing
-    // ...rest of your code...
-	AST ast = SPManager::parseFile(filename);
-	SPManager::extractDesign(ast);
+  // ...rest of your code...
+    AST ast = SPManager::parseFile(filename);
+    SPManager::extractDesign(ast);
 }
 
 // method to evaluating a query
-void TestWrapper::evaluate(std::string query, std::list<std::string>& results) {
-// call your evaluator to evaluate the query here
-    // ...code to evaluate query...
+void TestWrapper::evaluate(std::string query, std::list<std::string>&results) {
+    // call your evaluator to evaluate the query here
+      // ...code to evaluate query...
 
-    // store the answers to the query in the results list (it is initially empty)
-    // each result must be a string.
+      // store the answers to the query in the results list (it is initially empty)
+      // each result must be a string.
     std::vector<PQLToken*> tokens = PQL::tokenise(query);
     Query queryObject = PQL::parse(tokens);
     Table queryTable = PQL::evaluate(queryObject);
     std::vector<QueryArgument> resultSynonyms = queryObject.getResultSynonyms();
     std::unordered_set<std::string> queryResult = PQL::getResults(queryTable, resultSynonyms);
-    
-    results.insert(results.end(), queryResult.begin(), queryResult.end());
-}
 
-/*=== DESTRUCTOR ===*/
-TestWrapper::~TestWrapper() {
-	// Clears all static list
-	PKB::clearAllStores();
+    results.insert(results.end(), queryResult.begin(), queryResult.end());
 }

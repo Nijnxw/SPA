@@ -62,7 +62,7 @@ static std::unordered_set<EntityType> stmtRef = {
 static std::unordered_set<EntityType> UsesFristArgTypes = {
 	EntityType::STMT, EntityType::PRINT, EntityType::INT,
 	EntityType::WHILE, EntityType::IF, EntityType::ASSIGN,
-    EntityType::PROC, EntityType::STRING
+    EntityType::PROC, EntityType::STRING, EntityType::CALL
 };
 
 static std::unordered_set<EntityType> VarArgTypes = {
@@ -72,7 +72,7 @@ static std::unordered_set<EntityType> VarArgTypes = {
 static std::unordered_set<EntityType> ModifiesFristArgTypes = {
 	EntityType::STMT, EntityType::READ, EntityType::INT,
 	EntityType::WHILE, EntityType::IF, EntityType::ASSIGN,
-	EntityType::PROC, EntityType::STRING
+	EntityType::PROC, EntityType::STRING, EntityType::CALL
 };
 
 static std::unordered_set<EntityType> callsArgTypes = {

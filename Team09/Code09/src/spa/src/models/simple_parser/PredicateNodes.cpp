@@ -3,7 +3,7 @@
 //overloaded functions to handle RelFactorNode variants for variable extraction
 std::unordered_set<std::string> extractVariable(RelFactorNode relExpr);
 std::unordered_set<std::string> extractVariable(std::shared_ptr<ConstantNode> constant) {
-	return { constant->getValue() };
+	return { };
 }
 
 std::unordered_set<std::string> extractVariable(std::shared_ptr<VariableNode> variable) {

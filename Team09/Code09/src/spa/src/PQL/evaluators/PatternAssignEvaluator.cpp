@@ -8,7 +8,7 @@ PatternAssignEvaluator::getPattern(const std::string& LHS, const std::string& RH
 							  EntityType LHSType, EntityType RHSType,
 							  bool isBooleanResult) {
 
-	std::unordered_map<int, AssignStatement> assignStatements = PKB::getAssignStatements();
+	std::unordered_map<int, AssignStatement> assignStatements = PKB::getAssignStatementsToStructs();
 
 	switch (LHSType) {
 		case EntityType::VAR:

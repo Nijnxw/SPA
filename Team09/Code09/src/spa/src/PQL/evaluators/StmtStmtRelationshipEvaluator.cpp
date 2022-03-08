@@ -118,9 +118,7 @@ std::unordered_set<int> StmtStmtRelationshipEvaluator::filterStatementsByType(st
 
 	switch (type) {
 	case EntityType::ASSIGN:
-		for (auto kv : PKB::getAssignStatements()) {
-			typeStatements.insert(kv.first);
-		}
+		typeStatements = PKB::getStatementsWithType(EntityType::ASSIGN);
 		break;
 	case EntityType::IF:
 		typeStatements = PKB::getStatementsWithType(EntityType::IF);
@@ -156,9 +154,7 @@ std::tuple<std::vector<int>, std::vector<int>> StmtStmtRelationshipEvaluator::fi
 		}
 	break;
 	case EntityType::ASSIGN:
-		for (auto kv : PKB::getAssignStatements()) {
-			firstTypeStatements.insert(kv.first);
-		}
+		firstTypeStatements = PKB::getStatementsWithType(EntityType::ASSIGN);
 		break;
 	case EntityType::IF:
 		firstTypeStatements = PKB::getStatementsWithType(EntityType::IF);
@@ -193,9 +189,7 @@ std::tuple<std::vector<int>, std::vector<int>> StmtStmtRelationshipEvaluator::fi
 		}
 		break;
 	case EntityType::ASSIGN:
-		for (auto kv : PKB::getAssignStatements()) {
-			secondTypeStatements.insert(kv.first);
-		}
+		secondTypeStatements = PKB::getStatementsWithType(EntityType::ASSIGN);
 		break;
 	case EntityType::IF:
 		secondTypeStatements = PKB::getStatementsWithType(EntityType::IF);

@@ -17,7 +17,7 @@ TEST_CASE("Follows Relationship API") {
 		PKB::addFollowsT(1, 3);
 		PKB::addFollowsT(4, 5);
 
-		PKB::addStatementWithType(EntityType::CALL, 1);
+		PKB::addCallStatement(1, "TEST");
 
 		// --------------------------------------------------
 		//                  LHS int

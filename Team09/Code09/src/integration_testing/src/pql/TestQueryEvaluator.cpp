@@ -10,8 +10,8 @@ TEST_CASE("QueryEvaluator evaluate") {
 	SECTION("no clauses") {
 		PKB::clearAllStores();
 
-		PKB::addStatementWithType(EntityType::READ, 3);
-		PKB::addStatementWithType(EntityType::READ, 4);
+		PKB::addReadStatement(3, "r");
+		PKB::addReadStatement(4, "r");
 
 		std::vector<QueryArgument> selectSynonyms = {{"s", EntityType::READ}};
 		std::vector<QueryClause> clauses;
@@ -80,10 +80,10 @@ TEST_CASE("QueryEvaluator evaluate") {
 	SECTION("one pattern clause - don't contain select synonym") {
 		PKB::clearAllStores();
 
-		PKB::addStatementWithType(EntityType::PRINT, 1);
-		PKB::addStatementWithType(EntityType::PRINT, 2);
-		PKB::addStatementWithType(EntityType::PRINT, 3);
-		PKB::addStatementWithType(EntityType::PRINT, 4);
+		PKB::addPrintStatement(1, "p");
+		PKB::addPrintStatement(2, "p");
+		PKB::addPrintStatement(3, "p");
+		PKB::addPrintStatement(4, "p");
 
 		PKB::addAssignStatement(5, "x", "y");
 		PKB::addAssignStatement(6, "x", "x y +");
@@ -146,8 +146,9 @@ TEST_CASE("QueryEvaluator evaluate") {
 		PKB::addParent(4, 8);
 		PKB::addParent(9, 10);
 
-		PKB::addStatementWithType(EntityType::IF, 4);
-		PKB::addStatementWithType(EntityType::IF, 9);
+		std::unordered_set<std::string> controlVariables = { "v" };
+		PKB::addIfStatement(4, controlVariables);
+		PKB::addIfStatement(9, controlVariables);
 
 		PKB::addAssignStatement(6, "x", "5");
 
@@ -184,8 +185,9 @@ TEST_CASE("QueryEvaluator evaluate") {
 			Select ifs such that Follows*(ifs, s) pattern a("y", _"y + 1"_)
 		*/
 
-		PKB::addStatementWithType(EntityType::IF, 1);
-		PKB::addStatementWithType(EntityType::IF, 8);
+		std::unordered_set<std::string> controlVariables = { "v" };
+		PKB::addIfStatement(1, controlVariables);
+		PKB::addIfStatement(8, controlVariables);
 		PKB::addFollowsT(1, 5);
 		PKB::addFollowsT(1, 6);
 		PKB::addFollowsT(1, 7);

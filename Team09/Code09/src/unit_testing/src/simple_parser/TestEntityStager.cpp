@@ -66,7 +66,7 @@ TEST_CASE("Test EntityStager interaction with PKB") {
 	AssignStatement expectedAssStmt(1, "var1", "var2 + var3");
 	std::unordered_map<int, AssignStatement> expectedResult;
 	expectedResult.insert({ 1, expectedAssStmt });
-	REQUIRE(PKB::getAssignStatements() == expectedResult);
+	REQUIRE(PKB::getAssignStatementsToStructs() == expectedResult);
 
 	REQUIRE(PKB::isFollowsRelationship(1, 2));
 	REQUIRE(PKB::isFollowsTRelationship(1, 2));

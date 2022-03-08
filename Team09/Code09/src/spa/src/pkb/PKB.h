@@ -40,7 +40,11 @@ public:
 	static bool addStatementNumber(int statementNumber);
 
 	static bool addAssignStatement(int statementNumber, std::string leftHandSide, std::string rightHandSide);
-	static bool addStatementWithType(EntityType statementType, int statementNumber);
+	static bool addIfStatement(int statementNumber, std::unordered_set<std::string> conditionalVariables);
+	static bool addWhileStatement(int statementNumber, std::unordered_set<std::string> conditionalVariables);
+	static bool addCallStatement(int statementNumber, std::string procedure);
+	static bool addReadStatement(int statementNumber, std::string variable);
+	static bool addPrintStatement(int statementNumber, std::string variable);
 
 	static bool addFollows(int follower, int followee);
 	static bool addFollowsT(int follower, int followee);
@@ -59,7 +63,13 @@ public:
 	static std::unordered_set<std::string> getConstants();
 	static std::unordered_set<int> getStatementNumbers();
 
-	static std::unordered_map<int, AssignStatement> getAssignStatements();
+	static std::unordered_map<int, AssignStatement> getAssignStatementsToStructs();
+	static std::unordered_map<int, std::unordered_set<std::string>> getIfStatementsToConditionalVariables();
+	static std::unordered_map<int, std::unordered_set<std::string>> getWhileStatementsToConditionalVariables();
+	static std::unordered_map<int, std::string> getCallStatementsToProcedures();
+	static std::unordered_map<int, std::string> getPrintStatementsToVariables();
+	static std::unordered_map<int, std::string> getReadStatementsToVariables();
+
 	static std::unordered_set<int> getStatementsWithType(EntityType statementType);
 
 	/* StmtStmt Getters */

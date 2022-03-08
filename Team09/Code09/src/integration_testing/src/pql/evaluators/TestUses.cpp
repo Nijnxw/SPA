@@ -26,12 +26,13 @@ TEST_CASE("Test UsesStore and UsesEvaluator functionality") {
 		// Assumed calls from SP/DE
 		PKB::addProcedure("testProg");
 		PKB::addProcedure("testProg2");
-		PKB::addStatementWithType(EntityType::PRINT, 1);
+		PKB::addPrintStatement(1, "p");
 		PKB::addAssignStatement(2, "<LHS>", "<RHS>");
-		PKB::addStatementWithType(EntityType::IF, 3);
+		std::unordered_set<std::string> ifConditionalVariables = { "c", "k" };
+		PKB::addIfStatement(3, ifConditionalVariables);
 		PKB::addAssignStatement(4, "<LHS>", "<RHS>");
-		PKB::addStatementWithType(EntityType::READ, 5);
-		PKB::addStatementWithType(EntityType::CALL, 6);
+		PKB::addReadStatement(5, "k");
+		PKB::addCallStatement(6, "testProg2");
 		PKB::addAssignStatement(7, "<LHS>", "<RHS>");
 		PKB::addUsesStatement(1,{"p"});
 		PKB::addUsesStatement(2,{"p"});

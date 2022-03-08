@@ -23,13 +23,15 @@ TEST_CASE("Test ModifiesStore and ModifiesEvaluator functionality") {
 			}
 		*/
 		// Assumed calls from SP/DE
-		PKB::addStatementWithType(EntityType::READ, 1);
+		PKB::addReadStatement(1, "p");
 		PKB::addAssignStatement(2, "<LHS>", "<RHS>");
-		PKB::addStatementWithType(EntityType::IF, 3);
+		std::unordered_set<std::string> ifConditionalVariables = { "c", "k" };
+		PKB::addIfStatement(3, ifConditionalVariables);
 		PKB::addAssignStatement(4, "<LHS>", "<RHS>");
-		PKB::addStatementWithType(EntityType::WHILE, 5);
+		std::unordered_set<std::string> whileConditionalVariables = { "w" };
+		PKB::addWhileStatement(5, whileConditionalVariables);
 		PKB::addAssignStatement(6, "<LHS>", "<RHS>");
-		PKB::addStatementWithType(EntityType::CALL, 7);
+		PKB::addCallStatement(7, "testProg1");
 		PKB::addAssignStatement(8, "<LHS>", "<RHS>");
 		PKB::addModifiesStatement(1, {"p"});
 		PKB::addModifiesStatement(2, {"a"});

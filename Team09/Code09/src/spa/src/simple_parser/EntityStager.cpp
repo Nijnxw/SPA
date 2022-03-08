@@ -28,7 +28,8 @@ void EntityStager::clear() {
 	stagedModifiesProcedure.clear();
 }
 //helper function
-std::unordered_set<int> getStmtNoFromSet(std::unordered_map<int, std::string> store) {
+template <typename T>
+std::unordered_set<int> getStmtNoFromSet(std::unordered_map<int, T> store) {
 	std::unordered_set<int> output;
 	for (auto& s : store) {
 		output.insert(s.first);
@@ -71,10 +72,18 @@ std::unordered_map<int, std::string> EntityStager::getStagedPrints() {
 }
 
 std::unordered_set<int> EntityStager::getStagedIfStatements() {
+	return getStmtNoFromSet(stagedIfStatements);
+}
+
+std::unordered_map<int, std::unordered_set<std::string>> EntityStager::getStagedIfs() {
 	return stagedIfStatements;
 }
 
 std::unordered_set<int> EntityStager::getStagedWhileStatements() {
+	return getStmtNoFromSet(stagedWhileStatements);
+}
+
+std::unordered_map<int, std::unordered_set<std::string>> EntityStager::getStagedWhiles() {
 	return stagedWhileStatements;
 }
 
@@ -147,12 +156,12 @@ void EntityStager::stageStatement(int stmtNo) {
 	stagedStatements.insert(stmtNo);
 }
 
-void EntityStager::stageIfStatement(int stmtNo) {
-	stagedIfStatements.insert(stmtNo);
+void EntityStager::stageIfStatement(int stmtNo, std::unordered_set<std::string> vars) {
+	stagedIfStatements.insert({ stmtNo, vars });
 }
 
-void EntityStager::stageWhileStatement(int stmtNo) {
-	stagedWhileStatements.insert(stmtNo);
+void EntityStager::stageWhileStatement(int stmtNo, std::unordered_set<std::string> vars) {
+	stagedWhileStatements.insert({ stmtNo, vars });
 }
 
 void EntityStager::stageReadStatement(int stmtNo, std::string varName) {
@@ -222,13 +231,11 @@ void EntityStager::commit() {
 	for (auto& con: stagedVariables) { PKB::addVariable(con); }
 
 	for (auto& stmt: stagedStatements) { PKB::addStatementNumber(stmt); }
-	for (auto& read: stagedReadStatements) {
-		PKB::addStatementWithType(EntityType::READ, read.first);
-	}
-	for (auto& print: stagedPrintStatements) { PKB::addStatementWithType(EntityType::PRINT, print.first); }
-	for (auto& ifs: stagedIfStatements) { PKB::addStatementWithType(EntityType::IF, ifs); }
-	for (auto& whiles: stagedWhileStatements) { PKB::addStatementWithType(EntityType::WHILE, whiles); }
-	for (auto& call: stagedCallStatements) { PKB::addStatementWithType(EntityType::CALL, call.first); }
+	for (auto& read: stagedReadStatements) {PKB::addReadStatement(read.first, read.second); }
+	for (auto& print: stagedPrintStatements) { PKB::addPrintStatement(print.first, print.second); }
+	for (auto& ifs: stagedIfStatements) { PKB::addIfStatement(ifs.first, ifs.second); }
+	for (auto& whiles: stagedWhileStatements) { PKB::addWhileStatement(whiles.first, whiles.second); }
+	for (auto& call: stagedCallStatements) { PKB::addCallStatement(call.first, call.second); }
 
 	for (auto& assign: stagedAssignStatements) {
 		PKB::addAssignStatement(std::get<0>(assign), std::get<1>(assign), std::get<2>(assign));

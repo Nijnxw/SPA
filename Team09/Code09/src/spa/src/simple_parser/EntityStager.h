@@ -19,8 +19,8 @@ private:
 	static inline std::unordered_set<int> stagedStatements;
 	static inline std::unordered_map<int, std::string> stagedReadStatements;
 	static inline std::unordered_map<int, std::string> stagedPrintStatements;
-	static inline std::unordered_set<int> stagedIfStatements;
-	static inline std::unordered_set<int> stagedWhileStatements;
+	static inline std::unordered_map<int, std::unordered_set<std::string>> stagedIfStatements;
+	static inline std::unordered_map<int, std::unordered_set<std::string>> stagedWhileStatements;
 	static inline std::unordered_map<int, std::string> stagedCallStatements;
 
 	static inline std::vector<std::tuple<int, std::string, std::string>> stagedAssignStatements;
@@ -53,7 +53,9 @@ public:
 	static std::unordered_set<int> getStagedPrintStatements();
 	static std::unordered_map<int, std::string> getStagedPrints();
 	static std::unordered_set<int> getStagedIfStatements();
+	static std::unordered_map<int, std::unordered_set<std::string>> getStagedIfs();
 	static std::unordered_set<int> getStagedWhileStatements();
+	static std::unordered_map<int, std::unordered_set<std::string>> getStagedWhiles();
 	static std::unordered_set<int> getStagedCallStatements();
 	static std::unordered_map<int, std::string> getStagedCall();
 
@@ -77,8 +79,8 @@ public:
 	static void stageConstant(const std::string& constant);
 
 	static void stageStatement(int stmtNo);
-	static void stageIfStatement(int stmtNo);
-	static void stageWhileStatement(int stmtNo);
+	static void stageIfStatement(int stmtNo, std::unordered_set<std::string> vars);
+	static void stageWhileStatement(int stmtNo, std::unordered_set<std::string> vars);
 	static void stageReadStatement(int stmtNo, std::string varName);
 	static void stagePrintStatement(int stmtNo, std::string varName);
 	static void stageCallStatement(int stmtNo, std::string procName);

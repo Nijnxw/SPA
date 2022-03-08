@@ -26,6 +26,7 @@ void EntityStager::clear() {
 	stagedUsesProcedure.clear();
 	stagedModifiesStatement.clear();
 	stagedModifiesProcedure.clear();
+	stagedCFG.clear();
 }
 
 // getters
@@ -107,6 +108,10 @@ std::vector<std::pair<int, std::unordered_set<std::string>>> EntityStager::getSt
 
 std::vector<std::pair<std::string, std::unordered_set<std::string>>> EntityStager::getStagedModifiesProcedure() {
 	return stagedModifiesProcedure;
+}
+
+std::vector<std::unordered_set<int>> EntityStager::getCFG() {
+	return stagedCFG;
 }
 
 // stagers
@@ -195,6 +200,10 @@ void EntityStager::stageModifiesProcedure(std::string proc, std::unordered_set<s
 	stagedModifiesProcedure.emplace_back(proc, variables);
 }
 
+void EntityStager::stageCFG(std::vector<std::unordered_set<int>> cfg) {
+	stagedCFG = cfg;
+}
+
 void EntityStager::commit() {
 	for (auto& proc: stagedProcedures) { PKB::addProcedure(proc); }
 	for (auto& var: stagedConstants) { PKB::addConstant(var); }
@@ -241,5 +250,8 @@ void EntityStager::commit() {
 	for (auto& usesP: stagedUsesProcedure) {
 		PKB::addUsesProcedure(usesP.first, usesP.second);
 	}
+
+	//pending link with pkb cfg interface
+
 	EntityStager::clear();
 }

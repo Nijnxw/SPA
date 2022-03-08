@@ -11,6 +11,7 @@
 #include "models/simple_parser/WhileNode.h"
 #include "simple_parser/EntityStager.h"
 #include "simple_parser/NestableRelationships.h"
+#include "simple_parser/CFGExtractor.h"
 
 #include <memory>
 #include <string>

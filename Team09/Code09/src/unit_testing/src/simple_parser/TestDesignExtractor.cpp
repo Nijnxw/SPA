@@ -36,6 +36,18 @@ TEST_CASE("Entity 2.1 - Extract basic read") {
 	std::unordered_set<int> expectedIfTable{ };
 	REQUIRE(EntityStager::getStagedIfStatements() == expectedIfTable);
 
+	std::unordered_map<int, std::string> expectedPrintContents{ };
+	REQUIRE(EntityStager::getStagedPrintContents() == expectedPrintContents);
+
+	std::unordered_map<int, std::string> expectedReadContents{ {1, "x"} };
+	REQUIRE(EntityStager::getStagedReadContents() == expectedReadContents);
+
+	std::unordered_map<int, std::unordered_set<std::string>> expectedWhileContents{ };
+	REQUIRE(EntityStager::getStagedWhileContents() == expectedWhileContents);
+
+	std::unordered_map<int, std::unordered_set<std::string>> expectedIfContents{ };
+	REQUIRE(EntityStager::getStagedIfContents() == expectedIfContents);
+
 	std::vector<std::tuple<int, std::string, std::string>> expectedAssignTable{ };
 	std::sort(expectedAssignTable.begin(), expectedAssignTable.end(),
 		[](auto& left, auto& right) { return std::get<0>(left) < std::get<0>(right); });
@@ -77,6 +89,18 @@ TEST_CASE("Entity 2.2 - Extract basic print") {
 	std::unordered_set<int> expectedIfTable{ };
 	REQUIRE(EntityStager::getStagedIfStatements() == expectedIfTable);
 
+	std::unordered_map<int, std::string> expectedPrintContents{ {1, "x"} };
+	REQUIRE(EntityStager::getStagedPrintContents() == expectedPrintContents);
+
+	std::unordered_map<int, std::string> expectedReadContents{ };
+	REQUIRE(EntityStager::getStagedReadContents() == expectedReadContents);
+
+	std::unordered_map<int, std::unordered_set<std::string>> expectedWhileContents{ };
+	REQUIRE(EntityStager::getStagedWhileContents() == expectedWhileContents);
+
+	std::unordered_map<int, std::unordered_set<std::string>> expectedIfContents{ };
+	REQUIRE(EntityStager::getStagedIfContents() == expectedIfContents);
+
 	std::vector<std::tuple<int, std::string, std::string>> expectedAssignTable{ };
 	std::sort(expectedAssignTable.begin(), expectedAssignTable.end(),
 		[](auto& left, auto& right) { return std::get<0>(left) < std::get<0>(right); });
@@ -117,6 +141,18 @@ TEST_CASE("Entity 2.3 - Extract single assign - single constant") {
 
 	std::unordered_set<int> expectedIfTable{ };
 	REQUIRE(EntityStager::getStagedIfStatements() == expectedIfTable);
+
+	std::unordered_map<int, std::string> expectedPrintContents{ };
+	REQUIRE(EntityStager::getStagedPrintContents() == expectedPrintContents);
+
+	std::unordered_map<int, std::string> expectedReadContents{ };
+	REQUIRE(EntityStager::getStagedReadContents() == expectedReadContents);
+
+	std::unordered_map<int, std::unordered_set<std::string>> expectedWhileContents{ };
+	REQUIRE(EntityStager::getStagedWhileContents() == expectedWhileContents);
+
+	std::unordered_map<int, std::unordered_set<std::string>> expectedIfContents{ };
+	REQUIRE(EntityStager::getStagedIfContents() == expectedIfContents);
 
 	std::vector<std::tuple<int, std::string, std::string>> expectedAssignTable{
 		{1, "a", "1"}
@@ -161,6 +197,18 @@ TEST_CASE("Entity 2.4 - Extract single assign - single variable") {
 	std::unordered_set<int> expectedIfTable{ };
 	REQUIRE(EntityStager::getStagedIfStatements() == expectedIfTable);
 
+	std::unordered_map<int, std::string> expectedPrintContents{ };
+	REQUIRE(EntityStager::getStagedPrintContents() == expectedPrintContents);
+
+	std::unordered_map<int, std::string> expectedReadContents{ };
+	REQUIRE(EntityStager::getStagedReadContents() == expectedReadContents);
+
+	std::unordered_map<int, std::unordered_set<std::string>> expectedWhileContents{ };
+	REQUIRE(EntityStager::getStagedWhileContents() == expectedWhileContents);
+
+	std::unordered_map<int, std::unordered_set<std::string>> expectedIfContents{ };
+	REQUIRE(EntityStager::getStagedIfContents() == expectedIfContents);
+
 	std::vector<std::tuple<int, std::string, std::string>> expectedAssignTable{
 		{1, "a", "x"}
 	};
@@ -204,6 +252,18 @@ TEST_CASE("Entity 2.5 - Extract single assign - two variables") {
 	std::unordered_set<int> expectedIfTable{ };
 	REQUIRE(EntityStager::getStagedIfStatements() == expectedIfTable);
 
+	std::unordered_map<int, std::string> expectedPrintContents{ };
+	REQUIRE(EntityStager::getStagedPrintContents() == expectedPrintContents);
+
+	std::unordered_map<int, std::string> expectedReadContents{ };
+	REQUIRE(EntityStager::getStagedReadContents() == expectedReadContents);
+
+	std::unordered_map<int, std::unordered_set<std::string>> expectedWhileContents{ };
+	REQUIRE(EntityStager::getStagedWhileContents() == expectedWhileContents);
+
+	std::unordered_map<int, std::unordered_set<std::string>> expectedIfContents{ };
+	REQUIRE(EntityStager::getStagedIfContents() == expectedIfContents);
+
 	std::vector<std::tuple<int, std::string, std::string>> expectedAssignTable{
 		{1, "a", "x y +"}
 	};
@@ -246,6 +306,18 @@ TEST_CASE("Entity 2.6 - Extract single assign - two constants") {
 
 	std::unordered_set<int> expectedIfTable{ };
 	REQUIRE(EntityStager::getStagedIfStatements() == expectedIfTable);
+
+	std::unordered_map<int, std::string> expectedPrintContents{ };
+	REQUIRE(EntityStager::getStagedPrintContents() == expectedPrintContents);
+
+	std::unordered_map<int, std::string> expectedReadContents{ };
+	REQUIRE(EntityStager::getStagedReadContents() == expectedReadContents);
+
+	std::unordered_map<int, std::unordered_set<std::string>> expectedWhileContents{ };
+	REQUIRE(EntityStager::getStagedWhileContents() == expectedWhileContents);
+
+	std::unordered_map<int, std::unordered_set<std::string>> expectedIfContents{ };
+	REQUIRE(EntityStager::getStagedIfContents() == expectedIfContents);
 
 	std::vector<std::tuple<int, std::string, std::string>> expectedAssignTable{
 		{1, "a", "1 2 +"}
@@ -291,6 +363,18 @@ TEST_CASE("Entity 2.7 - Extract single assign - one constant one variable") {
 	std::unordered_set<int> expectedIfTable{ };
 	REQUIRE(EntityStager::getStagedIfStatements() == expectedIfTable);
 
+	std::unordered_map<int, std::string> expectedPrintContents{ };
+	REQUIRE(EntityStager::getStagedPrintContents() == expectedPrintContents);
+
+	std::unordered_map<int, std::string> expectedReadContents{ };
+	REQUIRE(EntityStager::getStagedReadContents() == expectedReadContents);
+
+	std::unordered_map<int, std::unordered_set<std::string>> expectedWhileContents{ };
+	REQUIRE(EntityStager::getStagedWhileContents() == expectedWhileContents);
+
+	std::unordered_map<int, std::unordered_set<std::string>> expectedIfContents{ };
+	REQUIRE(EntityStager::getStagedIfContents() == expectedIfContents);
+
 	std::vector<std::tuple<int, std::string, std::string>> expectedAssignTable{
 		{1, "a", "x 1 +"}
 	};
@@ -333,6 +417,18 @@ TEST_CASE("Entity 2.8 - Extract advanced assign 1") {
 
 	std::unordered_set<int> expectedIfTable{ };
 	REQUIRE(EntityStager::getStagedIfStatements() == expectedIfTable);
+
+	std::unordered_map<int, std::string> expectedPrintContents{ };
+	REQUIRE(EntityStager::getStagedPrintContents() == expectedPrintContents);
+
+	std::unordered_map<int, std::string> expectedReadContents{ };
+	REQUIRE(EntityStager::getStagedReadContents() == expectedReadContents);
+
+	std::unordered_map<int, std::unordered_set<std::string>> expectedWhileContents{ };
+	REQUIRE(EntityStager::getStagedWhileContents() == expectedWhileContents);
+
+	std::unordered_map<int, std::unordered_set<std::string>> expectedIfContents{ };
+	REQUIRE(EntityStager::getStagedIfContents() == expectedIfContents);
 
 	std::vector<std::tuple<int, std::string, std::string>> expectedAssignTable{
 		{1, "a", "1 x y 2 z / 3 % - * +"}
@@ -377,6 +473,18 @@ TEST_CASE("Entity 2.9 - Extract advanced assign 2") {
 	std::unordered_set<int> expectedIfTable{ };
 	REQUIRE(EntityStager::getStagedIfStatements() == expectedIfTable);
 
+	std::unordered_map<int, std::string> expectedPrintContents{ };
+	REQUIRE(EntityStager::getStagedPrintContents() == expectedPrintContents);
+
+	std::unordered_map<int, std::string> expectedReadContents{ };
+	REQUIRE(EntityStager::getStagedReadContents() == expectedReadContents);
+
+	std::unordered_map<int, std::unordered_set<std::string>> expectedWhileContents{ };
+	REQUIRE(EntityStager::getStagedWhileContents() == expectedWhileContents);
+
+	std::unordered_map<int, std::unordered_set<std::string>> expectedIfContents{ };
+	REQUIRE(EntityStager::getStagedIfContents() == expectedIfContents);
+
 	std::vector<std::tuple<int, std::string, std::string>> expectedAssignTable{
 		{1, "a", "1 x y 2 - * z 3 % / +"}
 	};
@@ -420,6 +528,20 @@ TEST_CASE("Entity 2.10 - While stmt - Constant to Constant comparison") {
 	std::unordered_set<int> expectedIfTable{ };
 	REQUIRE(EntityStager::getStagedIfStatements() == expectedIfTable);
 
+	std::unordered_map<int, std::string> expectedPrintContents{ };
+	REQUIRE(EntityStager::getStagedPrintContents() == expectedPrintContents);
+
+	std::unordered_map<int, std::string> expectedReadContents{ {2, "x"} };
+	REQUIRE(EntityStager::getStagedReadContents() == expectedReadContents);
+
+	std::unordered_map<int, std::unordered_set<std::string>> expectedWhileContents{ 
+		{1, {}}
+	};
+	REQUIRE(EntityStager::getStagedWhileContents() == expectedWhileContents);
+
+	std::unordered_map<int, std::unordered_set<std::string>> expectedIfContents{ };
+	REQUIRE(EntityStager::getStagedIfContents() == expectedIfContents);
+
 	std::vector<std::tuple<int, std::string, std::string>> expectedAssignTable{ };
 	std::sort(expectedAssignTable.begin(), expectedAssignTable.end(),
 		[](auto& left, auto& right) { return std::get<0>(left) < std::get<0>(right); });
@@ -460,6 +582,20 @@ TEST_CASE("Entity 2.11 - While stmt - Variable to variable comparison") {
 
 	std::unordered_set<int> expectedIfTable{ };
 	REQUIRE(EntityStager::getStagedIfStatements() == expectedIfTable);
+
+	std::unordered_map<int, std::string> expectedPrintContents{ };
+	REQUIRE(EntityStager::getStagedPrintContents() == expectedPrintContents);
+
+	std::unordered_map<int, std::string> expectedReadContents{ {2, "x"} };
+	REQUIRE(EntityStager::getStagedReadContents() == expectedReadContents);
+
+	std::unordered_map<int, std::unordered_set<std::string>> expectedWhileContents{
+		{1, {"x", "y"}}
+	};
+	REQUIRE(EntityStager::getStagedWhileContents() == expectedWhileContents);
+
+	std::unordered_map<int, std::unordered_set<std::string>> expectedIfContents{ };
+	REQUIRE(EntityStager::getStagedIfContents() == expectedIfContents);
 
 	std::vector<std::tuple<int, std::string, std::string>> expectedAssignTable{ };
 	std::sort(expectedAssignTable.begin(), expectedAssignTable.end(),
@@ -502,6 +638,20 @@ TEST_CASE("Entity 2.12 - While stmt - Variable to variable comparison") {
 	std::unordered_set<int> expectedIfTable{ };
 	REQUIRE(EntityStager::getStagedIfStatements() == expectedIfTable);
 
+	std::unordered_map<int, std::string> expectedPrintContents{ };
+	REQUIRE(EntityStager::getStagedPrintContents() == expectedPrintContents);
+
+	std::unordered_map<int, std::string> expectedReadContents{ {2, "x"} };
+	REQUIRE(EntityStager::getStagedReadContents() == expectedReadContents);
+
+	std::unordered_map<int, std::unordered_set<std::string>> expectedWhileContents{
+		{1, {"x"}}
+	};
+	REQUIRE(EntityStager::getStagedWhileContents() == expectedWhileContents);
+
+	std::unordered_map<int, std::unordered_set<std::string>> expectedIfContents{ };
+	REQUIRE(EntityStager::getStagedIfContents() == expectedIfContents);
+
 	std::vector<std::tuple<int, std::string, std::string>> expectedAssignTable{ };
 	std::sort(expectedAssignTable.begin(), expectedAssignTable.end(),
 		[](auto& left, auto& right) { return std::get<0>(left) < std::get<0>(right); });
@@ -542,6 +692,20 @@ TEST_CASE("Entity 2.13 - While stmt - Term Expr comparison") {
 
 	std::unordered_set<int> expectedIfTable{ };
 	REQUIRE(EntityStager::getStagedIfStatements() == expectedIfTable);
+
+	std::unordered_map<int, std::string> expectedPrintContents{ };
+	REQUIRE(EntityStager::getStagedPrintContents() == expectedPrintContents);
+
+	std::unordered_map<int, std::string> expectedReadContents{ {2, "x"} };
+	REQUIRE(EntityStager::getStagedReadContents() == expectedReadContents);
+
+	std::unordered_map<int, std::unordered_set<std::string>> expectedWhileContents{
+		{1, {"x"}}
+	};
+	REQUIRE(EntityStager::getStagedWhileContents() == expectedWhileContents);
+
+	std::unordered_map<int, std::unordered_set<std::string>> expectedIfContents{ };
+	REQUIRE(EntityStager::getStagedIfContents() == expectedIfContents);
 
 	std::vector<std::tuple<int, std::string, std::string>> expectedAssignTable{ };
 	std::sort(expectedAssignTable.begin(), expectedAssignTable.end(),
@@ -584,6 +748,20 @@ TEST_CASE("Entity 2.14 - While stmt - Expr Term comparison") {
 	std::unordered_set<int> expectedIfTable{ };
 	REQUIRE(EntityStager::getStagedIfStatements() == expectedIfTable);
 
+	std::unordered_map<int, std::string> expectedPrintContents{ };
+	REQUIRE(EntityStager::getStagedPrintContents() == expectedPrintContents);
+
+	std::unordered_map<int, std::string> expectedReadContents{ {2, "x"} };
+	REQUIRE(EntityStager::getStagedReadContents() == expectedReadContents);
+
+	std::unordered_map<int, std::unordered_set<std::string>> expectedWhileContents{
+		{1, {"x"}}
+	};
+	REQUIRE(EntityStager::getStagedWhileContents() == expectedWhileContents);
+
+	std::unordered_map<int, std::unordered_set<std::string>> expectedIfContents{ };
+	REQUIRE(EntityStager::getStagedIfContents() == expectedIfContents);
+
 	std::vector<std::tuple<int, std::string, std::string>> expectedAssignTable{ };
 	std::sort(expectedAssignTable.begin(), expectedAssignTable.end(),
 		[](auto& left, auto& right) { return std::get<0>(left) < std::get<0>(right); });
@@ -624,6 +802,20 @@ TEST_CASE("Entity 2.15 - While stmt - Expr Expr comparison") {
 
 	std::unordered_set<int> expectedIfTable{ };
 	REQUIRE(EntityStager::getStagedIfStatements() == expectedIfTable);
+
+	std::unordered_map<int, std::string> expectedPrintContents{ };
+	REQUIRE(EntityStager::getStagedPrintContents() == expectedPrintContents);
+
+	std::unordered_map<int, std::string> expectedReadContents{ {2, "x"} };
+	REQUIRE(EntityStager::getStagedReadContents() == expectedReadContents);
+
+	std::unordered_map<int, std::unordered_set<std::string>> expectedWhileContents{
+		{1, {"x", "y"}}
+	};
+	REQUIRE(EntityStager::getStagedWhileContents() == expectedWhileContents);
+
+	std::unordered_map<int, std::unordered_set<std::string>> expectedIfContents{ };
+	REQUIRE(EntityStager::getStagedIfContents() == expectedIfContents);
 
 	std::vector<std::tuple<int, std::string, std::string>> expectedAssignTable{ };
 	std::sort(expectedAssignTable.begin(), expectedAssignTable.end(),
@@ -666,6 +858,20 @@ TEST_CASE("Entity 2.16 - While stmt - Advanced") {
 	std::unordered_set<int> expectedIfTable{ };
 	REQUIRE(EntityStager::getStagedIfStatements() == expectedIfTable);
 
+	std::unordered_map<int, std::string> expectedPrintContents{ };
+	REQUIRE(EntityStager::getStagedPrintContents() == expectedPrintContents);
+
+	std::unordered_map<int, std::string> expectedReadContents{ {2, "x"} };
+	REQUIRE(EntityStager::getStagedReadContents() == expectedReadContents);
+
+	std::unordered_map<int, std::unordered_set<std::string>> expectedWhileContents{
+		{1, {"x", "y"}}
+	};
+	REQUIRE(EntityStager::getStagedWhileContents() == expectedWhileContents);
+
+	std::unordered_map<int, std::unordered_set<std::string>> expectedIfContents{ };
+	REQUIRE(EntityStager::getStagedIfContents() == expectedIfContents);
+
 	std::vector<std::tuple<int, std::string, std::string>> expectedAssignTable{ };
 	std::sort(expectedAssignTable.begin(), expectedAssignTable.end(),
 		[](auto& left, auto& right) { return std::get<0>(left) < std::get<0>(right); });
@@ -706,6 +912,20 @@ TEST_CASE("Entity 2.17 - While stmt - Advanced") {
 
 	std::unordered_set<int> expectedIfTable{ };
 	REQUIRE(EntityStager::getStagedIfStatements() == expectedIfTable);
+
+	std::unordered_map<int, std::string> expectedPrintContents{ };
+	REQUIRE(EntityStager::getStagedPrintContents() == expectedPrintContents);
+
+	std::unordered_map<int, std::string> expectedReadContents{ {2, "x"} };
+	REQUIRE(EntityStager::getStagedReadContents() == expectedReadContents);
+
+	std::unordered_map<int, std::unordered_set<std::string>> expectedWhileContents{
+		{1, {"x", "y"}}
+	};
+	REQUIRE(EntityStager::getStagedWhileContents() == expectedWhileContents);
+
+	std::unordered_map<int, std::unordered_set<std::string>> expectedIfContents{ };
+	REQUIRE(EntityStager::getStagedIfContents() == expectedIfContents);
 
 	std::vector<std::tuple<int, std::string, std::string>> expectedAssignTable{ };
 	std::sort(expectedAssignTable.begin(), expectedAssignTable.end(),
@@ -748,6 +968,20 @@ TEST_CASE("Entity 2.18 - While stmt - Advanced") {
 	std::unordered_set<int> expectedIfTable{ };
 	REQUIRE(EntityStager::getStagedIfStatements() == expectedIfTable);
 
+	std::unordered_map<int, std::string> expectedPrintContents{ };
+	REQUIRE(EntityStager::getStagedPrintContents() == expectedPrintContents);
+
+	std::unordered_map<int, std::string> expectedReadContents{ {2, "x"} };
+	REQUIRE(EntityStager::getStagedReadContents() == expectedReadContents);
+
+	std::unordered_map<int, std::unordered_set<std::string>> expectedWhileContents{
+		{1, {"x", "y"}}
+	};
+	REQUIRE(EntityStager::getStagedWhileContents() == expectedWhileContents);
+
+	std::unordered_map<int, std::unordered_set<std::string>> expectedIfContents{ };
+	REQUIRE(EntityStager::getStagedIfContents() == expectedIfContents);
+
 	std::vector<std::tuple<int, std::string, std::string>> expectedAssignTable{ };
 	std::sort(expectedAssignTable.begin(), expectedAssignTable.end(),
 		[](auto& left, auto& right) { return std::get<0>(left) < std::get<0>(right); });
@@ -788,6 +1022,20 @@ TEST_CASE("Entity 2.19 - While stmt - Advanced") {
 
 	std::unordered_set<int> expectedIfTable{ };
 	REQUIRE(EntityStager::getStagedIfStatements() == expectedIfTable);
+
+	std::unordered_map<int, std::string> expectedPrintContents{ };
+	REQUIRE(EntityStager::getStagedPrintContents() == expectedPrintContents);
+
+	std::unordered_map<int, std::string> expectedReadContents{ {2, "x"} };
+	REQUIRE(EntityStager::getStagedReadContents() == expectedReadContents);
+
+	std::unordered_map<int, std::unordered_set<std::string>> expectedWhileContents{
+		{1, {"x", "y"}}
+	};
+	REQUIRE(EntityStager::getStagedWhileContents() == expectedWhileContents);
+
+	std::unordered_map<int, std::unordered_set<std::string>> expectedIfContents{ };
+	REQUIRE(EntityStager::getStagedIfContents() == expectedIfContents);
 
 	std::vector<std::tuple<int, std::string, std::string>> expectedAssignTable{ };
 	std::sort(expectedAssignTable.begin(), expectedAssignTable.end(),
@@ -830,6 +1078,20 @@ TEST_CASE("Entity 2.20 - While stmt - NOT in predicate") {
 	std::unordered_set<int> expectedIfTable{ };
 	REQUIRE(EntityStager::getStagedIfStatements() == expectedIfTable);
 
+	std::unordered_map<int, std::string> expectedPrintContents{ };
+	REQUIRE(EntityStager::getStagedPrintContents() == expectedPrintContents);
+
+	std::unordered_map<int, std::string> expectedReadContents{ {2, "x"} };
+	REQUIRE(EntityStager::getStagedReadContents() == expectedReadContents);
+
+	std::unordered_map<int, std::unordered_set<std::string>> expectedWhileContents{
+		{1, {"x"}}
+	};
+	REQUIRE(EntityStager::getStagedWhileContents() == expectedWhileContents);
+
+	std::unordered_map<int, std::unordered_set<std::string>> expectedIfContents{ };
+	REQUIRE(EntityStager::getStagedIfContents() == expectedIfContents);
+
 	std::vector<std::tuple<int, std::string, std::string>> expectedAssignTable{ };
 	std::sort(expectedAssignTable.begin(), expectedAssignTable.end(),
 		[](auto& left, auto& right) { return std::get<0>(left) < std::get<0>(right); });
@@ -870,6 +1132,20 @@ TEST_CASE("Entity 2.21 - While stmt - AND in predicate") {
 
 	std::unordered_set<int> expectedIfTable{ };
 	REQUIRE(EntityStager::getStagedIfStatements() == expectedIfTable);
+
+	std::unordered_map<int, std::string> expectedPrintContents{ };
+	REQUIRE(EntityStager::getStagedPrintContents() == expectedPrintContents);
+
+	std::unordered_map<int, std::string> expectedReadContents{ {2, "x"} };
+	REQUIRE(EntityStager::getStagedReadContents() == expectedReadContents);
+
+	std::unordered_map<int, std::unordered_set<std::string>> expectedWhileContents{
+		{1, {"x", "y"}}
+	};
+	REQUIRE(EntityStager::getStagedWhileContents() == expectedWhileContents);
+
+	std::unordered_map<int, std::unordered_set<std::string>> expectedIfContents{ };
+	REQUIRE(EntityStager::getStagedIfContents() == expectedIfContents);
 
 	std::vector<std::tuple<int, std::string, std::string>> expectedAssignTable{ };
 	std::sort(expectedAssignTable.begin(), expectedAssignTable.end(),
@@ -912,6 +1188,20 @@ TEST_CASE("Entity 2.22 - While stmt - OR in predicate") {
 	std::unordered_set<int> expectedIfTable{ };
 	REQUIRE(EntityStager::getStagedIfStatements() == expectedIfTable);
 
+	std::unordered_map<int, std::string> expectedPrintContents{ };
+	REQUIRE(EntityStager::getStagedPrintContents() == expectedPrintContents);
+
+	std::unordered_map<int, std::string> expectedReadContents{ {2, "x"} };
+	REQUIRE(EntityStager::getStagedReadContents() == expectedReadContents);
+
+	std::unordered_map<int, std::unordered_set<std::string>> expectedWhileContents{
+		{1, {"x", "y"}}
+	};
+	REQUIRE(EntityStager::getStagedWhileContents() == expectedWhileContents);
+
+	std::unordered_map<int, std::unordered_set<std::string>> expectedIfContents{ };
+	REQUIRE(EntityStager::getStagedIfContents() == expectedIfContents);
+
 	std::vector<std::tuple<int, std::string, std::string>> expectedAssignTable{ };
 	std::sort(expectedAssignTable.begin(), expectedAssignTable.end(),
 		[](auto& left, auto& right) { return std::get<0>(left) < std::get<0>(right); });
@@ -952,6 +1242,26 @@ TEST_CASE("Entity 2.23 - While stmt - all statements nested within while stmt") 
 
 	std::unordered_set<int> expectedIfTable{ 5 };
 	REQUIRE(EntityStager::getStagedIfStatements() == expectedIfTable);
+
+	std::unordered_map<int, std::string> expectedPrintContents{ 
+		{3, "x"}, {7, "y"}
+	};
+	REQUIRE(EntityStager::getStagedPrintContents() == expectedPrintContents);
+
+	std::unordered_map<int, std::string> expectedReadContents{
+		{2, "x"}, {6, "y"}, {9, "y"}
+	};
+	REQUIRE(EntityStager::getStagedReadContents() == expectedReadContents);
+
+	std::unordered_map<int, std::unordered_set<std::string>> expectedWhileContents{
+		{1, {"x"}}, {8, {"y"}}
+	};
+	REQUIRE(EntityStager::getStagedWhileContents() == expectedWhileContents);
+
+	std::unordered_map<int, std::unordered_set<std::string>> expectedIfContents{
+		{5, {"y"}}
+	};
+	REQUIRE(EntityStager::getStagedIfContents() == expectedIfContents);
 
 	std::vector<std::tuple<int, std::string, std::string>> expectedAssignTable{
 		{4, "a", "x 1 +"}
@@ -996,6 +1306,22 @@ TEST_CASE("Entity 2.24 - If stmt - If-Read") {
 	std::unordered_set<int> expectedIfTable{ 1 };
 	REQUIRE(EntityStager::getStagedIfStatements() == expectedIfTable);
 
+	std::unordered_map<int, std::string> expectedPrintContents{ };
+	REQUIRE(EntityStager::getStagedPrintContents() == expectedPrintContents);
+
+	std::unordered_map<int, std::string> expectedReadContents{
+		{2, "x"}, {3, "y"}
+	};
+	REQUIRE(EntityStager::getStagedReadContents() == expectedReadContents);
+
+	std::unordered_map<int, std::unordered_set<std::string>> expectedWhileContents{ };
+	REQUIRE(EntityStager::getStagedWhileContents() == expectedWhileContents);
+
+	std::unordered_map<int, std::unordered_set<std::string>> expectedIfContents{
+		{1, {"x"}}
+	};
+	REQUIRE(EntityStager::getStagedIfContents() == expectedIfContents);
+
 	std::vector<std::tuple<int, std::string, std::string>> expectedAssignTable{ };
 	std::sort(expectedAssignTable.begin(), expectedAssignTable.end(),
 		[](auto& left, auto& right) { return std::get<0>(left) < std::get<0>(right); });
@@ -1037,6 +1363,22 @@ TEST_CASE("Entity 2.25 - If stmt - If-Print") {
 	std::unordered_set<int> expectedIfTable{ 1 };
 	REQUIRE(EntityStager::getStagedIfStatements() == expectedIfTable);
 
+	std::unordered_map<int, std::string> expectedPrintContents{
+		{2, "x"}, {3, "y"}
+	};
+	REQUIRE(EntityStager::getStagedPrintContents() == expectedPrintContents);
+
+	std::unordered_map<int, std::string> expectedReadContents{ };
+	REQUIRE(EntityStager::getStagedReadContents() == expectedReadContents);
+
+	std::unordered_map<int, std::unordered_set<std::string>> expectedWhileContents{ };
+	REQUIRE(EntityStager::getStagedWhileContents() == expectedWhileContents);
+
+	std::unordered_map<int, std::unordered_set<std::string>> expectedIfContents{
+		{1, {"x"}}
+	};
+	REQUIRE(EntityStager::getStagedIfContents() == expectedIfContents);
+
 	std::vector<std::tuple<int, std::string, std::string>> expectedAssignTable{ };
 	std::sort(expectedAssignTable.begin(), expectedAssignTable.end(),
 		[](auto& left, auto& right) { return std::get<0>(left) < std::get<0>(right); });
@@ -1077,6 +1419,20 @@ TEST_CASE("Entity 2.26 - If stmt - If-Assign") {
 
 	std::unordered_set<int> expectedIfTable{ 1 };
 	REQUIRE(EntityStager::getStagedIfStatements() == expectedIfTable);
+
+	std::unordered_map<int, std::string> expectedPrintContents{ };
+	REQUIRE(EntityStager::getStagedPrintContents() == expectedPrintContents);
+
+	std::unordered_map<int, std::string> expectedReadContents{ };
+	REQUIRE(EntityStager::getStagedReadContents() == expectedReadContents);
+
+	std::unordered_map<int, std::unordered_set<std::string>> expectedWhileContents{ };
+	REQUIRE(EntityStager::getStagedWhileContents() == expectedWhileContents);
+
+	std::unordered_map<int, std::unordered_set<std::string>> expectedIfContents{
+		{1, {"x"}}
+	};
+	REQUIRE(EntityStager::getStagedIfContents() == expectedIfContents);
 
 	std::vector<std::tuple<int, std::string, std::string>> expectedAssignTable{
 		{2, "a", "x 1 +"},
@@ -1122,6 +1478,24 @@ TEST_CASE("Entity 2.27 - If stmt - If-If(then)") {
 	std::unordered_set<int> expectedIfTable{ 1, 2 };
 	REQUIRE(EntityStager::getStagedIfStatements() == expectedIfTable);
 
+	std::unordered_map<int, std::string> expectedPrintContents{
+		{4, "y"}, {5, "x"}
+	};
+	REQUIRE(EntityStager::getStagedPrintContents() == expectedPrintContents);
+
+	std::unordered_map<int, std::string> expectedReadContents{
+		{3, "y"}
+	};
+	REQUIRE(EntityStager::getStagedReadContents() == expectedReadContents);
+
+	std::unordered_map<int, std::unordered_set<std::string>> expectedWhileContents{ };
+	REQUIRE(EntityStager::getStagedWhileContents() == expectedWhileContents);
+
+	std::unordered_map<int, std::unordered_set<std::string>> expectedIfContents{
+		{1, {"x"}}, {2, {"y"}}
+	};
+	REQUIRE(EntityStager::getStagedIfContents() == expectedIfContents);
+
 	std::vector<std::tuple<int, std::string, std::string>> expectedAssignTable{ };
 	std::sort(expectedAssignTable.begin(), expectedAssignTable.end(),
 		[](auto& left, auto& right) { return std::get<0>(left) < std::get<0>(right); });
@@ -1162,6 +1536,24 @@ TEST_CASE("Entity 2.28 - If stmt - If-If(else)") {
 
 	std::unordered_set<int> expectedIfTable{ 1, 3 };
 	REQUIRE(EntityStager::getStagedIfStatements() == expectedIfTable);
+
+	std::unordered_map<int, std::string> expectedPrintContents{
+		{5, "y"}
+	};
+	REQUIRE(EntityStager::getStagedPrintContents() == expectedPrintContents);
+
+	std::unordered_map<int, std::string> expectedReadContents{
+		{2, "x"}, {4, "y"}
+	};
+	REQUIRE(EntityStager::getStagedReadContents() == expectedReadContents);
+
+	std::unordered_map<int, std::unordered_set<std::string>> expectedWhileContents{ };
+	REQUIRE(EntityStager::getStagedWhileContents() == expectedWhileContents);
+
+	std::unordered_map<int, std::unordered_set<std::string>> expectedIfContents{
+		{1, {"x"}}, {3, {"y"}}
+	};
+	REQUIRE(EntityStager::getStagedIfContents() == expectedIfContents);
 
 	std::vector<std::tuple<int, std::string, std::string>> expectedAssignTable{ };
 	std::sort(expectedAssignTable.begin(), expectedAssignTable.end(),
@@ -1204,6 +1596,26 @@ TEST_CASE("Entity 2.29 - If stmt - If-While(then)") {
 	std::unordered_set<int> expectedIfTable{ 1 };
 	REQUIRE(EntityStager::getStagedIfStatements() == expectedIfTable);
 
+	std::unordered_map<int, std::string> expectedPrintContents{
+		{4, "y"}
+	};
+	REQUIRE(EntityStager::getStagedPrintContents() == expectedPrintContents);
+
+	std::unordered_map<int, std::string> expectedReadContents{
+		{3, "y"}
+	};
+	REQUIRE(EntityStager::getStagedReadContents() == expectedReadContents);
+
+	std::unordered_map<int, std::unordered_set<std::string>> expectedWhileContents{
+		{2, {"y"}}
+	};
+	REQUIRE(EntityStager::getStagedWhileContents() == expectedWhileContents);
+
+	std::unordered_map<int, std::unordered_set<std::string>> expectedIfContents{
+		{1, {"x"}}
+	};
+	REQUIRE(EntityStager::getStagedIfContents() == expectedIfContents);
+
 	std::vector<std::tuple<int, std::string, std::string>> expectedAssignTable{ };
 	std::sort(expectedAssignTable.begin(), expectedAssignTable.end(),
 		[](auto& left, auto& right) { return std::get<0>(left) < std::get<0>(right); });
@@ -1245,6 +1657,24 @@ TEST_CASE("Entity 2.30 - If stmt - If-While(else)") {
 	std::unordered_set<int> expectedIfTable{ 1 };
 	REQUIRE(EntityStager::getStagedIfStatements() == expectedIfTable);
 
+	std::unordered_map<int, std::string> expectedPrintContents{ };
+	REQUIRE(EntityStager::getStagedPrintContents() == expectedPrintContents);
+
+	std::unordered_map<int, std::string> expectedReadContents{
+		{2, "x"}, {4, "y"}
+	};
+	REQUIRE(EntityStager::getStagedReadContents() == expectedReadContents);
+
+	std::unordered_map<int, std::unordered_set<std::string>> expectedWhileContents{
+		{3, {"y"}}
+	};
+	REQUIRE(EntityStager::getStagedWhileContents() == expectedWhileContents);
+
+	std::unordered_map<int, std::unordered_set<std::string>> expectedIfContents{
+		{1, {"x"}}
+	};
+	REQUIRE(EntityStager::getStagedIfContents() == expectedIfContents);
+
 	std::vector<std::tuple<int, std::string, std::string>> expectedAssignTable{ };
 	std::sort(expectedAssignTable.begin(), expectedAssignTable.end(),
 		[](auto& left, auto& right) { return std::get<0>(left) < std::get<0>(right); });
@@ -1285,6 +1715,26 @@ TEST_CASE("Entity 2.31 - If stmt - Every stmt in then") {
 
 	std::unordered_set<int> expectedIfTable{ 1, 5 };
 	REQUIRE(EntityStager::getStagedIfStatements() == expectedIfTable);
+
+	std::unordered_map<int, std::string> expectedPrintContents{
+		{3, "x"}, {7, "y"}, {10, "x"}
+	};
+	REQUIRE(EntityStager::getStagedPrintContents() == expectedPrintContents);
+
+	std::unordered_map<int, std::string> expectedReadContents{
+		{2, "x"}, {6, "y"}, {9, "z"}
+	};
+	REQUIRE(EntityStager::getStagedReadContents() == expectedReadContents);
+
+	std::unordered_map<int, std::unordered_set<std::string>> expectedWhileContents{
+		{8, {"z"}}
+	};
+	REQUIRE(EntityStager::getStagedWhileContents() == expectedWhileContents);
+
+	std::unordered_map<int, std::unordered_set<std::string>> expectedIfContents{
+		{1, {"x"}}, {5, {"y"}}
+	};
+	REQUIRE(EntityStager::getStagedIfContents() == expectedIfContents);
 
 	std::vector<std::tuple<int, std::string, std::string>> expectedAssignTable{
 		{4, "a", "x 1 +"}
@@ -1329,6 +1779,26 @@ TEST_CASE("Entity 2.32 - If stmt - Every stmt in else") {
 	std::unordered_set<int> expectedIfTable{ 1, 6 };
 	REQUIRE(EntityStager::getStagedIfStatements() == expectedIfTable);
 
+	std::unordered_map<int, std::string> expectedPrintContents{
+		{4, "x"}, {8, "y"}
+	};
+	REQUIRE(EntityStager::getStagedPrintContents() == expectedPrintContents);
+
+	std::unordered_map<int, std::string> expectedReadContents{
+		{2, "x"}, {3, "x"}, {7, "y"}, {10, "z"}
+	};
+	REQUIRE(EntityStager::getStagedReadContents() == expectedReadContents);
+
+	std::unordered_map<int, std::unordered_set<std::string>> expectedWhileContents{
+		{9, {"z"}}
+	};
+	REQUIRE(EntityStager::getStagedWhileContents() == expectedWhileContents);
+
+	std::unordered_map<int, std::unordered_set<std::string>> expectedIfContents{
+		{1, {"x"}}, {6, {"y"}}
+	};
+	REQUIRE(EntityStager::getStagedIfContents() == expectedIfContents);
+
 	std::vector<std::tuple<int, std::string, std::string>> expectedAssignTable{
 		{5, "a", "x 1 +"}
 	};
@@ -1372,6 +1842,24 @@ TEST_CASE("Entity 2.33 - 2 procedures; First: Read Second : If") {
 	std::unordered_set<int> expectedIfTable{ 2, 4 };
 	REQUIRE(EntityStager::getStagedIfStatements() == expectedIfTable);
 
+	std::unordered_map<int, std::string> expectedPrintContents{
+		{6, "y"}
+	};
+	REQUIRE(EntityStager::getStagedPrintContents() == expectedPrintContents);
+
+	std::unordered_map<int, std::string> expectedReadContents{
+		{1, "z"}, {3, "x"}, {5, "y"}
+	};
+	REQUIRE(EntityStager::getStagedReadContents() == expectedReadContents);
+
+	std::unordered_map<int, std::unordered_set<std::string>> expectedWhileContents{ };
+	REQUIRE(EntityStager::getStagedWhileContents() == expectedWhileContents);
+
+	std::unordered_map<int, std::unordered_set<std::string>> expectedIfContents{
+		{2, {"x"}}, {4, {"y"}}
+	};
+	REQUIRE(EntityStager::getStagedIfContents() == expectedIfContents);
+
 	std::vector<std::tuple<int, std::string, std::string>> expectedAssignTable{ };
 	std::sort(expectedAssignTable.begin(), expectedAssignTable.end(),
 		[](auto& left, auto& right) { return std::get<0>(left) < std::get<0>(right); });
@@ -1413,6 +1901,24 @@ TEST_CASE("Entity 2.34 - 2 procedures; First: Print Second : While") {
 	std::unordered_set<int> expectedIfTable{ };
 	REQUIRE(EntityStager::getStagedIfStatements() == expectedIfTable);
 
+	std::unordered_map<int, std::string> expectedPrintContents{
+		{1, "z"}
+	};
+	REQUIRE(EntityStager::getStagedPrintContents() == expectedPrintContents);
+
+	std::unordered_map<int, std::string> expectedReadContents{
+		{3, "x"}
+	};
+	REQUIRE(EntityStager::getStagedReadContents() == expectedReadContents);
+
+	std::unordered_map<int, std::unordered_set<std::string>> expectedWhileContents{
+		{2, {"x", "y"}}
+	};
+	REQUIRE(EntityStager::getStagedWhileContents() == expectedWhileContents);
+
+	std::unordered_map<int, std::unordered_set<std::string>> expectedIfContents{ };
+	REQUIRE(EntityStager::getStagedIfContents() == expectedIfContents);
+
 	std::vector<std::tuple<int, std::string, std::string>> expectedAssignTable{ };
 	std::sort(expectedAssignTable.begin(), expectedAssignTable.end(),
 		[](auto& left, auto& right) { return std::get<0>(left) < std::get<0>(right); });
@@ -1453,6 +1959,20 @@ TEST_CASE("Entity 2.35 - 2 procedures; First: Assignment Second : Print") {
 
 	std::unordered_set<int> expectedIfTable{ };
 	REQUIRE(EntityStager::getStagedIfStatements() == expectedIfTable);
+
+	std::unordered_map<int, std::string> expectedPrintContents{
+		{2, "b"}
+	};
+	REQUIRE(EntityStager::getStagedPrintContents() == expectedPrintContents);
+
+	std::unordered_map<int, std::string> expectedReadContents{ };
+	REQUIRE(EntityStager::getStagedReadContents() == expectedReadContents);
+
+	std::unordered_map<int, std::unordered_set<std::string>> expectedWhileContents{ };
+	REQUIRE(EntityStager::getStagedWhileContents() == expectedWhileContents);
+
+	std::unordered_map<int, std::unordered_set<std::string>> expectedIfContents{ };
+	REQUIRE(EntityStager::getStagedIfContents() == expectedIfContents);
 
 	std::vector<std::tuple<int, std::string, std::string>> expectedAssignTable{
 		{1, "a", "1 x y 2 - * z 3 % / +"}
@@ -1497,6 +2017,22 @@ TEST_CASE("Entity 2.36 - 2 procedures; First: While Second : Read") {
 	std::unordered_set<int> expectedIfTable{ };
 	REQUIRE(EntityStager::getStagedIfStatements() == expectedIfTable);
 
+	std::unordered_map<int, std::string> expectedPrintContents{ };
+	REQUIRE(EntityStager::getStagedPrintContents() == expectedPrintContents);
+
+	std::unordered_map<int, std::string> expectedReadContents{
+		{3, "y"}, {4, "x"}
+	};
+	REQUIRE(EntityStager::getStagedReadContents() == expectedReadContents);
+
+	std::unordered_map<int, std::unordered_set<std::string>> expectedWhileContents{
+		{1, {"x"}}, {2, {"y"}}
+	};
+	REQUIRE(EntityStager::getStagedWhileContents() == expectedWhileContents);
+
+	std::unordered_map<int, std::unordered_set<std::string>> expectedIfContents{ };
+	REQUIRE(EntityStager::getStagedIfContents() == expectedIfContents);
+
 	std::vector<std::tuple<int, std::string, std::string>> expectedAssignTable{ };
 	std::sort(expectedAssignTable.begin(), expectedAssignTable.end(),
 		[](auto& left, auto& right) { return std::get<0>(left) < std::get<0>(right); });
@@ -1537,6 +2073,24 @@ TEST_CASE("Entity 2.37 - 2 procedures; First: If Second : Assignment") {
 
 	std::unordered_set<int> expectedIfTable{ 1, 3 };
 	REQUIRE(EntityStager::getStagedIfStatements() == expectedIfTable);
+
+	std::unordered_map<int, std::string> expectedPrintContents{
+		{5, "y"}
+	};
+	REQUIRE(EntityStager::getStagedPrintContents() == expectedPrintContents);
+
+	std::unordered_map<int, std::string> expectedReadContents{
+		{2, "x"}, {4, "y"}
+	};
+	REQUIRE(EntityStager::getStagedReadContents() == expectedReadContents);
+
+	std::unordered_map<int, std::unordered_set<std::string>> expectedWhileContents{ };
+	REQUIRE(EntityStager::getStagedWhileContents() == expectedWhileContents);
+
+	std::unordered_map<int, std::unordered_set<std::string>> expectedIfContents{
+		{1, {"x"}}, {3, {"y"}}
+	};
+	REQUIRE(EntityStager::getStagedIfContents() == expectedIfContents);
 
 	std::vector<std::tuple<int, std::string, std::string>> expectedAssignTable{
 		{6, "a", "1 x 3 * + y %"}
@@ -1584,6 +2138,25 @@ TEST_CASE("Entity 2.38 - Test call statement") {
 	std::unordered_set<int> expectedCallsTable{ 1 };
 	REQUIRE(EntityStager::getStagedCallStatements() == expectedCallsTable);
 
+	std::unordered_map<int, std::string> expectedPrintContents{
+		{2, "x"}
+	};
+	REQUIRE(EntityStager::getStagedPrintContents() == expectedPrintContents);
+
+	std::unordered_map<int, std::string> expectedReadContents{ };
+	REQUIRE(EntityStager::getStagedReadContents() == expectedReadContents);
+
+	std::unordered_map<int, std::unordered_set<std::string>> expectedWhileContents{ };
+	REQUIRE(EntityStager::getStagedWhileContents() == expectedWhileContents);
+
+	std::unordered_map<int, std::unordered_set<std::string>> expectedIfContents{ };
+	REQUIRE(EntityStager::getStagedIfContents() == expectedIfContents);
+
+	std::unordered_map<int, std::string> expectedCallContents{
+		{1, "testProgram2"}
+	};
+	REQUIRE(EntityStager::getStagedCallContent() == expectedCallContents);
+
 	std::vector<std::tuple<int, std::string, std::string>> expectedAssignTable{ };
 	std::sort(expectedAssignTable.begin(), expectedAssignTable.end(),
 		[](auto& left, auto& right) { return std::get<0>(left) < std::get<0>(right); });
@@ -1627,6 +2200,25 @@ TEST_CASE("Entity 2.39 - Test call statement (opposite order)") {
 
 	std::unordered_set<int> expectedCallsTable{ 2 };
 	REQUIRE(EntityStager::getStagedCallStatements() == expectedCallsTable);
+
+	std::unordered_map<int, std::string> expectedPrintContents{
+		{1, "x"}
+	};
+	REQUIRE(EntityStager::getStagedPrintContents() == expectedPrintContents);
+
+	std::unordered_map<int, std::string> expectedReadContents{ };
+	REQUIRE(EntityStager::getStagedReadContents() == expectedReadContents);
+
+	std::unordered_map<int, std::unordered_set<std::string>> expectedWhileContents{ };
+	REQUIRE(EntityStager::getStagedWhileContents() == expectedWhileContents);
+
+	std::unordered_map<int, std::unordered_set<std::string>> expectedIfContents{ };
+	REQUIRE(EntityStager::getStagedIfContents() == expectedIfContents);
+
+	std::unordered_map<int, std::string> expectedCallContents{
+		{2, "testProgram"}
+	};
+	REQUIRE(EntityStager::getStagedCallContent() == expectedCallContents);
 
 	std::vector<std::tuple<int, std::string, std::string>> expectedAssignTable{ };
 	std::sort(expectedAssignTable.begin(), expectedAssignTable.end(),
@@ -1672,6 +2264,27 @@ TEST_CASE("Entity 2.40 - Call nested in If - second program") {
 	std::unordered_set<int> expectedCallsTable{ 3 };
 	REQUIRE(EntityStager::getStagedCallStatements() == expectedCallsTable);
 
+	std::unordered_map<int, std::string> expectedPrintContents{
+		{2, "x"}, {4, "y"}
+	};
+	REQUIRE(EntityStager::getStagedPrintContents() == expectedPrintContents);
+
+	std::unordered_map<int, std::string> expectedReadContents{ };
+	REQUIRE(EntityStager::getStagedReadContents() == expectedReadContents);
+
+	std::unordered_map<int, std::unordered_set<std::string>> expectedWhileContents{ };
+	REQUIRE(EntityStager::getStagedWhileContents() == expectedWhileContents);
+
+	std::unordered_map<int, std::unordered_set<std::string>> expectedIfContents{
+		{1, {"x"}}
+	};
+	REQUIRE(EntityStager::getStagedIfContents() == expectedIfContents);
+
+	std::unordered_map<int, std::string> expectedCallContents{
+		{3, "testProgram2"}
+	};
+	REQUIRE(EntityStager::getStagedCallContent() == expectedCallContents);
+
 	std::vector<std::tuple<int, std::string, std::string>> expectedAssignTable{ };
 	std::sort(expectedAssignTable.begin(), expectedAssignTable.end(),
 		[](auto& left, auto& right) { return std::get<0>(left) < std::get<0>(right); });
@@ -1716,6 +2329,27 @@ TEST_CASE("Entity 2.41 - Call nested in If - second program") {
 	std::unordered_set<int> expectedCallsTable{ 4 };
 	REQUIRE(EntityStager::getStagedCallStatements() == expectedCallsTable);
 
+	std::unordered_map<int, std::string> expectedPrintContents{
+		{1, "x"}, {3, "y"}
+	};
+	REQUIRE(EntityStager::getStagedPrintContents() == expectedPrintContents);
+
+	std::unordered_map<int, std::string> expectedReadContents{ };
+	REQUIRE(EntityStager::getStagedReadContents() == expectedReadContents);
+
+	std::unordered_map<int, std::unordered_set<std::string>> expectedWhileContents{ };
+	REQUIRE(EntityStager::getStagedWhileContents() == expectedWhileContents);
+
+	std::unordered_map<int, std::unordered_set<std::string>> expectedIfContents{
+		{2, {"x"}}
+	};
+	REQUIRE(EntityStager::getStagedIfContents() == expectedIfContents);
+
+	std::unordered_map<int, std::string> expectedCallContents{
+		{4, "testProgram"}
+	};
+	REQUIRE(EntityStager::getStagedCallContent() == expectedCallContents);
+
 	std::vector<std::tuple<int, std::string, std::string>> expectedAssignTable{ };
 	std::sort(expectedAssignTable.begin(), expectedAssignTable.end(),
 		[](auto& left, auto& right) { return std::get<0>(left) < std::get<0>(right); });
@@ -1759,6 +2393,27 @@ TEST_CASE("Entity 2.42 - Call nested in While") {
 
 	std::unordered_set<int> expectedCallsTable{ 2 };
 	REQUIRE(EntityStager::getStagedCallStatements() == expectedCallsTable);
+
+	std::unordered_map<int, std::string> expectedPrintContents{
+		{3, "y"}
+	};
+	REQUIRE(EntityStager::getStagedPrintContents() == expectedPrintContents);
+
+	std::unordered_map<int, std::string> expectedReadContents{ };
+	REQUIRE(EntityStager::getStagedReadContents() == expectedReadContents);
+
+	std::unordered_map<int, std::unordered_set<std::string>> expectedWhileContents{
+		{1, {"x"}}
+	};
+	REQUIRE(EntityStager::getStagedWhileContents() == expectedWhileContents);
+
+	std::unordered_map<int, std::unordered_set<std::string>> expectedIfContents{ };
+	REQUIRE(EntityStager::getStagedIfContents() == expectedIfContents);
+
+	std::unordered_map<int, std::string> expectedCallContents{
+		{2, "testProgram2"}
+	};
+	REQUIRE(EntityStager::getStagedCallContent() == expectedCallContents);
 
 	std::vector<std::tuple<int, std::string, std::string>> expectedAssignTable{ };
 	std::sort(expectedAssignTable.begin(), expectedAssignTable.end(),

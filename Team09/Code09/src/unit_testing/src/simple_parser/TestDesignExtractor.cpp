@@ -10,7 +10,7 @@
 
 TEST_CASE("Entity 2.1 - Extract basic read") {
 	EntityStager::clear();
-	DesignExtractor::extractDesignElements(EntityASTs::getAST2_1());
+	DesignExtractor::extractDesignElements(EntityASTs::getAST2_1(), 0);
 
 	std::unordered_set<std::string> expectedProcedureTable{ "testProgram" };
 	REQUIRE(EntityStager::getStagedProcedures() == expectedProcedureTable);
@@ -51,7 +51,7 @@ TEST_CASE("Entity 2.1 - Extract basic read") {
 
 TEST_CASE("Entity 2.2 - Extract basic print") {
 	EntityStager::clear();
-	DesignExtractor::extractDesignElements(EntityASTs::getAST2_2());
+	DesignExtractor::extractDesignElements(EntityASTs::getAST2_2(), 0);
 
 	std::unordered_set<std::string> expectedProcedureTable{ "testProgram" };
 	REQUIRE(EntityStager::getStagedProcedures() == expectedProcedureTable);
@@ -92,7 +92,7 @@ TEST_CASE("Entity 2.2 - Extract basic print") {
 
 TEST_CASE("Entity 2.3 - Extract single assign - single constant") {
 	EntityStager::clear();
-	DesignExtractor::extractDesignElements(EntityASTs::getAST2_3());
+	DesignExtractor::extractDesignElements(EntityASTs::getAST2_3(), 0);
 
 	std::unordered_set<std::string> expectedProcedureTable{ "testProgram" };
 	REQUIRE(EntityStager::getStagedProcedures() == expectedProcedureTable);
@@ -135,7 +135,7 @@ TEST_CASE("Entity 2.3 - Extract single assign - single constant") {
 
 TEST_CASE("Entity 2.4 - Extract single assign - single variable") {
 	EntityStager::clear();
-	DesignExtractor::extractDesignElements(EntityASTs::getAST2_4());
+	DesignExtractor::extractDesignElements(EntityASTs::getAST2_4(), 0);
 
 	std::unordered_set<std::string> expectedProcedureTable{ "testProgram" };
 	REQUIRE(EntityStager::getStagedProcedures() == expectedProcedureTable);
@@ -178,7 +178,7 @@ TEST_CASE("Entity 2.4 - Extract single assign - single variable") {
 
 TEST_CASE("Entity 2.5 - Extract single assign - two variables") {
 	EntityStager::clear();
-	DesignExtractor::extractDesignElements(EntityASTs::getAST2_5());
+	DesignExtractor::extractDesignElements(EntityASTs::getAST2_5(), 0);
 
 	std::unordered_set<std::string> expectedProcedureTable{ "testProgram" };
 	REQUIRE(EntityStager::getStagedProcedures() == expectedProcedureTable);
@@ -221,7 +221,7 @@ TEST_CASE("Entity 2.5 - Extract single assign - two variables") {
 
 TEST_CASE("Entity 2.6 - Extract single assign - two constants") {
 	EntityStager::clear();
-	DesignExtractor::extractDesignElements(EntityASTs::getAST2_6());
+	DesignExtractor::extractDesignElements(EntityASTs::getAST2_6(), 0);
 
 	std::unordered_set<std::string> expectedProcedureTable{ "testProgram" };
 	REQUIRE(EntityStager::getStagedProcedures() == expectedProcedureTable);
@@ -265,7 +265,7 @@ TEST_CASE("Entity 2.6 - Extract single assign - two constants") {
 
 TEST_CASE("Entity 2.7 - Extract single assign - one constant one variable") {
 	EntityStager::clear();
-	DesignExtractor::extractDesignElements(EntityASTs::getAST2_7());
+	DesignExtractor::extractDesignElements(EntityASTs::getAST2_7(), 0);
 
 	std::unordered_set<std::string> expectedProcedureTable{ "testProgram" };
 	REQUIRE(EntityStager::getStagedProcedures() == expectedProcedureTable);
@@ -308,7 +308,7 @@ TEST_CASE("Entity 2.7 - Extract single assign - one constant one variable") {
 
 TEST_CASE("Entity 2.8 - Extract advanced assign 1") {
 	EntityStager::clear();
-	DesignExtractor::extractDesignElements(EntityASTs::getAST2_8());
+	DesignExtractor::extractDesignElements(EntityASTs::getAST2_8(), 0);
 
 	std::unordered_set<std::string> expectedProcedureTable{ "testProgram" };
 	REQUIRE(EntityStager::getStagedProcedures() == expectedProcedureTable);
@@ -351,7 +351,7 @@ TEST_CASE("Entity 2.8 - Extract advanced assign 1") {
 
 TEST_CASE("Entity 2.9 - Extract advanced assign 2") {
 	EntityStager::clear();
-	DesignExtractor::extractDesignElements(EntityASTs::getAST2_9());
+	DesignExtractor::extractDesignElements(EntityASTs::getAST2_9(), 0);
 
 	std::unordered_set<std::string> expectedProcedureTable{ "testProgram" };
 	REQUIRE(EntityStager::getStagedProcedures() == expectedProcedureTable);
@@ -394,7 +394,7 @@ TEST_CASE("Entity 2.9 - Extract advanced assign 2") {
 
 TEST_CASE("Entity 2.10 - While stmt - Constant to Constant comparison") {
 	EntityStager::clear();
-	DesignExtractor::extractDesignElements(EntityASTs::getAST2_10());
+	DesignExtractor::extractDesignElements(EntityASTs::getAST2_10(), 0);
 
 	std::unordered_set<std::string> expectedProcedureTable{ "testProgram" };
 	REQUIRE(EntityStager::getStagedProcedures() == expectedProcedureTable);
@@ -435,7 +435,7 @@ TEST_CASE("Entity 2.10 - While stmt - Constant to Constant comparison") {
 
 TEST_CASE("Entity 2.11 - While stmt - Variable to variable comparison") {
 	EntityStager::clear();
-	DesignExtractor::extractDesignElements(EntityASTs::getAST2_11());
+	DesignExtractor::extractDesignElements(EntityASTs::getAST2_11(), 0);
 
 	std::unordered_set<std::string> expectedProcedureTable{ "testProgram" };
 	REQUIRE(EntityStager::getStagedProcedures() == expectedProcedureTable);
@@ -476,7 +476,7 @@ TEST_CASE("Entity 2.11 - While stmt - Variable to variable comparison") {
 
 TEST_CASE("Entity 2.12 - While stmt - Variable to variable comparison") {
 	EntityStager::clear();
-	DesignExtractor::extractDesignElements(EntityASTs::getAST2_12());
+	DesignExtractor::extractDesignElements(EntityASTs::getAST2_12(), 0);
 
 	std::unordered_set<std::string> expectedProcedureTable{ "testProgram" };
 	REQUIRE(EntityStager::getStagedProcedures() == expectedProcedureTable);
@@ -517,7 +517,7 @@ TEST_CASE("Entity 2.12 - While stmt - Variable to variable comparison") {
 
 TEST_CASE("Entity 2.13 - While stmt - Term Expr comparison") {
 	EntityStager::clear();
-	DesignExtractor::extractDesignElements(EntityASTs::getAST2_13());
+	DesignExtractor::extractDesignElements(EntityASTs::getAST2_13(), 0);
 
 	std::unordered_set<std::string> expectedProcedureTable{ "testProgram" };
 	REQUIRE(EntityStager::getStagedProcedures() == expectedProcedureTable);
@@ -558,7 +558,7 @@ TEST_CASE("Entity 2.13 - While stmt - Term Expr comparison") {
 
 TEST_CASE("Entity 2.14 - While stmt - Expr Term comparison") {
 	EntityStager::clear();
-	DesignExtractor::extractDesignElements(EntityASTs::getAST2_14());
+	DesignExtractor::extractDesignElements(EntityASTs::getAST2_14(), 0);
 
 	std::unordered_set<std::string> expectedProcedureTable{ "testProgram" };
 	REQUIRE(EntityStager::getStagedProcedures() == expectedProcedureTable);
@@ -599,7 +599,7 @@ TEST_CASE("Entity 2.14 - While stmt - Expr Term comparison") {
 
 TEST_CASE("Entity 2.15 - While stmt - Expr Expr comparison") {
 	EntityStager::clear();
-	DesignExtractor::extractDesignElements(EntityASTs::getAST2_15());
+	DesignExtractor::extractDesignElements(EntityASTs::getAST2_15(), 0);
 
 	std::unordered_set<std::string> expectedProcedureTable{ "testProgram" };
 	REQUIRE(EntityStager::getStagedProcedures() == expectedProcedureTable);
@@ -640,7 +640,7 @@ TEST_CASE("Entity 2.15 - While stmt - Expr Expr comparison") {
 
 TEST_CASE("Entity 2.16 - While stmt - Advanced") {
 	EntityStager::clear();
-	DesignExtractor::extractDesignElements(EntityASTs::getAST2_16());
+	DesignExtractor::extractDesignElements(EntityASTs::getAST2_16(), 0);
 
 	std::unordered_set<std::string> expectedProcedureTable{ "testProgram" };
 	REQUIRE(EntityStager::getStagedProcedures() == expectedProcedureTable);
@@ -681,7 +681,7 @@ TEST_CASE("Entity 2.16 - While stmt - Advanced") {
 
 TEST_CASE("Entity 2.17 - While stmt - Advanced") {
 	EntityStager::clear();
-	DesignExtractor::extractDesignElements(EntityASTs::getAST2_17());
+	DesignExtractor::extractDesignElements(EntityASTs::getAST2_17(), 0);
 
 	std::unordered_set<std::string> expectedProcedureTable{ "testProgram" };
 	REQUIRE(EntityStager::getStagedProcedures() == expectedProcedureTable);
@@ -722,7 +722,7 @@ TEST_CASE("Entity 2.17 - While stmt - Advanced") {
 
 TEST_CASE("Entity 2.18 - While stmt - Advanced") {
 	EntityStager::clear();
-	DesignExtractor::extractDesignElements(EntityASTs::getAST2_18());
+	DesignExtractor::extractDesignElements(EntityASTs::getAST2_18(), 0);
 
 	std::unordered_set<std::string> expectedProcedureTable{ "testProgram" };
 	REQUIRE(EntityStager::getStagedProcedures() == expectedProcedureTable);
@@ -763,7 +763,7 @@ TEST_CASE("Entity 2.18 - While stmt - Advanced") {
 
 TEST_CASE("Entity 2.19 - While stmt - Advanced") {
 	EntityStager::clear();
-	DesignExtractor::extractDesignElements(EntityASTs::getAST2_19());
+	DesignExtractor::extractDesignElements(EntityASTs::getAST2_19(), 0);
 
 	std::unordered_set<std::string> expectedProcedureTable{ "testProgram" };
 	REQUIRE(EntityStager::getStagedProcedures() == expectedProcedureTable);
@@ -804,7 +804,7 @@ TEST_CASE("Entity 2.19 - While stmt - Advanced") {
 
 TEST_CASE("Entity 2.20 - While stmt - NOT in predicate") {
 	EntityStager::clear();
-	DesignExtractor::extractDesignElements(EntityASTs::getAST2_20());
+	DesignExtractor::extractDesignElements(EntityASTs::getAST2_20(), 0);
 
 	std::unordered_set<std::string> expectedProcedureTable{ "testProgram" };
 	REQUIRE(EntityStager::getStagedProcedures() == expectedProcedureTable);
@@ -845,7 +845,7 @@ TEST_CASE("Entity 2.20 - While stmt - NOT in predicate") {
 
 TEST_CASE("Entity 2.21 - While stmt - AND in predicate") {
 	EntityStager::clear();
-	DesignExtractor::extractDesignElements(EntityASTs::getAST2_21());
+	DesignExtractor::extractDesignElements(EntityASTs::getAST2_21(), 0);
 
 	std::unordered_set<std::string> expectedProcedureTable{ "testProgram" };
 	REQUIRE(EntityStager::getStagedProcedures() == expectedProcedureTable);
@@ -886,7 +886,7 @@ TEST_CASE("Entity 2.21 - While stmt - AND in predicate") {
 
 TEST_CASE("Entity 2.22 - While stmt - OR in predicate") {
 	EntityStager::clear();
-	DesignExtractor::extractDesignElements(EntityASTs::getAST2_22());
+	DesignExtractor::extractDesignElements(EntityASTs::getAST2_22(), 0);
 
 	std::unordered_set<std::string> expectedProcedureTable{ "testProgram" };
 	REQUIRE(EntityStager::getStagedProcedures() == expectedProcedureTable);
@@ -927,7 +927,7 @@ TEST_CASE("Entity 2.22 - While stmt - OR in predicate") {
 
 TEST_CASE("Entity 2.23 - While stmt - all statements nested within while stmt") {
 	EntityStager::clear();
-	DesignExtractor::extractDesignElements(EntityASTs::getAST2_23());
+	DesignExtractor::extractDesignElements(EntityASTs::getAST2_23(), 0);
 
 	std::unordered_set<std::string> expectedProcedureTable{ "testProgram" };
 	REQUIRE(EntityStager::getStagedProcedures() == expectedProcedureTable);
@@ -970,7 +970,7 @@ TEST_CASE("Entity 2.23 - While stmt - all statements nested within while stmt") 
 
 TEST_CASE("Entity 2.24 - If stmt - If-Read") {
 	EntityStager::clear();
-	DesignExtractor::extractDesignElements(EntityASTs::getAST2_24());
+	DesignExtractor::extractDesignElements(EntityASTs::getAST2_24(), 0);
 
 	std::unordered_set<std::string> expectedProcedureTable{ "testProgram" };
 	REQUIRE(EntityStager::getStagedProcedures() == expectedProcedureTable);
@@ -1011,7 +1011,7 @@ TEST_CASE("Entity 2.24 - If stmt - If-Read") {
 
 TEST_CASE("Entity 2.25 - If stmt - If-Print") {
 	EntityStager::clear();
-	DesignExtractor::extractDesignElements(EntityASTs::getAST2_25());
+	DesignExtractor::extractDesignElements(EntityASTs::getAST2_25(), 0);
 
 	std::unordered_set<std::string> expectedProcedureTable{ "testProgram" };
 	REQUIRE(EntityStager::getStagedProcedures() == expectedProcedureTable);
@@ -1052,7 +1052,7 @@ TEST_CASE("Entity 2.25 - If stmt - If-Print") {
 
 TEST_CASE("Entity 2.26 - If stmt - If-Assign") {
 	EntityStager::clear();
-	DesignExtractor::extractDesignElements(EntityASTs::getAST2_26());
+	DesignExtractor::extractDesignElements(EntityASTs::getAST2_26(), 0);
 
 	std::unordered_set<std::string> expectedProcedureTable{ "testProgram" };
 	REQUIRE(EntityStager::getStagedProcedures() == expectedProcedureTable);
@@ -1096,7 +1096,7 @@ TEST_CASE("Entity 2.26 - If stmt - If-Assign") {
 
 TEST_CASE("Entity 2.27 - If stmt - If-If(then)") {
 	EntityStager::clear();
-	DesignExtractor::extractDesignElements(EntityASTs::getAST2_27());
+	DesignExtractor::extractDesignElements(EntityASTs::getAST2_27(), 0);
 
 	std::unordered_set<std::string> expectedProcedureTable{ "testProgram" };
 	REQUIRE(EntityStager::getStagedProcedures() == expectedProcedureTable);
@@ -1137,7 +1137,7 @@ TEST_CASE("Entity 2.27 - If stmt - If-If(then)") {
 
 TEST_CASE("Entity 2.28 - If stmt - If-If(else)") {
 	EntityStager::clear();
-	DesignExtractor::extractDesignElements(EntityASTs::getAST2_28());
+	DesignExtractor::extractDesignElements(EntityASTs::getAST2_28(), 0);
 
 	std::unordered_set<std::string> expectedProcedureTable{ "testProgram" };
 	REQUIRE(EntityStager::getStagedProcedures() == expectedProcedureTable);
@@ -1178,7 +1178,7 @@ TEST_CASE("Entity 2.28 - If stmt - If-If(else)") {
 
 TEST_CASE("Entity 2.29 - If stmt - If-While(then)") {
 	EntityStager::clear();
-	DesignExtractor::extractDesignElements(EntityASTs::getAST2_29());
+	DesignExtractor::extractDesignElements(EntityASTs::getAST2_29(), 0);
 
 	std::unordered_set<std::string> expectedProcedureTable{ "testProgram" };
 	REQUIRE(EntityStager::getStagedProcedures() == expectedProcedureTable);
@@ -1219,7 +1219,7 @@ TEST_CASE("Entity 2.29 - If stmt - If-While(then)") {
 
 TEST_CASE("Entity 2.30 - If stmt - If-While(else)") {
 	EntityStager::clear();
-	DesignExtractor::extractDesignElements(EntityASTs::getAST2_30());
+	DesignExtractor::extractDesignElements(EntityASTs::getAST2_30(), 0);
 
 	std::unordered_set<std::string> expectedProcedureTable{ "testProgram" };
 	REQUIRE(EntityStager::getStagedProcedures() == expectedProcedureTable);
@@ -1260,7 +1260,7 @@ TEST_CASE("Entity 2.30 - If stmt - If-While(else)") {
 
 TEST_CASE("Entity 2.31 - If stmt - Every stmt in then") {
 	EntityStager::clear();
-	DesignExtractor::extractDesignElements(EntityASTs::getAST2_31());
+	DesignExtractor::extractDesignElements(EntityASTs::getAST2_31(), 0);
 
 	std::unordered_set<std::string> expectedProcedureTable{ "testProgram" };
 	REQUIRE(EntityStager::getStagedProcedures() == expectedProcedureTable);
@@ -1303,7 +1303,7 @@ TEST_CASE("Entity 2.31 - If stmt - Every stmt in then") {
 
 TEST_CASE("Entity 2.32 - If stmt - Every stmt in else") {
 	EntityStager::clear();
-	DesignExtractor::extractDesignElements(EntityASTs::getAST2_32());
+	DesignExtractor::extractDesignElements(EntityASTs::getAST2_32(), 0);
 
 	std::unordered_set<std::string> expectedProcedureTable{ "testProgram" };
 	REQUIRE(EntityStager::getStagedProcedures() == expectedProcedureTable);
@@ -1346,7 +1346,7 @@ TEST_CASE("Entity 2.32 - If stmt - Every stmt in else") {
 
 TEST_CASE("Entity 2.33 - 2 procedures; First: Read Second : If") {
 	EntityStager::clear();
-	DesignExtractor::extractDesignElements(EntityASTs::getAST2_33());
+	DesignExtractor::extractDesignElements(EntityASTs::getAST2_33(), 0);
 
 	std::unordered_set<std::string> expectedProcedureTable{ "testProgram", "testProgram2"};
 	REQUIRE(EntityStager::getStagedProcedures() == expectedProcedureTable);
@@ -1387,7 +1387,7 @@ TEST_CASE("Entity 2.33 - 2 procedures; First: Read Second : If") {
 
 TEST_CASE("Entity 2.34 - 2 procedures; First: Print Second : While") {
 	EntityStager::clear();
-	DesignExtractor::extractDesignElements(EntityASTs::getAST2_34());
+	DesignExtractor::extractDesignElements(EntityASTs::getAST2_34(), 0);
 
 	std::unordered_set<std::string> expectedProcedureTable{ "testProgram", "testProgram2" };
 	REQUIRE(EntityStager::getStagedProcedures() == expectedProcedureTable);
@@ -1428,7 +1428,7 @@ TEST_CASE("Entity 2.34 - 2 procedures; First: Print Second : While") {
 
 TEST_CASE("Entity 2.35 - 2 procedures; First: Assignment Second : Print") {
 	EntityStager::clear();
-	DesignExtractor::extractDesignElements(EntityASTs::getAST2_35());
+	DesignExtractor::extractDesignElements(EntityASTs::getAST2_35(), 0);
 
 	std::unordered_set<std::string> expectedProcedureTable{ "testProgram", "testProgram2" };
 	REQUIRE(EntityStager::getStagedProcedures() == expectedProcedureTable);
@@ -1471,7 +1471,7 @@ TEST_CASE("Entity 2.35 - 2 procedures; First: Assignment Second : Print") {
 
 TEST_CASE("Entity 2.36 - 2 procedures; First: While Second : Read") {
 	EntityStager::clear();
-	DesignExtractor::extractDesignElements(EntityASTs::getAST2_36());
+	DesignExtractor::extractDesignElements(EntityASTs::getAST2_36(), 0);
 
 	std::unordered_set<std::string> expectedProcedureTable{ "testProgram", "testProgram2" };
 	REQUIRE(EntityStager::getStagedProcedures() == expectedProcedureTable);
@@ -1512,7 +1512,7 @@ TEST_CASE("Entity 2.36 - 2 procedures; First: While Second : Read") {
 
 TEST_CASE("Entity 2.37 - 2 procedures; First: If Second : Assignment") {
 	EntityStager::clear();
-	DesignExtractor::extractDesignElements(EntityASTs::getAST2_37());
+	DesignExtractor::extractDesignElements(EntityASTs::getAST2_37(), 0);
 
 	std::unordered_set<std::string> expectedProcedureTable{ "testProgram", "testProgram2" };
 	REQUIRE(EntityStager::getStagedProcedures() == expectedProcedureTable);
@@ -1555,7 +1555,7 @@ TEST_CASE("Entity 2.37 - 2 procedures; First: If Second : Assignment") {
 
 TEST_CASE("Entity 2.38 - Test call statement") {
 	EntityStager::clear();
-	DesignExtractor::extractDesignElements(EntityASTs::getAST2_38());
+	DesignExtractor::extractDesignElements(EntityASTs::getAST2_38(), 0);
 
 	std::unordered_set<std::string> expectedProcedureTable{ "testProgram", "testProgram2" };
 	REQUIRE(EntityStager::getStagedProcedures() == expectedProcedureTable);
@@ -1599,7 +1599,7 @@ TEST_CASE("Entity 2.38 - Test call statement") {
 
 TEST_CASE("Entity 2.39 - Test call statement (opposite order)") {
 	EntityStager::clear();
-	DesignExtractor::extractDesignElements(EntityASTs::getAST2_39());
+	DesignExtractor::extractDesignElements(EntityASTs::getAST2_39(), 0);
 
 	std::unordered_set<std::string> expectedProcedureTable{ "testProgram", "testProgram2" };
 	REQUIRE(EntityStager::getStagedProcedures() == expectedProcedureTable);
@@ -1643,7 +1643,7 @@ TEST_CASE("Entity 2.39 - Test call statement (opposite order)") {
 
 TEST_CASE("Entity 2.40 - Call nested in If - second program") {
 	EntityStager::clear();
-	DesignExtractor::extractDesignElements(EntityASTs::getAST2_40());
+	DesignExtractor::extractDesignElements(EntityASTs::getAST2_40(), 0);
 
 	std::unordered_set<std::string> expectedProcedureTable{ "testProgram", "testProgram2" };
 	REQUIRE(EntityStager::getStagedProcedures() == expectedProcedureTable);
@@ -1687,7 +1687,7 @@ TEST_CASE("Entity 2.40 - Call nested in If - second program") {
 
 TEST_CASE("Entity 2.41 - Call nested in If - second program") {
 	EntityStager::clear();
-	DesignExtractor::extractDesignElements(EntityASTs::getAST2_41());
+	DesignExtractor::extractDesignElements(EntityASTs::getAST2_41(), 0);
 
 	std::unordered_set<std::string> expectedProcedureTable{ "testProgram", "testProgram2" };
 	REQUIRE(EntityStager::getStagedProcedures() == expectedProcedureTable);
@@ -1731,7 +1731,7 @@ TEST_CASE("Entity 2.41 - Call nested in If - second program") {
 
 TEST_CASE("Entity 2.42 - Call nested in While") {
 	EntityStager::clear();
-	DesignExtractor::extractDesignElements(EntityASTs::getAST2_42());
+	DesignExtractor::extractDesignElements(EntityASTs::getAST2_42(), 0);
 
 	std::unordered_set<std::string> expectedProcedureTable{ "testProgram", "testProgram2" };
 	REQUIRE(EntityStager::getStagedProcedures() == expectedProcedureTable);
@@ -1775,7 +1775,7 @@ TEST_CASE("Entity 2.42 - Call nested in While") {
 
 TEST_CASE("Entity 4.1 - Complex AST") {
 	EntityStager::clear();
-	DesignExtractor::extractDesignElements(ComplexASTs::getAST4_1());
+	DesignExtractor::extractDesignElements(ComplexASTs::getAST4_1(), 0);
 
 	std::unordered_set<std::string> expectedProcedureTable{ "testProgram" };
 	REQUIRE(EntityStager::getStagedProcedures() == expectedProcedureTable);

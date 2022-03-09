@@ -9,7 +9,7 @@
 
 TEST_CASE("CallsT 3.35 - Normal Post Declared") {
 	EntityStager::clear();
-	DesignExtractor::extractDesignElements(RelationshipASTs::getAST3_35());
+	DesignExtractor::extractDesignElements(RelationshipASTs::getAST3_35(), 0);
 
 	std::vector<std::pair<std::string, std::string>> expectedCallsT{
 		{"testProgram1", "testProgram2"}
@@ -25,7 +25,7 @@ TEST_CASE("CallsT 3.35 - Normal Post Declared") {
 
 TEST_CASE("CallsT 3.36 - Normal Pre Declared") {
 	EntityStager::clear();
-	DesignExtractor::extractDesignElements(RelationshipASTs::getAST3_36());
+	DesignExtractor::extractDesignElements(RelationshipASTs::getAST3_36(), 0);
 
 	std::vector<std::pair<std::string, std::string>> expectedCallsT{
 		{"testProgram2", "testProgram1"}
@@ -41,7 +41,7 @@ TEST_CASE("CallsT 3.36 - Normal Pre Declared") {
 
 TEST_CASE("CallsT 3.37 - Normal Pre declared Nested in If") {
 	EntityStager::clear();
-	DesignExtractor::extractDesignElements(RelationshipASTs::getAST3_37());
+	DesignExtractor::extractDesignElements(RelationshipASTs::getAST3_37(), 0);
 
 	std::vector<std::pair<std::string, std::string>> expectedCallsT{
 		{"testProgram2", "testProgram1"}
@@ -57,7 +57,7 @@ TEST_CASE("CallsT 3.37 - Normal Pre declared Nested in If") {
 
 TEST_CASE("CallsT 3.38 - Normal Pre declared Nested in Else") {
 	EntityStager::clear();
-	DesignExtractor::extractDesignElements(RelationshipASTs::getAST3_38());
+	DesignExtractor::extractDesignElements(RelationshipASTs::getAST3_38(), 0);
 
 	std::vector<std::pair<std::string, std::string>> expectedCallsT{
 		{"testProgram2", "testProgram1"}
@@ -73,7 +73,7 @@ TEST_CASE("CallsT 3.38 - Normal Pre declared Nested in Else") {
 
 TEST_CASE("CallsT 3.39 - Normal Post declared Nested in If") {
 	EntityStager::clear();
-	DesignExtractor::extractDesignElements(RelationshipASTs::getAST3_39());
+	DesignExtractor::extractDesignElements(RelationshipASTs::getAST3_39(), 0);
 
 	std::vector<std::pair<std::string, std::string>> expectedCallsT{
 		{"testProgram1", "testProgram2"}
@@ -89,7 +89,7 @@ TEST_CASE("CallsT 3.39 - Normal Post declared Nested in If") {
 
 TEST_CASE("CallsT 3.40 - Normal Post declared Nested in Else") {
 	EntityStager::clear();
-	DesignExtractor::extractDesignElements(RelationshipASTs::getAST3_40());
+	DesignExtractor::extractDesignElements(RelationshipASTs::getAST3_40(), 0);
 
 	std::vector<std::pair<std::string, std::string>> expectedCallsT{
 		{"testProgram1", "testProgram2"}
@@ -105,7 +105,7 @@ TEST_CASE("CallsT 3.40 - Normal Post declared Nested in Else") {
 
 TEST_CASE("CallsT 3.41 - Normal Pre declared Nested in While") {
 	EntityStager::clear();
-	DesignExtractor::extractDesignElements(RelationshipASTs::getAST3_41());
+	DesignExtractor::extractDesignElements(RelationshipASTs::getAST3_41(), 0);
 
 	std::vector<std::pair<std::string, std::string>> expectedCallsT{
 		{"testProgram2", "testProgram1"}
@@ -121,7 +121,7 @@ TEST_CASE("CallsT 3.41 - Normal Pre declared Nested in While") {
 
 TEST_CASE("CallsT 3.42 - Normal Post declared Nested in While") {
 	EntityStager::clear();
-	DesignExtractor::extractDesignElements(RelationshipASTs::getAST3_42());
+	DesignExtractor::extractDesignElements(RelationshipASTs::getAST3_42(), 0);
 
 	std::vector<std::pair<std::string, std::string>> expectedCallsT{
 		{"testProgram1", "testProgram2"}
@@ -137,7 +137,7 @@ TEST_CASE("CallsT 3.42 - Normal Post declared Nested in While") {
 
 TEST_CASE("CallsT 3.43 - 3 calls sequential predeclared") {
 	EntityStager::clear();
-	DesignExtractor::extractDesignElements(RelationshipASTs::getAST3_43());
+	DesignExtractor::extractDesignElements(RelationshipASTs::getAST3_43(), 0);
 
 	std::vector<std::pair<std::string, std::string>> expectedCallsT{
 		{"testProgram2", "testProgram1"}, {"testProgram3", "testProgram2"}, {"testProgram3", "testProgram1"},
@@ -153,7 +153,7 @@ TEST_CASE("CallsT 3.43 - 3 calls sequential predeclared") {
 
 TEST_CASE("CallsT 3.44 - 3 calls sequential post declared") {
 	EntityStager::clear();
-	DesignExtractor::extractDesignElements(RelationshipASTs::getAST3_44());
+	DesignExtractor::extractDesignElements(RelationshipASTs::getAST3_44(), 0);
 
 	std::vector<std::pair<std::string, std::string>> expectedCallsT{
 		{"testProgram1", "testProgram2"}, {"testProgram2", "testProgram3"}, {"testProgram1", "testProgram3"},
@@ -169,7 +169,7 @@ TEST_CASE("CallsT 3.44 - 3 calls sequential post declared") {
 
 TEST_CASE("CallsT 3.45 - 3 calls forking from top") {
 	EntityStager::clear();
-	DesignExtractor::extractDesignElements(RelationshipASTs::getAST3_45());
+	DesignExtractor::extractDesignElements(RelationshipASTs::getAST3_45(), 0);
 
 	std::vector<std::pair<std::string, std::string>> expectedCallsT{
 		{"testProgram1", "testProgram2"}, {"testProgram1", "testProgram3"},
@@ -185,7 +185,7 @@ TEST_CASE("CallsT 3.45 - 3 calls forking from top") {
 
 TEST_CASE("CallsT 3.46 - 3 calls forking from bottom") {
 	EntityStager::clear();
-	DesignExtractor::extractDesignElements(RelationshipASTs::getAST3_46());
+	DesignExtractor::extractDesignElements(RelationshipASTs::getAST3_46(), 0);
 
 	std::vector<std::pair<std::string, std::string>> expectedCallsT{
 		{"testProgram3", "testProgram1"}, {"testProgram3", "testProgram2"},
@@ -201,7 +201,7 @@ TEST_CASE("CallsT 3.46 - 3 calls forking from bottom") {
 
 TEST_CASE("CallsT 3.47 - 3 calls forking from middle") {
 	EntityStager::clear();
-	DesignExtractor::extractDesignElements(RelationshipASTs::getAST3_47());
+	DesignExtractor::extractDesignElements(RelationshipASTs::getAST3_47(), 0);
 
 	std::vector<std::pair<std::string, std::string>> expectedCallsT{
 		{"testProgram2", "testProgram1"}, {"testProgram2", "testProgram3"},
@@ -217,7 +217,7 @@ TEST_CASE("CallsT 3.47 - 3 calls forking from middle") {
 
 TEST_CASE("CallsT 3.48 - 4 calls sequential call (mix of post and pre declared)") {
 	EntityStager::clear();
-	DesignExtractor::extractDesignElements(RelationshipASTs::getAST3_48());
+	DesignExtractor::extractDesignElements(RelationshipASTs::getAST3_48(), 0);
 
 	std::vector<std::pair<std::string, std::string>> expectedCallsT{
 		{"testProgram1", "testProgram3"}, {"testProgram2", "testProgram1"}, {"testProgram4", "testProgram2"},
@@ -234,7 +234,7 @@ TEST_CASE("CallsT 3.48 - 4 calls sequential call (mix of post and pre declared)"
 
 TEST_CASE("CallsT 3.49 - 4 calls - 1 - (2, 3, 4)") {
 	EntityStager::clear();
-	DesignExtractor::extractDesignElements(RelationshipASTs::getAST3_49());
+	DesignExtractor::extractDesignElements(RelationshipASTs::getAST3_49(), 0);
 
 	std::vector<std::pair<std::string, std::string>> expectedCallsT{
 		{"testProgram1", "testProgram2"}, {"testProgram1", "testProgram3"}, {"testProgram1", "testProgram4"}
@@ -250,7 +250,7 @@ TEST_CASE("CallsT 3.49 - 4 calls - 1 - (2, 3, 4)") {
 
 TEST_CASE("CallsT 3.50 - 4 calls - (1, 2, 4) - 3") {
 	EntityStager::clear();
-	DesignExtractor::extractDesignElements(RelationshipASTs::getAST3_50());
+	DesignExtractor::extractDesignElements(RelationshipASTs::getAST3_50(), 0);
 
 	std::vector<std::pair<std::string, std::string>> expectedCallsT{
 		{"testProgram1", "testProgram3"}, {"testProgram2", "testProgram3"}, {"testProgram4", "testProgram3"}
@@ -266,7 +266,7 @@ TEST_CASE("CallsT 3.50 - 4 calls - (1, 2, 4) - 3") {
 
 TEST_CASE("CallsT 3.51 - 4 calls - 1 - (3, 4) - 2") {
 	EntityStager::clear();
-	DesignExtractor::extractDesignElements(RelationshipASTs::getAST3_51());
+	DesignExtractor::extractDesignElements(RelationshipASTs::getAST3_51(), 0);
 
 	std::vector<std::pair<std::string, std::string>> expectedCallsT{
 		{"testProgram1", "testProgram3"}, {"testProgram1", "testProgram4"},
@@ -284,7 +284,7 @@ TEST_CASE("CallsT 3.51 - 4 calls - 1 - (3, 4) - 2") {
 
 TEST_CASE("CallsT 3.52 - 4 calls - 2 - 4 - (3, 1)") {
 	EntityStager::clear();
-	DesignExtractor::extractDesignElements(RelationshipASTs::getAST3_52());
+	DesignExtractor::extractDesignElements(RelationshipASTs::getAST3_52(), 0);
 
 	std::vector<std::pair<std::string, std::string>> expectedCallsT{
 		{"testProgram2", "testProgram4"}, {"testProgram4", "testProgram3"}, {"testProgram4", "testProgram1"},
@@ -301,7 +301,7 @@ TEST_CASE("CallsT 3.52 - 4 calls - 2 - 4 - (3, 1)") {
 
 TEST_CASE("CallsT 3.53 - 4 calls - (1, 2) - 3 - 4") {
 	EntityStager::clear();
-	DesignExtractor::extractDesignElements(RelationshipASTs::getAST3_53());
+	DesignExtractor::extractDesignElements(RelationshipASTs::getAST3_53(), 0);
 
 	std::vector<std::pair<std::string, std::string>> expectedCallsT{
 		{"testProgram1", "testProgram3"}, {"testProgram2", "testProgram3"}, {"testProgram3", "testProgram4"},
@@ -318,7 +318,7 @@ TEST_CASE("CallsT 3.53 - 4 calls - (1, 2) - 3 - 4") {
 
 TEST_CASE("CallsT 3.54 - 4 calls - (3, (2 - 4)) - 1") {
 	EntityStager::clear();
-	DesignExtractor::extractDesignElements(RelationshipASTs::getAST3_54());
+	DesignExtractor::extractDesignElements(RelationshipASTs::getAST3_54(), 0);
 
 	std::vector<std::pair<std::string, std::string>> expectedCallsT{
 		{"testProgram3", "testProgram1"}, {"testProgram2", "testProgram4"}, {"testProgram4", "testProgram1"},
@@ -335,7 +335,7 @@ TEST_CASE("CallsT 3.54 - 4 calls - (3, (2 - 4)) - 1") {
 
 TEST_CASE("CallsT 3.55 - 4 calls - 2 - ((1 - 4), 3)") {
 	EntityStager::clear();
-	DesignExtractor::extractDesignElements(RelationshipASTs::getAST3_55());
+	DesignExtractor::extractDesignElements(RelationshipASTs::getAST3_55(), 0);
 
 	std::vector<std::pair<std::string, std::string>> expectedCallsT{
 		{"testProgram2", "testProgram1"}, {"testProgram2", "testProgram3"},

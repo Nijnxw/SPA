@@ -253,7 +253,7 @@ void PQLParser::parseAssignPattern(PQLToken* synonymToken) {
 	patternArgs.emplace_back(LHS);
 	getNextExpectedToken(TokenType::COMMA);
 	patternArgs.emplace_back(parseAssignPatternRHS());
-	QueryClauses.push_back(QueryClause(RelationRef::PATTERN_A, patternArgs, usedSynonyms, synonymToken->getValue()));
+	QueryClauses.push_back(QueryClause(RelationRef::PATTERN_ASSIGN, patternArgs, usedSynonyms, synonymToken->getValue()));
 }
 
 void PQLParser::parseSinglePatternClause() {

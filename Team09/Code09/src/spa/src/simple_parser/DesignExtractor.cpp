@@ -253,7 +253,7 @@ void processProcedureList(AST ast, std::unordered_map<std::string, std::shared_p
 	}
 }
 
-void DesignExtractor::extractDesignElements(AST ast) {
+void DesignExtractor::extractDesignElements(AST ast, int stmtCount) {
 	EntityStager::clear();
 	DesignExtractor::procCache.clear();
 	processProcedureList(ast, ast->getProcedureMap());

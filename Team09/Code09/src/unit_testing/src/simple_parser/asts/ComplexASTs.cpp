@@ -164,3 +164,5 @@ AST ComplexASTs::getAST4_1() {
     std::unordered_map<std::string, std::shared_ptr<ProcedureNode>> procMap{ {"testProgram", proc} };
     return std::make_shared<ProgramNode>(procMap);
 }
+
+int ComplexASTs::getStmtCount4_1() { return 18; }

@@ -18,4 +18,5 @@ private:
 	ComplexASTs();
 public:
 	static AST getAST4_1();
+	static int getStmtCount4_1();
 };

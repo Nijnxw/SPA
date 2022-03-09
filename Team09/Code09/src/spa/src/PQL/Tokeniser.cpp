@@ -8,25 +8,25 @@
 
 #include "PQL/Tokeniser.h"
 #include "PQL/PQLUtils.cpp"
+#include "util/RPN.h"
 
 Tokeniser::Tokeniser(std::string rawQueryString) : CommonLexer(new std::stringstream(rawQueryString)) {}
 
-void Tokeniser::processRawToken(std::string rawToken) {
-	if (stringTokenMap.find(rawToken) != stringTokenMap.end()) {
-		PQLTokens.push_back(new PQLToken(stringTokenMap[rawToken], rawToken));
+void Tokeniser::processRawToken(std::string nextStr) {
+	if (stringTokenMap.find(nextStr) != stringTokenMap.end()) {
+		PQLTokens.push_back(new PQLToken(stringTokenMap[nextStr], nextStr));
 	}
-	else if (isValidString(rawToken)) {
-		const std::string ident = rawToken.substr(1, rawToken.size() - 2);
+	else if (isInStringLiteral(nextStr)) {
+		const std::string ident = trimWhitespaces(nextStr.substr(1, nextStr.size() - 2));
 		PQLTokens.push_back(new PQLToken(TokenType::STRING, ident));
+	} else if (isIdent(nextStr)) {
+		PQLTokens.push_back(new PQLToken(TokenType::SYNONYM, nextStr));
 	}
-	else if (isIdent(rawToken)) {
-		PQLTokens.push_back(new PQLToken(TokenType::SYNONYM, rawToken));
-	}
-	else if (isInt(rawToken)) {
-		PQLTokens.push_back(new PQLToken(TokenType::INTEGER, rawToken));
+	else if (isInt(nextStr)) {
+		PQLTokens.push_back(new PQLToken(TokenType::INTEGER, nextStr));
 	}
 	else {
-		throw "Unknown syntax : " + rawToken + "\n";
+		throw "Unknown syntax : " + nextStr + "\n";
 	}
 }
 
@@ -36,6 +36,13 @@ void Tokeniser::pushToken() {
 	}
 	nextStr = "";
 }
+
+void Tokeniser::pushSymbolToken(char nextChar) {
+	pushToken();
+	nextStr += nextChar;
+	pushToken();
+}
+
 
 std::vector<PQLToken*> Tokeniser::tokenise() {
 	try {
@@ -52,20 +59,43 @@ std::vector<PQLToken*> Tokeniser::tokenise() {
 			case ' ':
 			case '\t':
 			case '\n':
-				// ignore whitespaceif its within string literals
+				// ignore whitespace if its within string literals
 				if (!isWithinStringLiterals) {
 					pushToken();
+				} else {
+					nextStr += nextChar;
 				}
 				break;
 
-			case '_':
-			case ',':
+			//operator symbols that only appear within string literals
+			case '+':
+			case '-':
+			case '/':
+			case '%':
+				if (isWithinStringLiterals) {
+					nextStr += nextChar;
+				}
+				break;
+
+			//symbols that can appear in and outside string literals
 			case '(':
 			case ')':
+				if (isWithinStringLiterals) {
+					nextStr += nextChar;
+				} else {
+					pushSymbolToken(nextChar);
+				}
+				break;
+			
+			//symbols that does not appear in string literals at all 
+			case '_':
+			case ',':
 			case ';':
-				pushToken();
-				nextStr += nextChar;
-				pushToken();
+			case '.':
+			case '<':
+			case '>':
+			case '=':
+				pushSymbolToken(nextChar);
 				break;
 
 			default:
@@ -73,6 +103,9 @@ std::vector<PQLToken*> Tokeniser::tokenise() {
 				break;
 			}
 			nextChar = next();
+		}
+		if (isWithinStringLiterals) {
+			throw "Unclosed string in query.";
 		}
 		pushToken();
 	}

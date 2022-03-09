@@ -8,6 +8,7 @@
 
 class QueryClause {
 public:
+	QueryClause() = default;
 	QueryClause(RelationRef clauseType, std::vector<QueryArgument>& arguments,
 				std::unordered_set<std::string>& usedSynonyms, const std::string& clauseSynonym = "");
 
@@ -17,17 +18,23 @@ public:
 	const std::unordered_set<std::string>& getUsedSynonyms() const;
 	bool containsSynonym(QueryArgument& synonym) const;
 	bool containsCommonSynonym(QueryClause& other) const;
-	bool operator==(const QueryClause& other) const {
-		bool isRelationRefEqual = clauseType == other.getClauseType(); 
-		bool isclauseSynonymEqual = clauseSynonym == other.getClauseSynonym();
-		bool isArgumentsEqual = std::equal(arguments.begin(), arguments.end(), other.getArguments().begin());
-		bool isUsedSynonymsEqual = std::equal(usedSynonyms.begin(), usedSynonyms.end(), other.getUsedSynonyms().begin());
-		return isRelationRefEqual && isclauseSynonymEqual && isArgumentsEqual && isUsedSynonymsEqual;
-	}
+	bool operator==(const QueryClause& other) const;
+	std::string toString() const;
 
 private:
 	RelationRef clauseType;
 	std::string clauseSynonym;
 	std::vector<QueryArgument> arguments;
 	std::unordered_set<std::string> usedSynonyms;
+};
+
+template<>
+struct std::hash<QueryClause> {
+	size_t operator()(const QueryClause& clause) const {
+		size_t hash = std::hash<std::string>()(ToString(clause.getClauseType()));
+		for (const auto& arg: clause.getArguments()) {
+			hash = std::hash<std::string>()(arg.getValue()) + 0x9e3779b9 + (hash << 6) + (hash >> 2);
+		}
+		return hash;
+	}
 };

@@ -1,3 +1,5 @@
+#pragma once
+
 #include "StmtNode.h"
 #include "NodeType.h"
 

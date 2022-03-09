@@ -127,3 +127,43 @@ AST EntityASTs::getAST2_31() {
 AST EntityASTs::getAST2_32() {
 	return ContainerStmtASTs::getAST1_73();
 }
+
+AST EntityASTs::getAST2_33() {
+	return ContainerStmtASTs::getAST1_74();
+}
+
+AST EntityASTs::getAST2_34() {
+	return ContainerStmtASTs::getAST1_75();
+}
+
+AST EntityASTs::getAST2_35() {
+	return ContainerStmtASTs::getAST1_76();
+}
+
+AST EntityASTs::getAST2_36() {
+	return ContainerStmtASTs::getAST1_77();
+}
+
+AST EntityASTs::getAST2_37() {
+	return ContainerStmtASTs::getAST1_78();
+}
+
+AST EntityASTs::getAST2_38() {
+	return ContainerStmtASTs::getAST1_79();
+}
+
+AST EntityASTs::getAST2_39() {
+	return ContainerStmtASTs::getAST1_80();
+}
+
+AST EntityASTs::getAST2_40() {
+	return ContainerStmtASTs::getAST1_81();
+}
+
+AST EntityASTs::getAST2_41() {
+	return ContainerStmtASTs::getAST1_82();
+}
+
+AST EntityASTs::getAST2_42() {
+	return ContainerStmtASTs::getAST1_83();
+}

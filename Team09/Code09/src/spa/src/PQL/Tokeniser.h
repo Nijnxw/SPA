@@ -15,5 +15,6 @@ private:
 	std::vector<PQLToken*> PQLTokens;
 	void processRawToken(std::string rawToken);
 	void pushToken();
+	void pushSymbolToken(char nextChar);
 };
 

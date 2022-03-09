@@ -19,8 +19,8 @@ public:
 	QueryClauseResult();
 	QueryClauseResult(const Table& table);
 	bool operator==(const QueryClauseResult& other) const;
-	Table getTable();
-	bool containsValidResult();
+	Table getTable() const;
+	bool containsValidResult() const;
 	void setBooleanResult(bool inputBool);
 
 	// Overloaded add column to cater for different use cases

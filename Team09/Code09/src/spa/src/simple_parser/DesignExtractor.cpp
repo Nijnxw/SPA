@@ -2,7 +2,25 @@
 
 DesignExtractor::DesignExtractor() {}
 
-NestableRelationships processStmtList(std::vector<std::shared_ptr<StmtNode>> stmtList);
+bool DesignExtractor::isCached(std::string procName) {
+	return DesignExtractor::procCache.find(procName) != DesignExtractor::procCache.end();
+}
+
+NestableRelationships DesignExtractor::retrieve(std::string procName) {
+	if (!isCached(procName)) return NestableRelationships::createEmpty();
+	return DesignExtractor::procCache.at(procName);
+}
+
+void DesignExtractor::cache(std::string procName, NestableRelationships rs) {
+	DesignExtractor::procCache.insert({ procName, rs });
+}
+
+std::unordered_set<std::string> extractControlVariables(std::shared_ptr<PredicateNode> pred) {
+	return pred->getControlVariables();
+}
+
+NestableRelationships processStmtList(AST ast, std::vector<std::string> callStack, std::vector<std::shared_ptr<StmtNode>> stmtList);
+NestableRelationships processProcedure(AST ast, std::vector<std::string> callStack, std::shared_ptr<ProcedureNode> proc);
 
 //primitive node processing functions
 void processConstantNode(std::shared_ptr<ConstantNode> constant) {
@@ -62,7 +80,7 @@ NestableRelationships processPredicateNode(std::shared_ptr<PredicateNode> expr) 
 //individual stmt node processing functions
 NestableRelationships processPrintNode(std::shared_ptr<PrintNode> print) {
 	processVariableNode(print->getVariable());
-	EntityStager::stagePrintStatement(print->getStmtNumber());
+	EntityStager::stagePrintStatement(print->getStmtNumber(), print->getVariableName());
 
 	//stage relationships
 	NestableRelationships rs = NestableRelationships::createEmpty();
@@ -73,7 +91,7 @@ NestableRelationships processPrintNode(std::shared_ptr<PrintNode> print) {
 
 NestableRelationships processReadNode(std::shared_ptr<ReadNode> read) {
 	processVariableNode(read->getVariable());
-	EntityStager::stageReadStatement(read->getStmtNumber());
+	EntityStager::stageReadStatement(read->getStmtNumber(), read->getVariableName());
 
 	//stage relationships
 	NestableRelationships rs = NestableRelationships::createEmpty();
@@ -101,8 +119,10 @@ NestableRelationships processAssignNode(std::shared_ptr<AssignNode> assign) {
 	return rs;
 }
 
-NestableRelationships processWhileNode(std::shared_ptr<WhileNode> whiles) {
-	EntityStager::stageWhileStatement(whiles->getStmtNumber());
+NestableRelationships processWhileNode(AST ast, std::vector<std::string> callStack, std::shared_ptr<WhileNode> whiles) {
+	//extract predicate control variables
+	std::unordered_set<std::string> vars = extractControlVariables(whiles->getPredicate());
+	EntityStager::stageWhileStatement(whiles->getStmtNumber(), vars);
 
 	//process predicate
 	NestableRelationships rs = processPredicateNode(whiles->getPredicate());
@@ -110,7 +130,7 @@ NestableRelationships processWhileNode(std::shared_ptr<WhileNode> whiles) {
 	std::vector<std::shared_ptr<StmtNode>> stmtList = whiles->getStmtList();
 
 	//combine with stmtlist
-	rs.combine(processStmtList(stmtList));
+	rs.combine(processStmtList(ast, callStack, stmtList));
 
 	//extract direct children stmt number
 	std::unordered_set<int> childrenList;
@@ -125,8 +145,10 @@ NestableRelationships processWhileNode(std::shared_ptr<WhileNode> whiles) {
 	return rs;
 }
 
-NestableRelationships processIfNode(std::shared_ptr<IfNode> ifs) {
-	EntityStager::stageIfStatement(ifs->getStmtNumber());
+NestableRelationships processIfNode(AST ast, std::vector<std::string> callStack, std::shared_ptr<IfNode> ifs) {
+	//extract predicate control variables
+	std::unordered_set<std::string> vars = extractControlVariables(ifs->getPredicate());
+	EntityStager::stageIfStatement(ifs->getStmtNumber(), vars);
 
 	//process predicate
 	NestableRelationships rs = processPredicateNode(ifs->getPredicate());
@@ -135,9 +157,9 @@ NestableRelationships processIfNode(std::shared_ptr<IfNode> ifs) {
 	std::vector<std::shared_ptr<StmtNode>> elseStmtList = ifs->getElseStmtList();
 
 	//combine with thenStmtList
-	rs.combine(processStmtList(thenStmtList));
+	rs.combine(processStmtList(ast, callStack, thenStmtList));
 	//combine with elseStmtList
-	rs.combine(processStmtList(elseStmtList));
+	rs.combine(processStmtList(ast, callStack, elseStmtList));
 
 	//extract direct children stmt number
 	std::unordered_set<int> childrenList;
@@ -154,8 +176,29 @@ NestableRelationships processIfNode(std::shared_ptr<IfNode> ifs) {
 	return rs;
 }
 
+NestableRelationships processCallNode(AST ast, std::vector<std::string> callStack, std::shared_ptr<CallNode> call) {
+	EntityStager::stageCallStatement(call->getStmtNumber(), call->getProcedureName());
+
+	if (!ast->contains(call->getProcedureName())) return NestableRelationships::createEmpty();
+
+	NestableRelationships rs = processProcedure(ast, callStack, ast->retrieve(call->getProcedureName())); //under cache system: this wont populate callstore also
+	rs.clearChildren(); //remove parent-child information
+
+	if (rs.getModifiesSize() > 0) EntityStager::stageModifiesStatements(call->getStmtNumber(), rs.getModifies());
+	if (rs.getUsesSize() > 0) EntityStager::stageUsesStatements(call->getStmtNumber(), rs.getUses());
+
+	rs.addCalls(call->getProcedureName());
+	if (callStack.size() > 0) {
+		EntityStager::stageCalls(callStack[0], call->getProcedureName());
+		for (std::string callee : rs.getCalls()) {
+			EntityStager::stageCallsT(callStack[0], callee);
+		}
+	}
+	return rs;
+}
+
 //statement (list) processing functions
-NestableRelationships processStmt(std::shared_ptr<StmtNode> stmt) {
+NestableRelationships processStmt(AST ast, std::vector<std::string> callStack, std::shared_ptr<StmtNode> stmt) {
 	EntityStager::stageStatement(stmt->getStmtNumber());
 	if (stmt->isReadNode()) {
 		return processReadNode(std::dynamic_pointer_cast<ReadNode>(stmt));
@@ -164,14 +207,16 @@ NestableRelationships processStmt(std::shared_ptr<StmtNode> stmt) {
 	} else if (stmt->isAssignNode()) {
 		return processAssignNode(std::dynamic_pointer_cast<AssignNode>(stmt));
 	} else if (stmt->isWhileNode()) {
-		return processWhileNode(std::dynamic_pointer_cast<WhileNode>(stmt));
+		return processWhileNode(ast, callStack, std::dynamic_pointer_cast<WhileNode>(stmt));
 	} else if (stmt->isIfNode()) {
-		return processIfNode(std::dynamic_pointer_cast<IfNode>(stmt));
+		return processIfNode(ast, callStack, std::dynamic_pointer_cast<IfNode>(stmt));
+	} else if (stmt->isCallNode()) {
+		return processCallNode(ast, callStack, std::dynamic_pointer_cast<CallNode>(stmt));
 	}
 	return NestableRelationships::createEmpty();
 }
 
-NestableRelationships processStmtList(std::vector<std::shared_ptr<StmtNode>> stmtList) {
+NestableRelationships processStmtList(AST ast, std::vector<std::string> callStack, std::vector<std::shared_ptr<StmtNode>> stmtList) {
 	NestableRelationships output = NestableRelationships::createEmpty();
 	for (int i = 0; i < stmtList.size(); i++) {
 		if (i < stmtList.size() - 1) {
@@ -180,7 +225,7 @@ NestableRelationships processStmtList(std::vector<std::shared_ptr<StmtNode>> stm
 		for (int j = i + 1; j < stmtList.size(); j++) {
 			EntityStager::stageFollowsT(stmtList[i]->getStmtNumber(), stmtList[j]->getStmtNumber());
 		}
-		NestableRelationships rs = processStmt(stmtList[i]);
+		NestableRelationships rs = processStmt(ast, callStack, stmtList[i]);
 		rs.addChildren(stmtList[i]->getStmtNumber());
 		output.combine(rs);
 	}
@@ -188,26 +233,33 @@ NestableRelationships processStmtList(std::vector<std::shared_ptr<StmtNode>> stm
 }
 
 //procedure (list) processing functions
-NestableRelationships processProcedure(std::shared_ptr<ProcedureNode> proc) {
+NestableRelationships processProcedure(AST ast, std::vector<std::string> callStack, std::shared_ptr<ProcedureNode> proc) {
 	EntityStager::stageProcedure(proc->getProcName());
 
-	NestableRelationships rs = processStmtList(proc->getStmtList());
+	if (DesignExtractor::isCached(proc->getProcName())) return DesignExtractor::retrieve(proc->getProcName());
+
+	//only run when rs is not cached
+	callStack.insert(callStack.begin(), proc->getProcName());
+	NestableRelationships rs = processStmtList(ast, callStack, proc->getStmtList());
+	DesignExtractor::cache(proc->getProcName(), rs);
 	if (rs.getModifiesSize() > 0) EntityStager::stageModifiesProcedure(proc->getProcName(), rs.getModifies());
 	if (rs.getUsesSize() > 0) EntityStager::stageUsesProcedure(proc->getProcName(), rs.getUses());
 	return rs;
 }
 
-void processProcedureList(std::unordered_map<std::string, std::shared_ptr<ProcedureNode>> procMap) {
+void processProcedureList(AST ast, std::unordered_map<std::string, std::shared_ptr<ProcedureNode>> procMap) {
 	for (auto& procPair : procMap) {
-		processProcedure(procPair.second);
+		processProcedure(ast, { }, procPair.second);
 	}
 }
 
 void DesignExtractor::extractDesignElements(AST ast) {
 	EntityStager::clear();
-	processProcedureList(ast->getProcedureMap());
+	DesignExtractor::procCache.clear();
+	processProcedureList(ast, ast->getProcedureMap());
 }
 
 void DesignExtractor::commit() {
 	EntityStager::commit();
+	DesignExtractor::procCache.clear();
 }

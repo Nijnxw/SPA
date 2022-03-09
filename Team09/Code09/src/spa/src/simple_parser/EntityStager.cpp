@@ -20,11 +20,23 @@ void EntityStager::clear() {
 	stagedFollowsT.clear();
 	stagedParent.clear();
 	stagedParentT.clear();
+	stagedCalls.clear();
+	stagedCallsT.clear();
 	stagedUsesStatement.clear();
 	stagedUsesProcedure.clear();
 	stagedModifiesStatement.clear();
 	stagedModifiesProcedure.clear();
 }
+//helper function
+template <typename T>
+std::unordered_set<int> getStmtNoFromSet(std::unordered_map<int, T> store) {
+	std::unordered_set<int> output;
+	for (auto& s : store) {
+		output.insert(s.first);
+	}
+	return output;
+}
+
 
 // getters
 std::unordered_set<std::string> EntityStager::getStagedProcedures() {
@@ -44,22 +56,42 @@ std::unordered_set<int> EntityStager::getStagedStatements() {
 }
 
 std::unordered_set<int> EntityStager::getStagedReadStatements() {
+	return getStmtNoFromSet(stagedReadStatements);
+}
+
+std::unordered_map<int, std::string> EntityStager::getStagedReads() {
 	return stagedReadStatements;
 }
 
 std::unordered_set<int> EntityStager::getStagedPrintStatements() {
+	return getStmtNoFromSet(stagedPrintStatements);
+}
+
+std::unordered_map<int, std::string> EntityStager::getStagedPrints() {
 	return stagedPrintStatements;
 }
 
 std::unordered_set<int> EntityStager::getStagedIfStatements() {
+	return getStmtNoFromSet(stagedIfStatements);
+}
+
+std::unordered_map<int, std::unordered_set<std::string>> EntityStager::getStagedIfs() {
 	return stagedIfStatements;
 }
 
 std::unordered_set<int> EntityStager::getStagedWhileStatements() {
+	return getStmtNoFromSet(stagedWhileStatements);
+}
+
+std::unordered_map<int, std::unordered_set<std::string>> EntityStager::getStagedWhiles() {
 	return stagedWhileStatements;
 }
 
 std::unordered_set<int> EntityStager::getStagedCallStatements() {
+	return getStmtNoFromSet(stagedCallStatements);
+}
+
+std::unordered_map<int, std::string> EntityStager::getStagedCall() {
 	return stagedCallStatements;
 }
 
@@ -81,6 +113,14 @@ std::vector<std::pair<int, int>> EntityStager::getStagedParent() {
 
 std::vector<std::pair<int, int>> EntityStager::getStagedParentT() {
 	return stagedParentT;
+}
+
+std::vector<std::pair<std::string, std::string>> EntityStager::getStagedCalls() {
+	return stagedCalls;
+}
+
+std::vector<std::pair<std::string, std::string>> EntityStager::getStagedCallsT() {
+	return stagedCallsT;
 }
 
 std::vector<std::pair<int, std::unordered_set<std::string>>> EntityStager::getStagedUsesStatement() {
@@ -116,24 +156,24 @@ void EntityStager::stageStatement(int stmtNo) {
 	stagedStatements.insert(stmtNo);
 }
 
-void EntityStager::stageIfStatement(int stmtNo) {
-	stagedIfStatements.insert(stmtNo);
+void EntityStager::stageIfStatement(int stmtNo, std::unordered_set<std::string> vars) {
+	stagedIfStatements.insert({ stmtNo, vars });
 }
 
-void EntityStager::stageWhileStatement(int stmtNo) {
-	stagedWhileStatements.insert(stmtNo);
+void EntityStager::stageWhileStatement(int stmtNo, std::unordered_set<std::string> vars) {
+	stagedWhileStatements.insert({ stmtNo, vars });
 }
 
-void EntityStager::stageReadStatement(int stmtNo) {
-	stagedReadStatements.insert(stmtNo);
+void EntityStager::stageReadStatement(int stmtNo, std::string varName) {
+	stagedReadStatements.insert({stmtNo, varName});
 }
 
-void EntityStager::stagePrintStatement(int stmtNo) {
-	stagedPrintStatements.insert(stmtNo);
+void EntityStager::stagePrintStatement(int stmtNo, std::string varName) {
+	stagedPrintStatements.insert({ stmtNo, varName });
 }
 
-void EntityStager::stageCallStatement(int stmtNo) {
-	stagedCallStatements.insert(stmtNo);
+void EntityStager::stageCallStatement(int stmtNo, std::string procName) {
+	stagedCallStatements.insert({ stmtNo, procName });
 }
 
 void EntityStager::stageAssignStatement(int stmtNo, std::string lhs, std::string rhs) {
@@ -160,6 +200,14 @@ void EntityStager::stageParentT(int parent, std::unordered_set<int> children) {
 	}
 }
 
+void EntityStager::stageCalls(std::string caller, std::string callee) {
+	stagedCalls.emplace_back(caller, callee);
+}
+
+void EntityStager::stageCallsT(std::string caller, std::string callee) {
+	stagedCallsT.emplace_back(caller, callee);
+}
+
 void EntityStager::stageUsesStatements(int stmt, std::unordered_set<std::string> variables) {
 	stagedUsesStatement.emplace_back(stmt, variables);
 }
@@ -183,11 +231,11 @@ void EntityStager::commit() {
 	for (auto& con: stagedVariables) { PKB::addVariable(con); }
 
 	for (auto& stmt: stagedStatements) { PKB::addStatementNumber(stmt); }
-	for (auto& read: stagedReadStatements) { PKB::addStatementWithType(EntityType::READ, read); }
-	for (auto& print: stagedPrintStatements) { PKB::addStatementWithType(EntityType::PRINT, print); }
-	for (auto& ifs: stagedIfStatements) { PKB::addStatementWithType(EntityType::IF, ifs); }
-	for (auto& whiles: stagedWhileStatements) { PKB::addStatementWithType(EntityType::WHILE, whiles); }
-	for (auto& call: stagedCallStatements) { PKB::addStatementWithType(EntityType::CALL, call); }
+	for (auto& read: stagedReadStatements) {PKB::addReadStatement(read.first, read.second); }
+	for (auto& print: stagedPrintStatements) { PKB::addPrintStatement(print.first, print.second); }
+	for (auto& ifs: stagedIfStatements) { PKB::addIfStatement(ifs.first, ifs.second); }
+	for (auto& whiles: stagedWhileStatements) { PKB::addWhileStatement(whiles.first, whiles.second); }
+	for (auto& call: stagedCallStatements) { PKB::addCallStatement(call.first, call.second); }
 
 	for (auto& assign: stagedAssignStatements) {
 		PKB::addAssignStatement(std::get<0>(assign), std::get<1>(assign), std::get<2>(assign));
@@ -204,6 +252,12 @@ void EntityStager::commit() {
 	}
 	for (auto& parentT: stagedParentT) {
 		PKB::addParentT(parentT.first, parentT.second);
+	}
+	for (auto& call : stagedCalls) {
+		PKB::addCalls(call.first, call.second);
+	}
+	for (auto& callT : stagedCallsT) {
+		PKB::addCallsT(callT.first, callT.second);
 	}
 	for (auto& modifiesS: stagedModifiesStatement) {
 		PKB::addModifiesStatement(modifiesS.first, modifiesS.second);

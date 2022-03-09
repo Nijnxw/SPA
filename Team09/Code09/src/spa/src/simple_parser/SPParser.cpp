@@ -1,6 +1,7 @@
 #include "SPParser.h"
 
-SPParser::SPParser(std::vector<Token*> tokens) : tokens(std::move(tokens)), currentIdx(0), stmtNo(0) {}
+SPParser::SPParser(std::vector<Token*> tokens) : tokens(std::move(tokens)), currentIdx(0), stmtNo(0),
+	callStmtValidator(CallStmtValidator()) {}
 
 Token* SPParser::peek() {
 	return tokens[currentIdx];
@@ -229,6 +230,14 @@ std::shared_ptr<ProcedureNode> SPParser::parseProcedure() {
 		throw std::runtime_error("Expected a valid procedure name but got '" + peek()->getValue() + "' instead.\n");
 	}
 	std::string procName = get()->getValue();
+
+	// SEMANTIC RULE: A program cannot have two procedures with the same name
+	if (callStmtValidator.programHasProcName(procName)) {
+		throw std::runtime_error("There are 2 procedures with the same name '" + procName + "'.\n");
+	}
+	currProcName = procName;
+	callStmtValidator.addProcName(procName);
+
 	expect("{");
 	std::vector<std::shared_ptr<StmtNode>> stmtLst = parseStmtLst();
 	expect("}");
@@ -266,6 +275,9 @@ std::shared_ptr<StmtNode> SPParser::parseStatement() {
 
 	std::shared_ptr<IfNode> ifNode = parseIf();
 	if (ifNode) return ifNode;
+
+	std::shared_ptr<CallNode> callNode = parseCall();
+	if (callNode) return callNode;
 
 	throw std::runtime_error("Invalid statement syntax at statement " + std::to_string(getStmtNo()) + ".\n");
 }
@@ -347,17 +359,45 @@ std::shared_ptr<IfNode> SPParser::parseIf() {
 	return std::make_shared<IfNode>(currStmtNo, predicateNode, thenStmtLst, elseStmtLst);
 }
 
+// call: 'call' proc_name';'
+std::shared_ptr<CallNode> SPParser::parseCall() {
+	if (!check("call")) return nullptr;
+	expect("call");
+	if (!check(ParserTokenType::NAME)) {
+		throw std::runtime_error("Expected a valid procedure name but got '" + peek()->getValue() + "' instead.\n");
+	}
+	std::string calleeProcName = get()->getValue();
+
+	assert(!currProcName.empty());
+	callStmtValidator.addProcCall(currProcName, calleeProcName);
+
+	expect(";");
+	return std::make_shared<CallNode>(getStmtNo(), calleeProcName);
+}
+
 // Main function driving SPParser class (exposed API)
-// program: procedure
+// program: procedure+
 AST SPParser::parseProgram() {
 	std::unordered_map<std::string, std::shared_ptr<ProcedureNode>> procedureMap;
-	std::shared_ptr<ProcedureNode> procedureNode = parseProcedure();
-	if (!procedureNode) {
+	while (true) {
+		if (check(ParserTokenType::END_OF_FILE)) {
+			break;
+		}
+
+		std::shared_ptr<ProcedureNode> procedureNode = parseProcedure();
+		if (!procedureNode) {
+			throw std::runtime_error("Expected 'procedure' but got '" + peek()->getValue() + "' instead.\n");
+		}
+
+		procedureMap.insert(std::make_pair(procedureNode->getProcName(), procedureNode));
+	}
+
+	if (procedureMap.empty()) {
 		throw std::runtime_error("There must be at least 1 procedure in a SIMPLE program!\n");
 	}
-	if (procedureMap.count(procedureNode->getProcName()) == 1) {
-		//should throw - @wenjin
-	}
-	procedureMap.insert(std::make_pair(procedureNode->getProcName(), procedureNode));
+
+	// check if all call semantic rules are held, else throws error
+	callStmtValidator.checkCallStmtsValidity();
+
 	return std::make_shared<ProgramNode>(procedureMap);
 }

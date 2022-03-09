@@ -20,6 +20,14 @@ const std::unordered_set<std::string>& QueryClause::getUsedSynonyms() const {
 	return usedSynonyms;
 }
 
+bool QueryClause::operator==(const QueryClause& other) const {
+	bool isRelationRefEqual = clauseType == other.getClauseType();
+	bool isClauseSynonymEqual = clauseSynonym == other.getClauseSynonym();
+	bool isArgumentsEqual = arguments == other.arguments;
+	bool isUsedSynonymsEqual = usedSynonyms == other.usedSynonyms;
+	return isRelationRefEqual && isClauseSynonymEqual && isArgumentsEqual && isUsedSynonymsEqual;
+}
+
 bool QueryClause::containsCommonSynonym(QueryClause& other) const {
 	for (const auto& syn: other.usedSynonyms) {
 		if (usedSynonyms.count(syn) > 0) {
@@ -31,4 +39,13 @@ bool QueryClause::containsCommonSynonym(QueryClause& other) const {
 
 bool QueryClause::containsSynonym(QueryArgument& synonym) const {
 	return usedSynonyms.count(synonym.getValue()) > 0;
+}
+
+std::string QueryClause::toString() const {
+	std::string str = ToString(clauseType);
+	for (const auto& arg: arguments) {
+		str += " ";
+		str += arg.getValue();
+	}
+	return str;
 }

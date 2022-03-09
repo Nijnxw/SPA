@@ -12,8 +12,9 @@ void PKB::clearAllStores() {
 	PKB::entityStore.clear();
 	PKB::followsStore.clear();
 	PKB::parentStore.clear();
-	UsesStore::clear();
-	ModifiesStore::clear();
+	PKB::usesStore.clear();
+	PKB::modifiesStore.clear();
+	PKB::callsStore.clear();
 }
 
 /* Setters called by Source Processor */
@@ -24,6 +25,7 @@ bool PKB::addProcedure(std::string procedure) {
 bool PKB::addVariable(std::string variable) {
 	return entityStore.addVariable(variable);
 }
+
 bool PKB::addConstant(std::string constant) {
 	return entityStore.addConstant(constant);
 }
@@ -36,8 +38,24 @@ bool PKB::addAssignStatement(int statementNumber, std::string leftHandSide, std:
 	return entityStore.addAssignStatement(statementNumber, leftHandSide, rightHandSide);
 }
 
-bool PKB::addStatementWithType(EntityType statementType, int statementNumber) {
-	return entityStore.addStatementWithType(statementType, statementNumber);
+bool PKB::addIfStatement(int statementNumber, std::unordered_set<std::string> conditionalVariables) {
+	return entityStore.addIfStatement(statementNumber, conditionalVariables);
+}
+
+bool PKB::addWhileStatement(int statementNumber, std::unordered_set<std::string> conditionalVariables) {
+	return entityStore.addWhileStatement(statementNumber, conditionalVariables);
+}
+
+bool PKB::addCallStatement(int statementNumber, std::string procedure) {
+	return entityStore.addCallStatement(statementNumber, procedure);
+}
+
+bool PKB::addReadStatement(int statementNumber, std::string variable) {
+	return entityStore.addReadStatement(statementNumber, variable);
+}
+
+bool PKB::addPrintStatement(int statementNumber, std::string variable) {
+	return entityStore.addPrintStatement(statementNumber, variable);
 }
 
 bool PKB::addFollows(int follower, int followee) {
@@ -56,19 +74,28 @@ bool PKB::addParentT(int parent, int child) {
 	return parentStore.addRelationshipT(parent, child);
 }
 
+bool PKB::addCalls(std::string caller, std::string callee) {
+	return callsStore.addRelationship(caller, callee);
+}
+
+bool PKB::addCallsT(std::string caller, std::string callee) {
+	return callsStore.addRelationshipT(caller, callee);
+}
+
 bool PKB::addUsesStatement(int statementNumber, const std::unordered_set<std::string>& variables) {
-	return UsesStore::addUsesStatement(statementNumber, variables);
+	return usesStore.addStmtVarRelationship(statementNumber, variables);
 }
 
 bool PKB::addUsesProcedure(const std::string& procedure, const std::unordered_set<std::string>& variables) {
-	return UsesStore::addUsesProcedure(procedure, variables);
+	return usesStore.addProcVarRelationship(procedure, variables);
 }
 
 bool PKB::addModifiesStatement(int statementNumber, const std::unordered_set<std::string>& variables) {
-	return ModifiesStore::addModifiesStatement(statementNumber, variables);
+	return modifiesStore.addStmtVarRelationship(statementNumber, variables);
 }
+
 bool PKB::addModifiesProcedure(const std::string& procedure, const std::unordered_set<std::string>& variables) {
-	return ModifiesStore::addModifiesProcedure(procedure, variables);
+	return modifiesStore.addProcVarRelationship(procedure, variables);
 }
 
 /* Getters called by Query Evaluator */
@@ -88,152 +115,278 @@ std::unordered_set<int> PKB::getStatementNumbers() {
 	return entityStore.getStatementNumbers();
 }
 
-std::unordered_map<int, AssignStatement> PKB::getAssignStatements() {
-	return entityStore.getAssignStatements();
+std::unordered_map<int, AssignStatement> PKB::getAssignStatementsToStructs() {
+	return entityStore.getAssignStatementsToStructs();
+}
+
+std::unordered_map<int, std::unordered_set<std::string>> PKB::getIfStatementsToConditionalVariables() {
+	return entityStore.getIfStatementsToConditionalVariables();
+}
+
+std::unordered_map<int, std::unordered_set<std::string>> PKB::getWhileStatementsToConditionalVariables() {
+	return entityStore.getWhileStatementsToConditionalVariables();
+}
+
+std::unordered_map<int, std::string> PKB::getCallStatementsToProcedures() {
+	return entityStore.getCallStatementsToProcedures();
+}
+
+std::unordered_map<int, std::string> PKB::getPrintStatementsToVariables() {
+	return entityStore.getPrintStatementsToVariables();
+}
+
+std::unordered_map<int, std::string> PKB::getReadStatementsToVariables() {
+	return entityStore.getReadStatementsToVariables();
 }
 
 std::unordered_set<int> PKB::getStatementsWithType(EntityType statementType) {
 	return entityStore.getStatementsWithType(statementType);
 }
 
-/* Follows and Parent Getters */
-bool PKB::hasRelationship(RelationRef relationship) {
+/* StmtStmt Getter Helpers */
+bool PKB::hasStmtStmtRelationship(RelationRef relationship) {
 	switch (relationship) {
-	case RelationRef::FOLLOWS:
-		return followsStore.hasRelationship();
-	case RelationRef::PARENT:
-		return parentStore.hasRelationship();
-	case RelationRef::FOLLOWS_T:
-		return followsStore.hasTRelationship();
-	case RelationRef::PARENT_T:
-		return parentStore.hasTRelationship();
-	default:
-		return false;
+		case RelationRef::FOLLOWS:
+			return followsStore.hasRelationship();
+		case RelationRef::PARENT:
+			return parentStore.hasRelationship();
+		case RelationRef::FOLLOWS_T:
+			return followsStore.hasTRelationship();
+		case RelationRef::PARENT_T:
+			return parentStore.hasTRelationship();
+		default:
+			return false;
 	}
 }
 
-bool PKB::isRelationship(RelationRef relationship, int statementOne, int statementTwo) {
+bool PKB::isStmtStmtRelationship(RelationRef relationship, int statementOne, int statementTwo) {
 	switch (relationship) {
-	case RelationRef::FOLLOWS:
-		return followsStore.isRelationship(statementOne, statementTwo);
-	case RelationRef::PARENT:
-		return parentStore.isRelationship(statementOne, statementTwo);
-	case RelationRef::FOLLOWS_T:
-		return followsStore.isTRelationship(statementOne, statementTwo);
-	case RelationRef::PARENT_T:
-		return parentStore.isTRelationship(statementOne, statementTwo);
-	default:
-		return false;
+		case RelationRef::FOLLOWS:
+			return followsStore.isRelationship(statementOne, statementTwo);
+		case RelationRef::PARENT:
+			return parentStore.isRelationship(statementOne, statementTwo);
+		case RelationRef::FOLLOWS_T:
+			return followsStore.isTRelationship(statementOne, statementTwo);
+		case RelationRef::PARENT_T:
+			return parentStore.isTRelationship(statementOne, statementTwo);
+		default:
+			return false;
 	}
 }
 
-bool PKB::isFirstEntity(RelationRef relationship, int statementOne) {
+bool PKB::isStmtStmtFirstEntity(RelationRef relationship, int statementOne) {
 	switch (relationship) {
-	case RelationRef::FOLLOWS:
-		return followsStore.isFirstStatement(statementOne);
-	case RelationRef::PARENT:
-		return parentStore.isFirstStatement(statementOne);
-	case RelationRef::FOLLOWS_T:
-		return followsStore.isFirstStatementT(statementOne);
-	case RelationRef::PARENT_T:
-		return parentStore.isFirstStatementT(statementOne);
-	default:
-		return false;
+		case RelationRef::FOLLOWS:
+			return followsStore.isFirstSynonym(statementOne);
+		case RelationRef::PARENT:
+			return parentStore.isFirstSynonym(statementOne);
+		case RelationRef::FOLLOWS_T:
+			return followsStore.isFirstSynonymT(statementOne);
+		case RelationRef::PARENT_T:
+			return parentStore.isFirstSynonymT(statementOne);
+		default:
+			return false;
 	}
 }
 
-bool PKB::isSecondEntity(RelationRef relationship, int statementTwo) {
+bool PKB::isStmtStmtSecondEntity(RelationRef relationship, int statementTwo) {
 	switch (relationship) {
-	case RelationRef::FOLLOWS:
-		return followsStore.isSecondStatement(statementTwo);
-	case RelationRef::PARENT:
-		return parentStore.isSecondStatement(statementTwo);
-	case RelationRef::FOLLOWS_T:
-		return followsStore.isSecondStatementT(statementTwo);
-	case RelationRef::PARENT_T:
-		return parentStore.isSecondStatementT(statementTwo);
-	default:
-		return false;
+		case RelationRef::FOLLOWS:
+			return followsStore.isSecondSynonym(statementTwo);
+		case RelationRef::PARENT:
+			return parentStore.isSecondSynonym(statementTwo);
+		case RelationRef::FOLLOWS_T:
+			return followsStore.isSecondSynonymT(statementTwo);
+		case RelationRef::PARENT_T:
+			return parentStore.isSecondSynonymT(statementTwo);
+		default:
+			return false;
 	}
 }
 
-std::unordered_set<int> PKB::getFirstEntities(RelationRef relationship, int statementTwo) {
+std::unordered_set<int> PKB::getStmtStmtFirstEntities(RelationRef relationship, int statementTwo) {
 	switch (relationship) {
-	case RelationRef::FOLLOWS:
-		return followsStore.getFirstStatements(statementTwo);
-	case RelationRef::PARENT:
-		return parentStore.getFirstStatements(statementTwo);
-	case RelationRef::FOLLOWS_T:
-		return followsStore.getFirstStatementsT(statementTwo);
-	case RelationRef::PARENT_T:
-		return parentStore.getFirstStatementsT(statementTwo);
-	default:
-		std::unordered_set<int> emptyResult;
-		return emptyResult;
+		case RelationRef::FOLLOWS:
+			return followsStore.getFirstSynonyms(statementTwo);
+		case RelationRef::PARENT:
+			return parentStore.getFirstSynonyms(statementTwo);
+		case RelationRef::FOLLOWS_T:
+			return followsStore.getFirstSynonymsT(statementTwo);
+		case RelationRef::PARENT_T:
+			return parentStore.getFirstSynonymsT(statementTwo);
+		default:
+			std::unordered_set<int> emptyResult;
+			return emptyResult;
 	}
 }
 
-std::unordered_set<int> PKB::getSecondEntities(RelationRef relationship, int statementOne) {
+std::unordered_set<int> PKB::getStmtStmtSecondEntities(RelationRef relationship, int statementOne) {
 	switch (relationship) {
-	case RelationRef::FOLLOWS:
-		return followsStore.getSecondStatements(statementOne);
-	case RelationRef::PARENT:
-		return parentStore.getSecondStatements(statementOne);
-	case RelationRef::FOLLOWS_T:
-		return followsStore.getSecondStatementsT(statementOne);
-	case RelationRef::PARENT_T:
-		return parentStore.getSecondStatementsT(statementOne);
-	default:
-		std::unordered_set<int> emptyResult;
-		return emptyResult;
+		case RelationRef::FOLLOWS:
+			return followsStore.getSecondSynonyms(statementOne);
+		case RelationRef::PARENT:
+			return parentStore.getSecondSynonyms(statementOne);
+		case RelationRef::FOLLOWS_T:
+			return followsStore.getSecondSynonymsT(statementOne);
+		case RelationRef::PARENT_T:
+			return parentStore.getSecondSynonymsT(statementOne);
+		default:
+			std::unordered_set<int> emptyResult;
+			return emptyResult;
 	}
 }
 
-std::unordered_set<int> PKB::getAllFirstEntities(RelationRef relationship) {
+std::unordered_set<int> PKB::getAllStmtStmtFirstEntities(RelationRef relationship) {
 	switch (relationship) {
-	case RelationRef::FOLLOWS:
-		return followsStore.getAllFirstStatements();
-	case RelationRef::PARENT:
-		return parentStore.getAllFirstStatements();
-	case RelationRef::FOLLOWS_T:
-		return followsStore.getAllFirstStatementsT();
-	case RelationRef::PARENT_T:
-		return parentStore.getAllFirstStatementsT();
-	default:
-		std::unordered_set<int> emptyResult;
-		return emptyResult;
+		case RelationRef::FOLLOWS:
+			return followsStore.getAllFirstSynonyms();
+		case RelationRef::PARENT:
+			return parentStore.getAllFirstSynonyms();
+		case RelationRef::FOLLOWS_T:
+			return followsStore.getAllFirstSynonymsT();
+		case RelationRef::PARENT_T:
+			return parentStore.getAllFirstSynonymsT();
+		default:
+			std::unordered_set<int> emptyResult;
+			return emptyResult;
 	}
 }
 
-std::unordered_set<int> PKB::getAllSecondEntities(RelationRef relationship) {
+std::unordered_set<int> PKB::getAllStmtStmtSecondEntities(RelationRef relationship) {
 	switch (relationship) {
-	case RelationRef::FOLLOWS:
-		return followsStore.getAllSecondStatements();
-	case RelationRef::PARENT:
-		return parentStore.getAllSecondStatements();
-	case RelationRef::FOLLOWS_T:
-		return followsStore.getAllSecondStatementsT();
-	case RelationRef::PARENT_T:
-		return parentStore.getAllSecondStatementsT();
-	default:
-		std::unordered_set<int> emptyResult;
-		return emptyResult;
+		case RelationRef::FOLLOWS:
+			return followsStore.getAllSecondSynonyms();
+		case RelationRef::PARENT:
+			return parentStore.getAllSecondSynonyms();
+		case RelationRef::FOLLOWS_T:
+			return followsStore.getAllSecondSynonymsT();
+		case RelationRef::PARENT_T:
+			return parentStore.getAllSecondSynonymsT();
+		default:
+			std::unordered_set<int> emptyResult;
+			return emptyResult;
 	}
 }
 
-std::tuple<std::vector<int>, std::vector<int>> PKB::getAllRelationshipPairs(RelationRef relationship) {
+std::tuple<std::vector<int>, std::vector<int>> PKB::getAllStmtStmtRelationshipPairs(RelationRef relationship) {
 	switch (relationship) {
-	case RelationRef::FOLLOWS:
-		return followsStore.getAllRelationshipPairs();
-	case RelationRef::PARENT:
-		return parentStore.getAllRelationshipPairs();
-	case RelationRef::FOLLOWS_T:
-		return followsStore.getAllRelationshipTPairs();
-	case RelationRef::PARENT_T:
-		return parentStore.getAllRelationshipTPairs();
-	default:
-		std::tuple<std::vector<int>, std::vector<int>> emptyResult;
-		return emptyResult;
+		case RelationRef::FOLLOWS:
+			return followsStore.getAllRelationshipPairs();
+		case RelationRef::PARENT:
+			return parentStore.getAllRelationshipPairs();
+		case RelationRef::FOLLOWS_T:
+			return followsStore.getAllRelationshipTPairs();
+		case RelationRef::PARENT_T:
+			return parentStore.getAllRelationshipTPairs();
+		default:
+			std::tuple<std::vector<int>, std::vector<int>> emptyResult;
+			return emptyResult;
+	}
+}
+
+/* ProcProc Getter Helpers */
+bool PKB::hasProcProcRelationship(RelationRef relationship) {
+	switch (relationship) {
+		case RelationRef::CALLS:
+			return callsStore.hasRelationship();
+		case RelationRef::CALLS_T:
+			return callsStore.hasTRelationship();
+		default:
+			return false;
+	}
+}
+
+bool PKB::isProcProcRelationship(RelationRef relationship, std::string procOne, std::string procTwo) {
+	switch (relationship) {
+		case RelationRef::CALLS:
+			return callsStore.isRelationship(procOne, procTwo);
+		case RelationRef::CALLS_T:
+			return callsStore.isTRelationship(procOne, procTwo);
+		default:
+			return false;
+	}
+}
+
+bool PKB::isProcProcFirstEntity(RelationRef relationship, std::string procOne) {
+	switch (relationship) {
+		case RelationRef::CALLS:
+			return callsStore.isFirstSynonym(procOne);
+		case RelationRef::CALLS_T:
+			return callsStore.isFirstSynonymT(procOne);
+		default:
+			return false;
+	}
+}
+
+bool PKB::isProcProcSecondEntity(RelationRef relationship, std::string procTwo) {
+	switch (relationship) {
+		case RelationRef::CALLS:
+			return callsStore.isSecondSynonym(procTwo);
+		case RelationRef::CALLS_T:
+			return callsStore.isSecondSynonymT(procTwo);
+		default:
+			return false;
+	}
+}
+
+std::unordered_set<std::string> PKB::getProcProcFirstEntities(RelationRef relationship, std::string procTwo) {
+	switch (relationship) {
+		case RelationRef::CALLS:
+			return callsStore.getFirstSynonyms(procTwo);
+		case RelationRef::CALLS_T:
+			return callsStore.getFirstSynonymsT(procTwo);
+		default:
+			std::unordered_set<std::string> emptyResult;
+			return emptyResult;
+	}
+}
+
+std::unordered_set<std::string> PKB::getProcProcSecondEntities(RelationRef relationship, std::string procOne) {
+	switch (relationship) {
+		case RelationRef::CALLS:
+			return callsStore.getSecondSynonyms(procOne);
+		case RelationRef::CALLS_T:
+			return callsStore.getSecondSynonymsT(procOne);
+		default:
+			std::unordered_set<std::string> emptyResult;
+			return emptyResult;
+	}
+}
+
+std::unordered_set<std::string> PKB::getAllProcProcFirstEntities(RelationRef relationship) {
+	switch (relationship) {
+		case RelationRef::CALLS:
+			return callsStore.getAllFirstSynonyms();
+		case RelationRef::CALLS_T:
+			return callsStore.getAllFirstSynonymsT();
+		default:
+			std::unordered_set<std::string> emptyResult;
+			return emptyResult;
+	}
+}
+
+std::unordered_set<std::string> PKB::getAllProcProcSecondEntities(RelationRef relationship) {
+	switch (relationship) {
+		case RelationRef::CALLS:
+			return callsStore.getAllSecondSynonyms();
+		case RelationRef::CALLS_T:
+			return callsStore.getAllSecondSynonymsT();
+		default:
+			std::unordered_set<std::string> emptyResult;
+			return emptyResult;
+	}
+}
+
+std::tuple<std::vector<std::string>, std::vector<std::string>>
+PKB::getAllProcProcRelationshipPairs(RelationRef relationship) {
+	switch (relationship) {
+		case RelationRef::CALLS:
+			return callsStore.getAllRelationshipPairs();
+		case RelationRef::CALLS_T:
+			return callsStore.getAllRelationshipTPairs();
+		default:
+			std::tuple<std::vector<std::string>, std::vector<std::string>> emptyResult;
+			return emptyResult;
 	}
 }
 
@@ -255,51 +408,51 @@ bool PKB::isFollowsTRelationship(int follower, int followee) {
 }
 
 bool PKB::isFollower(int follower) {
-	return followsStore.isFirstStatement(follower);
+	return followsStore.isFirstSynonym(follower);
 }
 
 bool PKB::isFollowee(int followee) {
-	return followsStore.isSecondStatement(followee);
+	return followsStore.isSecondSynonym(followee);
 }
 
 bool PKB::isFollowerT(int follower) {
-	return followsStore.isFirstStatementT(follower);
+	return followsStore.isFirstSynonymT(follower);
 }
 
 bool PKB::isFolloweeT(int followee) {
-	return followsStore.isSecondStatementT(followee);
+	return followsStore.isSecondSynonymT(followee);
 }
 
 std::unordered_set<int> PKB::getFollowee(int follower) {
-	return followsStore.getSecondStatements(follower);
+	return followsStore.getSecondSynonyms(follower);
 }
 
 std::unordered_set<int> PKB::getFollower(int followee) {
-	return followsStore.getFirstStatements(followee);
+	return followsStore.getFirstSynonyms(followee);
 }
 
 std::unordered_set<int> PKB::getAllFollowees() {
-	return followsStore.getAllSecondStatements();
+	return followsStore.getAllSecondSynonyms();
 }
 
 std::unordered_set<int> PKB::getAllFollowers() {
-	return followsStore.getAllFirstStatements();
+	return followsStore.getAllFirstSynonyms();
 }
 
 std::unordered_set<int> PKB::getFolloweesT(int follower) {
-	return followsStore.getSecondStatementsT(follower);
+	return followsStore.getSecondSynonymsT(follower);
 }
 
 std::unordered_set<int> PKB::getFollowersT(int followee) {
-	return followsStore.getFirstStatementsT(followee);
+	return followsStore.getFirstSynonymsT(followee);
 }
 
 std::unordered_set<int> PKB::getAllFolloweesT() {
-	return followsStore.getAllSecondStatementsT();
+	return followsStore.getAllSecondSynonymsT();
 }
 
 std::unordered_set<int> PKB::getAllFollowersT() {
-	return followsStore.getAllFirstStatementsT();
+	return followsStore.getAllFirstSynonymsT();
 }
 
 std::tuple<std::vector<int>, std::vector<int>> PKB::getAllFollowsPairs() {
@@ -328,51 +481,51 @@ bool PKB::isParentTRelationship(int parent, int child) {
 }
 
 bool PKB::isParent(int parent) {
-	return parentStore.isFirstStatement(parent);
+	return parentStore.isFirstSynonym(parent);
 }
 
 bool PKB::isChild(int child) {
-	return parentStore.isSecondStatement(child);
+	return parentStore.isSecondSynonym(child);
 }
 
 bool PKB::isParentT(int parent) {
-	return parentStore.isFirstStatementT(parent);
+	return parentStore.isFirstSynonymT(parent);
 }
 
 bool PKB::isChildT(int child) {
-	return parentStore.isSecondStatementT(child);
+	return parentStore.isSecondSynonymT(child);
 }
 
 std::unordered_set<int> PKB::getChildren(int parent) {
-	return parentStore.getSecondStatements(parent);
+	return parentStore.getSecondSynonyms(parent);
 }
 
 std::unordered_set<int> PKB::getParent(int child) {
-	return parentStore.getFirstStatements(child);
+	return parentStore.getFirstSynonyms(child);
 }
 
 std::unordered_set<int> PKB::getAllChildren() {
-	return parentStore.getAllSecondStatements();
+	return parentStore.getAllSecondSynonyms();
 }
 
 std::unordered_set<int> PKB::getAllParents() {
-	return parentStore.getAllFirstStatements();
+	return parentStore.getAllFirstSynonyms();
 }
 
 std::unordered_set<int> PKB::getChildrenT(int parent) {
-	return parentStore.getSecondStatementsT(parent);
+	return parentStore.getSecondSynonymsT(parent);
 }
 
 std::unordered_set<int> PKB::getParentsT(int child) {
-	return parentStore.getFirstStatementsT(child);
+	return parentStore.getFirstSynonymsT(child);
 }
 
 std::unordered_set<int> PKB::getAllChildrenT() {
-	return parentStore.getAllSecondStatementsT();
+	return parentStore.getAllSecondSynonymsT();
 }
 
 std::unordered_set<int> PKB::getAllParentsT() {
-	return parentStore.getAllFirstStatementsT();
+	return parentStore.getAllFirstSynonymsT();
 }
 
 std::tuple<std::vector<int>, std::vector<int>> PKB::getAllParentPairs() {
@@ -383,83 +536,187 @@ std::tuple<std::vector<int>, std::vector<int>> PKB::getAllParentTPairs() {
 	return parentStore.getAllRelationshipTPairs();
 }
 
+/* Calls Getters */
+bool PKB::hasCallsRelationship() {
+	return callsStore.hasRelationship();
+}
+
+bool PKB::hasCallsTRelationship() {
+	return callsStore.hasTRelationship();
+}
+
+bool PKB::isCallsRelationship(std::string caller, std::string callee) {
+	return callsStore.isRelationship(caller, callee);
+}
+
+bool PKB::isCallsTRelationship(std::string caller, std::string callee) {
+	return callsStore.isTRelationship(caller, callee);
+}
+
+bool PKB::isCaller(std::string caller) {
+	return callsStore.isFirstSynonym(caller);
+}
+
+bool PKB::isCallee(std::string callee) {
+	return callsStore.isSecondSynonym(callee);
+}
+
+bool PKB::isCallerT(std::string caller) {
+	return callsStore.isFirstSynonymT(caller);
+}
+
+bool PKB::isCalleeT(std::string callee) {
+	return callsStore.isSecondSynonymT(callee);
+}
+
+std::unordered_set<std::string> PKB::getCallees(std::string caller) {
+	return callsStore.getSecondSynonyms(caller);
+}
+
+std::unordered_set<std::string> PKB::getCaller(std::string callee) {
+	return callsStore.getFirstSynonyms(callee);
+}
+
+std::unordered_set<std::string> PKB::getAllCallees() {
+	return callsStore.getAllSecondSynonyms();
+}
+
+std::unordered_set<std::string> PKB::getAllCallers() {
+	return callsStore.getAllFirstSynonyms();
+}
+
+std::unordered_set<std::string> PKB::getCalleesT(std::string caller) {
+	return callsStore.getSecondSynonymsT(caller);
+}
+
+std::unordered_set<std::string> PKB::getCallersT(std::string callee) {
+	return callsStore.getFirstSynonymsT(callee);
+}
+
+std::unordered_set<std::string> PKB::getAllCalleesT() {
+	return callsStore.getAllSecondSynonymsT();
+}
+
+std::unordered_set<std::string> PKB::getAllCallersT() {
+	return callsStore.getAllFirstSynonymsT();
+}
+
+std::tuple<std::vector<std::string>, std::vector<std::string>> PKB::getAllCallsPairs() {
+	return callsStore.getAllRelationshipPairs();
+}
+
+std::tuple<std::vector<std::string>, std::vector<std::string>> PKB::getAllCallsTPairs() {
+	return callsStore.getAllRelationshipTPairs();
+}
+
 /* Uses Getters */
 std::unordered_set<int> PKB::getUsesStatements() {
-	return UsesStore::getUsesStatements();
+	return usesStore.getStmtInRelationship();
+}
+
+std::unordered_set<std::string> PKB::getUsesProcedures() {
+	return usesStore.getProcInRelationship();
 }
 
 std::unordered_set<std::string> PKB::getUsedVariables() {
-	return UsesStore::getUsedVariables();
+	return usesStore.getVarInRelationship();
 }
 
 std::unordered_map<int, std::unordered_set<std::string>> PKB::getStatementNumberToVariablesUsed() {
-	return UsesStore::getStatementNumberToVariablesUsed();
+	return usesStore.getStmtToVarRelationship();
 }
 
 std::unordered_map<std::string, std::unordered_set<int>> PKB::getVariableToStatementNumbersUsedBy() {
-	return UsesStore::getVariableToStatementNumbersUsedBy();
+	return usesStore.getVarToStmtRelationship();
 }
 
 std::unordered_map<std::string, std::unordered_set<std::string>> PKB::getProcedureToVariablesUsed() {
-	return UsesStore::getProcedureToVariablesUsed();
+	return usesStore.getProcToVarRelationship();
 }
 
 std::unordered_map<std::string, std::unordered_set<std::string>> PKB::getVariableToProceduresUsedBy() {
-	return UsesStore::getVariableToProceduresUsedBy();
+	return usesStore.getVarToProcRelationship();
 }
 
+// Helpers
 std::unordered_set<std::string> PKB::getVariablesUsedByStatement(int stmtNo) {
-	return UsesStore::getVariablesUsedByStatement(stmtNo);
+	return usesStore.getVarByStmt(stmtNo);
 }
+
 std::unordered_set<std::string> PKB::getVariablesUsedByProcedure(const std::string& procName) {
-	return UsesStore::getVariablesUsedByProcedure(procName);
+	return usesStore.getVarByProc(procName);
 }
+
 std::unordered_set<int> PKB::getStatementsUsingVariable(const std::string& variable) {
-	return UsesStore::getStatementsUsingVariable(variable);
+	return usesStore.getStmtByVar(variable);
 }
+
+std::unordered_set<std::string> PKB::getProcedureUsingVariable(const std::string& variable) {
+	return usesStore.getProcByVar(variable);
+}
+
 std::tuple<std::vector<std::string>, std::vector<std::string>>
 PKB::getStmtsToUsedVariable(const std::unordered_set<int>& stmts) {
-	return UsesStore::getStmtsToUsedVariable(stmts);
+	return usesStore.getStmtToVarByStmts(stmts);
+}
+
+std::tuple<std::vector<std::string>, std::vector<std::string>>
+PKB::getProcsToUsedVariable(const std::unordered_set<std::string>& procs) {
+	return usesStore.getProcToVarByProcs(procs);
 }
 
 /* Modifies Getters */
 std::unordered_set<int> PKB::getModifiesStatements() {
-	return ModifiesStore::getModifiesStatements();
+	return modifiesStore.getStmtInRelationship();
+}
+
+std::unordered_set<std::string> PKB::getModifiesProcedures() {
+	return modifiesStore.getProcInRelationship();
 }
 
 std::unordered_set<std::string> PKB::getModifiedVariables() {
-	return ModifiesStore::getModifiedVariables();
+	return modifiesStore.getVarInRelationship();
 }
 
 std::unordered_map<int, std::unordered_set<std::string>> PKB::getStatementNumberToVariablesModified() {
-	return ModifiesStore::getStatementNumberToVariablesModified();
+	return modifiesStore.getStmtToVarRelationship();
 }
 
 std::unordered_map<std::string, std::unordered_set<int>> PKB::getVariableToStatementNumbersModifiedBy() {
-	return ModifiesStore::getVariableToStatementNumbersModifiedBy();
+	return modifiesStore.getVarToStmtRelationship();
 }
 
 std::unordered_map<std::string, std::unordered_set<std::string>> PKB::getProcedureToVariablesModified() {
-	return ModifiesStore::getProcedureToVariablesModified();
+	return modifiesStore.getProcToVarRelationship();
 }
 
 std::unordered_map<std::string, std::unordered_set<std::string>> PKB::getVariableToProceduresModifiedBy() {
-	return ModifiesStore::getVariableToProceduresModifiedBy();
+	return modifiesStore.getVarToProcRelationship();
 }
 
+// Helpers
 std::unordered_set<std::string> PKB::getVariablesModifiedByStatement(int stmtNo) {
-	return ModifiesStore::getVariablesModifiedByStatement(stmtNo);
+	return modifiesStore.getVarByStmt(stmtNo);
 }
 
 std::unordered_set<std::string> PKB::getVariablesModifiedByProcedure(const std::string& procName) {
-	return ModifiesStore::getVariablesModifiedByProcedure(procName);
+	return modifiesStore.getVarByProc(procName);
 }
 
 std::unordered_set<int> PKB::getStatementsModifyingVariable(const std::string& variable) {
-	return ModifiesStore::getStatementsModifyingVariable(variable);
+	return modifiesStore.getStmtByVar(variable);
+}
+
+std::unordered_set<std::string> PKB::getProcedureModifyingVariable(const std::string& variable) {
+	return modifiesStore.getProcByVar(variable);
 }
 
 std::tuple<std::vector<std::string>, std::vector<std::string>>
 PKB::getStmtsToModifiedVariable(const std::unordered_set<int>& stmts) {
-	return ModifiesStore::getStmtsToModifiedVariable(stmts);
+	return modifiesStore.getStmtToVarByStmts(stmts);
+}
+
+std::tuple<std::vector<std::string>, std::vector<std::string>>
+PKB::getProcsToModifiedVariable(const std::unordered_set<std::string>& procs) {
+	return modifiesStore.getProcToVarByProcs(procs);
 }

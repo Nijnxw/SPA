@@ -91,6 +91,53 @@ public:
 	static AST getAST1_81();
 	static AST getAST1_82();
 	static AST getAST1_83();
+
+	// stmt counts
+	static int getStmtCount1_39();
+	static int getStmtCount1_40();
+	static int getStmtCount1_41();
+	static int getStmtCount1_42();
+	static int getStmtCount1_43();
+	static int getStmtCount1_44();
+	static int getStmtCount1_45();
+	static int getStmtCount1_46();
+	static int getStmtCount1_47();
+	static int getStmtCount1_48();
+	static int getStmtCount1_49();
+	static int getStmtCount1_50();
+	static int getStmtCount1_51();
+	static int getStmtCount1_52();
+	static int getStmtCount1_53();
+	static int getStmtCount1_54();
+	static int getStmtCount1_55();
+	static int getStmtCount1_56();
+	static int getStmtCount1_57();
+	static int getStmtCount1_58();
+	static int getStmtCount1_59();
+	static int getStmtCount1_60();
+	static int getStmtCount1_61();
+	static int getStmtCount1_62();
+	static int getStmtCount1_63();
+	static int getStmtCount1_64();
+	static int getStmtCount1_65();
+	static int getStmtCount1_66();
+	static int getStmtCount1_67();
+	static int getStmtCount1_68();
+	static int getStmtCount1_69();
+	static int getStmtCount1_70();
+	static int getStmtCount1_71();
+	static int getStmtCount1_72();
+	static int getStmtCount1_73();
+	static int getStmtCount1_74();
+	static int getStmtCount1_75();
+	static int getStmtCount1_76();
+	static int getStmtCount1_77();
+	static int getStmtCount1_78();
+	static int getStmtCount1_79();
+	static int getStmtCount1_80();
+	static int getStmtCount1_81();
+	static int getStmtCount1_82();
+	static int getStmtCount1_83();
 };
 
 

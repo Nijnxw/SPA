@@ -121,7 +121,7 @@ AST ComplexASTs::getAST4_1() {
     std::shared_ptr<PredicateNode> predOuterIfRelLhs = std::make_shared<PredicateNode>(outerIfRelLhs);
 
     std::shared_ptr<RelExprNode> outerIfRelRhs = std::make_shared<RelExprNode>(y, ComparatorOperator::GTE, zero);
-    std::shared_ptr<PredicateNode> predOuterIfRelRhs = std::make_shared<PredicateNode>(outerIfRelLhs);
+    std::shared_ptr<PredicateNode> predOuterIfRelRhs = std::make_shared<PredicateNode>(outerIfRelRhs);
 
     std::shared_ptr<PredicateNode> outerIfPred = std::make_shared<PredicateNode>(predOuterIfRelLhs, ConditionalOperator::AND, predOuterIfRelRhs);
 

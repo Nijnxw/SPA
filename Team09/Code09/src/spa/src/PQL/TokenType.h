@@ -9,13 +9,17 @@ enum class TokenType {
 	SYNONYM,
 	INTEGER,
 	STRING,
+	EXPR,
 
 	//Puncuation tokens
 	SEMICOLON,
 	OPEN_PARAN,
 	CLOSE_PARAN,
+	OPEN_ANGLED,
+	CLOSE_ANGLED,
 	COMMA,
-	UNDERSCORE, //if underscore is in quotes (within string literals)
+	UNDERSCORE, 
+	PERIOD,
 
 	//Design-entity tokens
 	STMT,
@@ -27,22 +31,37 @@ enum class TokenType {
 	VARIABLE,
 	CONST,
 	PROC,
+	CALL,
 
-	//Such that clause tokens
+	//Select
 	SELECT,
-	SUCH,
-	THAT,
+	BOOLEAN,
 
 	//Relationship clause tokens
+	SUCH,
+	THAT,
 	MODIFIES,
 	USES,
 	PARENT,
 	PARENT_T,
 	FOLLOWS,
 	FOLLOWS_T,
+	CALLS,
+	CALLS_T,
+	NEXT,
+	NEXT_T,
+	AFFECTS,
+	AFFECTS_T,
 
-	//PATTERN_A clause tokens
-	PATTERN
+	//PATTERN clause tokens
+	PATTERN,
+
+	//WITH clause
+	WITH,
+	EQUAL,
+
+	//AND
+	AND
 };
 
 //unordered map to map raw string tokens to the appropriate token type
@@ -51,8 +70,11 @@ static std::unordered_map<std::string, TokenType> stringTokenMap = {
 	{";",         TokenType::SEMICOLON},
 	{"(",         TokenType::OPEN_PARAN},
 	{")",         TokenType::CLOSE_PARAN},
+	{"<",         TokenType::OPEN_ANGLED},
+	{">",         TokenType::CLOSE_ANGLED},
 	{",",         TokenType::COMMA},
 	{"_",         TokenType::UNDERSCORE},
+	{".",		  TokenType::PERIOD},
 
 	//Design-entity token mapping
 	{"stmt",      TokenType::STMT},
@@ -64,21 +86,36 @@ static std::unordered_map<std::string, TokenType> stringTokenMap = {
 	{"variable",  TokenType::VARIABLE},
 	{"constant",  TokenType::CONST},
 	{"procedure", TokenType::PROC},
+	{"call",	  TokenType::CALL},
 
+	//Select
 	{"Select",    TokenType::SELECT},
-
-	//such that clauses token mapping
-	{"such",      TokenType::SUCH},
-	{"that",      TokenType::THAT},
+	{"BOOLEAN",	  TokenType::BOOLEAN},
 
 	//Relationship clause token mapping 
+	{"such",      TokenType::SUCH},
+	{"that",      TokenType::THAT},
 	{"Modifies",  TokenType::MODIFIES},
 	{"Uses",      TokenType::USES},
 	{"Parent",    TokenType::PARENT},
 	{"Parent*",   TokenType::PARENT_T},
 	{"Follows",   TokenType::FOLLOWS},
 	{"Follows*",  TokenType::FOLLOWS_T},
+	{"Calls",	  TokenType::CALLS},
+	{"Calls*",	  TokenType::CALLS_T},
+	{"Next",	  TokenType::NEXT},
+	{"Next*",	  TokenType::NEXT_T},
+	{"Affects",	  TokenType::AFFECTS},
+	{"Affects*",  TokenType::AFFECTS_T},
 
 	//Pattern clause token mapping 
 	{"pattern",   TokenType::PATTERN},
+
+	//with claue token mapping
+	{"with",	  TokenType::WITH},
+	{"=",		  TokenType::EQUAL},
+
+	//And
+	{"and",		  TokenType::AND},
+
 };

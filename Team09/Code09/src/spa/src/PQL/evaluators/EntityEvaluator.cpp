@@ -1,12 +1,12 @@
 #include "EntityEvaluator.h"
 #include "pkb/PKB.h"
 
-QueryClauseResult EntityEvaluator::evaluate(QueryArgument& entity) {
+QueryClauseResult EntityEvaluator::evaluate(const QueryArgument& entity) {
 	Table result;
 	std::vector<std::string> rows;
 	switch (entity.getType()) {
 		case EntityType::ASSIGN:
-			rows = keySetIntToStringVector(PKB::getAssignStatements());
+			rows = setIntToStringVector(PKB::getStatementsWithType(EntityType::ASSIGN));
 			break;
 		case EntityType::STMT:
 			rows = setIntToStringVector(PKB::getStatementNumbers());

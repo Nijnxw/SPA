@@ -806,7 +806,7 @@ AST ContainerStmtASTs::getAST1_73() {
 AST ContainerStmtASTs::getAST1_74() {
 	/*
 	 * procedure testProgram {
-	 * 1    read x;
+	 * 1    read z;
 	 * }
 	 *
 	 * procedure testProgram2 {
@@ -857,7 +857,7 @@ AST ContainerStmtASTs::getAST1_74() {
 
 AST ContainerStmtASTs::getAST1_75() {
 	/*
-	 * procedure testProgram1 {
+	 * procedure testProgram {
 	 * 1	print z;
 	 *  }
 	 * 

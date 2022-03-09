@@ -1,10 +1,41 @@
 #include "PredicateNodes.h"
 
+//overloaded functions to handle RelFactorNode variants for variable extraction
+std::unordered_set<std::string> extractVariable(RelFactorNode relExpr);
+std::unordered_set<std::string> extractVariable(std::shared_ptr<ConstantNode> constant) {
+	return { };
+}
+
+std::unordered_set<std::string> extractVariable(std::shared_ptr<VariableNode> variable) {
+	return { variable->getName() };
+}
+
+std::unordered_set<std::string> extractVariable(std::shared_ptr<BinaryOperatorNode> binOp) {
+	std::unordered_set<std::string> vars = extractVariable(binOp->getLhs());
+	std::unordered_set<std::string> rightVar = extractVariable(binOp->getRhs());
+	
+	vars.insert(rightVar.begin(), rightVar.end());
+	return vars;
+}
+
+std::unordered_set<std::string> extractVariable(RelFactorNode relExpr) {
+	return std::visit(
+		[](const auto& relFactor) { return extractVariable(relFactor); },
+		relExpr
+	);
+}
+
 RelExprNode::RelExprNode(RelFactorNode left, ComparatorOperator oper, RelFactorNode right) :
 	Node(NodeType::RELEXPR) {
 	lhs = left;
 	op = oper;
 	rhs = right;
+
+	//populate variables bottom-up
+	std::unordered_set<std::string> leftVars = extractVariable(left);
+	variables.insert(leftVars.begin(), leftVars.end());
+	std::unordered_set<std::string> rightVars = extractVariable(right);
+	variables.insert(rightVars.begin(), rightVars.end());
 }
 
 RelFactorNode RelExprNode::getLhs() const {
@@ -19,6 +50,9 @@ ComparatorOperator RelExprNode::getOperator() const {
 	return op;
 }
 
+std::unordered_set<std::string> RelExprNode::getVariables() const {
+	return variables;
+}
 
 bool RelExprNode::operator==(const Node& other) const {
 	const RelExprNode* cast = dynamic_cast<const RelExprNode*> (&other);
@@ -37,12 +71,20 @@ bool RelExprNode::operator==(const Node& other) const {
 PredicateNode::PredicateNode(std::shared_ptr<RelExprNode> re) :
 	Node(NodeType::PREDICATE) {
 	relExpr = re;
+
+	//populate control variables bottom-up
+	std::unordered_set<std::string> reControlVariables = re->getVariables();
+	controlVariables.insert(reControlVariables.begin(), reControlVariables.end());
 }
 
 PredicateNode::PredicateNode(ConditionalOperator oper, std::shared_ptr<PredicateNode> right) :
 	Node(NodeType::PREDICATE) {
 	op = oper;
 	rhs = right;
+
+	//populate control variables bottom-up
+	std::unordered_set<std::string> rightControlVariables = right->getControlVariables();
+	controlVariables.insert(rightControlVariables.begin(), rightControlVariables.end());
 }
 
 PredicateNode::PredicateNode(std::shared_ptr<PredicateNode> left, ConditionalOperator oper, std::shared_ptr<PredicateNode> right) :
@@ -50,6 +92,12 @@ PredicateNode::PredicateNode(std::shared_ptr<PredicateNode> left, ConditionalOpe
 	lhs = left;
 	op = oper;
 	rhs = right;
+
+	//populate control variables bottom-up
+	std::unordered_set<std::string> leftControlVariables = left->getControlVariables();
+	controlVariables.insert(leftControlVariables.begin(), leftControlVariables.end());
+	std::unordered_set<std::string> rightControlVariables = right->getControlVariables();
+	controlVariables.insert(rightControlVariables.begin(), rightControlVariables.end());
 }
 
 std::shared_ptr<RelExprNode> PredicateNode::getRelExprNode() const {
@@ -79,6 +127,10 @@ RelFactorNode PredicateNode::getRelRhs() const {
 
 ConditionalOperator PredicateNode::getOperator() const {
 	return op;
+}
+
+std::unordered_set<std::string> PredicateNode::getControlVariables() const {
+	return controlVariables;
 }
 
 bool PredicateNode::isTerminalPredicate() const {

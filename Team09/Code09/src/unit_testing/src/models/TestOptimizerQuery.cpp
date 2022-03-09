@@ -1,5 +1,5 @@
 #include "catch.hpp"
-#include "models/OptimizerQuery.h"
+#include "models/optimizer/OptimizerQuery.h"
 
 TEST_CASE("Group empty adjacency list - should return empty") {
 	OptimizerQuery query;
@@ -15,8 +15,8 @@ TEST_CASE("Separate single group of connected clauses - should return single opt
 	QueryClause clause1 = {RelationRef::MODIFIES, args1, usedSyn1};
 
 	std::vector<QueryArgument> args2 = {{"s", EntityType::STMT},
-										{"v", EntityType::VAR}};
-	std::unordered_set<std::string> usedSyn2 = {"s", "v"};
+										{"c", EntityType::VAR}};
+	std::unordered_set<std::string> usedSyn2 = {"s", "c"};
 	QueryClause clause2 = {RelationRef::MODIFIES, args2, usedSyn2};
 
 	OptimizerGroup expected = {{

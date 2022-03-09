@@ -38,8 +38,24 @@ bool PKB::addAssignStatement(int statementNumber, std::string leftHandSide, std:
 	return entityStore.addAssignStatement(statementNumber, leftHandSide, rightHandSide);
 }
 
-bool PKB::addStatementWithType(EntityType statementType, int statementNumber) {
-	return entityStore.addStatementWithType(statementType, statementNumber);
+bool PKB::addIfStatement(int statementNumber, std::unordered_set<std::string> conditionalVariables) {
+	return entityStore.addIfStatement(statementNumber, conditionalVariables);
+}
+
+bool PKB::addWhileStatement(int statementNumber, std::unordered_set<std::string> conditionalVariables) {
+	return entityStore.addWhileStatement(statementNumber, conditionalVariables);
+}
+
+bool PKB::addCallStatement(int statementNumber, std::string procedure) {
+	return entityStore.addCallStatement(statementNumber, procedure);
+}
+
+bool PKB::addReadStatement(int statementNumber, std::string variable) {
+	return entityStore.addReadStatement(statementNumber, variable);
+}
+
+bool PKB::addPrintStatement(int statementNumber, std::string variable) {
+	return entityStore.addPrintStatement(statementNumber, variable);
 }
 
 bool PKB::addFollows(int follower, int followee) {
@@ -99,8 +115,28 @@ std::unordered_set<int> PKB::getStatementNumbers() {
 	return entityStore.getStatementNumbers();
 }
 
-std::unordered_map<int, AssignStatement> PKB::getAssignStatements() {
-	return entityStore.getAssignStatements();
+std::unordered_map<int, AssignStatement> PKB::getAssignStatementsToStructs() {
+	return entityStore.getAssignStatementsToStructs();
+}
+
+std::unordered_map<int, std::unordered_set<std::string>> PKB::getIfStatementsToConditionalVariables() {
+	return entityStore.getIfStatementsToConditionalVariables();
+}
+
+std::unordered_map<int, std::unordered_set<std::string>> PKB::getWhileStatementsToConditionalVariables() {
+	return entityStore.getWhileStatementsToConditionalVariables();
+}
+
+std::unordered_map<int, std::string> PKB::getCallStatementsToProcedures() {
+	return entityStore.getCallStatementsToProcedures();
+}
+
+std::unordered_map<int, std::string> PKB::getPrintStatementsToVariables() {
+	return entityStore.getPrintStatementsToVariables();
+}
+
+std::unordered_map<int, std::string> PKB::getReadStatementsToVariables() {
+	return entityStore.getReadStatementsToVariables();
 }
 
 std::unordered_set<int> PKB::getStatementsWithType(EntityType statementType) {

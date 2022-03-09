@@ -6,7 +6,7 @@ QueryClauseResult EntityEvaluator::evaluate(const QueryArgument& entity) {
 	std::vector<std::string> rows;
 	switch (entity.getType()) {
 		case EntityType::ASSIGN:
-			rows = keySetIntToStringVector(PKB::getAssignStatements());
+			rows = setIntToStringVector(PKB::getStatementsWithType(EntityType::ASSIGN));
 			break;
 		case EntityType::STMT:
 			rows = setIntToStringVector(PKB::getStatementNumbers());

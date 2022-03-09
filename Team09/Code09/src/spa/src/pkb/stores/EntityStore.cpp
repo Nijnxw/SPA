@@ -13,6 +13,13 @@ void EntityStore::clear() {
 	callStatements.clear();
 	printStatements.clear();
 	readStatements.clear();
+
+	assignStatementsToStructs.clear();
+	ifStatementsToConditionalVariables.clear();
+	whileStatementsToConditionalVariables.clear();
+	callStatementsToProcedures.clear();
+	printStatementsToVariables.clear();
+	readStatementsToVariables.clear();
 }
 
 bool EntityStore::addProcedure(const std::string& procedure) {
@@ -33,33 +40,27 @@ bool EntityStore::addStatementNumber(int statementNumber) {
 
 bool EntityStore::addAssignStatement(int statementNumber, const std::string& leftHandSide, const std::string& rightHandSide) {
 	AssignStatement assignStatement(statementNumber, leftHandSide, rightHandSide);
-	return assignStatements.insert({ statementNumber, assignStatement }).second;
+	return assignStatements.insert(statementNumber).second && assignStatementsToStructs.insert({ statementNumber, assignStatement }).second;
 }
 
-bool EntityStore::addStatementWithType(EntityType statementType, int statementNumber) {
-	bool resultValue = true;
+bool EntityStore::addIfStatement(int statementNumber, const std::unordered_set<std::string>& conditionalVariables) {
+	return ifStatements.insert(statementNumber).second && ifStatementsToConditionalVariables.insert({ statementNumber, conditionalVariables }).second;
+}
 
-	switch (statementType) {
-	case EntityType::IF:
-		resultValue = ifStatements.insert(statementNumber).second;
-		break;
-	case EntityType::WHILE:
-		resultValue = whileStatements.insert(statementNumber).second;
-		break;
-	case EntityType::CALL:
-		resultValue = callStatements.insert(statementNumber).second;
-		break;
-	case EntityType::PRINT:
-		resultValue = printStatements.insert(statementNumber).second;
-		break;
-	case EntityType::READ:
-		resultValue = readStatements.insert(statementNumber).second;
-		break;
-	default:
-		break;
-	}
+bool EntityStore::addWhileStatement(int statementNumber, const std::unordered_set<std::string>& conditionalVariables) {
+	return whileStatements.insert(statementNumber).second && whileStatementsToConditionalVariables.insert({ statementNumber, conditionalVariables }).second;
+}
 
-	return resultValue;
+bool EntityStore::addCallStatement(int statementNumber, const std::string& procedure) {
+	return callStatements.insert(statementNumber).second && callStatementsToProcedures.insert({ statementNumber, procedure }).second;
+}
+
+bool EntityStore::addReadStatement(int statementNumber, const std::string& variable) {
+	return readStatements.insert(statementNumber).second && readStatementsToVariables.insert({ statementNumber, variable }).second;
+}
+
+bool EntityStore::addPrintStatement(int statementNumber, const std::string& variable) {
+	return printStatements.insert(statementNumber).second && printStatementsToVariables.insert({ statementNumber, variable }).second;
 }
 
 std::unordered_set<std::string> EntityStore::getProcedures() {
@@ -78,14 +79,13 @@ std::unordered_set<int> EntityStore::getStatementNumbers() {
 	return statements;
 }
 
-std::unordered_map<int, AssignStatement> EntityStore::getAssignStatements() {
-	return assignStatements;
-}
-
 std::unordered_set<int> EntityStore::getStatementsWithType(EntityType statementType) {
 	std::unordered_set<int> statements;
 
 	switch (statementType) {
+	case EntityType::ASSIGN:
+		statements = assignStatements;
+		break;
 	case EntityType::IF:
 		statements = ifStatements;
 		break;
@@ -108,3 +108,26 @@ std::unordered_set<int> EntityStore::getStatementsWithType(EntityType statementT
 	return statements;
 }
 
+std::unordered_map<int, AssignStatement> EntityStore::getAssignStatementsToStructs() {
+	return assignStatementsToStructs;
+}
+
+std::unordered_map<int, std::unordered_set<std::string>> EntityStore::getIfStatementsToConditionalVariables() {
+	return ifStatementsToConditionalVariables;
+}
+
+std::unordered_map<int, std::unordered_set<std::string>> EntityStore::getWhileStatementsToConditionalVariables() {
+	return whileStatementsToConditionalVariables;
+}
+
+std::unordered_map<int, std::string> EntityStore::getCallStatementsToProcedures() {
+	return callStatementsToProcedures;
+}
+
+std::unordered_map<int, std::string> EntityStore::getPrintStatementsToVariables() {
+	return printStatementsToVariables;
+}
+
+std::unordered_map<int, std::string> EntityStore::getReadStatementsToVariables() {
+	return readStatementsToVariables;
+}

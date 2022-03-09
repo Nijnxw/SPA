@@ -13,6 +13,13 @@ void EntityStore::clear() {
 	callStatements.clear();
 	printStatements.clear();
 	readStatements.clear();
+
+	assignStatementsToStructs.clear();
+	ifStatementsToConditionalVariables.clear();
+	whileStatementsToConditionalVariables.clear();
+	callStatementsToProcedures.clear();
+	printStatementsToVariables.clear();
+	readStatementsToVariables.clear();
 }
 
 bool EntityStore::addProcedure(const std::string& procedure) {
@@ -36,23 +43,23 @@ bool EntityStore::addAssignStatement(int statementNumber, const std::string& lef
 	return assignStatements.insert(statementNumber).second && assignStatementsToStructs.insert({ statementNumber, assignStatement }).second;
 }
 
-bool EntityStore::addIfStatement(int statementNumber, std::unordered_set<std::string> conditionalVariables) {
+bool EntityStore::addIfStatement(int statementNumber, const std::unordered_set<std::string>& conditionalVariables) {
 	return ifStatements.insert(statementNumber).second && ifStatementsToConditionalVariables.insert({ statementNumber, conditionalVariables }).second;
 }
 
-bool EntityStore::addWhileStatement(int statementNumber, std::unordered_set<std::string> conditionalVariables) {
+bool EntityStore::addWhileStatement(int statementNumber, const std::unordered_set<std::string>& conditionalVariables) {
 	return whileStatements.insert(statementNumber).second && whileStatementsToConditionalVariables.insert({ statementNumber, conditionalVariables }).second;
 }
 
-bool EntityStore::addCallStatement(int statementNumber, std::string procedure) {
+bool EntityStore::addCallStatement(int statementNumber, const std::string& procedure) {
 	return callStatements.insert(statementNumber).second && callStatementsToProcedures.insert({ statementNumber, procedure }).second;
 }
 
-bool EntityStore::addReadStatement(int statementNumber, std::string variable) {
+bool EntityStore::addReadStatement(int statementNumber, const std::string& variable) {
 	return readStatements.insert(statementNumber).second && readStatementsToVariables.insert({ statementNumber, variable }).second;
 }
 
-bool EntityStore::addPrintStatement(int statementNumber, std::string variable) {
+bool EntityStore::addPrintStatement(int statementNumber, const std::string& variable) {
 	return printStatements.insert(statementNumber).second && printStatementsToVariables.insert({ statementNumber, variable }).second;
 }
 

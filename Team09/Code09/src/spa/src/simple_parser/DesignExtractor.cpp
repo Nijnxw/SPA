@@ -15,6 +15,10 @@ void DesignExtractor::cache(std::string procName, NestableRelationships rs) {
 	DesignExtractor::procCache.insert({ procName, rs });
 }
 
+std::unordered_set<std::string> extractControlVariables(std::shared_ptr<PredicateNode> pred) {
+	return pred->getControlVariables();
+}
+
 NestableRelationships processStmtList(AST ast, std::vector<std::string> callStack, std::vector<std::shared_ptr<StmtNode>> stmtList);
 NestableRelationships processProcedure(AST ast, std::vector<std::string> callStack, std::shared_ptr<ProcedureNode> proc);
 
@@ -76,7 +80,7 @@ NestableRelationships processPredicateNode(std::shared_ptr<PredicateNode> expr) 
 //individual stmt node processing functions
 NestableRelationships processPrintNode(std::shared_ptr<PrintNode> print) {
 	processVariableNode(print->getVariable());
-	EntityStager::stagePrintStatement(print->getStmtNumber());
+	EntityStager::stagePrintStatement(print->getStmtNumber(), print->getVariableName());
 
 	//stage relationships
 	NestableRelationships rs = NestableRelationships::createEmpty();
@@ -87,7 +91,7 @@ NestableRelationships processPrintNode(std::shared_ptr<PrintNode> print) {
 
 NestableRelationships processReadNode(std::shared_ptr<ReadNode> read) {
 	processVariableNode(read->getVariable());
-	EntityStager::stageReadStatement(read->getStmtNumber());
+	EntityStager::stageReadStatement(read->getStmtNumber(), read->getVariableName());
 
 	//stage relationships
 	NestableRelationships rs = NestableRelationships::createEmpty();
@@ -116,7 +120,9 @@ NestableRelationships processAssignNode(std::shared_ptr<AssignNode> assign) {
 }
 
 NestableRelationships processWhileNode(AST ast, std::vector<std::string> callStack, std::shared_ptr<WhileNode> whiles) {
-	EntityStager::stageWhileStatement(whiles->getStmtNumber());
+	//extract predicate control variables
+	std::unordered_set<std::string> vars = extractControlVariables(whiles->getPredicate());
+	EntityStager::stageWhileStatement(whiles->getStmtNumber(), vars);
 
 	//process predicate
 	NestableRelationships rs = processPredicateNode(whiles->getPredicate());
@@ -140,7 +146,9 @@ NestableRelationships processWhileNode(AST ast, std::vector<std::string> callSta
 }
 
 NestableRelationships processIfNode(AST ast, std::vector<std::string> callStack, std::shared_ptr<IfNode> ifs) {
-	EntityStager::stageIfStatement(ifs->getStmtNumber());
+	//extract predicate control variables
+	std::unordered_set<std::string> vars = extractControlVariables(ifs->getPredicate());
+	EntityStager::stageIfStatement(ifs->getStmtNumber(), vars);
 
 	//process predicate
 	NestableRelationships rs = processPredicateNode(ifs->getPredicate());
@@ -169,7 +177,7 @@ NestableRelationships processIfNode(AST ast, std::vector<std::string> callStack,
 }
 
 NestableRelationships processCallNode(AST ast, std::vector<std::string> callStack, std::shared_ptr<CallNode> call) {
-	EntityStager::stageCallStatement(call->getStmtNumber());
+	EntityStager::stageCallStatement(call->getStmtNumber(), call->getProcedureName());
 
 	if (!ast->contains(call->getProcedureName())) return NestableRelationships::createEmpty();
 

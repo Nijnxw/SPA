@@ -44,11 +44,11 @@ public:
 	bool addConstant(const std::string& constant);
 	bool addStatementNumber(int statementNumber);
 	bool addAssignStatement(int statementNumber, const std::string& leftHandSide, const std::string& rightHandSide);
-	bool addIfStatement(int statementNumber, std::unordered_set<std::string> conditionalVariables);
-	bool addWhileStatement(int statementNumber, std::unordered_set<std::string> conditionalVariables);
-	bool addCallStatement(int statementNumber, std::string procedure);
-	bool addReadStatement(int statementNumber, std::string variable);
-	bool addPrintStatement(int statementNumber, std::string variable);
+	bool addIfStatement(int statementNumber, const std::unordered_set<std::string>& conditionalVariables);
+	bool addWhileStatement(int statementNumber, const std::unordered_set<std::string>& conditionalVariables);
+	bool addCallStatement(int statementNumber, const std::string& procedure);
+	bool addReadStatement(int statementNumber, const std::string& variable);
+	bool addPrintStatement(int statementNumber, const std::string& variable);
 
 	/* Getters called by QE */
 	std::unordered_set<std::string> getProcedures();

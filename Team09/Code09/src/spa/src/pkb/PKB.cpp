@@ -43,7 +43,7 @@ bool PKB::addIfStatement(int statementNumber, std::unordered_set<std::string> co
 }
 
 bool PKB::addWhileStatement(int statementNumber, std::unordered_set<std::string> conditionalVariables) {
-	return entityStore.addIfStatement(statementNumber, conditionalVariables);
+	return entityStore.addWhileStatement(statementNumber, conditionalVariables);
 }
 
 bool PKB::addCallStatement(int statementNumber, std::string procedure) {

@@ -257,7 +257,7 @@ void DesignExtractor::extractDesignElements(AST ast, int stmtCount) {
 	EntityStager::clear();
 	DesignExtractor::procCache.clear();
 	processProcedureList(ast, ast->getProcedureMap());
-	CFG cfg = CFGExtractor::extractCFG(ast, 500); //temporary variable
+	CFG cfg = CFGExtractor::extractCFG(ast, stmtCount);
 	EntityStager::stageCFG(cfg);
 }
 

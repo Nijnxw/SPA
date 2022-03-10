@@ -1243,7 +1243,7 @@ int ContainerStmtASTs::getStmtCount1_62() { return 4; }
 
 int ContainerStmtASTs::getStmtCount1_63() { return 3; }
 
-int ContainerStmtASTs::getStmtCount1_64() { return 8; }
+int ContainerStmtASTs::getStmtCount1_64() { return 9; }
 
 int ContainerStmtASTs::getStmtCount1_65() { return 3; }
 

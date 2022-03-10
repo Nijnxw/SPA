@@ -46,11 +46,17 @@ std::shared_ptr<PredicateNode> RelationshipASTs::predYLt1 = std::make_shared<Pre
 std::shared_ptr<PredicateNode> RelationshipASTs::predYLt2 = std::make_shared<PredicateNode>(
 	std::make_shared<RelExprNode>(y, ComparatorOperator::LT, two)
 );
+std::shared_ptr<PredicateNode> RelationshipASTs::predZLt1 = std::make_shared<PredicateNode>(
+	std::make_shared<RelExprNode>(z, ComparatorOperator::LT, one)
+);
 std::shared_ptr<PredicateNode> RelationshipASTs::predZLt3 = std::make_shared<PredicateNode>(
 	std::make_shared<RelExprNode>(z, ComparatorOperator::LT, three)
-);
+	);
 std::shared_ptr<PredicateNode> RelationshipASTs::predWLt3 = std::make_shared<PredicateNode>(
 	std::make_shared<RelExprNode>(w, ComparatorOperator::LT, three)
+	);
+std::shared_ptr<PredicateNode> RelationshipASTs::predWLt1 = std::make_shared<PredicateNode>(
+	std::make_shared<RelExprNode>(w, ComparatorOperator::LT, one)
 	);
 
 
@@ -2199,6 +2205,186 @@ AST RelationshipASTs::getAST3_55() {
 	return std::make_shared<ProgramNode>(procMap);
 }
 
+AST RelationshipASTs::getAST3_56() {
+	/*
+	 *   procedure testProgram {
+	 * 1   if (x < 1) then {
+	 * 2     if (y < 1) then {
+	 * 3       if (z < 1) then {
+	 * 4         read z;
+	 *         } else {
+	 * 5         print z;
+	 *         }
+	 *       } else {
+	 * 6       if (z < 1) then {
+	 * 7         read z;
+	 *         } else {
+	 * 8         print z;
+	 *         }
+	 *       }
+	 *     } else {
+	 * 9     if (y < 1) then {
+	 * 10      if (z < 1) then {
+	 * 11        read z;
+	 *         } else {
+	 * 12        print z;
+	 *         }
+	 *       } else {
+	 * 13      if (z < 1) then {
+	 * 14        read z;
+	 *         } else {
+	 * 15        print z;
+	 *         }
+	 *       }
+	 *     }
+	 * 16  print x;
+	 *   }
+	 */
+
+	std::vector<std::shared_ptr<StmtNode>> thenThenThenStmtList{
+		std::make_shared<ReadNode>(4, z)
+	};
+	std::vector<std::shared_ptr<StmtNode>> thenThenElseStmtList{
+		std::make_shared<PrintNode>(5, z)
+	};
+	std::vector<std::shared_ptr<StmtNode>> thenElseThenStmtList{
+		std::make_shared<ReadNode>(7, z)
+	};
+	std::vector<std::shared_ptr<StmtNode>> thenElseElseStmtList{
+		std::make_shared<PrintNode>(8, z)
+	};
+	std::vector<std::shared_ptr<StmtNode>> elseThenThenStmtList{
+		std::make_shared<ReadNode>(11, z)
+	};
+	std::vector<std::shared_ptr<StmtNode>> elseThenElseStmtList{
+		std::make_shared<PrintNode>(12, z)
+	};
+	std::vector<std::shared_ptr<StmtNode>> elseElseThenStmtList{
+		std::make_shared<ReadNode>(14, z)
+	};
+	std::vector<std::shared_ptr<StmtNode>> elseElseElseStmtList{
+		std::make_shared<PrintNode>(15, z)
+	};
+
+	std::vector<std::shared_ptr<StmtNode>> thenThenStmtList{
+		std::make_shared<IfNode>(3, predZLt1, thenThenThenStmtList, thenThenElseStmtList)
+	};
+	std::vector<std::shared_ptr<StmtNode>> thenElseStmtList{
+		std::make_shared<IfNode>(6, predZLt1, thenElseThenStmtList, thenElseElseStmtList)
+	};
+	std::vector<std::shared_ptr<StmtNode>> elseThenStmtList{
+		std::make_shared<IfNode>(10, predZLt1, elseThenThenStmtList, elseThenElseStmtList)
+	};
+	std::vector<std::shared_ptr<StmtNode>> elseElseStmtList{
+		std::make_shared<IfNode>(13, predZLt1, elseElseThenStmtList, elseElseElseStmtList)
+	};
+
+	std::vector<std::shared_ptr<StmtNode>> thenStmtList{
+		std::make_shared<IfNode>(2, predYLt1, thenThenStmtList, thenElseStmtList)
+	};
+	std::vector<std::shared_ptr<StmtNode>> elseStmtList{
+		std::make_shared<IfNode>(9, predYLt1, elseThenStmtList, elseElseStmtList)
+	};
+
+	std::vector<std::shared_ptr<StmtNode>> stmtList{
+		std::make_shared<IfNode>(1, predXLt1, thenStmtList, elseStmtList),
+		std::make_shared<PrintNode>(16, x)
+	};
+	return generateBasicAST(stmtList, "testProgram");
+}
+
+AST RelationshipASTs::getAST3_57() {
+	/*
+	 *   procedure testProgram {
+	 * 1   while (w < 0) {
+	 * 2     if (x < 1) then {
+	 * 3       if (y < 1) then {
+	 * 4         if (z < 1) then {
+	 * 5           read z;
+	 *           } else {
+	 * 6           print z;
+	 *           }
+	 *         } else {
+	 * 7         if (z < 1) then {
+	 * 8           read z;
+	 *           } else {
+	 * 9           print z;
+	 *           }
+	 *         }
+	 *       } else {
+	 * 10      if (y < 1) then {
+	 * 11        if (z < 1) then {
+	 * 12          read z;
+	 *           } else {
+	 * 13          print z;
+	 *           }
+	 *         } else {
+	 * 14        if (z < 1) then {
+	 * 15          read z;
+	 *           } else {
+	 * 16          print z;
+	 *           }
+	 *         }
+	 *       }
+	 *     }
+	 *   }
+	 */
+
+	std::vector<std::shared_ptr<StmtNode>> thenThenThenStmtList{
+		std::make_shared<ReadNode>(5, z)
+	};
+	std::vector<std::shared_ptr<StmtNode>> thenThenElseStmtList{
+		std::make_shared<PrintNode>(6, z)
+	};
+	std::vector<std::shared_ptr<StmtNode>> thenElseThenStmtList{
+		std::make_shared<ReadNode>(8, z)
+	};
+	std::vector<std::shared_ptr<StmtNode>> thenElseElseStmtList{
+		std::make_shared<PrintNode>(9, z)
+	};
+	std::vector<std::shared_ptr<StmtNode>> elseThenThenStmtList{
+		std::make_shared<ReadNode>(12, z)
+	};
+	std::vector<std::shared_ptr<StmtNode>> elseThenElseStmtList{
+		std::make_shared<PrintNode>(13, z)
+	};
+	std::vector<std::shared_ptr<StmtNode>> elseElseThenStmtList{
+		std::make_shared<ReadNode>(15, z)
+	};
+	std::vector<std::shared_ptr<StmtNode>> elseElseElseStmtList{
+		std::make_shared<PrintNode>(16, z)
+	};
+
+	std::vector<std::shared_ptr<StmtNode>> thenThenStmtList{
+		std::make_shared<IfNode>(4, predZLt1, thenThenThenStmtList, thenThenElseStmtList)
+	};
+	std::vector<std::shared_ptr<StmtNode>> thenElseStmtList{
+		std::make_shared<IfNode>(7, predZLt1, thenElseThenStmtList, thenElseElseStmtList)
+	};
+	std::vector<std::shared_ptr<StmtNode>> elseThenStmtList{
+		std::make_shared<IfNode>(11, predZLt1, elseThenThenStmtList, elseThenElseStmtList)
+	};
+	std::vector<std::shared_ptr<StmtNode>> elseElseStmtList{
+		std::make_shared<IfNode>(14, predZLt1, elseElseThenStmtList, elseElseElseStmtList)
+	};
+
+	std::vector<std::shared_ptr<StmtNode>> thenStmtList{
+		std::make_shared<IfNode>(3, predYLt1, thenThenStmtList, thenElseStmtList)
+	};
+	std::vector<std::shared_ptr<StmtNode>> elseStmtList{
+		std::make_shared<IfNode>(10, predYLt1, elseThenStmtList, elseElseStmtList)
+	};
+
+	std::vector<std::shared_ptr<StmtNode>> whileStmtList{
+		std::make_shared<IfNode>(2, predXLt1, thenStmtList, elseStmtList)
+	};
+
+	std::vector<std::shared_ptr<StmtNode>> stmtList{
+		std::make_shared<WhileNode>(1, predWLt1, whileStmtList)
+	};
+	return generateBasicAST(stmtList, "testProgram");
+}
+
 int RelationshipASTs::getStmtCount3_1() { return NonContainerStmtASTs::getStmtCount(); }
 
 int RelationshipASTs::getStmtCount3_2() { return NonContainerStmtASTs::getStmtCount(); }
@@ -2309,6 +2495,6 @@ int RelationshipASTs::getStmtCount3_54() { return 11; }
 
 int RelationshipASTs::getStmtCount3_55() { return 11; }
 
+int RelationshipASTs::getStmtCount3_56() { return 16; }
 
-
-
+int RelationshipASTs::getStmtCount3_57() { return 16; }

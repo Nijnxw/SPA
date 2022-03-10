@@ -93,4 +93,5 @@ public:
 	explicit SPParser(std::vector<Token*> tokens);
 
 	AST parseProgram();
+	int getStmtCount();
 };

@@ -401,3 +401,7 @@ AST SPParser::parseProgram() {
 
 	return std::make_shared<ProgramNode>(procedureMap);
 }
+
+int SPParser::getStmtCount() {
+	return stmtNo;
+}

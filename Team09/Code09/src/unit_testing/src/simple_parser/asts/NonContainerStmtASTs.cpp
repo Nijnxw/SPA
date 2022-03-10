@@ -576,3 +576,6 @@ AST NonContainerStmtASTs::getAST1_38() {
 	};
 	return generateBasicAST(stmtList);
 }
+
+// stmt count getter
+int NonContainerStmtASTs::getStmtCount() { return 1; }

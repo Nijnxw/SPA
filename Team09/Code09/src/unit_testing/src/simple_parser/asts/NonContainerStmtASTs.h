@@ -11,7 +11,6 @@ public:
 	// ast for read & print stmts
 	static AST getAST1_1();
 	static AST getAST1_2();
-
 	// ast for assignment stmts
 	static AST getAST1_3();
 	static AST getAST1_4();
@@ -54,4 +53,7 @@ public:
 	static AST getAST1_36();
 	static AST getAST1_37();
 	static AST getAST1_38();
+
+	// stmt count getter (all the same, returns 1)
+	static int getStmtCount();
 };

@@ -29,6 +29,6 @@ public:
 	static NestableRelationships retrieve(std::string procName);
 	static void cache(std::string procName, NestableRelationships rs);
 
-	static void extractDesignElements(AST ast);
+	static void extractDesignElements(AST ast, int stmtCount);
 	static void commit();
 };

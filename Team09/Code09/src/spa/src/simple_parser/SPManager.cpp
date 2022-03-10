@@ -13,6 +13,8 @@ AST SPManager::parseFile(const std::string& filename) {
 		SPParser parser = SPParser(tokens);
 		AST ast = parser.parseProgram();
 
+		stmtCount = parser.getStmtCount();
+
 		return ast;
 	} catch (const std::exception& e) {
 		std::cout << e.what();
@@ -21,6 +23,6 @@ AST SPManager::parseFile(const std::string& filename) {
 }
 
 void SPManager::extractDesign(AST ast) {
-	DesignExtractor::extractDesignElements(std::move(ast));
+	DesignExtractor::extractDesignElements(std::move(ast), stmtCount);
 	DesignExtractor::commit();
 }

@@ -2198,3 +2198,117 @@ AST RelationshipASTs::getAST3_55() {
 	};
 	return std::make_shared<ProgramNode>(procMap);
 }
+
+int RelationshipASTs::getStmtCount3_1() { return NonContainerStmtASTs::getStmtCount(); }
+
+int RelationshipASTs::getStmtCount3_2() { return NonContainerStmtASTs::getStmtCount(); }
+
+int RelationshipASTs::getStmtCount3_3() { return NonContainerStmtASTs::getStmtCount(); }
+
+int RelationshipASTs::getStmtCount3_4() { return NonContainerStmtASTs::getStmtCount(); }
+
+int RelationshipASTs::getStmtCount3_5() { return 2; }
+
+int RelationshipASTs::getStmtCount3_6() { return 2; }
+
+int RelationshipASTs::getStmtCount3_7() { return 2; }
+
+int RelationshipASTs::getStmtCount3_8() { return 3; }
+
+int RelationshipASTs::getStmtCount3_9() { return 3; }
+
+int RelationshipASTs::getStmtCount3_10() { return 3; }
+
+int RelationshipASTs::getStmtCount3_11() { return 4; }
+
+int RelationshipASTs::getStmtCount3_12() { return 4; }
+
+int RelationshipASTs::getStmtCount3_13() { return 4; }
+
+int RelationshipASTs::getStmtCount3_14() { return 5; }
+
+int RelationshipASTs::getStmtCount3_15() { return 5; }
+
+int RelationshipASTs::getStmtCount3_16() { return 5; }
+
+int RelationshipASTs::getStmtCount3_17() { return 5; }
+
+int RelationshipASTs::getStmtCount3_18() { return 4; }
+
+int RelationshipASTs::getStmtCount3_19() { return 7; }
+
+int RelationshipASTs::getStmtCount3_20() { return 7; }
+
+int RelationshipASTs::getStmtCount3_21() { return 9; }
+
+int RelationshipASTs::getStmtCount3_22() { return 5; }
+
+int RelationshipASTs::getStmtCount3_23() { return 4; }
+
+int RelationshipASTs::getStmtCount3_24() { return 13; }
+
+int RelationshipASTs::getStmtCount3_25() { return 13; }
+
+int RelationshipASTs::getStmtCount3_26() { return 13; }
+
+int RelationshipASTs::getStmtCount3_27() { return 10; }
+
+int RelationshipASTs::getStmtCount3_28() { return 10; }
+
+int RelationshipASTs::getStmtCount3_29() { return 10; }
+
+int RelationshipASTs::getStmtCount3_30() { return 9; }
+
+int RelationshipASTs::getStmtCount3_31() { return 6; }
+
+int RelationshipASTs::getStmtCount3_32() { return 9; }
+
+int RelationshipASTs::getStmtCount3_33() { return 8; }
+
+int RelationshipASTs::getStmtCount3_34() { return 22; }
+
+int RelationshipASTs::getStmtCount3_35() { return 5; }
+
+int RelationshipASTs::getStmtCount3_36() { return 5; }
+
+int RelationshipASTs::getStmtCount3_37() { return 6; }
+
+int RelationshipASTs::getStmtCount3_38() { return 6; }
+
+int RelationshipASTs::getStmtCount3_39() { return 6; }
+
+int RelationshipASTs::getStmtCount3_40() { return 6; }
+
+int RelationshipASTs::getStmtCount3_41() { return 5; }
+
+int RelationshipASTs::getStmtCount3_42() { return 5; }
+
+int RelationshipASTs::getStmtCount3_43() { return 7; }
+
+int RelationshipASTs::getStmtCount3_44() { return 7; }
+
+int RelationshipASTs::getStmtCount3_45() { return 7; }
+
+int RelationshipASTs::getStmtCount3_46() { return 7; }
+
+int RelationshipASTs::getStmtCount3_47() { return 7; }
+
+int RelationshipASTs::getStmtCount3_48() { return 11; }
+
+int RelationshipASTs::getStmtCount3_49() { return 11; }
+
+int RelationshipASTs::getStmtCount3_50() { return 11; }
+
+int RelationshipASTs::getStmtCount3_51() { return 12; }
+
+int RelationshipASTs::getStmtCount3_52() { return 11; }
+
+int RelationshipASTs::getStmtCount3_53() { return 11; }
+
+int RelationshipASTs::getStmtCount3_54() { return 11; }
+
+int RelationshipASTs::getStmtCount3_55() { return 11; }
+
+
+
+

@@ -1192,3 +1192,93 @@ AST ContainerStmtASTs::getAST1_83() {
 	};
 	return std::make_shared<ProgramNode>(procMap);
 }
+
+int ContainerStmtASTs::getStmtCount1_39() { return 2; }
+
+int ContainerStmtASTs::getStmtCount1_40() { return 2; }
+
+int ContainerStmtASTs::getStmtCount1_41() { return 2; }
+
+int ContainerStmtASTs::getStmtCount1_42() { return 2; }
+
+int ContainerStmtASTs::getStmtCount1_43() { return 2; }
+
+int ContainerStmtASTs::getStmtCount1_44() { return 2; }
+
+int ContainerStmtASTs::getStmtCount1_45() { return 2; }
+
+int ContainerStmtASTs::getStmtCount1_46() { return 2; }
+
+int ContainerStmtASTs::getStmtCount1_47() { return 2; }
+
+int ContainerStmtASTs::getStmtCount1_48() { return 2; }
+
+int ContainerStmtASTs::getStmtCount1_49() { return 2; }
+
+int ContainerStmtASTs::getStmtCount1_50() { return 2; }
+
+int ContainerStmtASTs::getStmtCount1_51() { return 2; }
+
+int ContainerStmtASTs::getStmtCount1_52() { return 2; }
+
+int ContainerStmtASTs::getStmtCount1_53() { return 2; }
+
+int ContainerStmtASTs::getStmtCount1_54() { return 2; }
+
+int ContainerStmtASTs::getStmtCount1_55() { return 2; }
+
+int ContainerStmtASTs::getStmtCount1_56() { return 2; }
+
+int ContainerStmtASTs::getStmtCount1_57() { return 2; }
+
+int ContainerStmtASTs::getStmtCount1_58() { return 2; }
+
+int ContainerStmtASTs::getStmtCount1_59() { return 2; }
+
+int ContainerStmtASTs::getStmtCount1_60() { return 2; }
+
+int ContainerStmtASTs::getStmtCount1_61() { return 2; }
+
+int ContainerStmtASTs::getStmtCount1_62() { return 4; }
+
+int ContainerStmtASTs::getStmtCount1_63() { return 3; }
+
+int ContainerStmtASTs::getStmtCount1_64() { return 8; }
+
+int ContainerStmtASTs::getStmtCount1_65() { return 3; }
+
+int ContainerStmtASTs::getStmtCount1_66() { return 3; }
+
+int ContainerStmtASTs::getStmtCount1_67() { return 3; }
+
+int ContainerStmtASTs::getStmtCount1_68() { return 5; }
+
+int ContainerStmtASTs::getStmtCount1_69() { return 5; }
+
+int ContainerStmtASTs::getStmtCount1_70() { return 4; }
+
+int ContainerStmtASTs::getStmtCount1_71() { return 4; }
+
+int ContainerStmtASTs::getStmtCount1_72() { return 10; }
+
+int ContainerStmtASTs::getStmtCount1_73() { return 10; }
+
+int ContainerStmtASTs::getStmtCount1_74() { return 6; }
+
+int ContainerStmtASTs::getStmtCount1_75() { return 3; }
+
+int ContainerStmtASTs::getStmtCount1_76() { return 2; }
+
+int ContainerStmtASTs::getStmtCount1_77() { return 4; }
+
+int ContainerStmtASTs::getStmtCount1_78() { return 6; }
+
+int ContainerStmtASTs::getStmtCount1_79() { return 2; }
+
+int ContainerStmtASTs::getStmtCount1_80() { return 2; }
+
+int ContainerStmtASTs::getStmtCount1_81() { return 4; }
+
+int ContainerStmtASTs::getStmtCount1_82() { return 4; }
+
+int ContainerStmtASTs::getStmtCount1_83() { return 3; }

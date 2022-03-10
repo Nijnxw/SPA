@@ -15,6 +15,7 @@ void PKB::clearAllStores() {
 	PKB::usesStore.clear();
 	PKB::modifiesStore.clear();
 	PKB::callsStore.clear();
+	PKB::nextStore.clear();
 }
 
 /* Setters called by Source Processor */
@@ -96,6 +97,10 @@ bool PKB::addModifiesStatement(int statementNumber, const std::unordered_set<std
 
 bool PKB::addModifiesProcedure(const std::string& procedure, const std::unordered_set<std::string>& variables) {
 	return modifiesStore.addProcVarRelationship(procedure, variables);
+}
+
+bool PKB::addCFG(const std::vector<std::unordered_set<int>>* cfg) {
+	return nextStore.addCFG(cfg);
 }
 
 /* Getters called by Query Evaluator */
@@ -638,7 +643,7 @@ std::unordered_map<std::string, std::unordered_set<std::string>> PKB::getVariabl
 	return usesStore.getVarToProcRelationship();
 }
 
-// Helpers
+// Uses Helpers
 std::unordered_set<std::string> PKB::getVariablesUsedByStatement(int stmtNo) {
 	return usesStore.getVarByStmt(stmtNo);
 }
@@ -694,7 +699,7 @@ std::unordered_map<std::string, std::unordered_set<std::string>> PKB::getVariabl
 	return modifiesStore.getVarToProcRelationship();
 }
 
-// Helpers
+// Modifies Helpers
 std::unordered_set<std::string> PKB::getVariablesModifiedByStatement(int stmtNo) {
 	return modifiesStore.getVarByStmt(stmtNo);
 }

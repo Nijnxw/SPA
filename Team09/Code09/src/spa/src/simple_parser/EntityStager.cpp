@@ -235,6 +235,7 @@ void EntityStager::stageCFG(std::vector<std::unordered_set<int>> cfg) {
 }
 
 void EntityStager::commit() {
+	PKB::addCFG(&stagedCFG);
 	for (auto& proc: stagedProcedures) { PKB::addProcedure(proc); }
 	for (auto& var: stagedConstants) { PKB::addConstant(var); }
 	for (auto& con: stagedVariables) { PKB::addVariable(con); }
@@ -280,8 +281,5 @@ void EntityStager::commit() {
 	for (auto& usesP: stagedUsesProcedure) {
 		PKB::addUsesProcedure(usesP.first, usesP.second);
 	}
-
-	//pending link with pkb cfg interface
-
 	EntityStager::clear();
 }

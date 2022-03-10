@@ -4,14 +4,15 @@ CFGExtractor::CFGExtractor() {}
 
 void CFGExtractor::initialiseCFG(int totalStmts) {
 	CFGExtractor::cfg.clear();
-	for (int i = 0; i < totalStmts + 1; i++) {
+	for (int i = 0; i <= totalStmts; i++) {
 		CFGExtractor::cfg.push_back({});
 	}
 }
 
 void CFGExtractor::insertIntoCFG(std::unordered_set<int> prev, int next) {
 	for (int x : prev) {
-		CFGExtractor::cfg.at(x).insert(next);
+		std::unordered_set<int>& setToInsert = CFGExtractor::cfg.at(x);
+		setToInsert.insert(next);
 	}
 }
 

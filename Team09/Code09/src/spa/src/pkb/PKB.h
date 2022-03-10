@@ -19,6 +19,7 @@
 #include "stores/CallsStore.h"
 #include "stores/UsesStore.h"
 #include "stores/ModifiesStore.h"
+#include "stores/NextStore.h"
 
 class PKB {
 private:
@@ -28,6 +29,7 @@ private:
 	static inline CallsStore callsStore;
 	static inline UsesStore usesStore;
 	static inline ModifiesStore modifiesStore;
+	static inline NextStore nextStore;
 public:
 	PKB();
 
@@ -56,6 +58,8 @@ public:
 	static bool addUsesProcedure(const std::string& procedure, const std::unordered_set<std::string>& variables);
 	static bool addModifiesStatement(int statementNumber, const std::unordered_set<std::string>& variables);
 	static bool addModifiesProcedure(const std::string& procedure, const std::unordered_set<std::string>& variables);
+	static bool addCFG(const std::vector<std::unordered_set<int>>* cfg);
+
 
 	/* Getters called by QE */
 	static std::unordered_set<std::string> getProcedures();

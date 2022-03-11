@@ -6,24 +6,54 @@
 #include "Optimizer.h"
 
 Table QueryEvaluator::evaluate(Query& query) {
-	std::vector<QueryArgument> synNotInClauses;
+	std::vector<QueryArgument> selectSynNotInClauses;
 	std::vector<QueryClause> clausesWithoutSyn;
 	std::vector<OptimizerGroup> groupsWithSelect;
 	std::vector<OptimizerGroup> groupsWithoutSelect;
 
-	std::vector<QueryArgument> resSyns = query.getResultSynonyms();
-	std::vector<QueryClause> clauses = query.getClauses();
-	if (clauses.empty() && resSyns.empty()) {
+	if (query.isEmpty()) {
 		return {};
 	}
 
-	std::tie(synNotInClauses, clausesWithoutSyn, groupsWithSelect, groupsWithoutSelect) = Optimizer::optimize(query);
+	std::tie(selectSynNotInClauses, clausesWithoutSyn, groupsWithSelect, groupsWithoutSelect) = Optimizer::optimize(
+		query);
+
+	if (query.isBooleanQuery()) {
+		return evaluateBooleanQuery(clausesWithoutSyn, groupsWithoutSelect);
+	}
+
+	return evaluateNormalQuery(selectSynNotInClauses, clausesWithoutSyn, groupsWithoutSelect, groupsWithSelect);
+}
+
+Table QueryEvaluator::evaluateBooleanQuery(const std::vector<QueryClause>& clausesWithoutSyn,
+										   const std::vector<OptimizerGroup>& groupsWithoutSelect) {
 
 	if (!clausesWithoutSyn.empty() && !evaluateBooleanClauses(clausesWithoutSyn)) {
 		return {};
 	}
-	std::vector<QueryClauseResult> entityResults = evaluateSynWithoutClause(synNotInClauses);
-	if (!synNotInClauses.empty() && entityResults.empty()) {
+
+	std::vector<std::vector<QueryClauseResult>> groupsWithoutSelectRes = evaluateGroupsWithoutSelect(
+		groupsWithoutSelect);
+	if (!groupsWithoutSelect.empty() && groupsWithoutSelectRes.empty()) {
+		return {};
+	}
+	if (!groupsWithoutSelect.empty() && !mergeGroupWithoutSelectResults(groupsWithoutSelectRes)) {
+		return {};
+	}
+
+	return {{"true", {}}};    //returns a dummy result
+}
+
+Table QueryEvaluator::evaluateNormalQuery(const std::vector<QueryArgument>& selectSynNotInClauses,
+										  const std::vector<QueryClause>& clausesWithoutSyn,
+										  const std::vector<OptimizerGroup>& groupsWithoutSelect,
+										  const std::vector<OptimizerGroup>& groupsWithSelect) {
+
+	if (!clausesWithoutSyn.empty() && !evaluateBooleanClauses(clausesWithoutSyn)) {
+		return {};
+	}
+	std::vector<QueryClauseResult> entityResults = evaluateSynWithoutClause(selectSynNotInClauses);
+	if (!selectSynNotInClauses.empty() && entityResults.empty()) {
 		return {};
 	}
 	std::vector<std::vector<QueryClauseResult>> groupsWithoutSelectRes = evaluateGroupsWithoutSelect(
@@ -40,9 +70,9 @@ Table QueryEvaluator::evaluate(Query& query) {
 		return {};
 	}
 
-	if (!groupsWithSelect.empty() && synNotInClauses.empty()) {
+	if (!groupsWithSelect.empty() && selectSynNotInClauses.empty()) {
 		return mergeGroupWithSelectResults(groupsWithSelectRes);
-	} else if (groupsWithSelect.empty() && !synNotInClauses.empty()) {
+	} else if (groupsWithSelect.empty() && !selectSynNotInClauses.empty()) {
 		return mergeSynNotInClauseResults(entityResults);
 	} else {
 		Table selectClauseResults = mergeGroupWithSelectResults(groupsWithSelectRes);
@@ -52,7 +82,7 @@ Table QueryEvaluator::evaluate(Query& query) {
 	}
 }
 
-bool QueryEvaluator::evaluateBooleanClauses(std::vector<QueryClause>& clauses) {
+bool QueryEvaluator::evaluateBooleanClauses(const std::vector<QueryClause>& clauses) {
 	for (const auto& clause: clauses) {
 		QueryClauseResult clauseRes = ClauseEvaluator::evaluate(clause, true);
 		if (!clauseRes.containsValidResult()) {
@@ -62,7 +92,7 @@ bool QueryEvaluator::evaluateBooleanClauses(std::vector<QueryClause>& clauses) {
 	return true;
 }
 
-std::vector<QueryClauseResult> QueryEvaluator::evaluateSynWithoutClause(std::vector<QueryArgument> syns) {
+std::vector<QueryClauseResult> QueryEvaluator::evaluateSynWithoutClause(const std::vector<QueryArgument>& syns) {
 	std::vector<QueryClauseResult> results;
 	for (const auto& syn: syns) {
 		QueryClauseResult entityResult = EntityEvaluator::evaluate(syn);
@@ -75,7 +105,7 @@ std::vector<QueryClauseResult> QueryEvaluator::evaluateSynWithoutClause(std::vec
 }
 
 std::vector<std::vector<QueryClauseResult>>
-QueryEvaluator::evaluateGroupsWithoutSelect(std::vector<OptimizerGroup> groups) {
+QueryEvaluator::evaluateGroupsWithoutSelect(const std::vector<OptimizerGroup>& groups) {
 	std::vector<std::vector<QueryClauseResult>> groupResults;
 
 	for (const auto& group: groups) {
@@ -106,7 +136,7 @@ QueryEvaluator::evaluateGroupsWithoutSelect(std::vector<OptimizerGroup> groups) 
 }
 
 std::vector<std::vector<QueryClauseResult>>
-QueryEvaluator::evaluateGroupsWithSelect(std::vector<OptimizerGroup> groups) {
+QueryEvaluator::evaluateGroupsWithSelect(const std::vector<OptimizerGroup>& groups) {
 	std::vector<std::vector<QueryClauseResult>> groupResults;
 
 	for (const auto& group: groups) {

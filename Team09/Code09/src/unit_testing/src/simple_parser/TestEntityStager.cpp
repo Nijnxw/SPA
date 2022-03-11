@@ -40,6 +40,11 @@ TEST_CASE("Test EntityStager interaction with PKB") {
 	EntityStager::stageModifiesStatements(1, varList);
 	EntityStager::stageModifiesProcedure("procedure", varList);
 
+	EntityStager::stageCFG({
+		{1}, {2}, {3, 10}, {4, 7}, {5, 6}, {1}, {1}, {8, 9}, {1}, {1},
+		{11, 14}, {12, 13}, {1}, {1}, {15, 16}, {1}, {1}
+	});
+
 	EntityStager::commit();
 
 	std::unordered_set<std::string> expectedProc;
@@ -82,6 +87,5 @@ TEST_CASE("Test EntityStager interaction with PKB") {
 
 	REQUIRE(PKB::isCallsRelationship("testProgram1", "testProgram2"));
 	REQUIRE(PKB::isCallsTRelationship("testProgram1", "testProgram2"));
-
 	PKB::clearAllStores();
 }

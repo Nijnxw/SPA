@@ -26,6 +26,7 @@ void EntityStager::clear() {
 	stagedUsesProcedure.clear();
 	stagedModifiesStatement.clear();
 	stagedModifiesProcedure.clear();
+	stagedCFG.clear();
 }
 //helper function
 template <typename T>
@@ -139,6 +140,10 @@ std::vector<std::pair<std::string, std::unordered_set<std::string>>> EntityStage
 	return stagedModifiesProcedure;
 }
 
+std::vector<std::unordered_set<int>> EntityStager::getCFG() {
+	return stagedCFG;
+}
+
 // stagers
 void EntityStager::stageProcedure(const std::string& procedure) {
 	stagedProcedures.insert(procedure);
@@ -225,7 +230,12 @@ void EntityStager::stageModifiesProcedure(std::string proc, std::unordered_set<s
 	stagedModifiesProcedure.emplace_back(proc, variables);
 }
 
+void EntityStager::stageCFG(std::vector<std::unordered_set<int>> cfg) {
+	stagedCFG = cfg;
+}
+
 void EntityStager::commit() {
+	PKB::addCFG(&stagedCFG);
 	for (auto& proc: stagedProcedures) { PKB::addProcedure(proc); }
 	for (auto& var: stagedConstants) { PKB::addConstant(var); }
 	for (auto& con: stagedVariables) { PKB::addVariable(con); }

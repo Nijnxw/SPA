@@ -161,6 +161,7 @@ TEST_CASE("Extract design from SIMPLE program") {
 	std::unordered_map<std::string, std::shared_ptr<ProcedureNode>> procMap{ {"testProgram", procedureNode} };
 	AST ast = std::make_shared<ProgramNode>(procMap);
 
+	SPManager::stmtCount = 4;
 	SPManager::extractDesign(ast);
 
 	std::unordered_set<std::string> expectedProcedures;

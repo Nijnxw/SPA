@@ -37,6 +37,8 @@ private:
 	static inline std::vector<std::pair<int, std::unordered_set<std::string>>> stagedModifiesStatement;
 	static inline std::vector<std::pair<std::string, std::unordered_set<std::string>>> stagedModifiesProcedure;
 
+	static inline std::vector<std::unordered_set<int>> stagedCFG;
+
 public:
 	EntityStager();
 
@@ -73,6 +75,8 @@ public:
 	static std::vector<std::pair<int, std::unordered_set<std::string>>> getStagedModifiesStatement();
 	static std::vector<std::pair<std::string, std::unordered_set<std::string>>> getStagedModifiesProcedure();
 
+	static std::vector<std::unordered_set<int>> getCFG();
+
 	// stagers
 	static void stageProcedure(const std::string& procedure);
 	static void stageVariable(const std::string& variable);
@@ -99,6 +103,8 @@ public:
 
 	static void stageModifiesStatements(int stmt, std::unordered_set<std::string> variables);
 	static void stageModifiesProcedure(std::string proc, std::unordered_set<std::string> variables);
+
+	static void stageCFG(std::vector<std::unordered_set<int>> cfg);
 
 	static void commit();
 };

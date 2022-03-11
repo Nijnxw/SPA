@@ -59,7 +59,7 @@ std::unordered_set<int> EntityStager::getStagedReadStatements() {
 	return getStmtNoFromSet(stagedReadStatements);
 }
 
-std::unordered_map<int, std::string> EntityStager::getStagedReads() {
+std::unordered_map<int, std::string> EntityStager::getStagedReadContents() {
 	return stagedReadStatements;
 }
 
@@ -67,7 +67,7 @@ std::unordered_set<int> EntityStager::getStagedPrintStatements() {
 	return getStmtNoFromSet(stagedPrintStatements);
 }
 
-std::unordered_map<int, std::string> EntityStager::getStagedPrints() {
+std::unordered_map<int, std::string> EntityStager::getStagedPrintContents() {
 	return stagedPrintStatements;
 }
 
@@ -75,7 +75,7 @@ std::unordered_set<int> EntityStager::getStagedIfStatements() {
 	return getStmtNoFromSet(stagedIfStatements);
 }
 
-std::unordered_map<int, std::unordered_set<std::string>> EntityStager::getStagedIfs() {
+std::unordered_map<int, std::unordered_set<std::string>> EntityStager::getStagedIfContents() {
 	return stagedIfStatements;
 }
 
@@ -83,7 +83,7 @@ std::unordered_set<int> EntityStager::getStagedWhileStatements() {
 	return getStmtNoFromSet(stagedWhileStatements);
 }
 
-std::unordered_map<int, std::unordered_set<std::string>> EntityStager::getStagedWhiles() {
+std::unordered_map<int, std::unordered_set<std::string>> EntityStager::getStagedWhileContents() {
 	return stagedWhileStatements;
 }
 
@@ -91,7 +91,7 @@ std::unordered_set<int> EntityStager::getStagedCallStatements() {
 	return getStmtNoFromSet(stagedCallStatements);
 }
 
-std::unordered_map<int, std::string> EntityStager::getStagedCall() {
+std::unordered_map<int, std::string> EntityStager::getStagedCallContent() {
 	return stagedCallStatements;
 }
 

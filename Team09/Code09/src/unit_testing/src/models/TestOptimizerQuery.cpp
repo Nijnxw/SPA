@@ -63,7 +63,7 @@ TEST_CASE("Separate multiple groups of connected clauses - should return multipl
 	std::vector<QueryArgument> args6 = {{"_", EntityType::WILD},
 										{"_", EntityType::WILD}};
 	std::unordered_set<std::string> usedSyn6 = {"a"};
-	QueryClause clause6 = {RelationRef::PATTERN_A, args6, usedSyn6, "a"};
+	QueryClause clause6 = {RelationRef::PATTERN_ASSIGN, args6, usedSyn6, "a"};
 
 	OptimizerGroup expected1 = {{
 									{"ifs", {{"ifs", "s1", 0, clause1}}},

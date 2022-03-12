@@ -49,7 +49,7 @@ TEST_CASE("Test optimizer extraction logic") {
 	std::vector<QueryArgument> args8 = {{"_", EntityType::WILD},
 										{"_", EntityType::WILD}};
 	std::unordered_set<std::string> usedSyn8 = {"a"};
-	QueryClause clause8 = {RelationRef::PATTERN_A, args8, usedSyn8, "a"};
+	QueryClause clause8 = {RelationRef::PATTERN_ASSIGN, args8, usedSyn8, "a"};
 
 	// Clauses without synonyms
 	std::vector<QueryArgument> args9 = {{"1", EntityType::INT},

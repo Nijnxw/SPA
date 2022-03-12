@@ -96,7 +96,7 @@ TEST_CASE("QueryEvaluator evaluate normal synonym queries") {
 			{"_x_", EntityType::STRING},
 		};
 		std::unordered_set<std::string> usedSynonyms = {"a"};
-		QueryClause pAClause = QueryClause(RelationRef::PATTERN_A, clauseArguments, usedSynonyms, "a");
+		QueryClause pAClause = QueryClause(RelationRef::PATTERN_ASSIGN, clauseArguments, usedSynonyms, "a");
 
 		std::vector<QueryClause> clauses = {pAClause};
 		Query query = Query(selectSynonyms, clauses, false);
@@ -122,7 +122,7 @@ TEST_CASE("QueryEvaluator evaluate normal synonym queries") {
 		};
 
 		std::unordered_set<std::string> usedSynonyms = {"a"};
-		QueryClause pAClause = QueryClause(RelationRef::PATTERN_A, clauseArguments, usedSynonyms, "a");
+		QueryClause pAClause = QueryClause(RelationRef::PATTERN_ASSIGN, clauseArguments, usedSynonyms, "a");
 
 		std::vector<QueryClause> clauses = {pAClause};
 		Query query = Query(selectSynonyms, clauses, false);
@@ -167,7 +167,7 @@ TEST_CASE("QueryEvaluator evaluate normal synonym queries") {
 			{"_5_", EntityType::STRING}
 		};
 		std::unordered_set<std::string> pAUsedSynonyms = {"a"};
-		QueryClause pAClause = QueryClause(RelationRef::PATTERN_A, pAClauseArguments, pAUsedSynonyms, "a");
+		QueryClause pAClause = QueryClause(RelationRef::PATTERN_ASSIGN, pAClauseArguments, pAUsedSynonyms, "a");
 
 		std::vector<QueryClause> clauses = {stClause, pAClause};
 		Query query = Query(selectSynonyms, clauses, false);
@@ -210,7 +210,7 @@ TEST_CASE("QueryEvaluator evaluate normal synonym queries") {
 			{"_y 1 +_", EntityType::STRING}
 		};
 		std::unordered_set<std::string> pAUsedSynonyms = {"a"};
-		QueryClause pAClause = QueryClause(RelationRef::PATTERN_A, pAClauseArguments, pAUsedSynonyms, "a");
+		QueryClause pAClause = QueryClause(RelationRef::PATTERN_ASSIGN, pAClauseArguments, pAUsedSynonyms, "a");
 
 		std::vector<QueryClause> clauses = {stClause, pAClause};
 		Query query = Query(selectSynonyms, clauses, false);
@@ -251,7 +251,7 @@ TEST_CASE("QueryEvaluator evaluate normal synonym queries") {
 			{"_x_", EntityType::STRING}
 		};
 		std::unordered_set<std::string> pAUsedSynonyms = {"a"};
-		QueryClause pAClause = QueryClause(RelationRef::PATTERN_A, pAClauseArguments, pAUsedSynonyms, "a");
+		QueryClause pAClause = QueryClause(RelationRef::PATTERN_ASSIGN, pAClauseArguments, pAUsedSynonyms, "a");
 
 		std::vector<QueryClause> clauses = {stClause, pAClause};
 		Query query = Query(selectSynonyms, clauses, false);
@@ -290,7 +290,7 @@ TEST_CASE("QueryEvaluator evaluate normal synonym queries") {
 			{"_x_", EntityType::STRING}
 		};
 		std::unordered_set<std::string> pAUsedSynonyms = {"a"};
-		QueryClause pAClause = QueryClause(RelationRef::PATTERN_A, pAClauseArguments, pAUsedSynonyms, "a");
+		QueryClause pAClause = QueryClause(RelationRef::PATTERN_ASSIGN, pAClauseArguments, pAUsedSynonyms, "a");
 
 		std::vector<QueryClause> clauses = {stClause, pAClause};
 		Query query = Query(selectSynonyms, clauses, false);
@@ -340,7 +340,7 @@ TEST_CASE("QueryEvaluator evaluate normal synonym queries") {
 			{"_x_", EntityType::STRING}
 		};
 		std::unordered_set<std::string> pAUsedSynonyms = {"a"};
-		QueryClause pAClause = QueryClause(RelationRef::PATTERN_A, pAClauseArguments, pAUsedSynonyms, "a");
+		QueryClause pAClause = QueryClause(RelationRef::PATTERN_ASSIGN, pAClauseArguments, pAUsedSynonyms, "a");
 
 		std::vector<QueryClause> clauses = {stClause, pAClause};
 		Query query = Query(selectSynonyms, clauses, false);
@@ -383,7 +383,7 @@ TEST_CASE("QueryEvaluator evaluate normal synonym queries") {
 			{"_x_", EntityType::STRING}
 		};
 		std::unordered_set<std::string> pAUsedSynonyms = {"a", "v"};
-		QueryClause pAClause = QueryClause(RelationRef::PATTERN_A, pAClauseArguments, pAUsedSynonyms, "a");
+		QueryClause pAClause = QueryClause(RelationRef::PATTERN_ASSIGN, pAClauseArguments, pAUsedSynonyms, "a");
 
 		std::vector<QueryClause> clauses = {stClause, pAClause};
 		Query query = Query(selectSynonyms, clauses, false);
@@ -430,7 +430,7 @@ TEST_CASE("QueryEvaluator evaluate normal synonym queries") {
 			{"_x_", EntityType::STRING}
 		};
 		std::unordered_set<std::string> pAUsedSynonyms = {"a", "v"};
-		QueryClause pAClause = QueryClause(RelationRef::PATTERN_A, pAClauseArguments, pAUsedSynonyms, "a");
+		QueryClause pAClause = QueryClause(RelationRef::PATTERN_ASSIGN, pAClauseArguments, pAUsedSynonyms, "a");
 
 		std::vector<QueryClause> clauses = {stClause, pAClause};
 		Query query = Query(selectSynonyms, clauses, false);
@@ -469,7 +469,7 @@ TEST_CASE("QueryEvaluator evaluate normal synonym queries") {
 		};
 		std::unordered_set<std::string> pAUsedSynonyms = {"a",
 														  "v"};
-		QueryClause pAClause = QueryClause(RelationRef::PATTERN_A, pAClauseArguments, pAUsedSynonyms, "a");
+		QueryClause pAClause = QueryClause(RelationRef::PATTERN_ASSIGN, pAClauseArguments, pAUsedSynonyms, "a");
 
 		std::vector<QueryArgument> usesClauseArguments = {
 			{"p", EntityType::PROC},
@@ -523,7 +523,7 @@ TEST_CASE("QueryEvaluator evaluate normal synonym queries") {
 			{"_", EntityType::WILD}
 		};
 		std::unordered_set<std::string> pAUsedSynonyms = {"v"};
-		QueryClause pAClause = QueryClause(RelationRef::PATTERN_A, pAClauseArguments, pAUsedSynonyms, "a");
+		QueryClause pAClause = QueryClause(RelationRef::PATTERN_ASSIGN, pAClauseArguments, pAUsedSynonyms, "a");
 
 		std::vector<QueryArgument> modifiesClauseArguments = {
 			{"a", EntityType::ASSIGN},
@@ -579,7 +579,7 @@ TEST_CASE("QueryEvaluator evaluate normal synonym queries") {
 			{"_", EntityType::WILD}
 		};
 		std::unordered_set<std::string> pAUsedSynonyms = {"v"};
-		QueryClause pAClause = QueryClause(RelationRef::PATTERN_A, pAClauseArguments, pAUsedSynonyms, "a");
+		QueryClause pAClause = QueryClause(RelationRef::PATTERN_ASSIGN, pAClauseArguments, pAUsedSynonyms, "a");
 
 		std::vector<QueryArgument> modifiesClauseArguments = {
 			{"a", EntityType::ASSIGN},

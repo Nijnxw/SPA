@@ -5,6 +5,8 @@
 #include "ParentEvaluator.h"
 #include "ModifiesEvaluator.h"
 #include "PatternAssignEvaluator.h"
+#include "PatternIfEvaluator.h"
+#include "PatternWhileEvaluator.h"
 #include "CallsEvaluator.h"
 
 QueryClauseResult ClauseEvaluator::evaluate(const QueryClause& clause, bool isBooleanResult) {
@@ -16,6 +18,8 @@ QueryClauseResult ClauseEvaluator::evaluate(const QueryClause& clause, bool isBo
 	UsesEvaluator usesEvaluator = UsesEvaluator();
 	ModifiesEvaluator modifiesEvaluator = ModifiesEvaluator();
 	PatternAssignEvaluator patternAssignEvaluator = PatternAssignEvaluator();
+	PatternIfEvaluator patternIfEvaluator = PatternIfEvaluator();
+	PatternWhileEvaluator patternWhileEvaluator = PatternWhileEvaluator();
 	CallsEvaluator callsEvaluator = CallsEvaluator();
 
 	switch (clause.getClauseType()) {
@@ -37,10 +41,14 @@ QueryClauseResult ClauseEvaluator::evaluate(const QueryClause& clause, bool isBo
 		case RelationRef::USES:
 			return usesEvaluator.getUses(firstArg.getValue(), secondArg.getValue(), firstArg.getType(),
 										 secondArg.getType(), isBooleanResult);
-		case RelationRef::PATTERN_A:
+		case RelationRef::PATTERN_ASSIGN:
 			return patternAssignEvaluator.getPattern(firstArg.getValue(), secondArg.getValue(),
 													 clause.getClauseSynonym(), firstArg.getType(),
 													 secondArg.getType(), isBooleanResult);
+		case RelationRef::PATTERN_IF:
+			return patternIfEvaluator.getIfPattern(firstArg.getValue(), clause.getClauseSynonym(), firstArg.getType(), isBooleanResult);
+		case RelationRef::PATTERN_WHILE:
+			return patternWhileEvaluator.getWhilePattern(firstArg.getValue(), clause.getClauseSynonym(), firstArg.getType(), isBooleanResult);
 		case RelationRef::CALLS:
 			return callsEvaluator.getCalls(firstArg.getValue(), secondArg.getValue(), firstArg.getType(),
 										   secondArg.getType(), isBooleanResult);

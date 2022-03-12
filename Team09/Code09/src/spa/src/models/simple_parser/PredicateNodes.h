@@ -6,6 +6,7 @@
 
 #include <memory>
 #include <stdexcept>
+#include <unordered_set>
 #include <variant>
 
 using RelFactorNode = ExprNode;
@@ -16,12 +17,14 @@ private:
 	RelFactorNode lhs;
 	ComparatorOperator op;
 	RelFactorNode rhs;
+	std::unordered_set<std::string> variables;
 
 public:
 	RelExprNode(RelFactorNode left, ComparatorOperator oper, RelFactorNode right);
 	RelFactorNode getLhs() const;
 	RelFactorNode getRhs() const;
 	ComparatorOperator getOperator() const;
+	std::unordered_set<std::string> getVariables() const;
 	bool operator==(const Node& other) const override;
 };
 
@@ -31,6 +34,7 @@ private:
 	std::shared_ptr<PredicateNode> lhs = nullptr;
 	ConditionalOperator op = ConditionalOperator::NONE;
 	std::shared_ptr<PredicateNode> rhs = nullptr;
+	std::unordered_set<std::string> controlVariables;
 
 public:
 	PredicateNode(std::shared_ptr<RelExprNode> re);
@@ -43,6 +47,7 @@ public:
 	RelFactorNode getRelLhs() const;
 	RelFactorNode getRelRhs() const;
 	ConditionalOperator getOperator() const;
+	std::unordered_set<std::string> getControlVariables() const;
 
 	bool isTerminalPredicate() const;
 	bool isNotPredicate() const;

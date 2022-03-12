@@ -11,7 +11,7 @@ AST NonContainerStmtASTs::getAST1_1() {
 	std::vector<std::shared_ptr<StmtNode>> stmtList{
 			std::make_shared<ReadNode>(1, x),
 	};
-	return generateAST(stmtList);
+	return generateBasicAST(stmtList);
 }
 
 AST NonContainerStmtASTs::getAST1_2() {
@@ -23,7 +23,7 @@ AST NonContainerStmtASTs::getAST1_2() {
 	std::vector<std::shared_ptr<StmtNode>> stmtList{
 			std::make_shared<PrintNode>(1, x),
 	};
-	return generateAST(stmtList);
+	return generateBasicAST(stmtList);
 }
 
 // ASSIGNMENT ASTs
@@ -37,7 +37,7 @@ AST NonContainerStmtASTs::getAST1_3() {
 	std::vector<std::shared_ptr<StmtNode>> stmtList{
 			std::make_shared<AssignNode>(1, a, c1, "1"),
 	};
-	return generateAST(stmtList);
+	return generateBasicAST(stmtList);
 }
 
 AST NonContainerStmtASTs::getAST1_4() {
@@ -49,7 +49,7 @@ AST NonContainerStmtASTs::getAST1_4() {
 	std::vector<std::shared_ptr<StmtNode>> stmtList{
 			std::make_shared<AssignNode>(1, a, x, "x"),
 	};
-	return generateAST(stmtList);
+	return generateBasicAST(stmtList);
 }
 
 AST NonContainerStmtASTs::getAST1_5() {
@@ -63,7 +63,7 @@ AST NonContainerStmtASTs::getAST1_5() {
 										 std::make_shared<BinaryOperatorNode>(BinaryOperator::PLUS, x, y),
 										 "x y +"),
 	};
-	return generateAST(stmtList);
+	return generateBasicAST(stmtList);
 }
 
 AST NonContainerStmtASTs::getAST1_6() {
@@ -77,7 +77,7 @@ AST NonContainerStmtASTs::getAST1_6() {
 										 std::make_shared<BinaryOperatorNode>(BinaryOperator::PLUS, c1, c2),
 										 "1 2 +"),
 	};
-	return generateAST(stmtList);
+	return generateBasicAST(stmtList);
 }
 
 AST NonContainerStmtASTs::getAST1_7() {
@@ -91,7 +91,7 @@ AST NonContainerStmtASTs::getAST1_7() {
 										 std::make_shared<BinaryOperatorNode>(BinaryOperator::PLUS, x, c1),
 										 "x 1 +"),
 	};
-	return generateAST(stmtList);
+	return generateBasicAST(stmtList);
 }
 
 AST NonContainerStmtASTs::getAST1_8() {
@@ -108,7 +108,7 @@ AST NonContainerStmtASTs::getAST1_8() {
 										 std::make_shared<BinaryOperatorNode>(BinaryOperator::PLUS, c1PlusXPlusYPlusC2, z),
 										 "1 x + y + 2 + z +"),
 	};
-	return generateAST(stmtList);
+	return generateBasicAST(stmtList);
 }
 
 // Single operator parsing
@@ -128,7 +128,7 @@ AST NonContainerStmtASTs::getAST1_10() {
 										 std::make_shared<BinaryOperatorNode>(BinaryOperator::MINUS, x, c1),
 										 "x 1 -"),
 	};
-	return generateAST(stmtList);
+	return generateBasicAST(stmtList);
 }
 
 AST NonContainerStmtASTs::getAST1_11() {
@@ -142,7 +142,7 @@ AST NonContainerStmtASTs::getAST1_11() {
 										 std::make_shared<BinaryOperatorNode>(BinaryOperator::TIMES, x, c1),
 										 "x 1 *"),
 	};
-	return generateAST(stmtList);
+	return generateBasicAST(stmtList);
 }
 
 AST NonContainerStmtASTs::getAST1_12() {
@@ -156,7 +156,7 @@ AST NonContainerStmtASTs::getAST1_12() {
 										 std::make_shared<BinaryOperatorNode>(BinaryOperator::DIVIDE, x, c1),
 										 "x 1 /"),
 	};
-	return generateAST(stmtList);
+	return generateBasicAST(stmtList);
 }
 
 AST NonContainerStmtASTs::getAST1_13() {
@@ -170,7 +170,7 @@ AST NonContainerStmtASTs::getAST1_13() {
 										 std::make_shared<BinaryOperatorNode>(BinaryOperator::MODULO, x, c1),
 										 "x 1 %"),
 	};
-	return generateAST(stmtList);
+	return generateBasicAST(stmtList);
 }
 
 // Operator precedence
@@ -188,7 +188,7 @@ AST NonContainerStmtASTs::getAST1_14() {
 										 std::make_shared<BinaryOperatorNode>(BinaryOperator::PLUS, xPlusC1MinusY, c3),
 										 " x 1 + y - 3+"),
 	};
-	return generateAST(stmtList);
+	return generateBasicAST(stmtList);
 }
 
 AST NonContainerStmtASTs::getAST1_15() {
@@ -204,7 +204,7 @@ AST NonContainerStmtASTs::getAST1_15() {
 										 std::make_shared<BinaryOperatorNode>(BinaryOperator::MODULO, xTimesC1DivideY, c3),
 										 "x 1 * y / 3 %"),
 	};
-	return generateAST(stmtList);
+	return generateBasicAST(stmtList);
 }
 
 AST NonContainerStmtASTs::getAST1_16() {
@@ -219,7 +219,7 @@ AST NonContainerStmtASTs::getAST1_16() {
 										 std::make_shared<BinaryOperatorNode>(BinaryOperator::PLUS, x, c1TimesY),
 										 "x 1 y * +"),
 	};
-	return generateAST(stmtList);
+	return generateBasicAST(stmtList);
 }
 
 AST NonContainerStmtASTs::getAST1_17() {
@@ -234,7 +234,7 @@ AST NonContainerStmtASTs::getAST1_17() {
 										 std::make_shared<BinaryOperatorNode>(BinaryOperator::PLUS, x, c1DivY),
 										 "x 1 y / +"),
 	};
-	return generateAST(stmtList);
+	return generateBasicAST(stmtList);
 }
 
 AST NonContainerStmtASTs::getAST1_18() {
@@ -249,7 +249,7 @@ AST NonContainerStmtASTs::getAST1_18() {
 										 std::make_shared<BinaryOperatorNode>(BinaryOperator::PLUS, x, c1ModY),
 										 "x 1 y % +"),
 	};
-	return generateAST(stmtList);
+	return generateBasicAST(stmtList);
 }
 
 AST NonContainerStmtASTs::getAST1_19() {
@@ -264,7 +264,7 @@ AST NonContainerStmtASTs::getAST1_19() {
 										 std::make_shared<BinaryOperatorNode>(BinaryOperator::MINUS, x,c1TimesY),
 										 "x 1 y / -"),
 	};
-	return generateAST(stmtList);
+	return generateBasicAST(stmtList);
 }
 
 AST NonContainerStmtASTs::getAST1_20() {
@@ -279,7 +279,7 @@ AST NonContainerStmtASTs::getAST1_20() {
 										 std::make_shared<BinaryOperatorNode>(BinaryOperator::MINUS, x, c1DivY),
 										 "x 1 y / -"),
 	};
-	return generateAST(stmtList);
+	return generateBasicAST(stmtList);
 }
 
 AST NonContainerStmtASTs::getAST1_21() {
@@ -294,7 +294,7 @@ AST NonContainerStmtASTs::getAST1_21() {
 										 std::make_shared<BinaryOperatorNode>(BinaryOperator::MINUS, x, c1ModY),
 										 "x 1 y % -"),
 	};
-	return generateAST(stmtList);
+	return generateBasicAST(stmtList);
 }
 
 // Parentheses interactions
@@ -308,7 +308,7 @@ AST NonContainerStmtASTs::getAST1_22() {
 	std::vector<std::shared_ptr<StmtNode>> stmtList{
 			std::make_shared<AssignNode>(1, a, c1, "1"),
 	};
-	return generateAST(stmtList);
+	return generateBasicAST(stmtList);
 }
 
 AST NonContainerStmtASTs::getAST1_23() {
@@ -320,7 +320,7 @@ AST NonContainerStmtASTs::getAST1_23() {
 	std::vector<std::shared_ptr<StmtNode>> stmtList{
 			std::make_shared<AssignNode>(1, a, x, "x"),
 	};
-	return generateAST(stmtList);
+	return generateBasicAST(stmtList);
 }
 
 AST NonContainerStmtASTs::getAST1_24() {
@@ -334,7 +334,7 @@ AST NonContainerStmtASTs::getAST1_24() {
 										 std::make_shared<BinaryOperatorNode>(BinaryOperator::PLUS, x, c1),
 										 "x 1 +"),
 	};
-	return generateAST(stmtList);
+	return generateBasicAST(stmtList);
 }
 
 AST NonContainerStmtASTs::getAST1_25() {
@@ -349,7 +349,7 @@ AST NonContainerStmtASTs::getAST1_25() {
 										 std::make_shared<BinaryOperatorNode>(BinaryOperator::PLUS, xPlusC1, y),
 										 "x 1 + y +"),
 	};
-	return generateAST(stmtList);
+	return generateBasicAST(stmtList);
 }
 
 AST NonContainerStmtASTs::getAST1_26() {
@@ -364,7 +364,7 @@ AST NonContainerStmtASTs::getAST1_26() {
 										 std::make_shared<BinaryOperatorNode>(BinaryOperator::PLUS, x, c1PlusY),
 										 "x 1 y + +"),
 	};
-	return generateAST(stmtList);
+	return generateBasicAST(stmtList);
 }
 
 AST NonContainerStmtASTs::getAST1_27() {
@@ -379,7 +379,7 @@ AST NonContainerStmtASTs::getAST1_27() {
 										 std::make_shared<BinaryOperatorNode>(BinaryOperator::PLUS, x, c1TimesY),
 										 "x 1 y * +"),
 	};
-	return generateAST(stmtList);
+	return generateBasicAST(stmtList);
 }
 
 AST NonContainerStmtASTs::getAST1_28() {
@@ -394,7 +394,7 @@ AST NonContainerStmtASTs::getAST1_28() {
 										 std::make_shared<BinaryOperatorNode>(BinaryOperator::TIMES, x, c1PlusY),
 										 "x 1 y + *"),
 	};
-	return generateAST(stmtList);
+	return generateBasicAST(stmtList);
 }
 
 AST NonContainerStmtASTs::getAST1_29() {
@@ -409,7 +409,7 @@ AST NonContainerStmtASTs::getAST1_29() {
 										 std::make_shared<BinaryOperatorNode>(BinaryOperator::TIMES, xTimesC1, y),
 										 "x 1 * y *"),
 	};
-	return generateAST(stmtList);
+	return generateBasicAST(stmtList);
 }
 
 AST NonContainerStmtASTs::getAST1_30() {
@@ -424,7 +424,7 @@ AST NonContainerStmtASTs::getAST1_30() {
 										 std::make_shared<BinaryOperatorNode>(BinaryOperator::TIMES, x, c1TimesY),
 										 "x 1 y * *"),
 	};
-	return generateAST(stmtList);
+	return generateBasicAST(stmtList);
 }
 
 // operator precedences - Intermediate
@@ -443,7 +443,7 @@ AST NonContainerStmtASTs::getAST1_31() {
 										 std::make_shared<BinaryOperatorNode>(BinaryOperator::DIVIDE, c1PlusXMinusY, c3),
 										 "1 x y - + 3 /"),
 	};
-	return generateAST(stmtList);
+	return generateBasicAST(stmtList);
 }
 
 AST NonContainerStmtASTs::getAST1_32() {
@@ -460,7 +460,7 @@ AST NonContainerStmtASTs::getAST1_32() {
 										 std::make_shared<BinaryOperatorNode>(BinaryOperator::MINUS, c1PlusX, yDivC3),
 										 "1 x + y 3 / -"),
 	};
-	return generateAST(stmtList);
+	return generateBasicAST(stmtList);
 }
 
 AST NonContainerStmtASTs::getAST1_33() {
@@ -477,7 +477,7 @@ AST NonContainerStmtASTs::getAST1_33() {
 										 std::make_shared<BinaryOperatorNode>(BinaryOperator::MINUS, c1PlusX, c3ModY),
 										 "1 x + 3 y % -"),
 	};
-	return generateAST(stmtList);
+	return generateBasicAST(stmtList);
 }
 
 AST NonContainerStmtASTs::getAST1_34() {
@@ -494,7 +494,7 @@ AST NonContainerStmtASTs::getAST1_34() {
 										 std::make_shared<BinaryOperatorNode>(BinaryOperator::MODULO, c1PlusXTimesC3, y),
 										 "1 x 3 * + y %"),
 	};
-	return generateAST(stmtList);
+	return generateBasicAST(stmtList);
 }
 
 // Operator Precedence - Advanced
@@ -515,7 +515,7 @@ AST NonContainerStmtASTs::getAST1_35() {
 										 std::make_shared<BinaryOperatorNode>(BinaryOperator::PLUS, c1, xTimesYMinusC2DivZModC3),
 										 "1 x y 2 - * z 3 % / +"),
 	};
-	return generateAST(stmtList);
+	return generateBasicAST(stmtList);
 }
 
 AST NonContainerStmtASTs::getAST1_36() {
@@ -534,7 +534,7 @@ AST NonContainerStmtASTs::getAST1_36() {
 										 std::make_shared<BinaryOperatorNode>(BinaryOperator::MINUS, c1PlusXTimesY, c2DivZModC3),
 										 "1 x y * + 2 z / 3 % -"),
 	};
-	return generateAST(stmtList);
+	return generateBasicAST(stmtList);
 }
 
 AST NonContainerStmtASTs::getAST1_37() {
@@ -554,7 +554,7 @@ AST NonContainerStmtASTs::getAST1_37() {
 										 std::make_shared<BinaryOperatorNode>(BinaryOperator::PLUS, c1, xTimesYMinusC2DivZModC3),
 										 "1 x y 2 z / 3 % - * +"),
 	};
-	return generateAST(stmtList);
+	return generateBasicAST(stmtList);
 }
 
 AST NonContainerStmtASTs::getAST1_38() {
@@ -574,5 +574,8 @@ AST NonContainerStmtASTs::getAST1_38() {
 										 std::make_shared<BinaryOperatorNode>(BinaryOperator::PLUS, c1, xTimesYMinusC2DivZModC3),
 										 "1 x y 2 - * z 3 % / +"),
 	};
-	return generateAST(stmtList);
+	return generateBasicAST(stmtList);
 }
+
+// stmt count getter
+int NonContainerStmtASTs::getStmtCount() { return 1; }

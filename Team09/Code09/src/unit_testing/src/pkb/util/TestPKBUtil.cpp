@@ -118,7 +118,7 @@ TEST_CASE("PKBUtil Helper Functions") {
 		}
 
 		SECTION("convertSetPairsToVectorTuple positive query when key does not exist") {
-			std::unordered_set<std::pair<int, int>, PKBUtil::hashFunction> set;
+			std::unordered_set<std::pair<int, int>, PKBUtil::pairHashFunction> set;
 
 			std::tuple<std::vector<int>, std::vector<int>> tuple = PKBUtil::convertSetPairsToVectorTuple(set);
 
@@ -130,7 +130,7 @@ TEST_CASE("PKBUtil Helper Functions") {
 		}
 
 		SECTION("convertSetPairsToVectorTuple positive query when key exists") {
-			std::unordered_set<std::pair<int, int>, PKBUtil::hashFunction> set;
+			std::unordered_set<std::pair<int, int>, PKBUtil::pairHashFunction> set;
 
 			std::pair<int, int> pair;
 			pair = std::make_pair(1, 2);
@@ -149,10 +149,10 @@ TEST_CASE("PKBUtil Helper Functions") {
 			std::vector<int> firstColumn = { 1 };
 			std::vector<int> secondColumn = { 2 };
 
-			std::unordered_set<std::pair<int, int>, PKBUtil::hashFunction> tuple = 
+			std::unordered_set<std::pair<int, int>, PKBUtil::pairHashFunction> tuple = 
 				PKBUtil::convertVectorTupleToSetPairs(firstColumn, secondColumn);
 
-			std::unordered_set<std::pair<int, int>, PKBUtil::hashFunction> expectedTuple;
+			std::unordered_set<std::pair<int, int>, PKBUtil::pairHashFunction> expectedTuple;
 
 			std::pair<int, int> pair;
 			pair = std::make_pair(1, 2);

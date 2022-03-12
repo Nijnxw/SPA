@@ -3,5 +3,5 @@
 
 class ClauseEvaluator {
 public:
-	static QueryClauseResult evaluate(QueryClause& entity, bool isBooleanResult);
+	static QueryClauseResult evaluate(const QueryClause& entity, bool isBooleanResult);
 };

@@ -3,81 +3,201 @@
 #include "PQL/evaluators/EntityEvaluator.h"
 #include "PQL/evaluators/ClauseEvaluator.h"
 #include "util/QueryUtils.h"
+#include "Optimizer.h"
 
-// assume single result synonym
-// assume at most 2 clauses (iter 1 req)
 Table QueryEvaluator::evaluate(Query& query) {
-	Table finalResult;
+	std::vector<QueryArgument> selectSynNotInClauses;
+	std::vector<QueryClause> clausesWithoutSyn;
+	std::vector<OptimizerGroup> groupsWithSelect;
+	std::vector<OptimizerGroup> groupsWithoutSelect;
 
-	bool isNoClauseQuery = query.getClauses().empty();
-	bool isSingleClauseQuery = query.getClauses().size() == 1;
-	bool isMultiClauseQuery = query.getClauses().size() == 2;
-
-	if (query.getResultSynonyms().size() != 1) {
-		return finalResult;
+	if (query.isEmpty()) {
+		return {};
 	}
 
-	QueryArgument resultSyn = query.getResultSynonyms().front();
+	std::tie(selectSynNotInClauses, clausesWithoutSyn, groupsWithSelect, groupsWithoutSelect) = Optimizer::optimize(
+		query);
 
-	if (isNoClauseQuery) {
-		finalResult = EntityEvaluator::evaluate(resultSyn).getTable();
-	} else if (isSingleClauseQuery) {
-		QueryClause clause = query.getClauses().front();
-		finalResult = evaluateSingleClause(clause, resultSyn);
-	} else if (isMultiClauseQuery) {
-		QueryClause firstClause = query.getClauses().at(0);
-		QueryClause secondClause = query.getClauses().at(1);
-		finalResult = evaluateMultiClause(firstClause, secondClause, resultSyn);
+	if (query.isBooleanQuery()) {
+		return evaluateBooleanQuery(clausesWithoutSyn, groupsWithoutSelect);
 	}
 
-	return finalResult;
+	return evaluateNormalQuery(selectSynNotInClauses, clausesWithoutSyn, groupsWithoutSelect, groupsWithSelect);
 }
 
-Table QueryEvaluator::evaluateSingleClause(QueryClause& clause, QueryArgument& resultSyn) {
-	bool clauseContainsResSyn = clause.containsSynonym(resultSyn);
-	QueryClauseResult clauseRes = ClauseEvaluator::evaluate(clause, false);
+Table QueryEvaluator::evaluateBooleanQuery(const std::vector<QueryClause>& clausesWithoutSyn,
+										   const std::vector<OptimizerGroup>& groupsWithoutSelect) {
 
-	if (!clauseContainsResSyn && clauseRes.containsValidResult()) {
-		return EntityEvaluator::evaluate(resultSyn).getTable();
+	if (!clausesWithoutSyn.empty() && !evaluateBooleanClauses(clausesWithoutSyn)) {
+		return {};
+	}
+
+	std::vector<std::vector<QueryClauseResult>> groupsWithoutSelectRes = evaluateGroupsWithoutSelect(
+		groupsWithoutSelect);
+	if (!groupsWithoutSelect.empty() && groupsWithoutSelectRes.empty()) {
+		return {};
+	}
+	if (!groupsWithoutSelect.empty() && !mergeGroupWithoutSelectResults(groupsWithoutSelectRes)) {
+		return {};
+	}
+
+	return {{"true", {}}};    //returns a dummy result
+}
+
+Table QueryEvaluator::evaluateNormalQuery(const std::vector<QueryArgument>& selectSynNotInClauses,
+										  const std::vector<QueryClause>& clausesWithoutSyn,
+										  const std::vector<OptimizerGroup>& groupsWithoutSelect,
+										  const std::vector<OptimizerGroup>& groupsWithSelect) {
+
+	if (!clausesWithoutSyn.empty() && !evaluateBooleanClauses(clausesWithoutSyn)) {
+		return {};
+	}
+	std::vector<QueryClauseResult> entityResults = evaluateSynWithoutClause(selectSynNotInClauses);
+	if (!selectSynNotInClauses.empty() && entityResults.empty()) {
+		return {};
+	}
+	std::vector<std::vector<QueryClauseResult>> groupsWithoutSelectRes = evaluateGroupsWithoutSelect(
+		groupsWithoutSelect);
+	if (!groupsWithoutSelect.empty() && groupsWithoutSelectRes.empty()) {
+		return {};
+	}
+	std::vector<std::vector<QueryClauseResult>> groupsWithSelectRes = evaluateGroupsWithSelect(groupsWithSelect);
+	if (!groupsWithSelect.empty() && groupsWithSelectRes.empty()) {
+		return {};
+	}
+
+	if (!groupsWithoutSelect.empty() && !mergeGroupWithoutSelectResults(groupsWithoutSelectRes)) {
+		return {};
+	}
+
+	if (!groupsWithSelect.empty() && selectSynNotInClauses.empty()) {
+		return mergeGroupWithSelectResults(groupsWithSelectRes);
+	} else if (groupsWithSelect.empty() && !selectSynNotInClauses.empty()) {
+		return mergeSynNotInClauseResults(entityResults);
 	} else {
-		return clauseRes.getTable();
+		Table selectClauseResults = mergeGroupWithSelectResults(groupsWithSelectRes);
+		Table synNotInClauseResults = mergeSynNotInClauseResults(entityResults);
+
+		return QueryUtils::crossProduct(selectClauseResults, synNotInClauseResults);
 	}
 }
 
-Table QueryEvaluator::evaluateMultiClause(QueryClause& firstClause, QueryClause& secondClause,
-										  QueryArgument& resultSyn) {
-	QueryClauseResult firstClauseRes = ClauseEvaluator::evaluate(firstClause, false);
-	QueryClauseResult secondClauseRes = ClauseEvaluator::evaluate(secondClause, false);
-	Table emptyRes;
-
-	bool noneContainsResSyn = !firstClause.containsSynonym(resultSyn) && !secondClause.containsSynonym(resultSyn);
-	bool bothContainsResSyn = firstClause.containsSynonym(resultSyn) && secondClause.containsSynonym(resultSyn);
-
-	if (bothContainsResSyn) {
-		return QueryUtils::hashJoin(firstClauseRes.getTable(), secondClauseRes.getTable());
-	} else if (noneContainsResSyn) {
-		bool containsResult;
-		if (firstClause.containsCommonSynonym(secondClause)) {
-			Table intermediateRes = QueryUtils::hashJoin(firstClauseRes.getTable(), secondClauseRes.getTable());
-			containsResult = !intermediateRes.empty();
-		} else {
-			containsResult = firstClauseRes.containsValidResult() && secondClauseRes.containsValidResult();
-		}
-
-		if (containsResult) {
-			return EntityEvaluator::evaluate(resultSyn).getTable();
-		}
-	} else {
-		if (firstClause.containsCommonSynonym(secondClause)) {
-			return QueryUtils::hashJoin(firstClauseRes.getTable(), secondClauseRes.getTable());
-		}
-
-		if (firstClause.containsSynonym(resultSyn)) {
-			return secondClauseRes.containsValidResult() ? firstClauseRes.getTable() : emptyRes;
-		} else {
-			return firstClauseRes.containsValidResult() ? secondClauseRes.getTable() : emptyRes;
+bool QueryEvaluator::evaluateBooleanClauses(const std::vector<QueryClause>& clauses) {
+	for (const auto& clause: clauses) {
+		QueryClauseResult clauseRes = ClauseEvaluator::evaluate(clause, true);
+		if (!clauseRes.containsValidResult()) {
+			return false;
 		}
 	}
+	return true;
+}
 
-	return emptyRes;
+std::vector<QueryClauseResult> QueryEvaluator::evaluateSynWithoutClause(const std::vector<QueryArgument>& syns) {
+	std::vector<QueryClauseResult> results;
+	for (const auto& syn: syns) {
+		QueryClauseResult entityResult = EntityEvaluator::evaluate(syn);
+		if (!entityResult.containsValidResult()) {
+			return {};
+		}
+		results.push_back(entityResult);
+	}
+	return results;
+}
+
+std::vector<std::vector<QueryClauseResult>>
+QueryEvaluator::evaluateGroupsWithoutSelect(const std::vector<OptimizerGroup>& groups) {
+	std::vector<std::vector<QueryClauseResult>> groupResults;
+
+	for (const auto& group: groups) {
+		std::vector<QueryClause> groupClauses = group.getClauses();
+		std::vector<QueryClauseResult> results;
+		if (groupClauses.size() == 1) {
+			QueryClauseResult clauseRes = ClauseEvaluator::evaluate(groupClauses.front(), true);
+
+			if (!clauseRes.containsValidResult()) {
+				return {};
+			}
+			results.push_back(clauseRes);
+			groupResults.push_back(results);
+			continue;
+		}
+
+		for (const auto& clause: groupClauses) {
+			QueryClauseResult clauseRes = ClauseEvaluator::evaluate(clause, false);
+			if (!clauseRes.containsValidResult()) {
+				return {};
+			}
+			results.push_back(clauseRes);
+		}
+		groupResults.push_back(results);
+	}
+
+	return groupResults;
+}
+
+std::vector<std::vector<QueryClauseResult>>
+QueryEvaluator::evaluateGroupsWithSelect(const std::vector<OptimizerGroup>& groups) {
+	std::vector<std::vector<QueryClauseResult>> groupResults;
+
+	for (const auto& group: groups) {
+		std::vector<QueryClause> groupClauses = group.getClauses();
+		std::vector<QueryClauseResult> results;
+
+		for (const auto& clause: groupClauses) {
+			QueryClauseResult clauseRes = ClauseEvaluator::evaluate(clause, false);
+			if (!clauseRes.containsValidResult()) {
+				return {};
+			}
+			results.push_back(clauseRes);
+		}
+		groupResults.push_back(results);
+	}
+
+	return groupResults;
+}
+
+Table QueryEvaluator::mergeSynNotInClauseResults(const std::vector<QueryClauseResult>& synResults) {
+	Table finalResults = (*synResults.begin()).getTable();
+	for (auto it = next(synResults.begin()); it != synResults.end(); it++) {
+		finalResults = QueryUtils::crossProduct(finalResults, it->getTable());
+	}
+	return finalResults;
+}
+
+bool QueryEvaluator::mergeGroupWithoutSelectResults(const std::vector<std::vector<QueryClauseResult>>& groupResults) {
+	for (const auto& group: groupResults) {
+		Table result = (*group.begin()).getTable();
+		for (auto it = next(group.begin()); it != group.end(); it++) {
+			result = QueryUtils::hashJoin(result, it->getTable());
+		}
+		std::vector<std::string> firstCol = (*result.begin()).second;
+		if (firstCol.empty()) {
+			return false;
+		}
+	}
+	return true;
+}
+
+Table QueryEvaluator::mergeGroupWithSelectResults(const std::vector<std::vector<QueryClauseResult>>& groupResults) {
+	Table finalResults;
+	std::vector<Table> tempResults;
+
+	for (const auto& group: groupResults) {
+		Table result = (*group.begin()).getTable();
+		for (auto it = next(group.begin()); it != group.end(); it++) {
+			result = QueryUtils::hashJoin(result, it->getTable());
+		}
+		std::vector<std::string> firstCol = (*result.begin()).second;
+		if (firstCol.empty()) {
+			return {};
+		}
+		tempResults.push_back(result);
+	}
+
+	finalResults = tempResults.front();
+	for (auto it = next(tempResults.begin()); it != tempResults.end(); it++) {
+		finalResults = QueryUtils::crossProduct(finalResults, *it);
+	}
+
+	return finalResults;
 }

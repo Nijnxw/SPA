@@ -10,11 +10,13 @@ public:
 	std::vector<PQLToken*> tokenise();
 
 private:
+	bool isWithinStringLiterals = false;
 	std::istream* rawQuery;
 	std::string rawToken = "";
 	std::vector<PQLToken*> PQLTokens;
 	
 	void processRawToken(std::string rawToken);
 	void pushToken();
+	void pushSymbolToken(char nextChar);
 };
 

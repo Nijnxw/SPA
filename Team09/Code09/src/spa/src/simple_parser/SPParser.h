@@ -2,14 +2,16 @@
 
 #include "simple_parser/Token.h"
 #include "models/simple_parser/AST.h"
+#include "models/simple_parser/AssignNode.h"
+#include "models/simple_parser/CallNode.h"
 #include "models/simple_parser/ExprNodes.h"
+#include "models/simple_parser/IfNode.h"
 #include "models/simple_parser/IoNodes.h"
 #include "models/simple_parser/ProcedureNode.h"
-#include "models/simple_parser/AssignNode.h"
 #include "models/simple_parser/PredicateNodes.h"
 #include "models/simple_parser/WhileNode.h"
 #include "util/RPN.h"
-#include "models/simple_parser/IfNode.h"
+#include "CallStmtValidator.h"
 
 #include <vector>
 #include <string>
@@ -23,6 +25,8 @@ private:
 	int stmtNo = 0;
 	std::vector<Token*> tokens;
 	std::string exprStr;
+	std::string currProcName;
+	CallStmtValidator callStmtValidator;
 
 	std::unordered_map<std::string, BinaryOperator> strBinaryOpMap = {
 		{"+", BinaryOperator::PLUS},
@@ -83,9 +87,11 @@ private:
 	std::shared_ptr<AssignNode> parseAssign();
 	std::shared_ptr<WhileNode> parseWhile();
 	std::shared_ptr<IfNode> parseIf();
+	std::shared_ptr<CallNode> parseCall();
 
 public:
 	explicit SPParser(std::vector<Token*> tokens);
 
 	AST parseProgram();
+	int getStmtCount();
 };

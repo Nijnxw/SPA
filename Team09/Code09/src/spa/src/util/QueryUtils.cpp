@@ -11,8 +11,7 @@ Table QueryUtils::hashJoin(const Table& firstTable, const Table& secondTable) {
 
 	// can't hash join (natural join) if no common headers
 	if (commonTableHeaders.empty()) {
-		Table joinedTable;
-		return joinedTable;
+		return {};
 	}
 
 	Table shorterTable;
@@ -32,10 +31,40 @@ Table QueryUtils::hashJoin(const Table& firstTable, const Table& secondTable) {
 	std::unordered_set<std::pair<int, int>, PairHash> pairedTuples;
 	for (const auto& keyVal: groupedCommonTuples) {
 		const auto& group = keyVal.second;
-		crossProduct(group.first, group.second, pairedTuples);
+		crossProductHelper(group.first, group.second, pairedTuples);
 	}
 
 	return {joinRows(pairedTuples, shorterTable, longerTable, commonTableHeaders)};
+}
+
+/*
+ * Performs cartesian product between 2 tables. Returns empty if any table is empty or if the tables share some common
+ * header(s).
+ */
+Table QueryUtils::crossProduct(const Table& firstResult, const Table& secondResult) {
+	const std::vector<std::string> commonTableHeaders = getCommonHeaders(firstResult, secondResult);
+
+	if (firstResult.empty() || secondResult.empty() || !commonTableHeaders.empty()) {
+		return {};
+	}
+
+	std::unordered_set<int> firstRowNums;
+	int counter = 0;
+	for (const auto& row: firstResult.begin()->second) {
+		firstRowNums.insert(counter);
+		counter++;
+	}
+	std::unordered_set<int> secondRowNums;
+	counter = 0;
+	for (const auto& row: secondResult.begin()->second) {
+		secondRowNums.insert(counter);
+		counter++;
+	}
+
+	std::unordered_set<std::pair<int, int>, PairHash> tuplePairings;
+	crossProductHelper(firstRowNums, secondRowNums, tuplePairings);
+
+	return {joinRows(tuplePairings, firstResult, secondResult, {})};
 }
 
 /*
@@ -131,8 +160,9 @@ QueryUtils::selectTupleToString(const std::vector<std::string>& headers, size_t 
 }
 
 void
-QueryUtils::crossProduct(const std::unordered_set<int>& firstTupleSet, const std::unordered_set<int>& secondTupleSet,
-						 std::unordered_set<std::pair<int, int>, PairHash>& tuplePairings) {
+QueryUtils::crossProductHelper(const std::unordered_set<int>& firstTupleSet,
+							   const std::unordered_set<int>& secondTupleSet,
+							   std::unordered_set<std::pair<int, int>, PairHash>& tuplePairings) {
 	for (auto firstRowNum: firstTupleSet) {
 		for (auto secondRowNum: secondTupleSet) {
 			tuplePairings.emplace(firstRowNum, secondRowNum);

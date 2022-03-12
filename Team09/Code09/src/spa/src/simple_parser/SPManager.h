@@ -11,6 +11,7 @@
 
 class SPManager {
 public:
+	static inline int stmtCount = 0;
 	static AST parseFile(const std::string& filename);
 	static void extractDesign(AST ast);
 };

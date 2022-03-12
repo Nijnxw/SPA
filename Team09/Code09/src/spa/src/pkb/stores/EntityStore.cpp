@@ -20,6 +20,9 @@ void EntityStore::clear() {
 	callStatementsToProcedures.clear();
 	printStatementsToVariables.clear();
 	readStatementsToVariables.clear();
+	proceduresToCallStatements.clear();
+	variablesToPrintStatements.clear();
+	variablesToReadStatements.clear();
 }
 
 bool EntityStore::addProcedure(const std::string& procedure) {

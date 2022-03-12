@@ -120,6 +120,14 @@ std::unordered_set<int> PKB::getStatementNumbers() {
 	return entityStore.getStatementNumbers();
 }
 
+std::unordered_set<std::string> PKB::getPrintVariables() {
+	return entityStore.getPrintVariables();
+}
+
+std::unordered_set<std::string> PKB::getReadVariables() {
+	return entityStore.getReadVariables();
+}
+
 std::unordered_map<int, AssignStatement> PKB::getAssignStatementsToStructs() {
 	return entityStore.getAssignStatementsToStructs();
 }
@@ -146,6 +154,18 @@ std::unordered_map<int, std::string> PKB::getReadStatementsToVariables() {
 
 std::unordered_set<int> PKB::getStatementsWithType(EntityType statementType) {
 	return entityStore.getStatementsWithType(statementType);
+}
+
+std::unordered_map<std::string, std::unordered_set<int>> PKB::getProceduresToCallStatements() {
+	return entityStore.getProceduresToCallStatements();
+}
+
+std::unordered_map<std::string, std::unordered_set<int>> PKB::getVariablesToPrintStatements() {
+	return entityStore.getVariablesToPrintStatements();
+}
+
+std::unordered_map<std::string, std::unordered_set<int>> PKB::getVariablesToReadStatements() {
+	return entityStore.getVariablesToReadStatements();
 }
 
 /* StmtStmt Getter Helpers */

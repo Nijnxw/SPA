@@ -199,6 +199,43 @@ TEST_CASE("EntityStore API") {
 			std::unordered_set<int> expectedSet = { 10 };
 			REQUIRE(res == expectedSet);
 		}
+
+		// getStatementsWithType() CALL
+		SECTION("getStatementsWithType() CALL positive query") {
+			std::unordered_set<int> res = entityStore.getStatementsWithType(EntityType::CALL);
+			std::unordered_set<int> expectedSet = { 10 };
+			REQUIRE(res == expectedSet);
+		}
+		// getPrintVariables();
+		SECTION("getPrintVariables() positive query") {
+			std::unordered_set<std::string> res = entityStore.getPrintVariables();
+			std::unordered_set<std::string> expectedSet = { "pn" };
+			REQUIRE(res == expectedSet);
+		}
+		// getReadVariables();
+		SECTION("getReadVariables() positive query") {
+			std::unordered_set<std::string> res = entityStore.getReadVariables();
+			std::unordered_set<std::string> expectedSet = { "r" };
+			REQUIRE(res == expectedSet);
+		}
+		// getProceduresToCallStatements();
+		SECTION("getProceduresToCallStatements() positive query") {
+			std::unordered_map<std::string, std::unordered_set<int>> res = entityStore.getProceduresToCallStatements();
+			std::unordered_map<std::string, std::unordered_set<int>> expectedMap = {{"TEST", { 10 }}};
+			REQUIRE(res == expectedMap);
+		}
+		// getVariablesToPrintStatements();
+		SECTION("getVariablesToPrintStatements() positive query") {
+			std::unordered_map<std::string, std::unordered_set<int>> res = entityStore.getVariablesToPrintStatements();
+			std::unordered_map<std::string, std::unordered_set<int>> expectedMap = {{"pn", { 3 }}};
+			REQUIRE(res == expectedMap);
+		}
+		// getVariablesToReadStatements();
+		SECTION("getVariablesToReadStatements() positive query") {
+			std::unordered_map<std::string, std::unordered_set<int>> res = entityStore.getVariablesToReadStatements();
+			std::unordered_map<std::string, std::unordered_set<int>> expectedMap = {{"r", { 2 }}};
+			REQUIRE(res == expectedMap);
+		}
 	}
 	entityStore.clear();
 }

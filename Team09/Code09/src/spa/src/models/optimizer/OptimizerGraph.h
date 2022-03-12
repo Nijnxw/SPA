@@ -13,8 +13,8 @@ public:
 	AdjList getAdjList() const;
 	std::unordered_set<std::string> getUsedSynonyms() const;
 
-	bool addEdge(const OptimizerClause& clause);
-	bool addEdge(const QueryClause& clause);
+	virtual bool addEdge(const OptimizerClause& clause);
+	virtual bool addEdge(const QueryClause& clause);
 	virtual bool addEdge(const QueryClause& clause, int weight);
 	bool operator==(const OptimizerGraph& other) const;
 

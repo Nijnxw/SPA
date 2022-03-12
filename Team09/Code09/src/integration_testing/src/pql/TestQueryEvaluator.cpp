@@ -642,7 +642,7 @@ TEST_CASE("QueryEvaluator evaluate boolean queries") {
 			{"a1", EntityType::STRING}
 		};
 		std::unordered_set<std::string> pAUsedSynonyms = {"a", "v"};
-		QueryClause pAClause = QueryClause(RelationRef::PATTERN_A, pAClauseArguments, pAUsedSynonyms);
+		QueryClause pAClause = QueryClause(RelationRef::PATTERN_ASSIGN, pAClauseArguments, pAUsedSynonyms);
 
 		std::vector<QueryArgument> modifiesClauseArguments = {
 			{"s",  EntityType::STMT},
@@ -705,7 +705,7 @@ TEST_CASE("QueryEvaluator evaluate boolean queries") {
 			{"a1", EntityType::STRING}
 		};
 		std::unordered_set<std::string> pAUsedSynonyms = {"a", "v"};
-		QueryClause pAClause = QueryClause(RelationRef::PATTERN_A, pAClauseArguments, pAUsedSynonyms, "a");
+		QueryClause pAClause = QueryClause(RelationRef::PATTERN_ASSIGN, pAClauseArguments, pAUsedSynonyms, "a");
 
 		std::vector<QueryArgument> modifiesClauseArguments = {
 			{"s",  EntityType::STMT},

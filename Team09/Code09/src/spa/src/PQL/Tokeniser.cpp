@@ -13,8 +13,8 @@
 Tokeniser::Tokeniser(std::string rawQueryString) : CommonLexer(new std::stringstream(rawQueryString)) {}
 
 void Tokeniser::processRawToken(std::string nextStr) {
-	if (stringTokenMap.find(nextStr) != stringTokenMap.end()) {
-		PQLTokens.push_back(new PQLToken(stringTokenMap[nextStr], nextStr));
+	if (QPStringTokenMap.find(nextStr) != QPStringTokenMap.end()) {
+		PQLTokens.push_back(new PQLToken(QPStringTokenMap[nextStr], nextStr));
 	}
 	else if (isInStringLiteral(nextStr)) {
 		const std::string ident = trimWhitespaces(nextStr.substr(1, nextStr.size() - 2));

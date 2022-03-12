@@ -1,27 +1,39 @@
 #pragma once
-
 #include <unordered_map>
-#include "models/EntityType.h"
-#include "models/RelationRef.h"
 
 enum class TokenType {
-	//Lexical tokens
-	SYNONYM,
+	// Lexical tokens
+	SYNONYM, NAME,
 	INTEGER,
 	STRING,
 	EXPR,
 
-	//Puncuation tokens
+	// Operator tokens
+	PLUS,
+	MINUS,
+	TIMES,
+	DIVIDE,
+	MODULUS,
+	MORE_THAN_EQUALS,
+	LESS_THAN_EQUALS,
+	EQUAL,
+	D_EQUAL,
+	NOT_EQUAL,
+	OR,
+
+	// Punctuation tokens
 	SEMICOLON,
 	OPEN_PARAN,
 	CLOSE_PARAN,
-	OPEN_ANGLED,
-	CLOSE_ANGLED,
+	OPEN_CURLY,
+	CLOSE_CURLY,
+	OPEN_ANGLED, LESS_THAN,
+	CLOSE_ANGLED, MORE_THAN,
 	COMMA,
-	UNDERSCORE, 
+	UNDERSCORE,
 	PERIOD,
 
-	//Design-entity tokens
+	// Design-entity tokens
 	STMT,
 	READ,
 	PRINT,
@@ -33,11 +45,11 @@ enum class TokenType {
 	PROC,
 	CALL,
 
-	//Select
+	// Select
 	SELECT,
 	BOOLEAN,
 
-	//Relationship clause tokens
+	// Relationship clause tokens
 	SUCH,
 	THAT,
 	MODIFIES,
@@ -53,19 +65,42 @@ enum class TokenType {
 	AFFECTS,
 	AFFECTS_T,
 
-	//PATTERN clause tokens
+	// PATTERN clause tokens
 	PATTERN,
 
-	//WITH clause
+	// WITH clause
 	WITH,
-	EQUAL,
 
-	//AND
+	// AND
 	AND
 };
 
-//unordered map to map raw string tokens to the appropriate token type
-static std::unordered_map<std::string, TokenType> stringTokenMap = {
+static std::unordered_map<std::string, TokenType> SPStringTokenMap = {
+	//Operator token mapping
+	{"<",       TokenType::LESS_THAN},
+	{">",		TokenType::MORE_THAN},
+	{"<=",		TokenType::LESS_THAN_EQUALS},
+	{">=",		TokenType::MORE_THAN_EQUALS},
+	{"+",		TokenType::PLUS},
+	{"-",       TokenType::MINUS},
+	{"*",       TokenType::TIMES},
+	{"/",       TokenType::DIVIDE},
+	{"%",       TokenType::MODULUS},
+	{"=",       TokenType::EQUAL},
+	{"==",      TokenType::D_EQUAL},
+	{"!=",      TokenType::NOT_EQUAL},
+	{"&&",      TokenType::AND},
+	{"||",      TokenType::OR},
+
+	//puncuation token mapping
+	{";",         TokenType::SEMICOLON},
+	{"(",         TokenType::OPEN_PARAN},
+	{")",         TokenType::CLOSE_PARAN},
+	{"{",         TokenType::OPEN_CURLY},
+	{"}",         TokenType::CLOSE_CURLY},
+};
+
+static std::unordered_map<std::string, TokenType> QPStringTokenMap = {
 	//puncuation token mapping
 	{";",         TokenType::SEMICOLON},
 	{"(",         TokenType::OPEN_PARAN},
@@ -118,4 +153,20 @@ static std::unordered_map<std::string, TokenType> stringTokenMap = {
 	//And
 	{"and",		  TokenType::AND},
 
+};
+
+class CommonToken {
+public:
+	CommonToken(TokenType type, std::string value = "");
+
+	std::string getValue();
+	TokenType getType();
+
+	bool operator==(CommonToken& other) {
+		return type == other.getType() && value == other.getValue();
+	}
+
+protected:
+	std::string value;
+	TokenType type;
 };

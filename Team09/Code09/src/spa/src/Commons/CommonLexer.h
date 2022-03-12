@@ -11,6 +11,8 @@ protected:
     char peek();
     char next();
     bool notEOF();
+    bool isValidInt(std::string str);
+    bool isValidName(std::string str);
 
 private:
     std::istream* stream;

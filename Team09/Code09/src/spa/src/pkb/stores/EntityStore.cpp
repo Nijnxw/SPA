@@ -13,6 +13,8 @@ void EntityStore::clear() {
 	callStatements.clear();
 	printStatements.clear();
 	readStatements.clear();
+	readVariables.clear();
+	printVariables.clear();
 
 	assignStatementsToStructs.clear();
 	ifStatementsToConditionalVariables.clear();
@@ -101,35 +103,35 @@ std::unordered_set<int> EntityStore::getStatementNumbers() {
 }
 
 std::unordered_set<int> EntityStore::getStatementsWithType(EntityType statementType) {
-	std::unordered_set<int> statements;
+	std::unordered_set<int> statementsWithType;
 
 	switch (statementType) {
 	case EntityType::STMT:
-		statements = statements;
+		statementsWithType = statements;
 		break;
 	case EntityType::ASSIGN:
-		statements = assignStatements;
+		statementsWithType = assignStatements;
 		break;
 	case EntityType::IF:
-		statements = ifStatements;
+		statementsWithType = ifStatements;
 		break;
 	case EntityType::WHILE:
-		statements = whileStatements;
+		statementsWithType = whileStatements;
 		break;
 	case EntityType::CALL:
-		statements = callStatements;
+		statementsWithType = callStatements;
 		break;
 	case EntityType::PRINT:
-		statements = printStatements;
+		statementsWithType = printStatements;
 		break;
 	case EntityType::READ:
-		statements = readStatements;
+		statementsWithType = readStatements;
 		break;
 	default:
 		break;
 	}
 
-	return statements;
+	return statementsWithType;
 }
 
 std::unordered_set<std::string> EntityStore::getPrintVariables() {

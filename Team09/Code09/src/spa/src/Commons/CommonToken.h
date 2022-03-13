@@ -97,7 +97,7 @@ static std::unordered_map<std::string, TokenType> SPStringTokenMap = {
 	{"&&",      TokenType::AND},
 	{"||",      TokenType::OR},
 
-	//puncuation token mapping
+	//Punctuation token mapping
 	{";",         TokenType::SEMICOLON},
 	{"(",         TokenType::OPEN_PARAN},
 	{")",         TokenType::CLOSE_PARAN},
@@ -106,7 +106,7 @@ static std::unordered_map<std::string, TokenType> SPStringTokenMap = {
 };
 
 static std::unordered_map<std::string, TokenType> QPStringTokenMap = {
-	//puncuation token mapping
+	//Punctuation token mapping
 	{";",         TokenType::SEMICOLON},
 	{"(",         TokenType::OPEN_PARAN},
 	{")",         TokenType::CLOSE_PARAN},

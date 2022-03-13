@@ -4,7 +4,7 @@
 #include "catch.hpp"
 #include <sstream>
 
-bool compareVectors(const std::vector<Token*> output, const std::vector<Token*> expected) {
+bool compareVectors(const std::vector<Token*>& output, const std::vector<Token*>& expected) {
 	return std::equal(output.begin(), output.end(),
 										expected.begin(), expected.end(),
 										[](Token* t1, Token* t2) { return *t1 == *t2; });
@@ -15,7 +15,7 @@ bool compareVectors(const std::vector<Token*> output, const std::vector<Token*> 
 // --------------------------------------------------
 
 TEST_CASE("Test end of file token") {
-	std::string program = "";
+	std::string program;
 	std::istringstream input(program);
 
 	auto lexer = Lexer(&input);
@@ -152,6 +152,29 @@ TEST_CASE("Test SIMPLE program") {
 // --------------------------------------------------
 //                  UNHAPPY PATHS
 // --------------------------------------------------
+TEST_CASE("Test invalid integer - all zeroes") {
+	std::string program = "0000";
+	std::istringstream input(program);
+	auto lexer = Lexer(&input);
+	REQUIRE_THROWS(lexer.tokenize());
+}
+
+TEST_CASE("Test invalid integer - leading zeroes") {
+	SECTION("one leading zero") {
+		std::string program = "01";
+		std::istringstream input(program);
+		auto lexer = Lexer(&input);
+		REQUIRE_THROWS(lexer.tokenize());
+	}
+
+	SECTION("multiple leading zeroes") {
+		std::string program = "0000123";
+		std::istringstream input(program);
+		auto lexer = Lexer(&input);
+		REQUIRE_THROWS(lexer.tokenize());
+	}
+}
+
 TEST_CASE("Test invalid symbols - underscore") {
 	std::string program = "proc_name";
 	std::istringstream input(program);

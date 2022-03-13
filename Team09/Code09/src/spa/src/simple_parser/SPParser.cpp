@@ -39,9 +39,11 @@ int SPParser::getStmtNo() {
 }
 
 bool SPParser::isEndOfExpr() {
-	std::string val = peek()->getValue();
-	return val == ")" || val == ";" || val == ">" || val == ">=" || val == "<" ||
-		   val == "<=" || val == "==" || val == "!=";
+	TokenType type = peek()->getType();
+	return type == TokenType::CLOSE_PARAN || type == TokenType::SEMICOLON
+			|| type == TokenType::MORE_THAN || type == TokenType::MORE_THAN_EQUALS
+			|| type == TokenType::LESS_THAN || type == TokenType::LESS_THAN_EQUALS
+			|| type == TokenType::EQUAL || type == TokenType::NOT_EQUAL;
 }
 
 void SPParser::clearExprStr() {
@@ -49,10 +51,10 @@ void SPParser::clearExprStr() {
 }
 
 int SPParser::getLeftBindingPower() {
-	std::string op = peek()->getValue();
-	if (op == "+" || op == "-") {
+	TokenType opType = peek()->getType();
+	if (opType == TokenType::PLUS || opType == TokenType::MINUS) {
 		return BindingPower::SUM;
-	} else if (op == "*" || op == "/" || op == "%") {
+	} else if (opType == TokenType::TIMES || opType == TokenType::DIVIDE || opType == TokenType::MODULO) {
 		return BindingPower::PRODUCT;
 	} else {
 		throw std::runtime_error("Expected arithmetic operator but got '" + peek()->getValue() + "' instead.\n");
@@ -60,10 +62,9 @@ int SPParser::getLeftBindingPower() {
 }
 
 BinaryOperator SPParser::getBinaryOperatorEnum() {
-	if (strBinaryOpMap.find(peek()->getValue()) == strBinaryOpMap.end()) {
-		throw std::runtime_error("Expected arithmetic operator but got '" + peek()->getValue() + "' instead.\n");
-	}
-	std::string op = peek()->getValue();
+	// the next token is a binary operator
+	assert (strBinaryOpMap.find(peek()->getType()) != strBinaryOpMap.end());
+	TokenType op = peek()->getType();
 	return strBinaryOpMap[op];
 }
 
@@ -77,7 +78,7 @@ ExprNode SPParser::parseOperand() {
 	} else if (check(TokenType::INTEGER)) {
 		exprStr += peek()->getValue();
 		return parseConstant();
-	} else if (check("(")) {
+	} else if (check(TokenType::OPEN_PARAN)) {
 		exprStr += get()->getValue();
 		ExprNode expr = parseExpr();
 		expect(")");
@@ -130,7 +131,7 @@ bool SPParser::isTerminalPredicate() {
 	// check if future token do not have '&&' or '||' tokens
 	int storeCurrIdx = currentIdx;
 	int parenthesesStack = 0;
-	if (check("(")) {
+	if (check(TokenType::OPEN_PARAN)) {
 		parenthesesStack++;
 		get();
 	} else {
@@ -138,33 +139,32 @@ bool SPParser::isTerminalPredicate() {
 	}
 	while (parenthesesStack != 0) {
 		// is end of program or predicate but parentheses do not match
-		if (isEndOfFile() || check("{"))
+		if (isEndOfFile() || check(TokenType::OPEN_CURLY)) {
 			throw std::runtime_error("Unmatched parentheses at line " + std::to_string(getStmtNo()));
-		if (check("(")) parenthesesStack++;
-		if (check(")")) parenthesesStack--;
+		}
+		if (check(TokenType::OPEN_PARAN)) parenthesesStack++;
+		if (check(TokenType::CLOSE_PARAN)) parenthesesStack--;
 		get();
 	}
-	bool rtv = !(check("&&") || check("||"));
+	bool rtv = !(check(TokenType::AND) || check(TokenType::OR));
 	currentIdx = storeCurrIdx;
 	return rtv;
 }
 
 ComparatorOperator SPParser::getComparatorOperatorEnum() {
-	if (strComparatorOpMap.find(peek()->getValue()) == strComparatorOpMap.end()) {
+	if (strComparatorOpMap.find(peek()->getType()) == strComparatorOpMap.end()) {
 		throw std::runtime_error("Expected comparator operator but got '" + peek()->getValue() + "' instead.\n");
 	}
-	std::string op = peek()->getValue();
+	TokenType op = peek()->getType();
 	return strComparatorOpMap[op];
 }
 
 ConditionalOperator SPParser::getInfixConditionalOperatorEnum() {
-	if (check("&&")) {
+	assert (check(TokenType::AND) || check(TokenType::OR));
+	if (check(TokenType::AND)) {
 		return ConditionalOperator::AND;
-	} else if (check("||")) {
-		return ConditionalOperator::OR;
-	} else {
-		throw std::runtime_error("Expected '&&' or '||' but got '" + peek()->getValue() + "' instead.\n");
 	}
+	return ConditionalOperator::OR;
 }
 
 // rel_factor: var_name | const_value | expr
@@ -189,7 +189,7 @@ std::shared_ptr<RelExprNode> SPParser::parseRelExpr() {
 //			| '(' cond_expr ')' '&&' '(' cond_expr ')'
 //			| '(' cond_expr ')' '||' '(' cond_expr ')'
 std::shared_ptr<PredicateNode> SPParser::parsePredicate() {
-	if (check("!")) {
+	if (check(TokenType::NOT)) {
 		expect("!");
 		expect("(");
 		std::shared_ptr<PredicateNode> predicateNode = parsePredicate();
@@ -257,7 +257,7 @@ std::vector<std::shared_ptr<StmtNode>> SPParser::parseStmtLst() {
 }
 
 std::shared_ptr<StmtNode> SPParser::parseStatement() {
-	if (check("}")) return nullptr;
+	if (check(TokenType::CLOSE_CURLY)) return nullptr;
 
 	std::shared_ptr<AssignNode> assignNode = parseAssign();
 	if (assignNode) return assignNode;
@@ -309,7 +309,7 @@ std::shared_ptr<AssignNode> SPParser::parseAssign() {
 	int storedCurrIdx = currentIdx;
 	std::shared_ptr<VariableNode> varNode = parseVariable();
 	if (!varNode) return nullptr;
-	if (!check("=")) {
+	if (!check(TokenType::ASSIGNMENT_EQUAL)) {
 		// var_name could be a keyword (read, print, if, while)
 		// if next token is not '-', restore token pointer and return nullptr
 		// for parseStmt to parse other types of stmts
@@ -400,6 +400,6 @@ AST SPParser::parseProgram() {
 	return std::make_shared<ProgramNode>(procedureMap);
 }
 
-int SPParser::getStmtCount() {
+int SPParser::getStmtCount() const {
 	return stmtNo;
 }

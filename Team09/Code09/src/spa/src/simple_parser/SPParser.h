@@ -28,21 +28,21 @@ private:
 	std::string currProcName;
 	CallStmtValidator callStmtValidator;
 
-	std::unordered_map<std::string, BinaryOperator> strBinaryOpMap = {
-		{"+", BinaryOperator::PLUS},
-		{"-", BinaryOperator::MINUS},
-		{"*", BinaryOperator::TIMES},
-		{"/", BinaryOperator::DIVIDE},
-		{"%", BinaryOperator::MODULO},
+	std::unordered_map<TokenType, BinaryOperator> strBinaryOpMap = {
+		{TokenType::PLUS, BinaryOperator::PLUS},
+		{TokenType::MINUS, BinaryOperator::MINUS},
+		{TokenType::TIMES, BinaryOperator::TIMES},
+		{TokenType::DIVIDE, BinaryOperator::DIVIDE},
+		{TokenType::MODULO, BinaryOperator::MODULO},
 	};
 
-	std::unordered_map<std::string, ComparatorOperator> strComparatorOpMap = {
-		{">", ComparatorOperator::GT},
-		{">=", ComparatorOperator::GTE},
-		{"<", ComparatorOperator::LT},
-		{"<=", ComparatorOperator::LTE},
-		{"==", ComparatorOperator::EQ},
-		{"!=", ComparatorOperator::NEQ},
+	std::unordered_map<TokenType, ComparatorOperator> strComparatorOpMap = {
+		{TokenType::MORE_THAN, ComparatorOperator::GT},
+		{TokenType::MORE_THAN_EQUALS, ComparatorOperator::GTE},
+		{TokenType::LESS_THAN, ComparatorOperator::LT},
+		{TokenType::LESS_THAN_EQUALS, ComparatorOperator::LTE},
+		{TokenType::EQUAL, ComparatorOperator::EQ},
+		{TokenType::NOT_EQUAL, ComparatorOperator::NEQ},
 	};
 
 	Token* peek();
@@ -93,5 +93,5 @@ public:
 	explicit SPParser(std::vector<Token*> tokens);
 
 	AST parseProgram();
-	int getStmtCount();
+	int getStmtCount() const;
 };

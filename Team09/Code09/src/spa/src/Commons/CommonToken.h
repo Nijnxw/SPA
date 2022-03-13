@@ -84,10 +84,10 @@ enum class TokenType {
 static std::unordered_map<std::string, TokenType> SPStringTokenMap = {
 	//Operator token mapping
 	{"<",       TokenType::LESS_THAN},
-	{">",				TokenType::MORE_THAN},
-	{"<=",			TokenType::LESS_THAN_EQUALS},
-	{">=",			TokenType::MORE_THAN_EQUALS},
-	{"+",				TokenType::PLUS},
+	{">",       TokenType::MORE_THAN},
+	{"<=",      TokenType::LESS_THAN_EQUALS},
+	{">=",      TokenType::MORE_THAN_EQUALS},
+	{"+",       TokenType::PLUS},
 	{"-",       TokenType::MINUS},
 	{"*",       TokenType::TIMES},
 	{"/",       TokenType::DIVIDE},

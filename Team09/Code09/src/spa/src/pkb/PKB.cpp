@@ -99,7 +99,7 @@ bool PKB::addModifiesProcedure(const std::string& procedure, const std::unordere
 	return modifiesStore.addProcVarRelationship(procedure, variables);
 }
 
-bool PKB::addCFG(const std::vector<std::unordered_set<int>>* cfg) {
+bool PKB::addCFG(const std::vector<std::unordered_set<int>>& cfg) {
 	return nextStore.addCFG(cfg);
 }
 
@@ -155,6 +155,8 @@ bool PKB::hasStmtStmtRelationship(RelationRef relationship) {
 			return followsStore.hasRelationship();
 		case RelationRef::PARENT:
 			return parentStore.hasRelationship();
+		case RelationRef::NEXT:
+			return nextStore.hasRelationship();
 		case RelationRef::FOLLOWS_T:
 			return followsStore.hasTRelationship();
 		case RelationRef::PARENT_T:
@@ -170,6 +172,8 @@ bool PKB::isStmtStmtRelationship(RelationRef relationship, int statementOne, int
 			return followsStore.isRelationship(statementOne, statementTwo);
 		case RelationRef::PARENT:
 			return parentStore.isRelationship(statementOne, statementTwo);
+		case RelationRef::NEXT:
+			return nextStore.isRelationship(statementOne, statementTwo);
 		case RelationRef::FOLLOWS_T:
 			return followsStore.isTRelationship(statementOne, statementTwo);
 		case RelationRef::PARENT_T:
@@ -185,6 +189,8 @@ bool PKB::isStmtStmtFirstEntity(RelationRef relationship, int statementOne) {
 			return followsStore.isFirstSynonym(statementOne);
 		case RelationRef::PARENT:
 			return parentStore.isFirstSynonym(statementOne);
+		case RelationRef::NEXT:
+			return nextStore.isFirstSynonym(statementOne);
 		case RelationRef::FOLLOWS_T:
 			return followsStore.isFirstSynonymT(statementOne);
 		case RelationRef::PARENT_T:
@@ -200,6 +206,8 @@ bool PKB::isStmtStmtSecondEntity(RelationRef relationship, int statementTwo) {
 			return followsStore.isSecondSynonym(statementTwo);
 		case RelationRef::PARENT:
 			return parentStore.isSecondSynonym(statementTwo);
+		case RelationRef::NEXT:
+			return nextStore.isSecondSynonym(statementTwo);
 		case RelationRef::FOLLOWS_T:
 			return followsStore.isSecondSynonymT(statementTwo);
 		case RelationRef::PARENT_T:
@@ -215,6 +223,8 @@ std::unordered_set<int> PKB::getStmtStmtFirstEntities(RelationRef relationship, 
 			return followsStore.getFirstSynonyms(statementTwo);
 		case RelationRef::PARENT:
 			return parentStore.getFirstSynonyms(statementTwo);
+		case RelationRef::NEXT:
+			return nextStore.getFirstSynonyms(statementTwo);
 		case RelationRef::FOLLOWS_T:
 			return followsStore.getFirstSynonymsT(statementTwo);
 		case RelationRef::PARENT_T:
@@ -231,6 +241,8 @@ std::unordered_set<int> PKB::getStmtStmtSecondEntities(RelationRef relationship,
 			return followsStore.getSecondSynonyms(statementOne);
 		case RelationRef::PARENT:
 			return parentStore.getSecondSynonyms(statementOne);
+		case RelationRef::NEXT:
+			return nextStore.getSecondSynonyms(statementOne);
 		case RelationRef::FOLLOWS_T:
 			return followsStore.getSecondSynonymsT(statementOne);
 		case RelationRef::PARENT_T:
@@ -247,6 +259,8 @@ std::unordered_set<int> PKB::getAllStmtStmtFirstEntities(RelationRef relationshi
 			return followsStore.getAllFirstSynonyms();
 		case RelationRef::PARENT:
 			return parentStore.getAllFirstSynonyms();
+		case RelationRef::NEXT:
+			return nextStore.getAllFirstSynonyms();
 		case RelationRef::FOLLOWS_T:
 			return followsStore.getAllFirstSynonymsT();
 		case RelationRef::PARENT_T:
@@ -263,6 +277,8 @@ std::unordered_set<int> PKB::getAllStmtStmtSecondEntities(RelationRef relationsh
 			return followsStore.getAllSecondSynonyms();
 		case RelationRef::PARENT:
 			return parentStore.getAllSecondSynonyms();
+		case RelationRef::NEXT:
+			return nextStore.getAllSecondSynonyms();
 		case RelationRef::FOLLOWS_T:
 			return followsStore.getAllSecondSynonymsT();
 		case RelationRef::PARENT_T:
@@ -279,6 +295,8 @@ std::tuple<std::vector<int>, std::vector<int>> PKB::getAllStmtStmtRelationshipPa
 			return followsStore.getAllRelationshipPairs();
 		case RelationRef::PARENT:
 			return parentStore.getAllRelationshipPairs();
+		case RelationRef::NEXT:
+			return nextStore.getAllRelationshipPairs();
 		case RelationRef::FOLLOWS_T:
 			return followsStore.getAllRelationshipTPairs();
 		case RelationRef::PARENT_T:
@@ -539,6 +557,51 @@ std::tuple<std::vector<int>, std::vector<int>> PKB::getAllParentPairs() {
 
 std::tuple<std::vector<int>, std::vector<int>> PKB::getAllParentTPairs() {
 	return parentStore.getAllRelationshipTPairs();
+}
+
+/* Next Getters */
+bool PKB::hasNextRelationship() {
+	return nextStore.hasRelationship();
+}
+
+bool PKB::isNextRelationship(int previousStatement, int nextStatement) {
+	return nextStore.isRelationship(previousStatement, nextStatement);
+}
+
+bool PKB::isPreviousStatement(int previousStatement) {
+	return nextStore.isFirstSynonym(previousStatement);
+}
+
+bool PKB::isNextStatement(int nextStatement) {
+	return nextStore.isSecondSynonym(nextStatement);
+}
+
+std::unordered_set<int> PKB::getNextStatements(int previousStatement) {
+	return nextStore.getSecondSynonyms(previousStatement);
+}
+
+std::unordered_set<int> PKB::getPreviousStatements(int nextStatement) {
+	return nextStore.getFirstSynonyms(nextStatement);
+}
+
+std::unordered_set<int> PKB::getAllNextStatements() {
+	return nextStore.getAllSecondSynonyms();
+}
+
+std::unordered_set<int> PKB::getAllPreviousStatements() {
+	return nextStore.getAllFirstSynonyms();
+}
+
+std::tuple<std::vector<int>, std::vector<int>> PKB::getAllNextPairs() {
+	return nextStore.getAllRelationshipPairs();
+}
+
+std::vector<std::unordered_set<int>> PKB::getCFG() {
+	return nextStore.getCFG();
+}
+
+std::vector<std::unordered_set<int>> PKB::getReversedCFG() {
+	return nextStore.getReversedCFG();
 }
 
 /* Calls Getters */

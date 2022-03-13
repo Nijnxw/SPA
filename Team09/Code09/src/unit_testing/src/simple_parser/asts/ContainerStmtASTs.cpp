@@ -656,7 +656,7 @@ AST ContainerStmtASTs::getAST1_70() {
 	 * 2		while (y < 1) {
 	 * 3			read y; }
 	 * 		} else {
-	 * 4		print x; } }
+	 * 4		print y; } }
 	 */
 	std::vector<std::shared_ptr<StmtNode>> whileStmtLst {
 			std::make_shared<ReadNode>(3, y)
@@ -1243,7 +1243,7 @@ int ContainerStmtASTs::getStmtCount1_62() { return 4; }
 
 int ContainerStmtASTs::getStmtCount1_63() { return 3; }
 
-int ContainerStmtASTs::getStmtCount1_64() { return 8; }
+int ContainerStmtASTs::getStmtCount1_64() { return 9; }
 
 int ContainerStmtASTs::getStmtCount1_65() { return 3; }
 

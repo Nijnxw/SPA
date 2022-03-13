@@ -77,11 +77,9 @@ TEST_CASE("Test optimizer extraction logic") {
 
 	std::vector<QueryArgument> actualSynNotInClauses;
 	std::vector<QueryClause> actualClausesWithoutSyn;
-	std::vector<OptimizerGroup> actualGroupsWithSelect;
-	std::vector<OptimizerGroup> actualGroupsWithoutSelect;
+	std::vector<OptimizerGroup> actualGroupClauses;
 
-	std::tie(actualSynNotInClauses, actualClausesWithoutSyn, actualGroupsWithSelect,
-			 actualGroupsWithoutSelect) = Optimizer::optimize(query);
+	std::tie(actualSynNotInClauses, actualClausesWithoutSyn, actualGroupClauses) = Optimizer::optimize(query);
 
 	OptimizerGroup group1 = OptimizerGroup();
 	group1.addEdge(clause6);
@@ -97,11 +95,9 @@ TEST_CASE("Test optimizer extraction logic") {
 
 	std::vector<QueryArgument> expectedSynNotInClauses = {{"s", EntityType::STMT}};
 	std::vector<QueryClause> expectedClausesWithoutSyn = {clause9};
-	std::vector<OptimizerGroup> expectedGroupsWithSelect = {group1, group2};
-	std::vector<OptimizerGroup> expectedGroupsWithoutSelect = {group3};
+	std::vector<OptimizerGroup> expectedGroupClauses = {group2, group1, group3};
 
 	REQUIRE(actualSynNotInClauses == expectedSynNotInClauses);
 	REQUIRE(actualClausesWithoutSyn == expectedClausesWithoutSyn);
-	REQUIRE(actualGroupsWithSelect == expectedGroupsWithSelect);
-	REQUIRE(actualGroupsWithoutSelect == expectedGroupsWithoutSelect);
+	REQUIRE(actualGroupClauses == expectedGroupClauses);
 }

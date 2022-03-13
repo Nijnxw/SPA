@@ -13,11 +13,19 @@ public:
 	static Table evaluate(Query& query);
 
 private:
-	static bool evaluateBooleanClauses(std::vector<QueryClause>& clauses);
-	static std::vector<QueryClauseResult> evaluateSynWithoutClause(std::vector<QueryArgument> syns);
-	static std::vector<std::vector<QueryClauseResult>> evaluateGroupsWithoutSelect(std::vector<OptimizerGroup> groups);
-	static std::vector<std::vector<QueryClauseResult>> evaluateGroupsWithSelect(std::vector<OptimizerGroup> groups);
-	static Table mergeSynNotInClauseResults(const std::vector<QueryClauseResult>& synResults);
-	static bool mergeGroupWithoutSelectResults(const std::vector<std::vector<QueryClauseResult>>& groupResults);
-	static Table mergeGroupWithSelectResults(const std::vector<std::vector<QueryClauseResult>>& groupResults);
+	static Table evaluateBooleanQuery(const std::vector<QueryClause>& clausesWithoutSyn,
+									  const std::vector<OptimizerGroup>& groupsWithoutSelect);
+	static Table evaluateNormalQuery(const std::unordered_set<std::string>& resultSynSet,
+									 const std::vector<QueryArgument>& selectSynNotInClauses,
+									 const std::vector<QueryClause>& clausesWithoutSyn,
+									 const std::vector<OptimizerGroup>& clauseGroups);
+
+	static Table mergeGroupResults(const std::vector<Table>& results);
+	static Table mergeGroupResults(const std::vector<QueryClauseResult>& results);
+	static Table mergeRelatedClauseResults(const std::vector<QueryClauseResult>& results);
+
+	static bool evaluateClausesWithoutSyn(const std::vector<QueryClause>& clauses);
+	static std::vector<QueryClauseResult> evaluateSynNotInClause(const std::vector<QueryArgument>& syns);
+	static bool evaluateGroupWithoutSelect(const OptimizerGroup& group);
+	static Table evaluateGroupWithSelect(const OptimizerGroup& group);
 };

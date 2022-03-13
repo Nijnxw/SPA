@@ -2,7 +2,17 @@
 #include "QueryResultProjector.h"
 #include "util/QueryUtils.h"
 
-std::unordered_set<std::string> QueryResultProjector::formatResult(Table& res, std::vector<QueryArgument>& selectSyn) {
+
+std::unordered_set<std::string> QueryResultProjector::formatResult(Table& res, Query& query) {
+
+	if (query.isBooleanQuery()) {
+		if (res.empty()) {
+			return {"FALSE"};
+		}
+		return {"TRUE"};
+	}
+
+	std::vector<QueryArgument> selectSyn = query.getResultSynonyms();
 	std::vector<std::string> colHeaders;
 	for (const auto& syn: selectSyn) {
 		colHeaders.push_back(syn.getValue());

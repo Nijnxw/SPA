@@ -26,6 +26,7 @@ void EntityStager::clear() {
 	stagedUsesProcedure.clear();
 	stagedModifiesStatement.clear();
 	stagedModifiesProcedure.clear();
+	stagedCFG.clear();
 }
 //helper function
 template <typename T>
@@ -59,7 +60,7 @@ std::unordered_set<int> EntityStager::getStagedReadStatements() {
 	return getStmtNoFromSet(stagedReadStatements);
 }
 
-std::unordered_map<int, std::string> EntityStager::getStagedReads() {
+std::unordered_map<int, std::string> EntityStager::getStagedReadContents() {
 	return stagedReadStatements;
 }
 
@@ -67,7 +68,7 @@ std::unordered_set<int> EntityStager::getStagedPrintStatements() {
 	return getStmtNoFromSet(stagedPrintStatements);
 }
 
-std::unordered_map<int, std::string> EntityStager::getStagedPrints() {
+std::unordered_map<int, std::string> EntityStager::getStagedPrintContents() {
 	return stagedPrintStatements;
 }
 
@@ -75,7 +76,7 @@ std::unordered_set<int> EntityStager::getStagedIfStatements() {
 	return getStmtNoFromSet(stagedIfStatements);
 }
 
-std::unordered_map<int, std::unordered_set<std::string>> EntityStager::getStagedIfs() {
+std::unordered_map<int, std::unordered_set<std::string>> EntityStager::getStagedIfContents() {
 	return stagedIfStatements;
 }
 
@@ -83,7 +84,7 @@ std::unordered_set<int> EntityStager::getStagedWhileStatements() {
 	return getStmtNoFromSet(stagedWhileStatements);
 }
 
-std::unordered_map<int, std::unordered_set<std::string>> EntityStager::getStagedWhiles() {
+std::unordered_map<int, std::unordered_set<std::string>> EntityStager::getStagedWhileContents() {
 	return stagedWhileStatements;
 }
 
@@ -91,7 +92,7 @@ std::unordered_set<int> EntityStager::getStagedCallStatements() {
 	return getStmtNoFromSet(stagedCallStatements);
 }
 
-std::unordered_map<int, std::string> EntityStager::getStagedCall() {
+std::unordered_map<int, std::string> EntityStager::getStagedCallContent() {
 	return stagedCallStatements;
 }
 
@@ -137,6 +138,10 @@ std::vector<std::pair<int, std::unordered_set<std::string>>> EntityStager::getSt
 
 std::vector<std::pair<std::string, std::unordered_set<std::string>>> EntityStager::getStagedModifiesProcedure() {
 	return stagedModifiesProcedure;
+}
+
+std::vector<std::unordered_set<int>> EntityStager::getCFG() {
+	return stagedCFG;
 }
 
 // stagers
@@ -225,7 +230,12 @@ void EntityStager::stageModifiesProcedure(std::string proc, std::unordered_set<s
 	stagedModifiesProcedure.emplace_back(proc, variables);
 }
 
+void EntityStager::stageCFG(std::vector<std::unordered_set<int>> cfg) {
+	stagedCFG = cfg;
+}
+
 void EntityStager::commit() {
+	PKB::addCFG(&stagedCFG);
 	for (auto& proc: stagedProcedures) { PKB::addProcedure(proc); }
 	for (auto& var: stagedConstants) { PKB::addConstant(var); }
 	for (auto& con: stagedVariables) { PKB::addVariable(con); }

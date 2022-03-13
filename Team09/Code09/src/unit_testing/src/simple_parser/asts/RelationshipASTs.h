@@ -34,8 +34,10 @@ private:
 	static std::shared_ptr<PredicateNode> predXLt1;
 	static std::shared_ptr<PredicateNode> predYLt1;
 	static std::shared_ptr<PredicateNode> predYLt2;
+	static std::shared_ptr<PredicateNode> predZLt1;
 	static std::shared_ptr<PredicateNode> predZLt3;
 	static std::shared_ptr<PredicateNode> predWLt3;
+	static std::shared_ptr<PredicateNode> predWLt1;
 public:
 	static AST getAST3_1();
 	static AST getAST3_2();
@@ -92,6 +94,8 @@ public:
 	static AST getAST3_53();
 	static AST getAST3_54();
 	static AST getAST3_55();
+	static AST getAST3_56();
+	static AST getAST3_57();
 
 	// stmt count
 	static int getStmtCount3_1();
@@ -149,4 +153,6 @@ public:
 	static int getStmtCount3_53();
 	static int getStmtCount3_54();
 	static int getStmtCount3_55();
+	static int getStmtCount3_56();
+	static int getStmtCount3_57();
 };

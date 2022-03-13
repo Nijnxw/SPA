@@ -6,7 +6,7 @@
 class Query {
 public:
 	Query();
-	Query(std::vector<QueryArgument>& resultSynonyms, std::vector<QueryClause>& clauses, bool isBoolean);
+	Query(const std::vector<QueryArgument>& resultSynonyms, const std::vector<QueryClause>& clauses, bool isBoolean);
 	const std::vector<QueryArgument>& getResultSynonyms() const;
 	const std::vector<QueryClause>& getClauses() const;
 	bool isBooleanQuery();

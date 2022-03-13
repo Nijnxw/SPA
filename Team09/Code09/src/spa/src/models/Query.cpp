@@ -1,8 +1,9 @@
 #include <vector>
 #include "Query.h"
 
-Query::Query(std::vector<QueryArgument>& resultSynonyms, std::vector<QueryClause>& clauses, bool isBoolean) 
+Query::Query(const std::vector<QueryArgument>& resultSynonyms, const std::vector<QueryClause>& clauses, bool isBoolean)
 	: resultSynonyms(resultSynonyms), clauses(clauses), isBoolean(isBoolean) {}
+
 Query::Query() {}
 
 const std::vector<QueryArgument>& Query::getResultSynonyms() const {

@@ -1,6 +1,15 @@
 #include "OptimizerGroup.h"
 
-OptimizerGroup::OptimizerGroup(AdjList adjList) : OptimizerGraph(adjList) {}
+OptimizerGroup::OptimizerGroup(AdjList adjList) : OptimizerGraph(std::move(adjList)) {
+	totalWeight = 0;
+	numClauses = 0;
+	for (const auto& keyVal: adjList) {
+		for (const auto& clause: keyVal.second) {
+			totalWeight += clause.getWeight();
+			numClauses++;
+		}
+	}
+}
 
 void OptimizerGroup::setStartPoint(const OptimizerClause& clause) {
 	if (clauses.empty()) {
@@ -8,6 +17,23 @@ void OptimizerGroup::setStartPoint(const OptimizerClause& clause) {
 	} else if (clause.getWeight() < startPoint.getWeight()) {
 		startPoint = clause;
 	}
+}
+
+bool OptimizerGroup::addEdge(const QueryClause& clause) {
+	numClauses++;
+	return OptimizerGraph::addEdge(clause);
+}
+
+bool OptimizerGroup::addEdge(const OptimizerClause& clause) {
+	numClauses++;
+	totalWeight += clause.getWeight();
+	return OptimizerGraph::addEdge(clause);
+}
+
+bool OptimizerGroup::addEdge(const QueryClause& clause, int weight) {
+	numClauses++;
+	totalWeight += weight;
+	return OptimizerGraph::addEdge(clause, weight);
 }
 
 std::vector<QueryClause> OptimizerGroup::getClauses() const {
@@ -58,4 +84,11 @@ void OptimizerGroup::orderingHelper(std::string& syn, std::unordered_set<std::st
 
 bool OptimizerGroup::operator==(const OptimizerGroup& other) const {
 	return adjList == other.adjList;
+}
+
+bool OptimizerGroup::operator<(const OptimizerGroup& other) const {
+	if (totalWeight == other.totalWeight) {
+		return numClauses < other.numClauses;
+	}
+	return totalWeight < other.totalWeight;
 }

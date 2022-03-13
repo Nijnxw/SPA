@@ -37,6 +37,8 @@ private:
 	static inline std::vector<std::pair<int, std::unordered_set<std::string>>> stagedModifiesStatement;
 	static inline std::vector<std::pair<std::string, std::unordered_set<std::string>>> stagedModifiesProcedure;
 
+	static inline std::vector<std::unordered_set<int>> stagedCFG;
+
 public:
 	EntityStager();
 
@@ -49,15 +51,15 @@ public:
 
 	static std::unordered_set<int> getStagedStatements();
 	static std::unordered_set<int> getStagedReadStatements();
-	static std::unordered_map<int, std::string> getStagedReads();
+	static std::unordered_map<int, std::string> getStagedReadContents();
 	static std::unordered_set<int> getStagedPrintStatements();
-	static std::unordered_map<int, std::string> getStagedPrints();
+	static std::unordered_map<int, std::string> getStagedPrintContents();
 	static std::unordered_set<int> getStagedIfStatements();
-	static std::unordered_map<int, std::unordered_set<std::string>> getStagedIfs();
+	static std::unordered_map<int, std::unordered_set<std::string>> getStagedIfContents();
 	static std::unordered_set<int> getStagedWhileStatements();
-	static std::unordered_map<int, std::unordered_set<std::string>> getStagedWhiles();
+	static std::unordered_map<int, std::unordered_set<std::string>> getStagedWhileContents();
 	static std::unordered_set<int> getStagedCallStatements();
-	static std::unordered_map<int, std::string> getStagedCall();
+	static std::unordered_map<int, std::string> getStagedCallContent();
 
 	static std::vector<std::tuple<int, std::string, std::string>> getStagedAssignStatements();
 
@@ -72,6 +74,8 @@ public:
 	static std::vector<std::pair<std::string, std::unordered_set<std::string>>> getStagedUsesProcedure();
 	static std::vector<std::pair<int, std::unordered_set<std::string>>> getStagedModifiesStatement();
 	static std::vector<std::pair<std::string, std::unordered_set<std::string>>> getStagedModifiesProcedure();
+
+	static std::vector<std::unordered_set<int>> getCFG();
 
 	// stagers
 	static void stageProcedure(const std::string& procedure);
@@ -99,6 +103,8 @@ public:
 
 	static void stageModifiesStatements(int stmt, std::unordered_set<std::string> variables);
 	static void stageModifiesProcedure(std::string proc, std::unordered_set<std::string> variables);
+
+	static void stageCFG(std::vector<std::unordered_set<int>> cfg);
 
 	static void commit();
 };

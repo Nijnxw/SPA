@@ -4,8 +4,9 @@
 #include "models/QueryClause.h"
 #include "models/Query.h"
 #include "PQL/QueryEvaluator.h"
+#include "PQL/QueryResultProjector.h"
 
-TEST_CASE("QueryEvaluator evaluate") {
+TEST_CASE("QueryEvaluator evaluate normal synonym queries") {
 
 	SECTION("no clauses") {
 		PKB::clearAllStores();
@@ -146,7 +147,7 @@ TEST_CASE("QueryEvaluator evaluate") {
 		PKB::addParent(4, 8);
 		PKB::addParent(9, 10);
 
-		std::unordered_set<std::string> controlVariables = { "v" };
+		std::unordered_set<std::string> controlVariables = {"v"};
 		PKB::addIfStatement(4, controlVariables);
 		PKB::addIfStatement(9, controlVariables);
 
@@ -185,7 +186,7 @@ TEST_CASE("QueryEvaluator evaluate") {
 			Select ifs such that Follows*(ifs, s) pattern a("y", _"y + 1"_)
 		*/
 
-		std::unordered_set<std::string> controlVariables = { "v" };
+		std::unordered_set<std::string> controlVariables = {"v"};
 		PKB::addIfStatement(1, controlVariables);
 		PKB::addIfStatement(8, controlVariables);
 		PKB::addFollowsT(1, 5);
@@ -600,6 +601,136 @@ TEST_CASE("QueryEvaluator evaluate") {
 		QueryClauseResult actual = {QueryEvaluator::evaluate(query)};
 
 		REQUIRE(actual == expected);
+	}
+
+	PKB::clearAllStores();
+}
+
+TEST_CASE("QueryEvaluator evaluate boolean queries") {
+	SECTION("Query evaluate to false") {
+		PKB::clearAllStores();
+		/*
+		 * assign a; stmt s; variable v; procedure p; call c;
+		 * Select BOOLEAN such that Uses (p, v) pattern a(v, ”a1”) such that Modifies (s, “a2”) and Parent(5, 6)
+		 */
+		PKB::addStatementNumber(1);
+		PKB::addStatementNumber(2);
+		PKB::addStatementNumber(5);
+		PKB::addStatementNumber(6);
+
+		PKB::addProcedure("proc1");
+		PKB::addProcedure("proc2");
+		PKB::addUsesProcedure("proc2", {"x", "y", "z"});
+		PKB::addUsesProcedure("proc1", {"a", "b", "c"});
+
+		PKB::addModifiesStatement(1, {"a1"});
+		PKB::addModifiesStatement(2, {"a2"});
+
+		PKB::addAssignStatement(1, "a1", "x y +");
+		PKB::addAssignStatement(2, "a2", "y z +");
+		PKB::addParent(5, 6);
+
+		std::vector<QueryArgument> usesClauseArguments = {
+			{"p", EntityType::PROC},
+			{"v", EntityType::VAR}
+		};
+		std::unordered_set<std::string> usesUsedSynonyms = {"p", "v"};
+		QueryClause usesClause = QueryClause(RelationRef::USES, usesClauseArguments, usesUsedSynonyms);
+
+		std::vector<QueryArgument> pAClauseArguments = {
+			{"v",  EntityType::VAR},
+			{"a1", EntityType::STRING}
+		};
+		std::unordered_set<std::string> pAUsedSynonyms = {"a", "v"};
+		QueryClause pAClause = QueryClause(RelationRef::PATTERN_ASSIGN, pAClauseArguments, pAUsedSynonyms);
+
+		std::vector<QueryArgument> modifiesClauseArguments = {
+			{"s",  EntityType::STMT},
+			{"a2", EntityType::STRING}
+		};
+		std::unordered_set<std::string> modifiesUsedSynonyms = {"s"};
+		QueryClause modifiesClause = QueryClause(RelationRef::MODIFIES, modifiesClauseArguments, modifiesUsedSynonyms);
+
+		std::vector<QueryArgument> parentClauseArguments = {
+			{"5", EntityType::INT},
+			{"6", EntityType::INT}
+		};
+		std::unordered_set<std::string> parentUsedSynonyms = {};
+		QueryClause parentClause = QueryClause(RelationRef::PARENT, parentClauseArguments, parentUsedSynonyms);
+
+		std::vector<QueryArgument> selectSynonyms = {};
+		std::vector<QueryClause> clauses = {usesClause, pAClause, modifiesClause, parentClause};
+		Query query = Query(selectSynonyms, clauses, true);
+
+		std::unordered_set<std::string> expected = {"FALSE"};
+
+		Table actual = QueryEvaluator::evaluate(query);
+		std::unordered_set<std::string> actualString = QueryResultProjector::formatResult(actual, query);
+
+		REQUIRE(actualString == expected);
+	}
+
+	SECTION("Query evaluate to true") {
+		PKB::clearAllStores();
+		/*
+		 * assign a; stmt s; variable v; procedure p;
+		 * Select BOOLEAN such that Uses (p, v) pattern a(v, ”a1”) such that Modifies (s, “a2”) and Parent(5, 6)
+		 */
+		PKB::addStatementNumber(1);
+		PKB::addStatementNumber(2);
+		PKB::addStatementNumber(5);
+		PKB::addStatementNumber(6);
+
+		PKB::addProcedure("proc1");
+		PKB::addProcedure("proc2");
+		PKB::addUsesProcedure("proc2", {"a1", "a2", "a3"});
+		PKB::addUsesProcedure("proc1", {"a", "b", "c"});
+
+		PKB::addModifiesStatement(1, {"a1"});
+		PKB::addModifiesStatement(2, {"a2"});
+
+		PKB::addAssignStatement(1, "a1", "a2 c3 +");
+		PKB::addAssignStatement(2, "a2", "a1");
+		PKB::addParent(5, 6);
+
+		std::vector<QueryArgument> usesClauseArguments = {
+			{"p", EntityType::PROC},
+			{"v", EntityType::VAR}
+		};
+		std::unordered_set<std::string> usesUsedSynonyms = {"p", "v"};
+		QueryClause usesClause = QueryClause(RelationRef::USES, usesClauseArguments, usesUsedSynonyms);
+
+		std::vector<QueryArgument> pAClauseArguments = {
+			{"v",  EntityType::VAR},
+			{"a1", EntityType::STRING}
+		};
+		std::unordered_set<std::string> pAUsedSynonyms = {"a", "v"};
+		QueryClause pAClause = QueryClause(RelationRef::PATTERN_ASSIGN, pAClauseArguments, pAUsedSynonyms, "a");
+
+		std::vector<QueryArgument> modifiesClauseArguments = {
+			{"s",  EntityType::STMT},
+			{"a2", EntityType::STRING}
+		};
+		std::unordered_set<std::string> modifiesUsedSynonyms = {"s"};
+		QueryClause modifiesClause = QueryClause(RelationRef::MODIFIES, modifiesClauseArguments, modifiesUsedSynonyms);
+
+		std::vector<QueryArgument> parentClauseArguments = {
+			{"5", EntityType::INT},
+			{"6", EntityType::INT}
+		};
+		std::unordered_set<std::string> parentUsedSynonyms = {};
+		QueryClause parentClause = QueryClause(RelationRef::PARENT, parentClauseArguments, parentUsedSynonyms);
+
+		std::vector<QueryArgument> selectSynonyms = {};
+		std::vector<QueryClause> clauses = {usesClause, pAClause, modifiesClause, parentClause};
+		Query query = Query(selectSynonyms, clauses, true);
+
+		std::unordered_set<std::string> expected = {"TRUE"};
+
+		Table actual = QueryEvaluator::evaluate(query);
+		std::unordered_set<std::string> actualString = QueryResultProjector::formatResult(actual, query);
+
+		REQUIRE(actualString == expected);
 	}
 
 	PKB::clearAllStores();

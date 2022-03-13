@@ -15,17 +15,14 @@ Tokeniser::Tokeniser(std::string rawQueryString) : rawQuery(new std::stringstrea
 void Tokeniser::processRawToken(std::string rawToken) {
 	if (stringTokenMap.find(rawToken) != stringTokenMap.end()) {
 		PQLTokens.push_back(new PQLToken(stringTokenMap[rawToken], rawToken));
-	}
-	else if (isInStringLiteral(rawToken)) {
-		const std::string ident = trimWhitespaces(rawToken.substr(1, rawToken.size() - 2));
-		PQLTokens.push_back(new PQLToken(TokenType::STRING, ident));
+	} else if (isInStringLiteral(rawToken)) {
+		const std::string content = trimWhitespaces(rawToken.substr(1, rawToken.size() - 2));
+		PQLTokens.push_back(new PQLToken(TokenType::STRING, content));
 	} else if (isIdent(rawToken)) {
 		PQLTokens.push_back(new PQLToken(TokenType::SYNONYM, rawToken));
-	}
-	else if (isInt(rawToken)) {
+	} else if (isInt(rawToken)) {
 		PQLTokens.push_back(new PQLToken(TokenType::INTEGER, rawToken));
-	}
-	else {
+	} else {
 		throw "Unknown syntax : " + rawToken + "\n";
 	}
 }

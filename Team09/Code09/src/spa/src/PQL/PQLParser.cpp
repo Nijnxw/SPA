@@ -29,6 +29,24 @@ bool PQLParser::nextIsComma() {
 	return (peekNextToken())->getType() == TokenType::COMMA;
 }
 
+bool PQLParser::isWithArgNameType(QueryArgument arg) {
+	return arg.getType() == EntityType::STRING || nameAttr.find(arg.getAttrRef()) != nameAttr.end();
+}
+
+bool PQLParser::isWithArgNumberType(QueryArgument arg) {
+	return arg.getType() == EntityType::INT || numberAttr.find(arg.getAttrRef()) != numberAttr.end();
+}
+
+bool PQLParser::isWithArgsSameType(QueryArgument arg1, QueryArgument arg2) {
+	return (isWithArgNameType(arg1) && isWithArgNameType(arg2)) || (isWithArgNumberType(arg1) && isWithArgNumberType(arg2));
+}
+
+bool PQLParser::isValidAttributeRef(EntityType synonym, TokenType attributeRef) {
+	bool isValidAttr = attrRefMapping.find(attributeRef) != attrRefMapping.end();
+	auto attrRefSynTypeMap = attrRefEntityTypeMap.find(attributeRef);
+	bool isValidattrRefSynTypeMap = attrRefSynTypeMap != attrRefEntityTypeMap.end() && attrRefEntityTypeMap[attributeRef].find(synonym) != attrRefEntityTypeMap[attributeRef].end();
+	return isValidAttr && isValidattrRefSynTypeMap;
+}
 
 PQLToken* PQLParser::getNextToken() {
 	if (current == end) {
@@ -125,7 +143,7 @@ void PQLParser::parseResultSynonym() {
 	if (!isDeclaredSynonym(nextToken->getValue())) {
 		throw "Result synonym is not declared";
 	}
-	resultSynonyms.push_back(QueryArgument(std::string(nextToken->getValue()), Declarations[nextToken->getValue()]));
+	resultSynonyms.emplace_back(QueryArgument(std::string(nextToken->getValue()), Declarations[nextToken->getValue()]));
 }
 
 QueryArgument PQLParser::parseArgs(PQLToken* token) {
@@ -174,7 +192,7 @@ void PQLParser::parseSingleRelationshipClause() {
 			usedSynonyms.insert(nextToken->getValue());
 		}
 
-		relArgs.push_back(arg);
+		relArgs.emplace_back(arg);
 		if (i != validArgTypes.size() - 1) {
 			getNextExpectedToken(TokenType::COMMA);
 		}
@@ -186,7 +204,7 @@ void PQLParser::parseSingleRelationshipClause() {
 		throw "Invalid number of arguments.";
 	}
 
-	QueryClauses.push_back(QueryClause(relationType->second, relArgs, usedSynonyms));
+	QueryClauses.emplace_back(QueryClause(relationType->second, relArgs, usedSynonyms));
 }
 
 void PQLParser::parseRelationshipClause() {
@@ -253,7 +271,7 @@ void PQLParser::parseAssignPattern(PQLToken* synonymToken) {
 	patternArgs.emplace_back(LHS);
 	getNextExpectedToken(TokenType::COMMA);
 	patternArgs.emplace_back(parseAssignPatternRHS());
-	QueryClauses.push_back(QueryClause(RelationRef::PATTERN_ASSIGN, patternArgs, usedSynonyms, synonymToken->getValue()));
+	QueryClauses.emplace_back(QueryClause(RelationRef::PATTERN_ASSIGN, patternArgs, usedSynonyms, synonymToken->getValue()));
 }
 
 void PQLParser::parseSinglePatternClause() {
@@ -289,6 +307,56 @@ void PQLParser::parsePatternClause() {
 	}
 }
 
+QueryArgument PQLParser::parseWithArgs() {
+	auto token = getNextToken();
+	switch (token->getType()) {
+	case TokenType::STRING:
+		if (!isIdent(token->getValue())) { throw "invalid string"; }
+		return QueryArgument(token->getValue(), entityTypeMapping[token->getType()]);
+	case TokenType::INTEGER:
+		return QueryArgument(token->getValue(), entityTypeMapping[token->getType()]);
+	case TokenType::SYNONYM : {
+		getNextExpectedToken(TokenType::PERIOD);
+		auto nextToken = getNextToken();
+		if (!isValidAttributeRef(Declarations[token->getValue()],nextToken->getType())) {
+			throw "invalid attribute ref";
+		}
+		return QueryArgument(token->getValue(), Declarations[token->getValue()], attrRefMapping[nextToken->getType()]);
+	}
+	default :
+		throw "invalid with argument";
+	}
+
+}
+
+void PQLParser::parseSignleWithClause() {
+	std::vector<QueryArgument> withArgs;
+	std::unordered_set<std::string> usedSynonyms;
+	QueryArgument LHS = parseWithArgs();
+	if (LHS.getType() != EntityType::STRING && LHS.getType() != EntityType::INT) {
+		usedSynonyms.insert(LHS.getValue());
+	}
+	getNextExpectedToken(TokenType::EQUAL);
+	QueryArgument RHS = parseWithArgs();
+	if (RHS.getType() != EntityType::STRING && RHS.getType() != EntityType::INT) {
+		usedSynonyms.insert(RHS.getValue());
+	}
+	if (!isWithArgsSameType(LHS, RHS)) { throw "mismatch of arg types : both must be NAME or both must be INTEGER"; }
+	withArgs.emplace_back(LHS);
+	withArgs.emplace_back(RHS);
+	QueryClauses.emplace_back(QueryClause(RelationRef::WITH, withArgs, usedSynonyms));
+}
+
+void PQLParser::parseWithClause() {
+	getNextExpectedToken(TokenType::WITH);
+	parseSignleWithClause();
+	while (current != end && peekNextToken()->getType() == TokenType::AND) {
+		getNextExpectedToken(TokenType::AND);
+		parseSignleWithClause();
+	}
+
+}
+
 
 void PQLParser::parseAfterSelect() {
 	while (current != end) {
@@ -298,6 +366,9 @@ void PQLParser::parseAfterSelect() {
 				break;
 			case TokenType::PATTERN:
 				parsePatternClause();
+				break;
+			case TokenType::WITH:
+				parseWithClause();
 				break;
 			default:
 				throw "Expected such that or pattern";

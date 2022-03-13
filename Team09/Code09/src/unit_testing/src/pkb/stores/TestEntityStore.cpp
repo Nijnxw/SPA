@@ -220,20 +220,20 @@ TEST_CASE("EntityStore API") {
 		}
 		// getProceduresToCallStatements();
 		SECTION("getProceduresToCallStatements() positive query") {
-			std::unordered_map<std::string, std::unordered_set<int>> res = entityStore.getProceduresToCallStatements();
-			std::unordered_map<std::string, std::unordered_set<int>> expectedMap = {{"TEST", { 10 }}};
+			std::unordered_map<std::string, std::unordered_set<std::string>> res = entityStore.getProceduresToCallStatements();
+			std::unordered_map<std::string, std::unordered_set<std::string>> expectedMap = {{"TEST", { "10" }}};
 			REQUIRE(res == expectedMap);
 		}
 		// getVariablesToPrintStatements();
 		SECTION("getVariablesToPrintStatements() positive query") {
-			std::unordered_map<std::string, std::unordered_set<int>> res = entityStore.getVariablesToPrintStatements();
-			std::unordered_map<std::string, std::unordered_set<int>> expectedMap = {{"pn", { 3 }}};
+			std::unordered_map<std::string, std::unordered_set<std::string>> res = entityStore.getVariablesToPrintStatements();
+			std::unordered_map<std::string, std::unordered_set<std::string>> expectedMap = {{"pn", { "3" }}};
 			REQUIRE(res == expectedMap);
 		}
 		// getVariablesToReadStatements();
 		SECTION("getVariablesToReadStatements() positive query") {
-			std::unordered_map<std::string, std::unordered_set<int>> res = entityStore.getVariablesToReadStatements();
-			std::unordered_map<std::string, std::unordered_set<int>> expectedMap = {{"r", { 2 }}};
+			std::unordered_map<std::string, std::unordered_set<std::string>> res = entityStore.getVariablesToReadStatements();
+			std::unordered_map<std::string, std::unordered_set<std::string>> expectedMap = {{"r", { "2" }}};
 			REQUIRE(res == expectedMap);
 		}
 	}

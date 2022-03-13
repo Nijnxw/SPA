@@ -58,8 +58,8 @@ bool EntityStore::addCallStatement(int statementNumber, const std::string& proce
 	callStatements.insert(statementNumber).second;
 	callStatementsToProcedures.insert({ statementNumber, procedure }).second;
 
-	if (!proceduresToCallStatements.emplace(procedure, std::unordered_set<int>{statementNumber}).second) {
-		proceduresToCallStatements.at(procedure).insert(statementNumber);
+	if (!proceduresToCallStatements.emplace(procedure, std::unordered_set<std::string>{std::to_string(statementNumber)}).second) {
+		proceduresToCallStatements.at(procedure).insert(std::to_string(statementNumber));
 	}
 	return true;
 }
@@ -68,8 +68,8 @@ bool EntityStore::addReadStatement(int statementNumber, const std::string& varia
 	readStatements.insert(statementNumber).second;
 	readStatementsToVariables.insert({ statementNumber, variable }).second;
 	readVariables.insert(variable).second;
-	if (!variablesToReadStatements.emplace(variable, std::unordered_set<int>{statementNumber}).second) {
-		variablesToReadStatements.at(variable).insert(statementNumber);
+	if (!variablesToReadStatements.emplace(variable, std::unordered_set<std::string>{std::to_string(statementNumber)}).second) {
+		variablesToReadStatements.at(variable).insert(std::to_string(statementNumber));
 	}
 	return true;
 }
@@ -78,8 +78,8 @@ bool EntityStore::addPrintStatement(int statementNumber, const std::string& vari
 	printStatements.insert(statementNumber).second;
 	printStatementsToVariables.insert({ statementNumber, variable }).second;
 	printVariables.insert(variable).second;
-	if (!variablesToPrintStatements.emplace(variable, std::unordered_set<int>{statementNumber}).second) {
-		variablesToPrintStatements.at(variable).insert(statementNumber);
+	if (!variablesToPrintStatements.emplace(variable, std::unordered_set<std::string>{std::to_string(statementNumber)}).second) {
+		variablesToPrintStatements.at(variable).insert(std::to_string(statementNumber));
 	}
 	return true;
 }
@@ -104,6 +104,9 @@ std::unordered_set<int> EntityStore::getStatementsWithType(EntityType statementT
 	std::unordered_set<int> statements;
 
 	switch (statementType) {
+	case EntityType::STMT:
+		statements = statements;
+		break;
 	case EntityType::ASSIGN:
 		statements = assignStatements;
 		break;
@@ -161,14 +164,14 @@ std::unordered_map<int, std::string> EntityStore::getReadStatementsToVariables()
 	return readStatementsToVariables;
 }
 
-std::unordered_map<std::string, std::unordered_set<int>> EntityStore::getProceduresToCallStatements() {
+std::unordered_map<std::string, std::unordered_set<std::string>> EntityStore::getProceduresToCallStatements() {
 	return proceduresToCallStatements;
 }
 
-std::unordered_map<std::string, std::unordered_set<int>> EntityStore::getVariablesToPrintStatements() {
+std::unordered_map<std::string, std::unordered_set<std::string>> EntityStore::getVariablesToPrintStatements() {
 	return variablesToPrintStatements;
 }
 
-std::unordered_map<std::string, std::unordered_set<int>> EntityStore::getVariablesToReadStatements() {
+std::unordered_map<std::string, std::unordered_set<std::string>> EntityStore::getVariablesToReadStatements() {
 	return variablesToReadStatements;
 }

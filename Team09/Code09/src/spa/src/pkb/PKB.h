@@ -75,9 +75,9 @@ public:
 	static std::unordered_map<int, std::string> getCallStatementsToProcedures();
 	static std::unordered_map<int, std::string> getPrintStatementsToVariables();
 	static std::unordered_map<int, std::string> getReadStatementsToVariables();
-	static std::unordered_map<std::string, std::unordered_set<int>> getProceduresToCallStatements();
-	static std::unordered_map<std::string, std::unordered_set<int>> getVariablesToPrintStatements();
-	static std::unordered_map<std::string, std::unordered_set<int>> getVariablesToReadStatements();
+	static std::unordered_map<std::string, std::unordered_set<std::string>> getProceduresToCallStatements();
+	static std::unordered_map<std::string, std::unordered_set<std::string>> getVariablesToPrintStatements();
+	static std::unordered_map<std::string, std::unordered_set<std::string>> getVariablesToReadStatements();
 
 	static std::unordered_set<int> getStatementsWithType(EntityType statementType);
 

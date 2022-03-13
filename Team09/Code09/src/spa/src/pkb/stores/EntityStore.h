@@ -35,9 +35,9 @@ private:
 	std::unordered_map<int, std::string> callStatementsToProcedures;
 	std::unordered_map<int, std::string> printStatementsToVariables;
 	std::unordered_map<int, std::string> readStatementsToVariables;
-	std::unordered_map<std::string, std::unordered_set<int>> proceduresToCallStatements;
-	std::unordered_map<std::string, std::unordered_set<int>> variablesToPrintStatements;
-	std::unordered_map<std::string, std::unordered_set<int>> variablesToReadStatements;
+	std::unordered_map<std::string, std::unordered_set<std::string>> proceduresToCallStatements;
+	std::unordered_map<std::string, std::unordered_set<std::string>> variablesToPrintStatements;
+	std::unordered_map<std::string, std::unordered_set<std::string>> variablesToReadStatements;
 
 public:
 	EntityStore();
@@ -71,7 +71,7 @@ public:
 	std::unordered_map<int, std::string> getCallStatementsToProcedures();
 	std::unordered_map<int, std::string> getPrintStatementsToVariables();
 	std::unordered_map<int, std::string> getReadStatementsToVariables();
-	std::unordered_map<std::string, std::unordered_set<int>> getProceduresToCallStatements();
-	std::unordered_map<std::string, std::unordered_set<int>> getVariablesToPrintStatements();
-	std::unordered_map<std::string, std::unordered_set<int>> getVariablesToReadStatements();
+	std::unordered_map<std::string, std::unordered_set<std::string>> getProceduresToCallStatements();
+	std::unordered_map<std::string, std::unordered_set<std::string>> getVariablesToPrintStatements();
+	std::unordered_map<std::string, std::unordered_set<std::string>> getVariablesToReadStatements();
 };

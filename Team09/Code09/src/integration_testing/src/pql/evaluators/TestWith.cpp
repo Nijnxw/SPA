@@ -310,7 +310,7 @@ TEST_CASE("WithRelationship API") {
 			Table expectedTable = {
 				{"v", {"x", "First1", "i", "y", "Second2", "z", "v"}},
 			};
-			REQUIRE(res.getTable().at("v") == QueryClauseResult(expectedTable).getTable().at("v"));
+			REQUIRE(res == QueryClauseResult(expectedTable));
 		}
 		SECTION("with variable.varName = variable.varName diff syn") {
 			QueryClauseResult res = withEvaluator.getWith("v1", EntityType::VAR, AttributeRef::VAR_NAME, "v2", EntityType::VAR, AttributeRef::VAR_NAME, false);
@@ -328,7 +328,7 @@ TEST_CASE("WithRelationship API") {
 				{"v", {"x", "First1"}},
 				{"r", {"1", "2"}}
 			};
-			REQUIRE(res.getTable().at("r") == QueryClauseResult(expectedTable).getTable().at("r"));
+			REQUIRE(res == QueryClauseResult(expectedTable));
 		}
 		SECTION("with variable.varName = print.varName") {
 			QueryClauseResult res = withEvaluator.getWith("v", EntityType::VAR, AttributeRef::VAR_NAME, "pn", EntityType::PRINT, AttributeRef::VAR_NAME, false);

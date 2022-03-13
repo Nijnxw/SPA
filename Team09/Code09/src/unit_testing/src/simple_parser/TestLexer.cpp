@@ -1,17 +1,13 @@
-#include "simple_parser/Token.h"
+#include "simple_parser/SPToken.h"
 #include "simple_parser/Lexer.h"
 
 #include "catch.hpp"
 #include <sstream>
 
-bool tokenComparator(Token *t1, Token* t2) {
-	return t1->getTokenType() == t2->getTokenType() && t1->getValue() == t2->getValue();
-}
-
-bool compareVectors(const std::vector<Token*> output, const std::vector<Token*> expected) {
+bool compareVectors(const std::vector<SPToken*>& output, const std::vector<SPToken*>& expected) {
 	return std::equal(output.begin(), output.end(),
 										expected.begin(), expected.end(),
-										tokenComparator);
+										[](SPToken* t1, SPToken* t2) { return *t1 == *t2; });
 }
 
 // --------------------------------------------------
@@ -19,12 +15,12 @@ bool compareVectors(const std::vector<Token*> output, const std::vector<Token*> 
 // --------------------------------------------------
 
 TEST_CASE("Test end of file token") {
-	std::string program = "";
+	std::string program;
 	std::istringstream input(program);
 
 	auto lexer = Lexer(&input);
-	std::vector<Token*> output = lexer.tokenize();
-	std::vector<Token*> expected = { new EndOfFileToken() };
+	std::vector<SPToken*> output = lexer.tokenize();
+	std::vector<SPToken*> expected = {new EndOfFileToken() };
 
 	REQUIRE(compareVectors(output, expected));
 }
@@ -34,8 +30,8 @@ TEST_CASE("Test NAME tokens") {
 	std::istringstream input(program);
 
 	auto lexer = Lexer(&input);
-	std::vector<Token*> output = lexer.tokenize();
-	std::vector<Token*> expected = {
+	std::vector<SPToken*> output = lexer.tokenize();
+	std::vector<SPToken*> expected = {
 			new NameToken("procedure"), new NameToken("ProCedure"),
 			new NameToken("if"),        new NameToken("read"),
 			new NameToken("x1"),        new NameToken("X1"),
@@ -47,14 +43,15 @@ TEST_CASE("Test NAME tokens") {
 }
 
 TEST_CASE("Test INTEGER tokens") {
-	std::string program = "1 13  093";
+	std::string program = "1  13 0 	100 93";
 	std::istringstream input(program);
 
 	auto lexer = Lexer(&input);
-	std::vector<Token*> output = lexer.tokenize();
-	std::vector<Token*> expected = {
+	std::vector<SPToken*> output = lexer.tokenize();
+	std::vector<SPToken*> expected = {
 			new IntegerToken("1"),     new IntegerToken("13"),
-			new IntegerToken("093"),   new EndOfFileToken(),
+			new IntegerToken("0"),     new IntegerToken("100"),
+			new IntegerToken("93"),   new EndOfFileToken(),
 	};
 
 	REQUIRE(compareVectors(output, expected));
@@ -65,12 +62,12 @@ TEST_CASE("Test OPERATOR tokens") {
 	std::istringstream input(program);
 
 	auto lexer = Lexer(&input);
-	std::vector<Token*> output = lexer.tokenize();
-	std::vector<Token*> expected = {
-			new OperatorToken("+"), new OperatorToken("&&"),
-			new OperatorToken("="), new OperatorToken("!"),
-			new OperatorToken("!="), new OperatorToken("<"),
-			new OperatorToken(">="), new EndOfFileToken(),
+	std::vector<SPToken*> output = lexer.tokenize();
+	std::vector<SPToken*> expected = {
+			new TerminalToken("+"), new TerminalToken("&&"),
+			new TerminalToken("="), new TerminalToken("!"),
+			new TerminalToken("!="), new TerminalToken("<"),
+			new TerminalToken(">="), new EndOfFileToken(),
 	};
 
 	REQUIRE(compareVectors(output, expected));
@@ -81,11 +78,11 @@ TEST_CASE("Test PUNCTUATOR tokens") {
 	std::istringstream input(program);
 
 	auto lexer = Lexer(&input);
-	std::vector<Token*> output = lexer.tokenize();
-	std::vector<Token*> expected = {
-			new PunctuatorToken("{"), new PunctuatorToken("}"),
-			new PunctuatorToken("("), new PunctuatorToken(")"),
-			new PunctuatorToken(";"), new EndOfFileToken(),
+	std::vector<SPToken*> output = lexer.tokenize();
+	std::vector<SPToken*> expected = {
+			new TerminalToken("{"), new TerminalToken("}"),
+			new TerminalToken("("), new TerminalToken(")"),
+			new TerminalToken(";"), new EndOfFileToken(),
 	};
 
 	REQUIRE(compareVectors(output, expected));
@@ -96,18 +93,18 @@ TEST_CASE("Test all lexical tokens") {
 	std::istringstream input(program);
 
 	auto lexer = Lexer(&input);
-	std::vector<Token*> output = lexer.tokenize();
-	std::vector<Token*> expected = {
+	std::vector<SPToken*> output = lexer.tokenize();
+	std::vector<SPToken*> expected = {
 			new NameToken("if"), new NameToken("while"),
-			new NameToken("procedure"), new PunctuatorToken("("),
-			new PunctuatorToken(")"), new PunctuatorToken("{"),
-			new PunctuatorToken("}"), new OperatorToken("&&"),
+			new NameToken("procedure"), new TerminalToken("("),
+			new TerminalToken(")"), new TerminalToken("{"),
+			new TerminalToken("}"), new TerminalToken("&&"),
 			new NameToken("variAble"), new NameToken("ball8"),
 			new IntegerToken("89"), new IntegerToken("2"),
-			new OperatorToken("<"), new OperatorToken("<="),
-			new OperatorToken("="), new OperatorToken("!="),
+			new TerminalToken("<"), new TerminalToken("<="),
+			new TerminalToken("="), new TerminalToken("!="),
 			new NameToken("print"), new NameToken("V1"),
-			new PunctuatorToken(";"), new EndOfFileToken(),
+			new TerminalToken(";"), new EndOfFileToken(),
 	};
 
 	REQUIRE(compareVectors(output, expected));
@@ -131,22 +128,22 @@ TEST_CASE("Test SIMPLE program") {
 	std::istringstream input(program);
 
 	auto lexer = Lexer(&input);
-	std::vector<Token*> output = lexer.tokenize();
-	std::vector<Token*> expected = {
-			new NameToken("procedure"), new NameToken("sumDigits"), new PunctuatorToken("{"),
-			new NameToken("read"), new NameToken("number"), new PunctuatorToken(";"),
-			new NameToken("sum"), new OperatorToken("="), new IntegerToken("0"),
-			new PunctuatorToken(";"), new NameToken("while"), new PunctuatorToken("("),
-			new NameToken("number"), new OperatorToken(">"), new IntegerToken("0"),
-			new PunctuatorToken(")"), new PunctuatorToken("{"), new NameToken("digit"),
-			new OperatorToken("="), new NameToken("number"), new OperatorToken("%"),
-			new IntegerToken("10"), new PunctuatorToken(";"), new NameToken("sum"),
-			new OperatorToken("="), new NameToken("sum"), new OperatorToken("+"),
-			new NameToken("digit"), new PunctuatorToken(";"), new NameToken("number"),
-			new OperatorToken("="), new NameToken("number"), new OperatorToken("/"),
-			new IntegerToken("10"), new PunctuatorToken(";"), new PunctuatorToken("}"),
-			new NameToken("print"), new NameToken("sum"), new PunctuatorToken(";"),
-			new PunctuatorToken("}"), new EndOfFileToken(),
+	std::vector<SPToken*> output = lexer.tokenize();
+	std::vector<SPToken*> expected = {
+			new NameToken("procedure"), new NameToken("sumDigits"), new TerminalToken("{"),
+			new NameToken("read"), new NameToken("number"), new TerminalToken(";"),
+			new NameToken("sum"), new TerminalToken("="), new IntegerToken("0"),
+			new TerminalToken(";"), new NameToken("while"), new TerminalToken("("),
+			new NameToken("number"), new TerminalToken(">"), new IntegerToken("0"),
+			new TerminalToken(")"), new TerminalToken("{"), new NameToken("digit"),
+			new TerminalToken("="), new NameToken("number"), new TerminalToken("%"),
+			new IntegerToken("10"), new TerminalToken(";"), new NameToken("sum"),
+			new TerminalToken("="), new NameToken("sum"), new TerminalToken("+"),
+			new NameToken("digit"), new TerminalToken(";"), new NameToken("number"),
+			new TerminalToken("="), new NameToken("number"), new TerminalToken("/"),
+			new IntegerToken("10"), new TerminalToken(";"), new TerminalToken("}"),
+			new NameToken("print"), new NameToken("sum"), new TerminalToken(";"),
+			new TerminalToken("}"), new EndOfFileToken(),
 	};
 
 	REQUIRE(compareVectors(output, expected));
@@ -155,6 +152,29 @@ TEST_CASE("Test SIMPLE program") {
 // --------------------------------------------------
 //                  UNHAPPY PATHS
 // --------------------------------------------------
+TEST_CASE("Test invalid integer - all zeroes") {
+	std::string program = "0000";
+	std::istringstream input(program);
+	auto lexer = Lexer(&input);
+	REQUIRE_THROWS(lexer.tokenize());
+}
+
+TEST_CASE("Test invalid integer - leading zeroes") {
+	SECTION("one leading zero") {
+		std::string program = "01";
+		std::istringstream input(program);
+		auto lexer = Lexer(&input);
+		REQUIRE_THROWS(lexer.tokenize());
+	}
+
+	SECTION("multiple leading zeroes") {
+		std::string program = "0000123";
+		std::istringstream input(program);
+		auto lexer = Lexer(&input);
+		REQUIRE_THROWS(lexer.tokenize());
+	}
+}
+
 TEST_CASE("Test invalid symbols - underscore") {
 	std::string program = "proc_name";
 	std::istringstream input(program);

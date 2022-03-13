@@ -8,7 +8,7 @@ AST SPManager::parseFile(const std::string& filename) {
 		}
 
 		Lexer lexer = Lexer(&inputStream);
-		std::vector<Token*> tokens = lexer.tokenize();
+		std::vector<SPToken*> tokens = lexer.tokenize();
 
 		SPParser parser = SPParser(tokens);
 		AST ast = parser.parseProgram();

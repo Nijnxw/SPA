@@ -9,21 +9,12 @@ char CommonLexer::peek() { return stream->peek(); }
 bool CommonLexer::notEOF() { return !stream->eof(); }
 
 bool CommonLexer::isValidInt(std::string str) {
+	if (str.length() == 1 && isdigit(str[0])) { return true; }
 	if ( str.empty() || str[0] == '0') { return false; }
-	for (const char c : str) {
-		if (!isdigit(c)) {
-			return false;
-		}
-	}
-	return true;
+	return std::all_of(str.begin(), str.end(), [](char c) { return isdigit(c); });
 }
 
 bool CommonLexer::isValidName(std::string str) {
 	if (str.empty() || !isalpha(str[0])) { return false; }
-	for (const char c : str) {
-		if (!isalnum(c)) {
-			return false;
-		}
-	}
-	return true;
+	return std::all_of(str.begin(), str.end(), [](char c) { return isalnum(c); });
 }

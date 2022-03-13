@@ -23,17 +23,12 @@ public:
 	explicit IntegerToken(std::string v);
 };
 
-// OPERATOR : '+' | '-' | '*' | '/' | '%' | '&&' | '||' |
-//            '<' | '<=' | '>' | '>=' | '=' | '==' | '!' | '!='
-class OperatorToken : public Token {
+// TERMINAL : '+' | '-' | '*' | '/' | '%' | '&&' | '||' |
+//            '<' | '<=' | '>' | '>=' | '=' | '==' | '!' | '!=' |
+// 						'(' | ')' | '{' | '}' | ';'
+class TerminalToken : public Token {
 public:
-	explicit OperatorToken(std::string v);
-};
-
-// PUNCTUATOR : '(' | ')' | '{' | '}' | ';'
-class PunctuatorToken : public Token {
-public:
-	explicit PunctuatorToken(std::string v);
+	explicit TerminalToken(std::string v);
 };
 
 // reached the end of the file

@@ -7,9 +7,9 @@
 
 std::vector<Token*> generateTokens(std::string procName) {
 	return std::vector<Token*> {
-			new NameToken("procedure"), 	new NameToken(procName),	new PunctuatorToken("{"),
-			new NameToken("read"),		new NameToken("x"),		new PunctuatorToken(";"),
-			new PunctuatorToken("}"),	new EndOfFileToken(),
+			new NameToken("procedure"), new NameToken(procName), new TerminalToken("{"),
+			new NameToken("read"), new NameToken("x"), new TerminalToken(";"),
+			new TerminalToken("}"), new EndOfFileToken(),
 	};
 }
 
@@ -104,10 +104,10 @@ TEST_CASE ("Test parsing of valid procedure") {
 		 * }
 		 */
 		std::vector<Token*> input = {
-				new NameToken("procedure"), 	new NameToken("testProgram"),
-				new PunctuatorToken("{"),   	new NameToken("read"),
-				new NameToken("p"),        	new PunctuatorToken(";"),
-				new PunctuatorToken("}"),	new EndOfFileToken(),
+				new NameToken("procedure"), new NameToken("testProgram"),
+				new TerminalToken("{"), new NameToken("read"),
+				new NameToken("p"), new TerminalToken(";"),
+				new TerminalToken("}"), new EndOfFileToken(),
 		};
 
 		SPParser parser = SPParser(input);
@@ -130,11 +130,11 @@ TEST_CASE ("Test parsing of valid procedure") {
 		 * }
 		 */
 		std::vector<Token*> input = {
-				new NameToken("procedure"),	new NameToken("testProgram"),
-				new PunctuatorToken("{"),   	new NameToken("read"),
-				new NameToken("p"), 			new PunctuatorToken(";"),
-				new NameToken("read"),		new NameToken("testProgram"),
-				new PunctuatorToken(";"),	new PunctuatorToken("}"),
+				new NameToken("procedure"), new NameToken("testProgram"),
+				new TerminalToken("{"), new NameToken("read"),
+				new NameToken("p"), new TerminalToken(";"),
+				new NameToken("read"), new NameToken("testProgram"),
+				new TerminalToken(";"), new TerminalToken("}"),
 				new EndOfFileToken(),
 		};
 
@@ -180,26 +180,26 @@ TEST_CASE("Multiple procedures 1.74 - Read-if") {
 	 * 6			print y; } } }
 	 */
 	std::vector<Token*> input = {
-			new NameToken("procedure"), new NameToken("testProgram"),	new PunctuatorToken("{"),
-			new NameToken("read"),		new NameToken("z"),				new PunctuatorToken(";"),
-			new PunctuatorToken("}"),
+			new NameToken("procedure"), new NameToken("testProgram"), new TerminalToken("{"),
+			new NameToken("read"), new NameToken("z"), new TerminalToken(";"),
+			new TerminalToken("}"),
 
-			new NameToken("procedure"), new NameToken("testProgram2"),	new PunctuatorToken("{"),
-			new NameToken("if"),		new PunctuatorToken("("),
-			new NameToken("x"),			new OperatorToken("<"),			new IntegerToken("1"),
-			new PunctuatorToken(")"),	new NameToken("then"),			new PunctuatorToken("{"),
-			new NameToken("read"),		new NameToken("x"),				new PunctuatorToken(";"),
-			new PunctuatorToken("}"),	new NameToken("else"),			new PunctuatorToken("{"),
+			new NameToken("procedure"), new NameToken("testProgram2"), new TerminalToken("{"),
+			new NameToken("if"), new TerminalToken("("),
+			new NameToken("x"), new TerminalToken("<"), new IntegerToken("1"),
+			new TerminalToken(")"), new NameToken("then"), new TerminalToken("{"),
+			new NameToken("read"), new NameToken("x"), new TerminalToken(";"),
+			new TerminalToken("}"), new NameToken("else"), new TerminalToken("{"),
 
-			new NameToken("if"),			new PunctuatorToken("("),
-			new NameToken("y"),			new OperatorToken("<"),			new IntegerToken("1"),
-			new PunctuatorToken(")"),	new NameToken("then"),			new PunctuatorToken("{"),
-			new NameToken("read"),		new NameToken("y"),				new PunctuatorToken(";"),
-			new PunctuatorToken("}"),	new NameToken("else"),			new PunctuatorToken("{"),
-			new NameToken("print"),		new NameToken("y"),				new PunctuatorToken(";"),
-			new PunctuatorToken("}"),
+			new NameToken("if"), new TerminalToken("("),
+			new NameToken("y"), new TerminalToken("<"), new IntegerToken("1"),
+			new TerminalToken(")"), new NameToken("then"), new TerminalToken("{"),
+			new NameToken("read"), new NameToken("y"), new TerminalToken(";"),
+			new TerminalToken("}"), new NameToken("else"), new TerminalToken("{"),
+			new NameToken("print"), new NameToken("y"), new TerminalToken(";"),
+			new TerminalToken("}"),
 
-			new PunctuatorToken("}"),	new PunctuatorToken("}"),		new EndOfFileToken(),
+			new TerminalToken("}"), new TerminalToken("}"), new EndOfFileToken(),
 	};
 	SPParser parser = SPParser(input);
 	AST output = parser.parseProgram();
@@ -217,24 +217,24 @@ TEST_CASE("Multiple procedures 1.75 - Print-while") {
 	 * 3		read x; } }
 	 */
 	std::vector<Token*> input = {
-			new NameToken("procedure"), new NameToken("testProgram"),	new PunctuatorToken("{"),
-			new NameToken("print"),		new NameToken("z"),				new PunctuatorToken(";"),
-			new PunctuatorToken("}"),
+			new NameToken("procedure"), new NameToken("testProgram"), new TerminalToken("{"),
+			new NameToken("print"), new NameToken("z"), new TerminalToken(";"),
+			new TerminalToken("}"),
 
-			new NameToken("procedure"), 	new NameToken("testProgram2"),	new PunctuatorToken("{"),
-			new NameToken("while"),		new PunctuatorToken("("),
-			new OperatorToken("!"),		new PunctuatorToken("("),		new PunctuatorToken("("),
-			new NameToken("y"),			new OperatorToken("+"),			new IntegerToken("1"),
-			new OperatorToken("<"),		new NameToken("x"),
-			new PunctuatorToken(")"),	new OperatorToken("&&"),			new PunctuatorToken("("),
-			new PunctuatorToken("("),
-			new NameToken("x"),			new OperatorToken("=="),			new IntegerToken("2"),
-			new PunctuatorToken(")"),	new OperatorToken("||"),			new PunctuatorToken("("),
-			new IntegerToken("1"),		new OperatorToken("!="),			new IntegerToken("1"),
-			new PunctuatorToken(")"),	new PunctuatorToken(")"),		new PunctuatorToken(")"),
-			new PunctuatorToken(")"),	new PunctuatorToken("{"),
-			new NameToken("read"),		new NameToken("x"),				new PunctuatorToken(";"),
-			new PunctuatorToken("}"),	new PunctuatorToken("}"),		new EndOfFileToken(),
+			new NameToken("procedure"), new NameToken("testProgram2"), new TerminalToken("{"),
+			new NameToken("while"), new TerminalToken("("),
+			new TerminalToken("!"), new TerminalToken("("), new TerminalToken("("),
+			new NameToken("y"), new TerminalToken("+"), new IntegerToken("1"),
+			new TerminalToken("<"), new NameToken("x"),
+			new TerminalToken(")"), new TerminalToken("&&"), new TerminalToken("("),
+			new TerminalToken("("),
+			new NameToken("x"), new TerminalToken("=="), new IntegerToken("2"),
+			new TerminalToken(")"), new TerminalToken("||"), new TerminalToken("("),
+			new IntegerToken("1"), new TerminalToken("!="), new IntegerToken("1"),
+			new TerminalToken(")"), new TerminalToken(")"), new TerminalToken(")"),
+			new TerminalToken(")"), new TerminalToken("{"),
+			new NameToken("read"), new NameToken("x"), new TerminalToken(";"),
+			new TerminalToken("}"), new TerminalToken("}"), new EndOfFileToken(),
 
 	};
 	SPParser parser = SPParser(input);
@@ -253,18 +253,18 @@ TEST_CASE("Multiple procedures 1.76 - Assignment-print") {
 	 * }
 	 */
 	std::vector<Token*> input = {
-			new NameToken("procedure"), new NameToken("testProgram"),	new PunctuatorToken("{"),
-			new NameToken("a"),			new OperatorToken("="),			new IntegerToken("1"),
-			new OperatorToken("+"),		new PunctuatorToken("("),		new NameToken("x"),
-			new OperatorToken("*"),		new PunctuatorToken("("),		new NameToken("y"),
-			new OperatorToken("-"),		new IntegerToken("2"),			new PunctuatorToken(")"),
-			new OperatorToken("/"),		new PunctuatorToken("("),		new NameToken("z"),
-			new OperatorToken("%"),		new IntegerToken("3"),			new PunctuatorToken(")"),
-			new PunctuatorToken(")"),	new PunctuatorToken(";"),		new PunctuatorToken("}"),
+			new NameToken("procedure"), new NameToken("testProgram"), new TerminalToken("{"),
+			new NameToken("a"), new TerminalToken("="), new IntegerToken("1"),
+			new TerminalToken("+"), new TerminalToken("("), new NameToken("x"),
+			new TerminalToken("*"), new TerminalToken("("), new NameToken("y"),
+			new TerminalToken("-"), new IntegerToken("2"), new TerminalToken(")"),
+			new TerminalToken("/"), new TerminalToken("("), new NameToken("z"),
+			new TerminalToken("%"), new IntegerToken("3"), new TerminalToken(")"),
+			new TerminalToken(")"), new TerminalToken(";"), new TerminalToken("}"),
 
-			new NameToken("procedure"), new NameToken("testProgram2"),	new PunctuatorToken("{"),
-			new NameToken("print"),		new NameToken("b"),				new PunctuatorToken(";"),
-			new PunctuatorToken("}"),	new EndOfFileToken(),
+			new NameToken("procedure"), new NameToken("testProgram2"), new TerminalToken("{"),
+			new NameToken("print"), new NameToken("b"), new TerminalToken(";"),
+			new TerminalToken("}"), new EndOfFileToken(),
 
 	};
 	SPParser parser = SPParser(input);
@@ -283,20 +283,20 @@ TEST_CASE("Multiple procedures 1.77 - While-read") {
 	 * 4	read x; }
 	 */
 	std::vector<Token*> input = {
-			new NameToken("procedure"), new NameToken("testProgram"),	new PunctuatorToken("{"),
-			new NameToken("while"),		new PunctuatorToken("("),
-			new NameToken("x"),			new OperatorToken("<"),			new IntegerToken("1"),
-			new PunctuatorToken(")"),	new PunctuatorToken("{"),
-			new NameToken("while"),		new PunctuatorToken("("),
-			new NameToken("y"),			new OperatorToken("<"),			new IntegerToken("1"),
-			new PunctuatorToken(")"),	new PunctuatorToken("{"),
-			new NameToken("read"),		new NameToken("y"),				new PunctuatorToken(";"),
-			new PunctuatorToken("}"),	new PunctuatorToken("}"),		new PunctuatorToken("}"),
+			new NameToken("procedure"), new NameToken("testProgram"), new TerminalToken("{"),
+			new NameToken("while"), new TerminalToken("("),
+			new NameToken("x"), new TerminalToken("<"), new IntegerToken("1"),
+			new TerminalToken(")"), new TerminalToken("{"),
+			new NameToken("while"), new TerminalToken("("),
+			new NameToken("y"), new TerminalToken("<"), new IntegerToken("1"),
+			new TerminalToken(")"), new TerminalToken("{"),
+			new NameToken("read"), new NameToken("y"), new TerminalToken(";"),
+			new TerminalToken("}"), new TerminalToken("}"), new TerminalToken("}"),
 
-			new NameToken("procedure"), new NameToken("testProgram2"),	new PunctuatorToken("{"),
-			new NameToken("read"),		new NameToken("x"),				new PunctuatorToken(";"),
-			new PunctuatorToken("}"),	
-			
+			new NameToken("procedure"), new NameToken("testProgram2"), new TerminalToken("{"),
+			new NameToken("read"), new NameToken("x"), new TerminalToken(";"),
+			new TerminalToken("}"),
+
 			new EndOfFileToken(),
 	};
 	SPParser parser = SPParser(input);
@@ -320,29 +320,29 @@ TEST_CASE("Multiple procedures 1.78 - If-assign") {
 	 * }
 	 */
 	std::vector<Token*> input = {
-			new NameToken("procedure"), new NameToken("testProgram"),	new PunctuatorToken("{"),
-			new NameToken("if"),		new PunctuatorToken("("),
-			new NameToken("x"),			new OperatorToken("<"),			new IntegerToken("1"),
-			new PunctuatorToken(")"),	new NameToken("then"),			new PunctuatorToken("{"),
-			new NameToken("read"),		new NameToken("x"),				new PunctuatorToken(";"),
-			new PunctuatorToken("}"),	new NameToken("else"),			new PunctuatorToken("{"),
+			new NameToken("procedure"), new NameToken("testProgram"), new TerminalToken("{"),
+			new NameToken("if"), new TerminalToken("("),
+			new NameToken("x"), new TerminalToken("<"), new IntegerToken("1"),
+			new TerminalToken(")"), new NameToken("then"), new TerminalToken("{"),
+			new NameToken("read"), new NameToken("x"), new TerminalToken(";"),
+			new TerminalToken("}"), new NameToken("else"), new TerminalToken("{"),
 
-			new NameToken("if"),		new PunctuatorToken("("),
-			new NameToken("y"),			new OperatorToken("<"),			new IntegerToken("1"),
-			new PunctuatorToken(")"),	new NameToken("then"),			new PunctuatorToken("{"),
-			new NameToken("read"),		new NameToken("y"),				new PunctuatorToken(";"),
-			new PunctuatorToken("}"),	new NameToken("else"),			new PunctuatorToken("{"),
-			new NameToken("print"),		new NameToken("y"),				new PunctuatorToken(";"),
-			new PunctuatorToken("}"),	new PunctuatorToken("}"),		new PunctuatorToken("}"),
+			new NameToken("if"), new TerminalToken("("),
+			new NameToken("y"), new TerminalToken("<"), new IntegerToken("1"),
+			new TerminalToken(")"), new NameToken("then"), new TerminalToken("{"),
+			new NameToken("read"), new NameToken("y"), new TerminalToken(";"),
+			new TerminalToken("}"), new NameToken("else"), new TerminalToken("{"),
+			new NameToken("print"), new NameToken("y"), new TerminalToken(";"),
+			new TerminalToken("}"), new TerminalToken("}"), new TerminalToken("}"),
 
-			new NameToken("procedure"), new NameToken("testProgram2"),	new PunctuatorToken("{"),
-			new NameToken("a"),			new OperatorToken("="),			new PunctuatorToken("("),
-			new IntegerToken("1"),		new OperatorToken("+"),			new NameToken("x"),
-			new OperatorToken("*"),		new IntegerToken("3"),			new PunctuatorToken(")"),
-			new OperatorToken("%"),		new PunctuatorToken("("),		new NameToken("y"),
-			new PunctuatorToken(")"),
-			new PunctuatorToken(";"),	new PunctuatorToken("}"),
-			
+			new NameToken("procedure"), new NameToken("testProgram2"), new TerminalToken("{"),
+			new NameToken("a"), new TerminalToken("="), new TerminalToken("("),
+			new IntegerToken("1"), new TerminalToken("+"), new NameToken("x"),
+			new TerminalToken("*"), new IntegerToken("3"), new TerminalToken(")"),
+			new TerminalToken("%"), new TerminalToken("("), new NameToken("y"),
+			new TerminalToken(")"),
+			new TerminalToken(";"), new TerminalToken("}"),
+
 			new EndOfFileToken(),
 	};
 	SPParser parser = SPParser(input);
@@ -356,9 +356,9 @@ TEST_CASE("Multiple procedures 1.78 - If-assign") {
 TEST_CASE("Proc_name validity 5.8 - proc_name cannot be an integer") {
 	// procedure 123 { read x;}
 	std::vector<Token*> input {
-			new NameToken("procedure"), 	new IntegerToken("123"),	new PunctuatorToken("{"),
-			new NameToken("read"),		new NameToken("x"),		new PunctuatorToken(";"),
-			new PunctuatorToken("}"),	new EndOfFileToken(),
+			new NameToken("procedure"), new IntegerToken("123"), new TerminalToken("{"),
+			new NameToken("read"), new NameToken("x"), new TerminalToken(";"),
+			new TerminalToken("}"), new EndOfFileToken(),
 	};
 	SPParser parser = SPParser(input);
 	REQUIRE_THROWS_WITH(parser.parseProgram(), "Expected a valid procedure name but got '123' instead.\n");
@@ -367,10 +367,10 @@ TEST_CASE("Proc_name validity 5.8 - proc_name cannot be an integer") {
 TEST_CASE("Proc_name validity 5.9 - proc_name cannot start with a digit") {
 	// procedure 1main { read x;}
 	std::vector<Token*> input {
-			new NameToken("procedure"), 	new IntegerToken("1"),	new NameToken("main"),
-			new PunctuatorToken("{"),
-			new NameToken("read"),		new NameToken("x"),		new PunctuatorToken(";"),
-			new PunctuatorToken("}"),	new EndOfFileToken(),
+			new NameToken("procedure"), new IntegerToken("1"), new NameToken("main"),
+			new TerminalToken("{"),
+			new NameToken("read"), new NameToken("x"), new TerminalToken(";"),
+			new TerminalToken("}"), new EndOfFileToken(),
 	};
 	SPParser parser = SPParser(input);
 	REQUIRE_THROWS_WITH(parser.parseProgram(), "Expected a valid procedure name but got '1' instead.\n");
@@ -379,11 +379,11 @@ TEST_CASE("Proc_name validity 5.9 - proc_name cannot start with a digit") {
 TEST_CASE("Proc_name validity 5.10 - proc_name cannot have symbols") {
 	// procedure m*in { read x;}
 	std::vector<Token*> input {
-			new NameToken("procedure"), 	new NameToken("m"),		new OperatorToken("*"),
+			new NameToken("procedure"), new NameToken("m"), new TerminalToken("*"),
 			new NameToken("in"),
-			new PunctuatorToken("{"),
-			new NameToken("read"),		new NameToken("x"),		new PunctuatorToken(";"),
-			new PunctuatorToken("}"),	new EndOfFileToken(),
+			new TerminalToken("{"),
+			new NameToken("read"), new NameToken("x"), new TerminalToken(";"),
+			new TerminalToken("}"), new EndOfFileToken(),
 	};
 	SPParser parser = SPParser(input);
 	REQUIRE_THROWS_WITH(parser.parseProgram(), "Expected '{' but got '*' instead.\n");
@@ -392,12 +392,12 @@ TEST_CASE("Proc_name validity 5.10 - proc_name cannot have symbols") {
 TEST_CASE("Proc_name validity 5.12 - proc_name cannot be repeated") {
   // procedure m*in { read x;}
   std::vector<Token*> input {
-      new NameToken("procedure"), 	new NameToken("main"),  new PunctuatorToken("{"),
-      new NameToken("read"),		    new NameToken("x"),		  new PunctuatorToken(";"),
-      new PunctuatorToken("}"),
-      new NameToken("procedure"), 	new NameToken("main"),  new PunctuatorToken("{"),
-      new NameToken("read"),		    new NameToken("x"),		  new PunctuatorToken(";"),
-      new PunctuatorToken("}"),
+      new NameToken("procedure"), 	new NameToken("main"),  new TerminalToken("{"),
+      new NameToken("read"),		    new NameToken("x"),		  new TerminalToken(";"),
+      new TerminalToken("}"),
+      new NameToken("procedure"), 	new NameToken("main"),  new TerminalToken("{"),
+      new NameToken("read"),		    new NameToken("x"),		  new TerminalToken(";"),
+      new TerminalToken("}"),
       new EndOfFileToken(),
   };
   SPParser parser = SPParser(input);
@@ -407,8 +407,8 @@ TEST_CASE("Proc_name validity 5.12 - proc_name cannot be repeated") {
 TEST_CASE ("Test parsing of invalid procedure") {
 	SECTION ("No statement in stmtLst") {
 		std::vector<Token*> input = {
-				new NameToken("procedure"),	new NameToken("testProgram"),
-				new PunctuatorToken("{"),   	new PunctuatorToken("}"),
+				new NameToken("procedure"), new NameToken("testProgram"),
+				new TerminalToken("{"), new TerminalToken("}"),
 				new EndOfFileToken(),
 		};
 		SPParser parser = SPParser(input);
@@ -416,30 +416,30 @@ TEST_CASE ("Test parsing of invalid procedure") {
 	}
 	SECTION ("Misspell `procedure`") {
 		std::vector<Token*> input = {
-				new NameToken("procedur"), 	new NameToken("testProgram"),
-				new PunctuatorToken("{"),   	new NameToken("read"),
-				new NameToken("p"),        	new PunctuatorToken(";"),
-				new PunctuatorToken("}"),	new EndOfFileToken(),
+				new NameToken("procedur"), new NameToken("testProgram"),
+				new TerminalToken("{"), new NameToken("read"),
+				new NameToken("p"), new TerminalToken(";"),
+				new TerminalToken("}"), new EndOfFileToken(),
 		};
 		SPParser parser = SPParser(input);
 		REQUIRE_THROWS_WITH(parser.parseProgram(), "Expected 'procedure' but got 'procedur' instead.\n");
 	}
 	SECTION ("'procedure' keyword is case sensitive") {
 		std::vector<Token*> input = {
-				new NameToken("Procedure"), 	new NameToken("testProgram"),
-				new PunctuatorToken("{"),   	new NameToken("read"),
-				new NameToken("p"),        	new PunctuatorToken(";"),
-				new PunctuatorToken("}"),	new EndOfFileToken(),
+				new NameToken("Procedure"), new NameToken("testProgram"),
+				new TerminalToken("{"), new NameToken("read"),
+				new NameToken("p"), new TerminalToken(";"),
+				new TerminalToken("}"), new EndOfFileToken(),
 		};
 		SPParser parser = SPParser(input);
 		REQUIRE_THROWS_WITH(parser.parseProgram(), "Expected 'procedure' but got 'Procedure' instead.\n");
 	}
 	SECTION ("Constants as proc_name") {
 		std::vector<Token*> input = {
-				new NameToken("procedure"), 	new IntegerToken("123"),
-				new PunctuatorToken("{"),   	new NameToken("read"),
-				new NameToken("p"),        	new PunctuatorToken(";"),
-				new PunctuatorToken("}"),	new EndOfFileToken(),
+				new NameToken("procedure"), new IntegerToken("123"),
+				new TerminalToken("{"), new NameToken("read"),
+				new NameToken("p"), new TerminalToken(";"),
+				new TerminalToken("}"), new EndOfFileToken(),
 		};
 		SPParser parser = SPParser(input);
 		REQUIRE_THROWS_WITH(parser.parseProgram(), "Expected a valid procedure name but got '123' instead.\n");
@@ -447,29 +447,29 @@ TEST_CASE ("Test parsing of invalid procedure") {
 	SECTION ("Missing proc_name") {
 		std::vector<Token*> input = {
 				new NameToken("procedure"),
-				new PunctuatorToken("{"),   	new NameToken("read"),
-				new NameToken("p"),        	new PunctuatorToken(";"),
-				new PunctuatorToken("}"),	new EndOfFileToken(),
+				new TerminalToken("{"), new NameToken("read"),
+				new NameToken("p"), new TerminalToken(";"),
+				new TerminalToken("}"), new EndOfFileToken(),
 		};
 		SPParser parser = SPParser(input);
 		REQUIRE_THROWS_WITH(parser.parseProgram(), "Expected a valid procedure name but got '{' instead.\n");
 	}
 	SECTION ("Missing '{'") {
 		std::vector<Token*> input = {
-				new NameToken("procedure"), 	new NameToken("testProgram"),
-												new NameToken("read"),
-				new NameToken("p"),			new PunctuatorToken(";"),
-				new PunctuatorToken("}"),	new EndOfFileToken(),
+				new NameToken("procedure"), new NameToken("testProgram"),
+				new NameToken("read"),
+				new NameToken("p"), new TerminalToken(";"),
+				new TerminalToken("}"), new EndOfFileToken(),
 		};
 		SPParser parser = SPParser(input);
 		REQUIRE_THROWS_WITH(parser.parseProgram(), "Expected '{' but got 'read' instead.\n");
 	}
 	SECTION ("Missing '}'") {
 		std::vector<Token*> input = {
-				new NameToken("procedure"), 	new NameToken("testProgram"),
-				new PunctuatorToken("{"),	new NameToken("read"),
-				new NameToken("p"),			new PunctuatorToken(";"),
-												new EndOfFileToken(),
+				new NameToken("procedure"), new NameToken("testProgram"),
+				new TerminalToken("{"), new NameToken("read"),
+				new NameToken("p"), new TerminalToken(";"),
+				new EndOfFileToken(),
 		};
 		SPParser parser = SPParser(input);
 		REQUIRE_THROWS_WITH(parser.parseProgram(), "Invalid statement syntax at statement 2.\n");

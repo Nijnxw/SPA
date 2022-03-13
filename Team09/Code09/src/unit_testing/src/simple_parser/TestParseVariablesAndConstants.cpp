@@ -7,15 +7,15 @@
 std::vector<Token*> generateTokens(std::string varName, bool isReadStmt = true) {
 	if (isReadStmt) {
 		return std::vector<Token*> {
-				new NameToken("procedure"), 	new NameToken("main"),	new PunctuatorToken("{"),
-				new NameToken("read"),		new NameToken(varName),		new PunctuatorToken(";"),
-				new PunctuatorToken("}"),	new EndOfFileToken(),
+				new NameToken("procedure"), new NameToken("main"), new TerminalToken("{"),
+				new NameToken("read"), new NameToken(varName), new TerminalToken(";"),
+				new TerminalToken("}"), new EndOfFileToken(),
 		};
 	}
 	return std::vector<Token*> {
-			new NameToken("procedure"), 	new NameToken("main"),	new PunctuatorToken("{"),
-			new NameToken(varName),		new OperatorToken("="),	new IntegerToken("1"),
-			new PunctuatorToken(";"),	new PunctuatorToken("}"),	new EndOfFileToken(),
+			new NameToken("procedure"), new NameToken("main"), new TerminalToken("{"),
+			new NameToken(varName), new TerminalToken("="), new IntegerToken("1"),
+			new TerminalToken(";"), new TerminalToken("}"), new EndOfFileToken(),
 	};
 }
 
@@ -137,10 +137,10 @@ TEST_CASE("Var_name validity 6.12 - var_name can be as long as possible") {
 
 TEST_CASE("Const validity 7.1 - constant") {
 	std::vector<Token*> input = {
-			new NameToken("procedure"), 	new NameToken("main"),	new PunctuatorToken("{"),
-			new NameToken("x"),			new OperatorToken("="),
+			new NameToken("procedure"), new NameToken("main"), new TerminalToken("{"),
+			new NameToken("x"), new TerminalToken("="),
 			new IntegerToken("12345"),
-			new PunctuatorToken(";"),	new PunctuatorToken("}"),	new EndOfFileToken(),
+			new TerminalToken(";"), new TerminalToken("}"), new EndOfFileToken(),
 	};
 	SPParser parser = SPParser(input);
 	AST output = parser.parseProgram();
@@ -161,10 +161,10 @@ TEST_CASE("Const validity 7.1 - constant") {
 
 TEST_CASE("Const validity 7.2 - const can be as long as possible") {
 	std::vector<Token*> input = {
-			new NameToken("procedure"), 	new NameToken("main"),	new PunctuatorToken("{"),
-			new NameToken("x"),			new OperatorToken("="),
+			new NameToken("procedure"), new NameToken("main"), new TerminalToken("{"),
+			new NameToken("x"), new TerminalToken("="),
 			new IntegerToken("1234567890987654321234567890987654321"),
-			new PunctuatorToken(";"),	new PunctuatorToken("}"),	new EndOfFileToken(),
+			new TerminalToken(";"), new TerminalToken("}"), new EndOfFileToken(),
 	};
 	SPParser parser = SPParser(input);
 	AST output = parser.parseProgram();
@@ -189,10 +189,10 @@ TEST_CASE("Const validity 7.2 - const can be as long as possible") {
 TEST_CASE("Var_name validity 6.13 - var_name cannot start with a digit") {
 	// procedure main { read 1main; }
 	std::vector<Token*> input {
-			new NameToken("procedure"), 	new NameToken("main"),	new PunctuatorToken("{"),
-			new NameToken("read"),		new IntegerToken("1"), 	new NameToken("main"),
-			new PunctuatorToken(";"),
-			new PunctuatorToken("}"),	new EndOfFileToken(),
+			new NameToken("procedure"), new NameToken("main"), new TerminalToken("{"),
+			new NameToken("read"), new IntegerToken("1"), new NameToken("main"),
+			new TerminalToken(";"),
+			new TerminalToken("}"), new EndOfFileToken(),
 	};;
 	SPParser parser = SPParser(input);
 	REQUIRE_THROWS_WITH(parser.parseProgram(), "Expected a variable name but got '1' instead.\n");
@@ -201,10 +201,10 @@ TEST_CASE("Var_name validity 6.13 - var_name cannot start with a digit") {
 TEST_CASE("Var_name validity 6.14 - var_name cannot have symbols") {
 	// procedure main { read m*in; }
 	std::vector<Token*> input {
-			new NameToken("procedure"), 	new NameToken("main"),	new PunctuatorToken("{"),
-			new NameToken("read"),		new NameToken("m"),		new OperatorToken("*"),
-			new NameToken("in"),	 		new PunctuatorToken(";"),
-			new PunctuatorToken("}"),	new EndOfFileToken(),
+			new NameToken("procedure"), new NameToken("main"), new TerminalToken("{"),
+			new NameToken("read"), new NameToken("m"), new TerminalToken("*"),
+			new NameToken("in"), new TerminalToken(";"),
+			new TerminalToken("}"), new EndOfFileToken(),
 	};;
 	SPParser parser = SPParser(input);
 	REQUIRE_THROWS_WITH(parser.parseProgram(), "Expected ';' but got '*' instead.\n");

@@ -64,10 +64,10 @@ TEST_CASE("Test OPERATOR tokens") {
 	auto lexer = Lexer(&input);
 	std::vector<Token*> output = lexer.tokenize();
 	std::vector<Token*> expected = {
-			new OperatorToken("+"), new OperatorToken("&&"),
-			new OperatorToken("="), new OperatorToken("!"),
-			new OperatorToken("!="), new OperatorToken("<"),
-			new OperatorToken(">="), new EndOfFileToken(),
+			new TerminalToken("+"), new TerminalToken("&&"),
+			new TerminalToken("="), new TerminalToken("!"),
+			new TerminalToken("!="), new TerminalToken("<"),
+			new TerminalToken(">="), new EndOfFileToken(),
 	};
 
 	REQUIRE(compareVectors(output, expected));
@@ -80,9 +80,9 @@ TEST_CASE("Test PUNCTUATOR tokens") {
 	auto lexer = Lexer(&input);
 	std::vector<Token*> output = lexer.tokenize();
 	std::vector<Token*> expected = {
-			new PunctuatorToken("{"), new PunctuatorToken("}"),
-			new PunctuatorToken("("), new PunctuatorToken(")"),
-			new PunctuatorToken(";"), new EndOfFileToken(),
+			new TerminalToken("{"), new TerminalToken("}"),
+			new TerminalToken("("), new TerminalToken(")"),
+			new TerminalToken(";"), new EndOfFileToken(),
 	};
 
 	REQUIRE(compareVectors(output, expected));
@@ -96,15 +96,15 @@ TEST_CASE("Test all lexical tokens") {
 	std::vector<Token*> output = lexer.tokenize();
 	std::vector<Token*> expected = {
 			new NameToken("if"), new NameToken("while"),
-			new NameToken("procedure"), new PunctuatorToken("("),
-			new PunctuatorToken(")"), new PunctuatorToken("{"),
-			new PunctuatorToken("}"), new OperatorToken("&&"),
+			new NameToken("procedure"), new TerminalToken("("),
+			new TerminalToken(")"), new TerminalToken("{"),
+			new TerminalToken("}"), new TerminalToken("&&"),
 			new NameToken("variAble"), new NameToken("ball8"),
 			new IntegerToken("89"), new IntegerToken("2"),
-			new OperatorToken("<"), new OperatorToken("<="),
-			new OperatorToken("="), new OperatorToken("!="),
+			new TerminalToken("<"), new TerminalToken("<="),
+			new TerminalToken("="), new TerminalToken("!="),
 			new NameToken("print"), new NameToken("V1"),
-			new PunctuatorToken(";"), new EndOfFileToken(),
+			new TerminalToken(";"), new EndOfFileToken(),
 	};
 
 	REQUIRE(compareVectors(output, expected));
@@ -130,20 +130,20 @@ TEST_CASE("Test SIMPLE program") {
 	auto lexer = Lexer(&input);
 	std::vector<Token*> output = lexer.tokenize();
 	std::vector<Token*> expected = {
-			new NameToken("procedure"), new NameToken("sumDigits"), new PunctuatorToken("{"),
-			new NameToken("read"), new NameToken("number"), new PunctuatorToken(";"),
-			new NameToken("sum"), new OperatorToken("="), new IntegerToken("0"),
-			new PunctuatorToken(";"), new NameToken("while"), new PunctuatorToken("("),
-			new NameToken("number"), new OperatorToken(">"), new IntegerToken("0"),
-			new PunctuatorToken(")"), new PunctuatorToken("{"), new NameToken("digit"),
-			new OperatorToken("="), new NameToken("number"), new OperatorToken("%"),
-			new IntegerToken("10"), new PunctuatorToken(";"), new NameToken("sum"),
-			new OperatorToken("="), new NameToken("sum"), new OperatorToken("+"),
-			new NameToken("digit"), new PunctuatorToken(";"), new NameToken("number"),
-			new OperatorToken("="), new NameToken("number"), new OperatorToken("/"),
-			new IntegerToken("10"), new PunctuatorToken(";"), new PunctuatorToken("}"),
-			new NameToken("print"), new NameToken("sum"), new PunctuatorToken(";"),
-			new PunctuatorToken("}"), new EndOfFileToken(),
+			new NameToken("procedure"), new NameToken("sumDigits"), new TerminalToken("{"),
+			new NameToken("read"), new NameToken("number"), new TerminalToken(";"),
+			new NameToken("sum"), new TerminalToken("="), new IntegerToken("0"),
+			new TerminalToken(";"), new NameToken("while"), new TerminalToken("("),
+			new NameToken("number"), new TerminalToken(">"), new IntegerToken("0"),
+			new TerminalToken(")"), new TerminalToken("{"), new NameToken("digit"),
+			new TerminalToken("="), new NameToken("number"), new TerminalToken("%"),
+			new IntegerToken("10"), new TerminalToken(";"), new NameToken("sum"),
+			new TerminalToken("="), new NameToken("sum"), new TerminalToken("+"),
+			new NameToken("digit"), new TerminalToken(";"), new NameToken("number"),
+			new TerminalToken("="), new NameToken("number"), new TerminalToken("/"),
+			new IntegerToken("10"), new TerminalToken(";"), new TerminalToken("}"),
+			new NameToken("print"), new NameToken("sum"), new TerminalToken(";"),
+			new TerminalToken("}"), new EndOfFileToken(),
 	};
 
 	REQUIRE(compareVectors(output, expected));

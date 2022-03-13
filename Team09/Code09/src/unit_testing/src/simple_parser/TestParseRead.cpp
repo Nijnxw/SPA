@@ -10,9 +10,9 @@
 // --------------------------------------------------
 TEST_CASE ("Read 1.1 - Basic read") {
 	std::vector<Token*> input = {
-			new NameToken("procedure"), 	new NameToken("testProgram"), 	new PunctuatorToken("{"),
-			new NameToken("read"),		new NameToken("x"),        		new PunctuatorToken(";"),
-			new PunctuatorToken("}"),	new EndOfFileToken(),
+			new NameToken("procedure"), new NameToken("testProgram"), new TerminalToken("{"),
+			new NameToken("read"), new NameToken("x"), new TerminalToken(";"),
+			new TerminalToken("}"), new EndOfFileToken(),
 	};
 
 	SPParser parser = SPParser(input);
@@ -23,10 +23,10 @@ TEST_CASE ("Read 1.1 - Basic read") {
 
 TEST_CASE ("Read 1.1a - A few read statements") {
 	std::vector<Token*> input = {
-			new NameToken("procedure"),	new NameToken("testProgram"),	new PunctuatorToken("{"),
-			new NameToken("read"),		new NameToken("x"), 				new PunctuatorToken(";"),
-			new NameToken("read"),		new NameToken("y"),				new PunctuatorToken(";"),
-			new PunctuatorToken("}"),	new EndOfFileToken(),
+			new NameToken("procedure"), new NameToken("testProgram"), new TerminalToken("{"),
+			new NameToken("read"), new NameToken("x"), new TerminalToken(";"),
+			new NameToken("read"), new NameToken("y"), new TerminalToken(";"),
+			new TerminalToken("}"), new EndOfFileToken(),
 	};
 
 	SPParser parser = SPParser(input);
@@ -48,50 +48,50 @@ TEST_CASE ("Read 1.1a - A few read statements") {
 TEST_CASE ("Test parsing of invalid read statement") {
 	SECTION ("Misspell `read` keyword") {
 		std::vector<Token*> input = {
-				new NameToken("procedure"), 	new NameToken("testProgram"),
-				new PunctuatorToken("{"),   	new NameToken("reed"),
-				new NameToken("p"),        	new PunctuatorToken(";"),
-				new PunctuatorToken("}"),	new EndOfFileToken(),
+				new NameToken("procedure"), new NameToken("testProgram"),
+				new TerminalToken("{"), new NameToken("reed"),
+				new NameToken("p"), new TerminalToken(";"),
+				new TerminalToken("}"), new EndOfFileToken(),
 		};
 		SPParser parser = SPParser(input);
 		REQUIRE_THROWS_WITH(parser.parseProgram(), "Invalid statement syntax at statement 1.\n");
 	}
 	SECTION ("'read' keyword is case sensitive") {
 		std::vector<Token*> input = {
-				new NameToken("procedure"), 	new NameToken("testProgram"),
-				new PunctuatorToken("{"),   	new NameToken("Read"),
-				new NameToken("p"),        	new PunctuatorToken(";"),
-				new PunctuatorToken("}"),	new EndOfFileToken(),
+				new NameToken("procedure"), new NameToken("testProgram"),
+				new TerminalToken("{"), new NameToken("Read"),
+				new NameToken("p"), new TerminalToken(";"),
+				new TerminalToken("}"), new EndOfFileToken(),
 		};
 		SPParser parser = SPParser(input);
 		REQUIRE_THROWS_WITH(parser.parseProgram(), "Invalid statement syntax at statement 1.\n");
 	}
 	SECTION ("Constants as var_name") {
 		std::vector<Token*> input = {
-				new NameToken("procedure"), 	new NameToken("testProgram"),
-				new PunctuatorToken("{"),   	new NameToken("read"),
-				new IntegerToken("123"),     new PunctuatorToken(";"),
-				new PunctuatorToken("}"),	new EndOfFileToken(),
+				new NameToken("procedure"), new NameToken("testProgram"),
+				new TerminalToken("{"), new NameToken("read"),
+				new IntegerToken("123"), new TerminalToken(";"),
+				new TerminalToken("}"), new EndOfFileToken(),
 		};
 		SPParser parser = SPParser(input);
 		REQUIRE_THROWS_WITH(parser.parseProgram(), "Expected a variable name but got '123' instead.\n");
 	}
 	SECTION ("Missing var_name") {
 		std::vector<Token*> input = {
-				new NameToken("procedure"),	new NameToken("testProgram"),
-				new PunctuatorToken("{"),   	new NameToken("read"),
-				new PunctuatorToken(";"),
-				new PunctuatorToken("}"),	new EndOfFileToken(),
+				new NameToken("procedure"), new NameToken("testProgram"),
+				new TerminalToken("{"), new NameToken("read"),
+				new TerminalToken(";"),
+				new TerminalToken("}"), new EndOfFileToken(),
 		};
 		SPParser parser = SPParser(input);
 		REQUIRE_THROWS_WITH(parser.parseProgram(), "Expected a variable name but got ';' instead.\n");
 	}
 	SECTION ("Missing ';'") {
 		std::vector<Token*> input = {
-				new NameToken("procedure"), 	new NameToken("testProgram"),
-				new PunctuatorToken("{"),	new NameToken("read"),
+				new NameToken("procedure"), new NameToken("testProgram"),
+				new TerminalToken("{"), new NameToken("read"),
 				new NameToken("p"),
-				new PunctuatorToken("}"),	new EndOfFileToken(),
+				new TerminalToken("}"), new EndOfFileToken(),
 		};
 		SPParser parser = SPParser(input);
 		REQUIRE_THROWS_WITH(parser.parseProgram(), "Expected ';' but got '}' instead.\n");

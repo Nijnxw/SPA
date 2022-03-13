@@ -18,14 +18,14 @@ TEST_CASE ("If 1.65 - Single statement - If-Read") {
 	 *    }
 	 */
 	std::vector<Token*> input = {
-			new NameToken("procedure"), 	new NameToken("testProgram"),	new PunctuatorToken("{"),
-			new NameToken("if"),			new PunctuatorToken("("),
-			new NameToken("x"),			new OperatorToken("<"),			new IntegerToken("1"),
-			new PunctuatorToken(")"),	new NameToken("then"),			new PunctuatorToken("{"),
-			new NameToken("read"),		new NameToken("x"),				new PunctuatorToken(";"),
-			new PunctuatorToken("}"),	new NameToken("else"),			new PunctuatorToken("{"),
-			new NameToken("read"),		new NameToken("y"),				new PunctuatorToken(";"),
-			new PunctuatorToken("}"),	new PunctuatorToken("}"),		new EndOfFileToken(),
+			new NameToken("procedure"), new NameToken("testProgram"), new TerminalToken("{"),
+			new NameToken("if"), new TerminalToken("("),
+			new NameToken("x"), new TerminalToken("<"), new IntegerToken("1"),
+			new TerminalToken(")"), new NameToken("then"), new TerminalToken("{"),
+			new NameToken("read"), new NameToken("x"), new TerminalToken(";"),
+			new TerminalToken("}"), new NameToken("else"), new TerminalToken("{"),
+			new NameToken("read"), new NameToken("y"), new TerminalToken(";"),
+			new TerminalToken("}"), new TerminalToken("}"), new EndOfFileToken(),
 	};
 
 	SPParser parser = SPParser(input);
@@ -43,14 +43,14 @@ TEST_CASE ("If 1.66 - Single statement - If-Print") {
 	 *    }
 	 */
 	std::vector<Token*> input = {
-			new NameToken("procedure"), 	new NameToken("testProgram"),	new PunctuatorToken("{"),
-			new NameToken("if"),			new PunctuatorToken("("),
-			new NameToken("x"),			new OperatorToken("<"),			new IntegerToken("1"),
-			new PunctuatorToken(")"),	new NameToken("then"),			new PunctuatorToken("{"),
-			new NameToken("print"),		new NameToken("x"),				new PunctuatorToken(";"),
-			new PunctuatorToken("}"),	new NameToken("else"),			new PunctuatorToken("{"),
-			new NameToken("print"),		new NameToken("y"),				new PunctuatorToken(";"),
-			new PunctuatorToken("}"),	new PunctuatorToken("}"),		new EndOfFileToken(),
+			new NameToken("procedure"), new NameToken("testProgram"), new TerminalToken("{"),
+			new NameToken("if"), new TerminalToken("("),
+			new NameToken("x"), new TerminalToken("<"), new IntegerToken("1"),
+			new TerminalToken(")"), new NameToken("then"), new TerminalToken("{"),
+			new NameToken("print"), new NameToken("x"), new TerminalToken(";"),
+			new TerminalToken("}"), new NameToken("else"), new TerminalToken("{"),
+			new NameToken("print"), new NameToken("y"), new TerminalToken(";"),
+			new TerminalToken("}"), new TerminalToken("}"), new EndOfFileToken(),
 	};
 
 	SPParser parser = SPParser(input);
@@ -68,16 +68,16 @@ TEST_CASE ("If 1.67 - Single statement - If-Assign") {
 	 *    }
 	 */
 	std::vector<Token*> input = {
-			new NameToken("procedure"), 	new NameToken("testProgram"),	new PunctuatorToken("{"),
-			new NameToken("if"),			new PunctuatorToken("("),
-			new NameToken("x"),			new OperatorToken("<"),			new IntegerToken("1"),
-			new PunctuatorToken(")"),	new NameToken("then"),			new PunctuatorToken("{"),
-			new NameToken("a"),			new OperatorToken("="),			new NameToken("x"),
-			new OperatorToken("+"),		new IntegerToken("1"),			new PunctuatorToken(";"),
-			new PunctuatorToken("}"),	new NameToken("else"),			new PunctuatorToken("{"),
-			new NameToken("a"),			new OperatorToken("="),			new NameToken("y"),
-			new OperatorToken("+"),		new IntegerToken("1"),			new PunctuatorToken(";"),
-			new PunctuatorToken("}"),	new PunctuatorToken("}"),		new EndOfFileToken(),
+			new NameToken("procedure"), new NameToken("testProgram"), new TerminalToken("{"),
+			new NameToken("if"), new TerminalToken("("),
+			new NameToken("x"), new TerminalToken("<"), new IntegerToken("1"),
+			new TerminalToken(")"), new NameToken("then"), new TerminalToken("{"),
+			new NameToken("a"), new TerminalToken("="), new NameToken("x"),
+			new TerminalToken("+"), new IntegerToken("1"), new TerminalToken(";"),
+			new TerminalToken("}"), new NameToken("else"), new TerminalToken("{"),
+			new NameToken("a"), new TerminalToken("="), new NameToken("y"),
+			new TerminalToken("+"), new IntegerToken("1"), new TerminalToken(";"),
+			new TerminalToken("}"), new TerminalToken("}"), new EndOfFileToken(),
 	};
 
 	SPParser parser = SPParser(input);
@@ -98,22 +98,22 @@ TEST_CASE ("If 1.68 - Single statement - If-If (then)") {
 	 *    }
 	 */
 	std::vector<Token*> input = {
-			new NameToken("procedure"), 	new NameToken("testProgram"),	new PunctuatorToken("{"),
-			new NameToken("if"),			new PunctuatorToken("("),
-			new NameToken("x"),			new OperatorToken("<"),			new IntegerToken("1"),
-			new PunctuatorToken(")"),	new NameToken("then"),			new PunctuatorToken("{"),
+			new NameToken("procedure"), new NameToken("testProgram"), new TerminalToken("{"),
+			new NameToken("if"), new TerminalToken("("),
+			new NameToken("x"), new TerminalToken("<"), new IntegerToken("1"),
+			new TerminalToken(")"), new NameToken("then"), new TerminalToken("{"),
 
-			new NameToken("if"),			new PunctuatorToken("("),
-			new NameToken("y"),			new OperatorToken("<"),			new IntegerToken("1"),
-			new PunctuatorToken(")"),	new NameToken("then"),			new PunctuatorToken("{"),
-			new NameToken("read"),		new NameToken("y"),				new PunctuatorToken(";"),
-			new PunctuatorToken("}"),	new NameToken("else"),			new PunctuatorToken("{"),
-			new NameToken("print"),		new NameToken("y"),				new PunctuatorToken(";"),
-			new PunctuatorToken("}"),
+			new NameToken("if"), new TerminalToken("("),
+			new NameToken("y"), new TerminalToken("<"), new IntegerToken("1"),
+			new TerminalToken(")"), new NameToken("then"), new TerminalToken("{"),
+			new NameToken("read"), new NameToken("y"), new TerminalToken(";"),
+			new TerminalToken("}"), new NameToken("else"), new TerminalToken("{"),
+			new NameToken("print"), new NameToken("y"), new TerminalToken(";"),
+			new TerminalToken("}"),
 
-			new PunctuatorToken("}"),	new NameToken("else"),			new PunctuatorToken("{"),
-			new NameToken("print"),		new NameToken("x"),				new PunctuatorToken(";"),
-			new PunctuatorToken("}"),	new PunctuatorToken("}"),		new EndOfFileToken(),
+			new TerminalToken("}"), new NameToken("else"), new TerminalToken("{"),
+			new NameToken("print"), new NameToken("x"), new TerminalToken(";"),
+			new TerminalToken("}"), new TerminalToken("}"), new EndOfFileToken(),
 	};
 
 	SPParser parser = SPParser(input);
@@ -134,22 +134,22 @@ TEST_CASE ("If 1.69 - Single statement - If-If (else)") {
 	 *    }
 	 */
 	std::vector<Token*> input = {
-			new NameToken("procedure"), 	new NameToken("testProgram"),	new PunctuatorToken("{"),
-			new NameToken("if"),			new PunctuatorToken("("),
-			new NameToken("x"),			new OperatorToken("<"),			new IntegerToken("1"),
-			new PunctuatorToken(")"),	new NameToken("then"),			new PunctuatorToken("{"),
-			new NameToken("read"),		new NameToken("x"),				new PunctuatorToken(";"),
-			new PunctuatorToken("}"),	new NameToken("else"),			new PunctuatorToken("{"),
+			new NameToken("procedure"), new NameToken("testProgram"), new TerminalToken("{"),
+			new NameToken("if"), new TerminalToken("("),
+			new NameToken("x"), new TerminalToken("<"), new IntegerToken("1"),
+			new TerminalToken(")"), new NameToken("then"), new TerminalToken("{"),
+			new NameToken("read"), new NameToken("x"), new TerminalToken(";"),
+			new TerminalToken("}"), new NameToken("else"), new TerminalToken("{"),
 
-			new NameToken("if"),			new PunctuatorToken("("),
-			new NameToken("y"),			new OperatorToken("<"),			new IntegerToken("1"),
-			new PunctuatorToken(")"),	new NameToken("then"),			new PunctuatorToken("{"),
-			new NameToken("read"),		new NameToken("y"),				new PunctuatorToken(";"),
-			new PunctuatorToken("}"),	new NameToken("else"),			new PunctuatorToken("{"),
-			new NameToken("print"),		new NameToken("y"),				new PunctuatorToken(";"),
-			new PunctuatorToken("}"),
+			new NameToken("if"), new TerminalToken("("),
+			new NameToken("y"), new TerminalToken("<"), new IntegerToken("1"),
+			new TerminalToken(")"), new NameToken("then"), new TerminalToken("{"),
+			new NameToken("read"), new NameToken("y"), new TerminalToken(";"),
+			new TerminalToken("}"), new NameToken("else"), new TerminalToken("{"),
+			new NameToken("print"), new NameToken("y"), new TerminalToken(";"),
+			new TerminalToken("}"),
 
-			new PunctuatorToken("}"),	new PunctuatorToken("}"),		new EndOfFileToken(),
+			new TerminalToken("}"), new TerminalToken("}"), new EndOfFileToken(),
 	};
 
 	SPParser parser = SPParser(input);
@@ -168,20 +168,20 @@ TEST_CASE ("If 1.70 - Single statement - If-While (then)") {
 	 *    }
 	 */
 	std::vector<Token*> input = {
-			new NameToken("procedure"), 	new NameToken("testProgram"),	new PunctuatorToken("{"),
-			new NameToken("if"),			new PunctuatorToken("("),
-			new NameToken("x"),			new OperatorToken("<"),			new IntegerToken("1"),
-			new PunctuatorToken(")"),	new NameToken("then"),			new PunctuatorToken("{"),
+			new NameToken("procedure"), new NameToken("testProgram"), new TerminalToken("{"),
+			new NameToken("if"), new TerminalToken("("),
+			new NameToken("x"), new TerminalToken("<"), new IntegerToken("1"),
+			new TerminalToken(")"), new NameToken("then"), new TerminalToken("{"),
 
-			new NameToken("while"),		new PunctuatorToken("("),
-			new NameToken("y"),			new OperatorToken("<"),			new IntegerToken("1"),
-			new PunctuatorToken(")"),	new PunctuatorToken("{"),
-			new NameToken("read"),		new NameToken("y"),				new PunctuatorToken(";"),
-			new PunctuatorToken("}"),
+			new NameToken("while"), new TerminalToken("("),
+			new NameToken("y"), new TerminalToken("<"), new IntegerToken("1"),
+			new TerminalToken(")"), new TerminalToken("{"),
+			new NameToken("read"), new NameToken("y"), new TerminalToken(";"),
+			new TerminalToken("}"),
 
-			new PunctuatorToken("}"),	new NameToken("else"),			new PunctuatorToken("{"),
-			new NameToken("print"),		new NameToken("y"),				new PunctuatorToken(";"),
-			new PunctuatorToken("}"),	new PunctuatorToken("}"),		new EndOfFileToken(),
+			new TerminalToken("}"), new NameToken("else"), new TerminalToken("{"),
+			new NameToken("print"), new NameToken("y"), new TerminalToken(";"),
+			new TerminalToken("}"), new TerminalToken("}"), new EndOfFileToken(),
 	};
 
 	SPParser parser = SPParser(input);
@@ -200,20 +200,20 @@ TEST_CASE ("If 1.71 - Single statement - If-While (else)") {
 	 *    }
 	 */
 	std::vector<Token*> input = {
-			new NameToken("procedure"), 	new NameToken("testProgram"),	new PunctuatorToken("{"),
-			new NameToken("if"),			new PunctuatorToken("("),
-			new NameToken("x"),			new OperatorToken("<"),			new IntegerToken("1"),
-			new PunctuatorToken(")"),	new NameToken("then"),			new PunctuatorToken("{"),
-			new NameToken("read"),		new NameToken("x"),				new PunctuatorToken(";"),
-			new PunctuatorToken("}"),	new NameToken("else"),			new PunctuatorToken("{"),
+			new NameToken("procedure"), new NameToken("testProgram"), new TerminalToken("{"),
+			new NameToken("if"), new TerminalToken("("),
+			new NameToken("x"), new TerminalToken("<"), new IntegerToken("1"),
+			new TerminalToken(")"), new NameToken("then"), new TerminalToken("{"),
+			new NameToken("read"), new NameToken("x"), new TerminalToken(";"),
+			new TerminalToken("}"), new NameToken("else"), new TerminalToken("{"),
 
-			new NameToken("while"),		new PunctuatorToken("("),
-			new NameToken("y"),			new OperatorToken("<"),			new IntegerToken("1"),
-			new PunctuatorToken(")"),	new PunctuatorToken("{"),
-			new NameToken("read"),		new NameToken("y"),				new PunctuatorToken(";"),
-			new PunctuatorToken("}"),
+			new NameToken("while"), new TerminalToken("("),
+			new NameToken("y"), new TerminalToken("<"), new IntegerToken("1"),
+			new TerminalToken(")"), new TerminalToken("{"),
+			new NameToken("read"), new NameToken("y"), new TerminalToken(";"),
+			new TerminalToken("}"),
 
-			new PunctuatorToken("}"),	new PunctuatorToken("}"),		new EndOfFileToken(),
+			new TerminalToken("}"), new TerminalToken("}"), new EndOfFileToken(),
 	};
 
 	SPParser parser = SPParser(input);
@@ -239,30 +239,30 @@ TEST_CASE ("If 1.72 - All statement types - If-then block") {
 	 *    }
 	 */
 	std::vector<Token*> input = {
-			new NameToken("procedure"), 	new NameToken("testProgram"),	new PunctuatorToken("{"),
-			new NameToken("if"),			new PunctuatorToken("("),
-			new NameToken("x"),			new OperatorToken("<"),			new IntegerToken("1"),
-			new PunctuatorToken(")"),	new NameToken("then"),			new PunctuatorToken("{"),
-			new NameToken("read"),		new NameToken("x"),				new PunctuatorToken(";"),
-			new NameToken("print"),		new NameToken("x"),				new PunctuatorToken(";"),
-			new NameToken("a"),			new OperatorToken("="),			new NameToken("x"),
-			new OperatorToken("+"),		new IntegerToken("1"),			new PunctuatorToken(";"),
-			new NameToken("if"),			new PunctuatorToken("("),
-			new NameToken("y"),			new OperatorToken("<"),			new IntegerToken("1"),
-			new PunctuatorToken(")"),	new NameToken("then"),			new PunctuatorToken("{"),
-			new NameToken("read"),		new NameToken("y"),				new PunctuatorToken(";"),
-			new PunctuatorToken("}"),	new NameToken("else"),			new PunctuatorToken("{"),
-			new NameToken("print"),		new NameToken("y"),				new PunctuatorToken(";"),
-			new PunctuatorToken("}"),
-			new NameToken("while"),		new PunctuatorToken("("),
-			new NameToken("z"),			new OperatorToken("<"),			new IntegerToken("1"),
-			new PunctuatorToken(")"),	new PunctuatorToken("{"),
-			new NameToken("read"),		new NameToken("z"),				new PunctuatorToken(";"),
-			new PunctuatorToken("}"),
+			new NameToken("procedure"), new NameToken("testProgram"), new TerminalToken("{"),
+			new NameToken("if"), new TerminalToken("("),
+			new NameToken("x"), new TerminalToken("<"), new IntegerToken("1"),
+			new TerminalToken(")"), new NameToken("then"), new TerminalToken("{"),
+			new NameToken("read"), new NameToken("x"), new TerminalToken(";"),
+			new NameToken("print"), new NameToken("x"), new TerminalToken(";"),
+			new NameToken("a"), new TerminalToken("="), new NameToken("x"),
+			new TerminalToken("+"), new IntegerToken("1"), new TerminalToken(";"),
+			new NameToken("if"), new TerminalToken("("),
+			new NameToken("y"), new TerminalToken("<"), new IntegerToken("1"),
+			new TerminalToken(")"), new NameToken("then"), new TerminalToken("{"),
+			new NameToken("read"), new NameToken("y"), new TerminalToken(";"),
+			new TerminalToken("}"), new NameToken("else"), new TerminalToken("{"),
+			new NameToken("print"), new NameToken("y"), new TerminalToken(";"),
+			new TerminalToken("}"),
+			new NameToken("while"), new TerminalToken("("),
+			new NameToken("z"), new TerminalToken("<"), new IntegerToken("1"),
+			new TerminalToken(")"), new TerminalToken("{"),
+			new NameToken("read"), new NameToken("z"), new TerminalToken(";"),
+			new TerminalToken("}"),
 
-			new PunctuatorToken("}"),	new NameToken("else"),			new PunctuatorToken("{"),
-			new NameToken("print"),		new NameToken("x"),				new PunctuatorToken(";"),
-			new PunctuatorToken("}"),	new PunctuatorToken("}"),		new EndOfFileToken(),
+			new TerminalToken("}"), new NameToken("else"), new TerminalToken("{"),
+			new NameToken("print"), new NameToken("x"), new TerminalToken(";"),
+			new TerminalToken("}"), new TerminalToken("}"), new EndOfFileToken(),
 	};
 
 	SPParser parser = SPParser(input);
@@ -288,29 +288,29 @@ TEST_CASE ("If 1.73 - All statement types - If-else block") {
 	 *    }
 	 */
 	std::vector<Token*> input = {
-			new NameToken("procedure"), 	new NameToken("testProgram"),	new PunctuatorToken("{"),
-			new NameToken("if"),			new PunctuatorToken("("),
-			new NameToken("x"),			new OperatorToken("<"),			new IntegerToken("1"),
-			new PunctuatorToken(")"),	new NameToken("then"),			new PunctuatorToken("{"),
-			new NameToken("read"),		new NameToken("x"),				new PunctuatorToken(";"),
-			new PunctuatorToken("}"),	new NameToken("else"),			new PunctuatorToken("{"),
-			new NameToken("read"),		new NameToken("x"),				new PunctuatorToken(";"),
-			new NameToken("print"),		new NameToken("x"),				new PunctuatorToken(";"),
-			new NameToken("a"),			new OperatorToken("="),			new NameToken("x"),
-			new OperatorToken("+"),		new IntegerToken("1"),			new PunctuatorToken(";"),
-			new NameToken("if"),		new PunctuatorToken("("),
-			new NameToken("y"),			new OperatorToken("<"),			new IntegerToken("1"),
-			new PunctuatorToken(")"),	new NameToken("then"),			new PunctuatorToken("{"),
-			new NameToken("read"),		new NameToken("y"),				new PunctuatorToken(";"),
-			new PunctuatorToken("}"),	new NameToken("else"),			new PunctuatorToken("{"),
-			new NameToken("print"),		new NameToken("y"),				new PunctuatorToken(";"),
-			new PunctuatorToken("}"),
-			new NameToken("while"),		new PunctuatorToken("("),
-			new NameToken("z"),			new OperatorToken("<"),			new IntegerToken("1"),
-			new PunctuatorToken(")"),	new PunctuatorToken("{"),
-			new NameToken("read"),		new NameToken("z"),				new PunctuatorToken(";"),
-			new PunctuatorToken("}"),
-			new PunctuatorToken("}"),	new PunctuatorToken("}"),		new EndOfFileToken(),
+			new NameToken("procedure"), new NameToken("testProgram"), new TerminalToken("{"),
+			new NameToken("if"), new TerminalToken("("),
+			new NameToken("x"), new TerminalToken("<"), new IntegerToken("1"),
+			new TerminalToken(")"), new NameToken("then"), new TerminalToken("{"),
+			new NameToken("read"), new NameToken("x"), new TerminalToken(";"),
+			new TerminalToken("}"), new NameToken("else"), new TerminalToken("{"),
+			new NameToken("read"), new NameToken("x"), new TerminalToken(";"),
+			new NameToken("print"), new NameToken("x"), new TerminalToken(";"),
+			new NameToken("a"), new TerminalToken("="), new NameToken("x"),
+			new TerminalToken("+"), new IntegerToken("1"), new TerminalToken(";"),
+			new NameToken("if"), new TerminalToken("("),
+			new NameToken("y"), new TerminalToken("<"), new IntegerToken("1"),
+			new TerminalToken(")"), new NameToken("then"), new TerminalToken("{"),
+			new NameToken("read"), new NameToken("y"), new TerminalToken(";"),
+			new TerminalToken("}"), new NameToken("else"), new TerminalToken("{"),
+			new NameToken("print"), new NameToken("y"), new TerminalToken(";"),
+			new TerminalToken("}"),
+			new NameToken("while"), new TerminalToken("("),
+			new NameToken("z"), new TerminalToken("<"), new IntegerToken("1"),
+			new TerminalToken(")"), new TerminalToken("{"),
+			new NameToken("read"), new NameToken("z"), new TerminalToken(";"),
+			new TerminalToken("}"),
+			new TerminalToken("}"), new TerminalToken("}"), new EndOfFileToken(),
 	};
 
 	SPParser parser = SPParser(input);
@@ -333,12 +333,12 @@ TEST_CASE("Invalid if stmt - no stmt in then stmtLst") {
 	 * }
 	 */
 	std::vector<Token*> input = {
-			new NameToken("procedure"), 	new NameToken("testProgram"), 	new PunctuatorToken("{"),
-			new NameToken("if"),			new PunctuatorToken("("), 		new NameToken("x"),
-			new OperatorToken("<"),		new IntegerToken("1"),			new PunctuatorToken(")"),
-			new NameToken("then"), 		new PunctuatorToken("{"),		new PunctuatorToken("}"),
-			new NameToken("else"),		new PunctuatorToken("{"),		new NameToken("print"),
-			new NameToken("y"),			new PunctuatorToken("}"),		new PunctuatorToken("}"),
+			new NameToken("procedure"), new NameToken("testProgram"), new TerminalToken("{"),
+			new NameToken("if"), new TerminalToken("("), new NameToken("x"),
+			new TerminalToken("<"), new IntegerToken("1"), new TerminalToken(")"),
+			new NameToken("then"), new TerminalToken("{"), new TerminalToken("}"),
+			new NameToken("else"), new TerminalToken("{"), new NameToken("print"),
+			new NameToken("y"), new TerminalToken("}"), new TerminalToken("}"),
 			new EndOfFileToken(),
 	};
 
@@ -357,13 +357,13 @@ TEST_CASE("Invalid if stmt - no stmt in else stmtLst") {
 	 * }
 	 */
 	std::vector<Token*> input = {
-			new NameToken("procedure"), 	new NameToken("testProgram"), 	new PunctuatorToken("{"),
-			new NameToken("if"),			new PunctuatorToken("("), 		new NameToken("x"),
-			new OperatorToken("<"),		new IntegerToken("1"),			new PunctuatorToken(")"),
-			new NameToken("then"), 		new PunctuatorToken("{"),
-			new NameToken("read"),		new NameToken("x"),				new PunctuatorToken(";"),
-			new PunctuatorToken("}"),	new NameToken("else"),			new PunctuatorToken("{"),
-			new PunctuatorToken("}"),	new PunctuatorToken("}"),		new EndOfFileToken(),
+			new NameToken("procedure"), new NameToken("testProgram"), new TerminalToken("{"),
+			new NameToken("if"), new TerminalToken("("), new NameToken("x"),
+			new TerminalToken("<"), new IntegerToken("1"), new TerminalToken(")"),
+			new NameToken("then"), new TerminalToken("{"),
+			new NameToken("read"), new NameToken("x"), new TerminalToken(";"),
+			new TerminalToken("}"), new NameToken("else"), new TerminalToken("{"),
+			new TerminalToken("}"), new TerminalToken("}"), new EndOfFileToken(),
 	};
 
 	SPParser parser = SPParser(input);
@@ -381,13 +381,13 @@ TEST_CASE("Invalid if stmt - no predicate") {
 	 * }
 	 */
 	std::vector<Token*> input = {
-			new NameToken("procedure"), 	new NameToken("testProgram"), 	new PunctuatorToken("{"),
-			new NameToken("if"),			new PunctuatorToken("("), 		new PunctuatorToken(")"),
-			new NameToken("then"),		new PunctuatorToken("{"),	new NameToken("read"),
-			new NameToken("x"),			new PunctuatorToken(";"),	new PunctuatorToken("}"),
-			new NameToken("else"),		new PunctuatorToken("{"), 	new NameToken("print"),
-			new NameToken("y"),			new PunctuatorToken(";"),	new PunctuatorToken("}"),
-			new PunctuatorToken("}"),	new EndOfFileToken(),
+			new NameToken("procedure"), new NameToken("testProgram"), new TerminalToken("{"),
+			new NameToken("if"), new TerminalToken("("), new TerminalToken(")"),
+			new NameToken("then"), new TerminalToken("{"), new NameToken("read"),
+			new NameToken("x"), new TerminalToken(";"), new TerminalToken("}"),
+			new NameToken("else"), new TerminalToken("{"), new NameToken("print"),
+			new NameToken("y"), new TerminalToken(";"), new TerminalToken("}"),
+			new TerminalToken("}"), new EndOfFileToken(),
 	};
 
 	SPParser parser = SPParser(input);
@@ -406,13 +406,13 @@ TEST_CASE("Invalid if stmt - invalid predicate") {
 		 * }
 		 */
 		std::vector<Token*> input = {
-				new NameToken("procedure"), 	new NameToken("testProgram"), 	new PunctuatorToken("{"),
-				new NameToken("if"),			new PunctuatorToken("("), 		new IntegerToken("1"),
-				new PunctuatorToken(")"),	new NameToken("then"),		new PunctuatorToken("{"),
-				new NameToken("read"),		new NameToken("x"),			new PunctuatorToken(";"),
-				new PunctuatorToken("}"),	new NameToken("else"),		new PunctuatorToken("{"),
-				new NameToken("print"),		new NameToken("y"),			new PunctuatorToken(";"),
-				new PunctuatorToken("}"),	new PunctuatorToken("}"),	new EndOfFileToken(),
+				new NameToken("procedure"), new NameToken("testProgram"), new TerminalToken("{"),
+				new NameToken("if"), new TerminalToken("("), new IntegerToken("1"),
+				new TerminalToken(")"), new NameToken("then"), new TerminalToken("{"),
+				new NameToken("read"), new NameToken("x"), new TerminalToken(";"),
+				new TerminalToken("}"), new NameToken("else"), new TerminalToken("{"),
+				new NameToken("print"), new NameToken("y"), new TerminalToken(";"),
+				new TerminalToken("}"), new TerminalToken("}"), new EndOfFileToken(),
 		};
 
 		SPParser parser = SPParser(input);
@@ -429,14 +429,14 @@ TEST_CASE("Invalid if stmt - invalid predicate") {
 		 * }
 		 */
 		std::vector<Token*> input = {
-				new NameToken("procedure"), 	new NameToken("testProgram"), 	new PunctuatorToken("{"),
+				new NameToken("procedure"), new NameToken("testProgram"), new TerminalToken("{"),
 				new NameToken("if"),
-				new NameToken("x"),			new OperatorToken("<"),			new IntegerToken("1"),
-				new PunctuatorToken(")"),	new NameToken("then"),		new PunctuatorToken("{"),
-				new NameToken("read"),		new NameToken("x"),			new PunctuatorToken(";"),
-				new PunctuatorToken("}"),	new NameToken("else"),		new PunctuatorToken("{"),
-				new NameToken("print"),		new NameToken("y"),			new PunctuatorToken(";"),
-				new PunctuatorToken("}"),	new PunctuatorToken("}"),	new EndOfFileToken(),
+				new NameToken("x"), new TerminalToken("<"), new IntegerToken("1"),
+				new TerminalToken(")"), new NameToken("then"), new TerminalToken("{"),
+				new NameToken("read"), new NameToken("x"), new TerminalToken(";"),
+				new TerminalToken("}"), new NameToken("else"), new TerminalToken("{"),
+				new NameToken("print"), new NameToken("y"), new TerminalToken(";"),
+				new TerminalToken("}"), new TerminalToken("}"), new EndOfFileToken(),
 		};
 
 
@@ -454,15 +454,15 @@ TEST_CASE("Invalid if stmt - invalid predicate") {
 		 * }
 		 */
 		std::vector<Token*> input = {
-				new NameToken("procedure"), 	new NameToken("testProgram"), 	new PunctuatorToken("{"),
-				new NameToken("if"),			new PunctuatorToken("("),		new PunctuatorToken("("),
-				new NameToken("x"),			new OperatorToken("<"),			new IntegerToken("1"),
-				new PunctuatorToken(")"),	new PunctuatorToken(")"),	new NameToken("then"),
-				new PunctuatorToken("{"),
-				new NameToken("read"),		new NameToken("x"),			new PunctuatorToken(";"),
-				new PunctuatorToken("}"),	new NameToken("else"),		new PunctuatorToken("{"),
-				new NameToken("print"),		new NameToken("y"),			new PunctuatorToken(";"),
-				new PunctuatorToken("}"),	new PunctuatorToken("}"),	new EndOfFileToken(),
+				new NameToken("procedure"), new NameToken("testProgram"), new TerminalToken("{"),
+				new NameToken("if"), new TerminalToken("("), new TerminalToken("("),
+				new NameToken("x"), new TerminalToken("<"), new IntegerToken("1"),
+				new TerminalToken(")"), new TerminalToken(")"), new NameToken("then"),
+				new TerminalToken("{"),
+				new NameToken("read"), new NameToken("x"), new TerminalToken(";"),
+				new TerminalToken("}"), new NameToken("else"), new TerminalToken("{"),
+				new NameToken("print"), new NameToken("y"), new TerminalToken(";"),
+				new TerminalToken("}"), new TerminalToken("}"), new EndOfFileToken(),
 		};
 
 		SPParser parser = SPParser(input);
@@ -481,14 +481,14 @@ TEST_CASE("Invalid if stmt - no 'then' keyword") {
 	 * }
 	 */
 	std::vector<Token*> input = {
-			new NameToken("procedure"), 	new NameToken("testProgram"), 	new PunctuatorToken("{"),
-			new NameToken("if"),			new PunctuatorToken("("),
-			new NameToken("x"),			new OperatorToken("<"),		 	new IntegerToken("1"),
-			new PunctuatorToken(")"),								 		new PunctuatorToken("{"),
-			new NameToken("read"),		new NameToken("x"),				new PunctuatorToken(";"),
-			new PunctuatorToken("}"),	new NameToken("else"),			new PunctuatorToken("{"),
-			new NameToken("print"),		new NameToken("y"),				new PunctuatorToken(";"),
-			new PunctuatorToken("}"),	new PunctuatorToken("}"),		new EndOfFileToken(),
+			new NameToken("procedure"), new NameToken("testProgram"), new TerminalToken("{"),
+			new NameToken("if"), new TerminalToken("("),
+			new NameToken("x"), new TerminalToken("<"), new IntegerToken("1"),
+			new TerminalToken(")"), new TerminalToken("{"),
+			new NameToken("read"), new NameToken("x"), new TerminalToken(";"),
+			new TerminalToken("}"), new NameToken("else"), new TerminalToken("{"),
+			new NameToken("print"), new NameToken("y"), new TerminalToken(";"),
+			new TerminalToken("}"), new TerminalToken("}"), new EndOfFileToken(),
 	};
 
 	SPParser parser = SPParser(input);
@@ -506,14 +506,14 @@ TEST_CASE("Invalid if stmt - no 'else' keyword") {
 	 * }
 	 */
 	std::vector<Token*> input = {
-			new NameToken("procedure"), 	new NameToken("testProgram"), 	new PunctuatorToken("{"),
-			new NameToken("if"),			new PunctuatorToken("("),
-			new NameToken("x"),			new OperatorToken("<"),		 	new IntegerToken("1"),
-			new PunctuatorToken(")"),	new NameToken("then"),	 		new PunctuatorToken("{"),
-			new NameToken("read"),		new NameToken("x"),				new PunctuatorToken(";"),
-			new PunctuatorToken("}"),										new PunctuatorToken("{"),
-			new NameToken("print"),		new NameToken("y"),				new PunctuatorToken(";"),
-			new PunctuatorToken("}"),	new PunctuatorToken("}"),		new EndOfFileToken(),
+			new NameToken("procedure"), new NameToken("testProgram"), new TerminalToken("{"),
+			new NameToken("if"), new TerminalToken("("),
+			new NameToken("x"), new TerminalToken("<"), new IntegerToken("1"),
+			new TerminalToken(")"), new NameToken("then"), new TerminalToken("{"),
+			new NameToken("read"), new NameToken("x"), new TerminalToken(";"),
+			new TerminalToken("}"), new TerminalToken("{"),
+			new NameToken("print"), new NameToken("y"), new TerminalToken(";"),
+			new TerminalToken("}"), new TerminalToken("}"), new EndOfFileToken(),
 	};
 
 	SPParser parser = SPParser(input);
@@ -529,12 +529,12 @@ TEST_CASE("Invalid if stmt - no 'else' block") {
 	 * }
 	 */
 	std::vector<Token*> input = {
-			new NameToken("procedure"), 	new NameToken("testProgram"), 	new PunctuatorToken("{"),
-			new NameToken("if"),			new PunctuatorToken("("),
-			new NameToken("x"),			new OperatorToken("<"),		 	new IntegerToken("1"),
-			new PunctuatorToken(")"),	new NameToken("then"),			new PunctuatorToken("{"),
-			new NameToken("read"),		new NameToken("x"),				new PunctuatorToken(";"),
-			new PunctuatorToken("}"),	new PunctuatorToken("}"),		new EndOfFileToken(),
+			new NameToken("procedure"), new NameToken("testProgram"), new TerminalToken("{"),
+			new NameToken("if"), new TerminalToken("("),
+			new NameToken("x"), new TerminalToken("<"), new IntegerToken("1"),
+			new TerminalToken(")"), new NameToken("then"), new TerminalToken("{"),
+			new NameToken("read"), new NameToken("x"), new TerminalToken(";"),
+			new TerminalToken("}"), new TerminalToken("}"), new EndOfFileToken(),
 	};
 
 	SPParser parser = SPParser(input);

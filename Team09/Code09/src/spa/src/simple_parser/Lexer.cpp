@@ -17,10 +17,10 @@ void Lexer::readInteger() {
 std::vector<Token*> Lexer::tokenize() {
 	char nextChar;
     while (notEOF()) {
-        nextChar = next();
-        if (nextChar == EOF) {
-            break;
-        }
+			nextChar = next();
+			if (nextChar == EOF) {
+				break;
+			}
 
 		nextStr += nextChar;
 		// Ignore whitespaces
@@ -42,25 +42,23 @@ std::vector<Token*> Lexer::tokenize() {
 			tokens.push_back((Token*) new IntegerToken(nextStr));
 		}
 		// PUNCTUATOR : '{' | '}' | '(' | ')' | ';'
-		else if (nextChar == '{' || nextChar == '}' || nextChar == '(' || nextChar == ')' || nextChar == ';') {
-			tokens.push_back((Token*) new PunctuatorToken(nextStr));
-		}
 		// OPERATOR that appears on its own
-		else if (nextChar == '+' || nextChar == '-' || nextChar == '*' || nextChar == '/' || nextChar == '%') {
-			tokens.push_back((Token*) new OperatorToken(nextStr));
+		else if (nextChar == '{' || nextChar == '}' || nextChar == '(' || nextChar == ')' || nextChar == ';'
+					|| nextChar == '+' || nextChar == '-' || nextChar == '*' || nextChar == '/' || nextChar == '%') {
+			tokens.push_back((Token*) new TerminalToken(nextStr));
 		}
 		// OPERATOR that may combine with other OPERATOR
 		else if (nextChar == '=' || nextChar == '!' || nextChar == '>' || nextChar == '<') {
 			if (peek() == '=') {
 				nextStr += next();
 			}
-			tokens.push_back((Token*) new OperatorToken(nextStr));
+			tokens.push_back((Token*) new TerminalToken(nextStr));
 		}
 		// validate '||' and '&&' operators
 		else if (nextChar == '|' || nextChar == '&') {
 			if (peek() == nextChar) {
 				nextStr += next();
-				tokens.push_back((Token*) new OperatorToken(nextStr));
+				tokens.push_back((Token*) new TerminalToken(nextStr));
 			} else { // invalid SIMPLE syntax
 				throw std::runtime_error("Invalid Syntax: Expected '" + std::to_string(nextChar) + "' but got '" + peek() + "' instead.\n");
 			}

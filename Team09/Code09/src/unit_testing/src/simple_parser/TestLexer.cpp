@@ -4,14 +4,10 @@
 #include "catch.hpp"
 #include <sstream>
 
-bool tokenComparator(Token *t1, Token* t2) {
-	return t1->getTokenType() == t2->getTokenType() && t1->getValue() == t2->getValue();
-}
-
 bool compareVectors(const std::vector<Token*> output, const std::vector<Token*> expected) {
 	return std::equal(output.begin(), output.end(),
 										expected.begin(), expected.end(),
-										tokenComparator);
+										[](Token* t1, Token* t2) { return *t1 == *t2; });
 }
 
 // --------------------------------------------------
@@ -47,14 +43,15 @@ TEST_CASE("Test NAME tokens") {
 }
 
 TEST_CASE("Test INTEGER tokens") {
-	std::string program = "1 13  093";
+	std::string program = "1  13 0 	100 93";
 	std::istringstream input(program);
 
 	auto lexer = Lexer(&input);
 	std::vector<Token*> output = lexer.tokenize();
 	std::vector<Token*> expected = {
 			new IntegerToken("1"),     new IntegerToken("13"),
-			new IntegerToken("093"),   new EndOfFileToken(),
+			new IntegerToken("0"),     new IntegerToken("100"),
+			new IntegerToken("93"),   new EndOfFileToken(),
 	};
 
 	REQUIRE(compareVectors(output, expected));

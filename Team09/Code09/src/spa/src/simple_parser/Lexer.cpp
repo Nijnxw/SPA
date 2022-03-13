@@ -31,35 +31,38 @@ std::vector<Token*> Lexer::tokenize() {
 		// NAME
 		else if (isalpha(nextChar) != 0) {
 			readName();
-			lexical_tokens.push_back(new NameToken(nextStr));
+			tokens.push_back((Token*) new NameToken(nextStr));
 		}
 		// INTEGER
 		else if (isdigit((nextChar)) != 0) {
 			readInteger();
-			lexical_tokens.push_back(new IntegerToken(nextStr));
+			if (!isValidInt(nextStr)) {
+				throw std::runtime_error("Invalid Syntax: Integer should not have leading zeroes, but got'" + nextStr + "' instead.\n");
+			}
+			tokens.push_back((Token*) new IntegerToken(nextStr));
 		}
 		// PUNCTUATOR : '{' | '}' | '(' | ')' | ';'
 		else if (nextChar == '{' || nextChar == '}' || nextChar == '(' || nextChar == ')' || nextChar == ';') {
-			lexical_tokens.push_back(new PunctuatorToken(nextStr));
+			tokens.push_back((Token*) new PunctuatorToken(nextStr));
 		}
 		// OPERATOR that appears on its own
 		else if (nextChar == '+' || nextChar == '-' || nextChar == '*' || nextChar == '/' || nextChar == '%') {
-			lexical_tokens.push_back(new OperatorToken(nextStr));
+			tokens.push_back((Token*) new OperatorToken(nextStr));
 		}
 		// OPERATOR that may combine with other OPERATOR
 		else if (nextChar == '=' || nextChar == '!' || nextChar == '>' || nextChar == '<') {
 			if (peek() == '=') {
 				nextStr += next();
 			}
-			lexical_tokens.push_back(new OperatorToken(nextStr));
+			tokens.push_back((Token*) new OperatorToken(nextStr));
 		}
 		// validate '||' and '&&' operators
 		else if (nextChar == '|' || nextChar == '&') {
 			if (peek() == nextChar) {
 				nextStr += next();
-				lexical_tokens.push_back(new OperatorToken(nextStr));
+				tokens.push_back((Token*) new OperatorToken(nextStr));
 			} else { // invalid SIMPLE syntax
-				throw std::runtime_error("Invalid Syntax: Expected '" + std::to_string(nextChar) + "' but got '" + peek() + "' instead\n.");
+				throw std::runtime_error("Invalid Syntax: Expected '" + std::to_string(nextChar) + "' but got '" + peek() + "' instead.\n");
 			}
 		} else { // invalid SIMPLE syntax
 			throw std::runtime_error("Invalid SIMPLE Syntax.\n");
@@ -68,6 +71,6 @@ std::vector<Token*> Lexer::tokenize() {
 		nextStr = "";
 	}
 
-	lexical_tokens.push_back(new EndOfFileToken());
-	return lexical_tokens;
+	tokens.push_back((Token*) new EndOfFileToken());
+	return tokens;
 }

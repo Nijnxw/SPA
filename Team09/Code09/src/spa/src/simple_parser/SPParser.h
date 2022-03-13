@@ -49,7 +49,7 @@ private:
 	Token* get();
 
 	bool isEndOfFile();
-	bool check(ParserTokenType t);
+	bool check(TokenType t);
 	bool check(const std::string& s);
 	bool expect(const std::string& s);
 

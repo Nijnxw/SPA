@@ -1,4 +1,6 @@
 #pragma once
+
+#include <string>
 #include <unordered_map>
 
 enum class TokenType {
@@ -72,16 +74,19 @@ enum class TokenType {
 	WITH,
 
 	// AND
-	AND
+	AND,
+
+	// End Of File token
+	END_OF_FILE,
 };
 
 static std::unordered_map<std::string, TokenType> SPStringTokenMap = {
 	//Operator token mapping
 	{"<",       TokenType::LESS_THAN},
-	{">",		TokenType::MORE_THAN},
-	{"<=",		TokenType::LESS_THAN_EQUALS},
-	{">=",		TokenType::MORE_THAN_EQUALS},
-	{"+",		TokenType::PLUS},
+	{">",				TokenType::MORE_THAN},
+	{"<=",			TokenType::LESS_THAN_EQUALS},
+	{">=",			TokenType::MORE_THAN_EQUALS},
+	{"+",				TokenType::PLUS},
 	{"-",       TokenType::MINUS},
 	{"*",       TokenType::TIMES},
 	{"/",       TokenType::DIVIDE},
@@ -127,7 +132,7 @@ static std::unordered_map<std::string, TokenType> QPStringTokenMap = {
 	{"Select",    TokenType::SELECT},
 	{"BOOLEAN",	  TokenType::BOOLEAN},
 
-	//Relationship clause token mapping 
+	//Relationship clause token mapping
 	{"such",      TokenType::SUCH},
 	{"that",      TokenType::THAT},
 	{"Modifies",  TokenType::MODIFIES},
@@ -143,7 +148,7 @@ static std::unordered_map<std::string, TokenType> QPStringTokenMap = {
 	{"Affects",	  TokenType::AFFECTS},
 	{"Affects*",  TokenType::AFFECTS_T},
 
-	//Pattern clause token mapping 
+	//Pattern clause token mapping
 	{"pattern",   TokenType::PATTERN},
 
 	//with claue token mapping
@@ -152,12 +157,11 @@ static std::unordered_map<std::string, TokenType> QPStringTokenMap = {
 
 	//And
 	{"and",		  TokenType::AND},
-
 };
 
 class CommonToken {
 public:
-	CommonToken(TokenType type, std::string value = "");
+	explicit CommonToken(TokenType type, std::string value = "");
 
 	std::string getValue();
 	TokenType getType();

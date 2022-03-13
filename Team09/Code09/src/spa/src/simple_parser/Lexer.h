@@ -14,7 +14,7 @@ class Lexer:CommonLexer {
         void readInteger();
 
     public:
-        std::vector<Token*> lexical_tokens;
+        std::vector<Token*> tokens;
         explicit Lexer(std::istream* new_stream);
         std::vector<Token*> tokenize();
 };

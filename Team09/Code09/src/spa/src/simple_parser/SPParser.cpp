@@ -14,11 +14,11 @@ Token* SPParser::get() {
 }
 
 bool SPParser::isEndOfFile() {
-	return peek()->isEndOfFileToken();
+	return peek()->getType() == TokenType::END_OF_FILE;
 }
 
-bool SPParser::check(ParserTokenType t) {
-	return peek()->getTokenType() == t;
+bool SPParser::check(TokenType t) {
+	return peek()->getType() == t;
 }
 
 bool SPParser::check(const std::string& s) {
@@ -60,8 +60,7 @@ int SPParser::getLeftBindingPower() {
 }
 
 BinaryOperator SPParser::getBinaryOperatorEnum() {
-	if (!check(ParserTokenType::OPERATOR) ||
-		strBinaryOpMap.find(peek()->getValue()) == strBinaryOpMap.end()) {
+	if (strBinaryOpMap.find(peek()->getValue()) == strBinaryOpMap.end()) {
 		throw std::runtime_error("Expected arithmetic operator but got '" + peek()->getValue() + "' instead.\n");
 	}
 	std::string op = peek()->getValue();
@@ -72,10 +71,10 @@ BinaryOperator SPParser::getBinaryOperatorEnum() {
 // 		 | const_value
 // 		 | '(' expr ')'
 ExprNode SPParser::parseOperand() {
-	if (check(ParserTokenType::NAME)) {
+	if (check(TokenType::NAME)) {
 		exprStr += peek()->getValue();
 		return parseVariable();
-	} else if (check(ParserTokenType::INTEGER)) {
+	} else if (check(TokenType::INTEGER)) {
 		exprStr += peek()->getValue();
 		return parseConstant();
 	} else if (check("(")) {
@@ -151,8 +150,7 @@ bool SPParser::isTerminalPredicate() {
 }
 
 ComparatorOperator SPParser::getComparatorOperatorEnum() {
-	if (!check(ParserTokenType::OPERATOR) ||
-		strComparatorOpMap.find(peek()->getValue()) == strComparatorOpMap.end()) {
+	if (strComparatorOpMap.find(peek()->getValue()) == strComparatorOpMap.end()) {
 		throw std::runtime_error("Expected comparator operator but got '" + peek()->getValue() + "' instead.\n");
 	}
 	std::string op = peek()->getValue();
@@ -213,12 +211,12 @@ std::shared_ptr<PredicateNode> SPParser::parsePredicate() {
 }
 
 std::shared_ptr<ConstantNode> SPParser::parseConstant() {
-	if (!check(ParserTokenType::INTEGER)) return nullptr;
+	if (!check(TokenType::INTEGER)) return nullptr;
 	return std::make_shared<ConstantNode>(get()->getValue());
 }
 
 std::shared_ptr<VariableNode> SPParser::parseVariable() {
-	if (!check(ParserTokenType::NAME)) return nullptr;
+	if (!check(TokenType::NAME)) return nullptr;
 	return std::make_shared<VariableNode>(get()->getValue());
 }
 
@@ -226,7 +224,7 @@ std::shared_ptr<VariableNode> SPParser::parseVariable() {
 std::shared_ptr<ProcedureNode> SPParser::parseProcedure() {
 	if (!check("procedure")) return nullptr;
 	expect("procedure");
-	if (!check(ParserTokenType::NAME)) {
+	if (!check(TokenType::NAME)) {
 		throw std::runtime_error("Expected a valid procedure name but got '" + peek()->getValue() + "' instead.\n");
 	}
 	std::string procName = get()->getValue();
@@ -363,7 +361,7 @@ std::shared_ptr<IfNode> SPParser::parseIf() {
 std::shared_ptr<CallNode> SPParser::parseCall() {
 	if (!check("call")) return nullptr;
 	expect("call");
-	if (!check(ParserTokenType::NAME)) {
+	if (!check(TokenType::NAME)) {
 		throw std::runtime_error("Expected a valid procedure name but got '" + peek()->getValue() + "' instead.\n");
 	}
 	std::string calleeProcName = get()->getValue();
@@ -380,7 +378,7 @@ std::shared_ptr<CallNode> SPParser::parseCall() {
 AST SPParser::parseProgram() {
 	std::unordered_map<std::string, std::shared_ptr<ProcedureNode>> procedureMap;
 	while (true) {
-		if (check(ParserTokenType::END_OF_FILE)) {
+		if (isEndOfFile()) {
 			break;
 		}
 

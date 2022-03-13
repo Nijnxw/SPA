@@ -1,36 +1,8 @@
 #include "simple_parser/Token.h"
 
-Token::Token(ParserTokenType t, std::string v) : type(t), value(std::move(v)){}
-NameToken::NameToken(std::string v) : Token(ParserTokenType::NAME, std::move(v)){}
-IntegerToken::IntegerToken(std::string v) : Token(ParserTokenType::INTEGER, std::move(v)){}
-OperatorToken::OperatorToken(std::string v) : Token(ParserTokenType::OPERATOR, std::move(v)){}
-PunctuatorToken::PunctuatorToken(std::string v) : Token(ParserTokenType::PUNCTUATOR, std::move(v)){}
-EndOfFileToken::EndOfFileToken() : Token(ParserTokenType::END_OF_FILE, ""){}
-
-bool Token::isNameToken() {
-	return type == ParserTokenType::NAME;
-}
-
-bool Token::isIntegerToken() {
-	return type == ParserTokenType::INTEGER;
-}
-
-bool Token::isOperatorToken() {
-	return type == ParserTokenType::OPERATOR;
-}
-
-bool Token::isPunctuatorToken() {
-	return type == ParserTokenType::PUNCTUATOR;
-}
-
-bool Token::isEndOfFileToken() {
-	return type == ParserTokenType::END_OF_FILE;
-}
-
-ParserTokenType Token::getTokenType() {
-	return type;
-}
-
-std::string Token::getValue() {
-	return value;
-}
+Token::Token(TokenType t, std::string v) : CommonToken(t, std::move(v)){}
+NameToken::NameToken(std::string v) : Token(TokenType::NAME, std::move(v)){}
+IntegerToken::IntegerToken(std::string v) : Token(TokenType::INTEGER, std::move(v)){}
+OperatorToken::OperatorToken(std::string v) : Token(SPStringTokenMap[v], std::move(v)){}
+PunctuatorToken::PunctuatorToken(std::string v) : Token(SPStringTokenMap[v], std::move(v)){}
+EndOfFileToken::EndOfFileToken() : Token(TokenType::END_OF_FILE, ""){}

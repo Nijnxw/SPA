@@ -1,27 +1,14 @@
 #pragma once
 
+#include "Commons/CommonToken.h"
+
 #include <string>
 #include <utility>
 
-enum class ParserTokenType { NAME, INTEGER, OPERATOR, PUNCTUATOR, END_OF_FILE };
-
 // Base class for SIMPLE language lexical tokens
-class Token {
-private:
-	ParserTokenType type;
-	std::string value;
-
+class Token : public CommonToken {
 public:
-	Token(ParserTokenType t, std::string v);
-
-	bool isNameToken();
-	bool isIntegerToken();
-	bool isOperatorToken();
-	bool isPunctuatorToken();
-	bool isEndOfFileToken();
-
-	ParserTokenType getTokenType();
-	std::string getValue();
+	Token(TokenType t, std::string v);
 };
 
 // NAME : LETTER (LETTER | DIGIT)*

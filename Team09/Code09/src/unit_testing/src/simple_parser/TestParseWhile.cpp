@@ -1,5 +1,5 @@
 #include "simple_parser/SPParser.h"
-#include "simple_parser/Token.h"
+#include "simple_parser/SPToken.h"
 
 #include "catch.hpp"
 #include "asts/ContainerStmtASTs.h"
@@ -15,7 +15,7 @@ TEST_CASE ("While 1.59 - Single statement - While-Read") {
 	 * 2    read x;
 	 *    }
 	 */
-	std::vector<Token*> input = {
+	std::vector<SPToken*> input = {
 			new NameToken("procedure"), new NameToken("testProgram"), new TerminalToken("{"),
 			new NameToken("while"), new TerminalToken("("),
 			new NameToken("x"), new TerminalToken("<"), new IntegerToken("1"),
@@ -36,7 +36,7 @@ TEST_CASE ("While 1.60 - Single statement - While-Print") {
 	 * 2    print x;
 	 *    }
 	 */
-	std::vector<Token*> input = {
+	std::vector<SPToken*> input = {
 			new NameToken("procedure"), new NameToken("testProgram"), new TerminalToken("{"),
 			new NameToken("while"), new TerminalToken("("),
 			new NameToken("x"), new TerminalToken("<"), new IntegerToken("1"),
@@ -57,7 +57,7 @@ TEST_CASE ("While 1.61 - Single statement - While-Assign") {
 	 * 2    a = x + 1;
 	 *    }
 	 */
-	std::vector<Token*> input = {
+	std::vector<SPToken*> input = {
 			new NameToken("procedure"), new NameToken("testProgram"), new TerminalToken("{"),
 			new NameToken("while"), new TerminalToken("("),
 			new NameToken("x"), new TerminalToken("<"), new IntegerToken("1"),
@@ -82,7 +82,7 @@ TEST_CASE ("While 1.62 - Single statement - While-If") {
 	 * 4      print y; }
 	 *    }
 	 */
-	std::vector<Token*> input = {
+	std::vector<SPToken*> input = {
 			new NameToken("procedure"), new NameToken("testProgram"), new TerminalToken("{"),
 			new NameToken("while"), new TerminalToken("("),
 			new NameToken("x"), new TerminalToken("<"), new IntegerToken("1"),
@@ -109,7 +109,7 @@ TEST_CASE ("While 1.63 - Single statement - While-While") {
 	 * 2    while (y < 1) {
 	 * 3 	  read y; } }
 	 */
-	std::vector<Token*> input = {
+	std::vector<SPToken*> input = {
 			new NameToken("procedure"), new NameToken("testProgram"), new TerminalToken("{"),
 			new NameToken("while"), new TerminalToken("("),
 			new NameToken("x"), new TerminalToken("<"), new IntegerToken("1"),
@@ -142,7 +142,7 @@ TEST_CASE ("While 1.64 - All statement types") {
 	 * 9	  read y; }
 	 *    }
 	 */
-	std::vector<Token*> input = {
+	std::vector<SPToken*> input = {
 			new NameToken("procedure"), new NameToken("testProgram"), new TerminalToken("{"),
 			new NameToken("while"), new TerminalToken("("),
 			new NameToken("x"), new TerminalToken("<"), new IntegerToken("1"),
@@ -184,7 +184,7 @@ TEST_CASE("Invalid while stmt - no stmt in stmtLst") {
 	 * 		}
 	 * }
 	 */
-	std::vector<Token*> input = {
+	std::vector<SPToken*> input = {
 			new NameToken("procedure"), new NameToken("testProgram"), new TerminalToken("{"),
 			new NameToken("while"), new TerminalToken("("), new NameToken("x"),
 			new TerminalToken("<"), new IntegerToken("1"), new TerminalToken(")"),
@@ -203,7 +203,7 @@ TEST_CASE("Invalid while stmt - no predicate") {
 	 * 		}
 	 * }
 	 */
-	std::vector<Token*> input = {
+	std::vector<SPToken*> input = {
 			new NameToken("procedure"), new NameToken("testProgram"), new TerminalToken("{"),
 			new NameToken("while"), new TerminalToken("("), new TerminalToken(")"),
 			new TerminalToken("{"), new NameToken("read"), new NameToken("x"),
@@ -223,7 +223,7 @@ TEST_CASE("Invalid while stmt - invalid predicate") {
 		 * 		}
 		 * }
 		 */
-		std::vector<Token*> input = {
+		std::vector<SPToken*> input = {
 				new NameToken("procedure"), new NameToken("testProgram"), new TerminalToken("{"),
 				new NameToken("while"), new TerminalToken("("), new IntegerToken("1"),
 				new TerminalToken(")"),
@@ -242,7 +242,7 @@ TEST_CASE("Invalid while stmt - invalid predicate") {
 		 * 		}
 		 * }
 		 */
-		std::vector<Token*> input = {
+		std::vector<SPToken*> input = {
 				new NameToken("procedure"), new NameToken("testProgram"), new TerminalToken("{"),
 				new NameToken("while"), new TerminalToken("("), new TerminalToken("("),
 				new NameToken("x"), new TerminalToken("<"), new IntegerToken("1"),
@@ -263,7 +263,7 @@ TEST_CASE("Invalid while stmt - invalid predicate") {
 		 * 		}
 		 * }
 		 */
-		std::vector<Token*> input = {
+		std::vector<SPToken*> input = {
 				new NameToken("procedure"), new NameToken("testProgram"), new TerminalToken("{"),
 				new NameToken("while"), new TerminalToken("("), new TerminalToken("("),
 				new NameToken("x"), new TerminalToken("<"), new IntegerToken("1"),

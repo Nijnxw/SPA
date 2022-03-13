@@ -1,12 +1,12 @@
 #include "simple_parser/SPParser.h"
-#include "simple_parser/Token.h"
+#include "simple_parser/SPToken.h"
 #include "asts/ContainerStmtASTs.h"
 
 #include "catch.hpp"
 #include <vector>
 
-std::vector<Token*> generateTokens(std::string procName) {
-	return std::vector<Token*> {
+std::vector<SPToken*> generateTokens(std::string procName) {
+	return std::vector<SPToken*> {
 			new NameToken("procedure"), new NameToken(procName), new TerminalToken("{"),
 			new NameToken("read"), new NameToken("x"), new TerminalToken(";"),
 			new TerminalToken("}"), new EndOfFileToken(),
@@ -41,7 +41,7 @@ AST generateASTs(std::string procName1, std::string procName2) {
 // --------------------------------------------------
 TEST_CASE("Proc_name validity 5.1 - Lowercase") {
 	// procedure main { read x;}
-	std::vector<Token*> input = generateTokens("main");
+	std::vector<SPToken*> input = generateTokens("main");
 	SPParser parser = SPParser(input);
 	AST output = parser.parseProgram();
 	REQUIRE(*output == *generateBasicAST("main"));
@@ -49,7 +49,7 @@ TEST_CASE("Proc_name validity 5.1 - Lowercase") {
 
 TEST_CASE("Proc_name validity 5.2 - Uppercase") {
 	// procedure MAIN { read x;}
-	std::vector<Token*> input = generateTokens("MAIN");
+	std::vector<SPToken*> input = generateTokens("MAIN");
 	SPParser parser = SPParser(input);
 	AST output = parser.parseProgram();
 	REQUIRE(*output == *generateBasicAST("MAIN"));
@@ -57,7 +57,7 @@ TEST_CASE("Proc_name validity 5.2 - Uppercase") {
 
 TEST_CASE("Proc_name validity 5.3 - Mixed casing") {
 	// procedure mAiN { read x;}
-	std::vector<Token*> input = generateTokens("mAiN");
+	std::vector<SPToken*> input = generateTokens("mAiN");
 	SPParser parser = SPParser(input);
 	AST output = parser.parseProgram();
 	REQUIRE(*output == *generateBasicAST("mAiN"));
@@ -65,7 +65,7 @@ TEST_CASE("Proc_name validity 5.3 - Mixed casing") {
 
 TEST_CASE("Proc_name validity 5.4 - Alphanumeric") {
 	// procedure main1 { read x;}
-	std::vector<Token*> input = generateTokens("main1");
+	std::vector<SPToken*> input = generateTokens("main1");
 	SPParser parser = SPParser(input);
 	AST output = parser.parseProgram();
 	REQUIRE(*output == *generateBasicAST("main1"));
@@ -73,7 +73,7 @@ TEST_CASE("Proc_name validity 5.4 - Alphanumeric") {
 
 TEST_CASE("Proc_name validity 5.5 - procedure as proc_name") {
 	// procedure procedure { read x;}
-	std::vector<Token*> input = generateTokens("procedure");
+	std::vector<SPToken*> input = generateTokens("procedure");
 	SPParser parser = SPParser(input);
 	AST output = parser.parseProgram();
 	REQUIRE(*output == *generateBasicAST("procedure"));
@@ -81,7 +81,7 @@ TEST_CASE("Proc_name validity 5.5 - procedure as proc_name") {
 
 TEST_CASE("Proc_name validity 5.6 - SIMPLE keywords as proc_name") {
 	// procedure read { read x;}
-	std::vector<Token*> input = generateTokens("read");
+	std::vector<SPToken*> input = generateTokens("read");
 	SPParser parser = SPParser(input);
 	AST output = parser.parseProgram();
 	REQUIRE(*output == *generateBasicAST("read"));
@@ -89,7 +89,7 @@ TEST_CASE("Proc_name validity 5.6 - SIMPLE keywords as proc_name") {
 
 TEST_CASE("Proc_name validity 5.7 - proc_name can be as long as possible") {
 	// procedure supercalifragilisticexpialidocious { read x;}
-	std::vector<Token*> input = generateTokens("supercalifragilisticexpialidocious");
+	std::vector<SPToken*> input = generateTokens("supercalifragilisticexpialidocious");
 	SPParser parser = SPParser(input);
 	AST output = parser.parseProgram();
 	REQUIRE(*output == *generateBasicAST("supercalifragilisticexpialidocious"));
@@ -103,7 +103,7 @@ TEST_CASE ("Test parsing of valid procedure") {
 		 * 1	read p;
 		 * }
 		 */
-		std::vector<Token*> input = {
+		std::vector<SPToken*> input = {
 				new NameToken("procedure"), new NameToken("testProgram"),
 				new TerminalToken("{"), new NameToken("read"),
 				new NameToken("p"), new TerminalToken(";"),
@@ -129,7 +129,7 @@ TEST_CASE ("Test parsing of valid procedure") {
 		 * 2	read testProgram;
 		 * }
 		 */
-		std::vector<Token*> input = {
+		std::vector<SPToken*> input = {
 				new NameToken("procedure"), new NameToken("testProgram"),
 				new TerminalToken("{"), new NameToken("read"),
 				new NameToken("p"), new TerminalToken(";"),
@@ -154,8 +154,8 @@ TEST_CASE ("Test parsing of valid procedure") {
 
 TEST_CASE("Test multiple procedures") {
 	// procedure main { read x; } procedure testProgram { read x; }
-	std::vector<Token*> input = generateTokens("main");
-	std::vector<Token*> input1 = generateTokens("testProgram");
+	std::vector<SPToken*> input = generateTokens("main");
+	std::vector<SPToken*> input1 = generateTokens("testProgram");
 	input.pop_back();
 	input.insert(input.end(), input1.begin(), input1.end());
 	SPParser parser = SPParser(input);
@@ -179,7 +179,7 @@ TEST_CASE("Multiple procedures 1.74 - Read-if") {
 	 * 			} else {
 	 * 6			print y; } } }
 	 */
-	std::vector<Token*> input = {
+	std::vector<SPToken*> input = {
 			new NameToken("procedure"), new NameToken("testProgram"), new TerminalToken("{"),
 			new NameToken("read"), new NameToken("z"), new TerminalToken(";"),
 			new TerminalToken("}"),
@@ -216,7 +216,7 @@ TEST_CASE("Multiple procedures 1.75 - Print-while") {
 	 * 2	while (!((y + 1 < x) && ((x == 2) || (1 != 1)))) {
 	 * 3		read x; } }
 	 */
-	std::vector<Token*> input = {
+	std::vector<SPToken*> input = {
 			new NameToken("procedure"), new NameToken("testProgram"), new TerminalToken("{"),
 			new NameToken("print"), new NameToken("z"), new TerminalToken(";"),
 			new TerminalToken("}"),
@@ -252,7 +252,7 @@ TEST_CASE("Multiple procedures 1.76 - Assignment-print") {
 	 * 2	print b;
 	 * }
 	 */
-	std::vector<Token*> input = {
+	std::vector<SPToken*> input = {
 			new NameToken("procedure"), new NameToken("testProgram"), new TerminalToken("{"),
 			new NameToken("a"), new TerminalToken("="), new IntegerToken("1"),
 			new TerminalToken("+"), new TerminalToken("("), new NameToken("x"),
@@ -282,7 +282,7 @@ TEST_CASE("Multiple procedures 1.77 - While-read") {
 	 * procedure testProgram2 {
 	 * 4	read x; }
 	 */
-	std::vector<Token*> input = {
+	std::vector<SPToken*> input = {
 			new NameToken("procedure"), new NameToken("testProgram"), new TerminalToken("{"),
 			new NameToken("while"), new TerminalToken("("),
 			new NameToken("x"), new TerminalToken("<"), new IntegerToken("1"),
@@ -319,7 +319,7 @@ TEST_CASE("Multiple procedures 1.78 - If-assign") {
 	 * 6	a = (1 + x * 3) % (y);
 	 * }
 	 */
-	std::vector<Token*> input = {
+	std::vector<SPToken*> input = {
 			new NameToken("procedure"), new NameToken("testProgram"), new TerminalToken("{"),
 			new NameToken("if"), new TerminalToken("("),
 			new NameToken("x"), new TerminalToken("<"), new IntegerToken("1"),
@@ -355,7 +355,7 @@ TEST_CASE("Multiple procedures 1.78 - If-assign") {
 // --------------------------------------------------
 TEST_CASE("Proc_name validity 5.8 - proc_name cannot be an integer") {
 	// procedure 123 { read x;}
-	std::vector<Token*> input {
+	std::vector<SPToken*> input {
 			new NameToken("procedure"), new IntegerToken("123"), new TerminalToken("{"),
 			new NameToken("read"), new NameToken("x"), new TerminalToken(";"),
 			new TerminalToken("}"), new EndOfFileToken(),
@@ -366,7 +366,7 @@ TEST_CASE("Proc_name validity 5.8 - proc_name cannot be an integer") {
 
 TEST_CASE("Proc_name validity 5.9 - proc_name cannot start with a digit") {
 	// procedure 1main { read x;}
-	std::vector<Token*> input {
+	std::vector<SPToken*> input {
 			new NameToken("procedure"), new IntegerToken("1"), new NameToken("main"),
 			new TerminalToken("{"),
 			new NameToken("read"), new NameToken("x"), new TerminalToken(";"),
@@ -378,7 +378,7 @@ TEST_CASE("Proc_name validity 5.9 - proc_name cannot start with a digit") {
 
 TEST_CASE("Proc_name validity 5.10 - proc_name cannot have symbols") {
 	// procedure m*in { read x;}
-	std::vector<Token*> input {
+	std::vector<SPToken*> input {
 			new NameToken("procedure"), new NameToken("m"), new TerminalToken("*"),
 			new NameToken("in"),
 			new TerminalToken("{"),
@@ -391,7 +391,7 @@ TEST_CASE("Proc_name validity 5.10 - proc_name cannot have symbols") {
 
 TEST_CASE("Proc_name validity 5.12 - proc_name cannot be repeated") {
   // procedure m*in { read x;}
-  std::vector<Token*> input {
+  std::vector<SPToken*> input {
       new NameToken("procedure"), 	new NameToken("main"),  new TerminalToken("{"),
       new NameToken("read"),		    new NameToken("x"),		  new TerminalToken(";"),
       new TerminalToken("}"),
@@ -406,7 +406,7 @@ TEST_CASE("Proc_name validity 5.12 - proc_name cannot be repeated") {
 
 TEST_CASE ("Test parsing of invalid procedure") {
 	SECTION ("No statement in stmtLst") {
-		std::vector<Token*> input = {
+		std::vector<SPToken*> input = {
 				new NameToken("procedure"), new NameToken("testProgram"),
 				new TerminalToken("{"), new TerminalToken("}"),
 				new EndOfFileToken(),
@@ -415,7 +415,7 @@ TEST_CASE ("Test parsing of invalid procedure") {
 		REQUIRE_THROWS_WITH(parser.parseProgram(), "There must be at least 1 statement in a statement list!\n");
 	}
 	SECTION ("Misspell `procedure`") {
-		std::vector<Token*> input = {
+		std::vector<SPToken*> input = {
 				new NameToken("procedur"), new NameToken("testProgram"),
 				new TerminalToken("{"), new NameToken("read"),
 				new NameToken("p"), new TerminalToken(";"),
@@ -425,7 +425,7 @@ TEST_CASE ("Test parsing of invalid procedure") {
 		REQUIRE_THROWS_WITH(parser.parseProgram(), "Expected 'procedure' but got 'procedur' instead.\n");
 	}
 	SECTION ("'procedure' keyword is case sensitive") {
-		std::vector<Token*> input = {
+		std::vector<SPToken*> input = {
 				new NameToken("Procedure"), new NameToken("testProgram"),
 				new TerminalToken("{"), new NameToken("read"),
 				new NameToken("p"), new TerminalToken(";"),
@@ -435,7 +435,7 @@ TEST_CASE ("Test parsing of invalid procedure") {
 		REQUIRE_THROWS_WITH(parser.parseProgram(), "Expected 'procedure' but got 'Procedure' instead.\n");
 	}
 	SECTION ("Constants as proc_name") {
-		std::vector<Token*> input = {
+		std::vector<SPToken*> input = {
 				new NameToken("procedure"), new IntegerToken("123"),
 				new TerminalToken("{"), new NameToken("read"),
 				new NameToken("p"), new TerminalToken(";"),
@@ -445,7 +445,7 @@ TEST_CASE ("Test parsing of invalid procedure") {
 		REQUIRE_THROWS_WITH(parser.parseProgram(), "Expected a valid procedure name but got '123' instead.\n");
 	}
 	SECTION ("Missing proc_name") {
-		std::vector<Token*> input = {
+		std::vector<SPToken*> input = {
 				new NameToken("procedure"),
 				new TerminalToken("{"), new NameToken("read"),
 				new NameToken("p"), new TerminalToken(";"),
@@ -455,7 +455,7 @@ TEST_CASE ("Test parsing of invalid procedure") {
 		REQUIRE_THROWS_WITH(parser.parseProgram(), "Expected a valid procedure name but got '{' instead.\n");
 	}
 	SECTION ("Missing '{'") {
-		std::vector<Token*> input = {
+		std::vector<SPToken*> input = {
 				new NameToken("procedure"), new NameToken("testProgram"),
 				new NameToken("read"),
 				new NameToken("p"), new TerminalToken(";"),
@@ -465,7 +465,7 @@ TEST_CASE ("Test parsing of invalid procedure") {
 		REQUIRE_THROWS_WITH(parser.parseProgram(), "Expected '{' but got 'read' instead.\n");
 	}
 	SECTION ("Missing '}'") {
-		std::vector<Token*> input = {
+		std::vector<SPToken*> input = {
 				new NameToken("procedure"), new NameToken("testProgram"),
 				new TerminalToken("{"), new NameToken("read"),
 				new NameToken("p"), new TerminalToken(";"),
@@ -478,7 +478,7 @@ TEST_CASE ("Test parsing of invalid procedure") {
 
 TEST_CASE("ProgramNode validity - A program need to have at least 1 procedure") {
 	// procedure m*in { read x;}
-	std::vector<Token*> input{new EndOfFileToken()};
+	std::vector<SPToken*> input{new EndOfFileToken()};
 	SPParser parser = SPParser(input);
 	REQUIRE_THROWS_WITH(parser.parseProgram(), "There must be at least 1 procedure in a SIMPLE program!\n");
 }

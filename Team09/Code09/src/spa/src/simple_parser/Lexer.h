@@ -1,6 +1,6 @@
 #pragma once
 
-#include "simple_parser/Token.h"
+#include "simple_parser/SPToken.h"
 #include "Commons/CommonLexer.h"
 
 #include <cctype>
@@ -14,8 +14,8 @@ class Lexer:CommonLexer {
         void readInteger();
 
     public:
-        std::vector<Token*> tokens;
+        std::vector<SPToken*> tokens;
         explicit Lexer(std::istream* new_stream);
-        std::vector<Token*> tokenize();
+        std::vector<SPToken*> tokenize();
 };
 

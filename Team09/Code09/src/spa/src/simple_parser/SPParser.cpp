@@ -1,14 +1,14 @@
 #include "SPParser.h"
 
-SPParser::SPParser(std::vector<Token*> tokens) : tokens(std::move(tokens)), currentIdx(0), stmtNo(0),
-	callStmtValidator(CallStmtValidator()) {}
+SPParser::SPParser(std::vector<SPToken*> tokens) : tokens(std::move(tokens)), currentIdx(0), stmtNo(0),
+																									 callStmtValidator(CallStmtValidator()) {}
 
-Token* SPParser::peek() {
+SPToken* SPParser::peek() {
 	return tokens[currentIdx];
 }
 
-Token* SPParser::get() {
-	Token* currToken = peek();
+SPToken* SPParser::get() {
+	SPToken* currToken = peek();
 	if (!isEndOfFile()) currentIdx++;
 	return currToken;
 }

@@ -1,6 +1,6 @@
 #include "asts/NonContainerStmtASTs.h"
 #include "simple_parser/SPParser.h"
-#include "simple_parser/Token.h"
+#include "simple_parser/SPToken.h"
 
 #include "catch.hpp"
 #include <vector>
@@ -9,7 +9,7 @@
 //                  HAPPY PATHS
 // --------------------------------------------------
 TEST_CASE ("Read 1.1 - Basic read") {
-	std::vector<Token*> input = {
+	std::vector<SPToken*> input = {
 			new NameToken("procedure"), new NameToken("testProgram"), new TerminalToken("{"),
 			new NameToken("read"), new NameToken("x"), new TerminalToken(";"),
 			new TerminalToken("}"), new EndOfFileToken(),
@@ -22,7 +22,7 @@ TEST_CASE ("Read 1.1 - Basic read") {
 }
 
 TEST_CASE ("Read 1.1a - A few read statements") {
-	std::vector<Token*> input = {
+	std::vector<SPToken*> input = {
 			new NameToken("procedure"), new NameToken("testProgram"), new TerminalToken("{"),
 			new NameToken("read"), new NameToken("x"), new TerminalToken(";"),
 			new NameToken("read"), new NameToken("y"), new TerminalToken(";"),
@@ -47,7 +47,7 @@ TEST_CASE ("Read 1.1a - A few read statements") {
 // --------------------------------------------------
 TEST_CASE ("Test parsing of invalid read statement") {
 	SECTION ("Misspell `read` keyword") {
-		std::vector<Token*> input = {
+		std::vector<SPToken*> input = {
 				new NameToken("procedure"), new NameToken("testProgram"),
 				new TerminalToken("{"), new NameToken("reed"),
 				new NameToken("p"), new TerminalToken(";"),
@@ -57,7 +57,7 @@ TEST_CASE ("Test parsing of invalid read statement") {
 		REQUIRE_THROWS_WITH(parser.parseProgram(), "Invalid statement syntax at statement 1.\n");
 	}
 	SECTION ("'read' keyword is case sensitive") {
-		std::vector<Token*> input = {
+		std::vector<SPToken*> input = {
 				new NameToken("procedure"), new NameToken("testProgram"),
 				new TerminalToken("{"), new NameToken("Read"),
 				new NameToken("p"), new TerminalToken(";"),
@@ -67,7 +67,7 @@ TEST_CASE ("Test parsing of invalid read statement") {
 		REQUIRE_THROWS_WITH(parser.parseProgram(), "Invalid statement syntax at statement 1.\n");
 	}
 	SECTION ("Constants as var_name") {
-		std::vector<Token*> input = {
+		std::vector<SPToken*> input = {
 				new NameToken("procedure"), new NameToken("testProgram"),
 				new TerminalToken("{"), new NameToken("read"),
 				new IntegerToken("123"), new TerminalToken(";"),
@@ -77,7 +77,7 @@ TEST_CASE ("Test parsing of invalid read statement") {
 		REQUIRE_THROWS_WITH(parser.parseProgram(), "Expected a variable name but got '123' instead.\n");
 	}
 	SECTION ("Missing var_name") {
-		std::vector<Token*> input = {
+		std::vector<SPToken*> input = {
 				new NameToken("procedure"), new NameToken("testProgram"),
 				new TerminalToken("{"), new NameToken("read"),
 				new TerminalToken(";"),
@@ -87,7 +87,7 @@ TEST_CASE ("Test parsing of invalid read statement") {
 		REQUIRE_THROWS_WITH(parser.parseProgram(), "Expected a variable name but got ';' instead.\n");
 	}
 	SECTION ("Missing ';'") {
-		std::vector<Token*> input = {
+		std::vector<SPToken*> input = {
 				new NameToken("procedure"), new NameToken("testProgram"),
 				new TerminalToken("{"), new NameToken("read"),
 				new NameToken("p"),

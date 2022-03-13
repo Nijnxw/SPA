@@ -14,7 +14,7 @@ void Lexer::readInteger() {
 	}
 }
 
-std::vector<Token*> Lexer::tokenize() {
+std::vector<SPToken*> Lexer::tokenize() {
 	char nextChar;
     while (notEOF()) {
 			nextChar = next();
@@ -31,7 +31,7 @@ std::vector<Token*> Lexer::tokenize() {
 		// NAME
 		else if (isalpha(nextChar) != 0) {
 			readName();
-			tokens.push_back((Token*) new NameToken(nextStr));
+			tokens.push_back((SPToken*) new NameToken(nextStr));
 		}
 		// INTEGER
 		else if (isdigit((nextChar)) != 0) {
@@ -39,26 +39,26 @@ std::vector<Token*> Lexer::tokenize() {
 			if (!isValidInt(nextStr)) {
 				throw std::runtime_error("Invalid Syntax: Integer should not have leading zeroes, but got'" + nextStr + "' instead.\n");
 			}
-			tokens.push_back((Token*) new IntegerToken(nextStr));
+			tokens.push_back((SPToken*) new IntegerToken(nextStr));
 		}
 		// PUNCTUATOR : '{' | '}' | '(' | ')' | ';'
 		// OPERATOR that appears on its own
 		else if (nextChar == '{' || nextChar == '}' || nextChar == '(' || nextChar == ')' || nextChar == ';'
 					|| nextChar == '+' || nextChar == '-' || nextChar == '*' || nextChar == '/' || nextChar == '%') {
-			tokens.push_back((Token*) new TerminalToken(nextStr));
+			tokens.push_back((SPToken*) new TerminalToken(nextStr));
 		}
 		// OPERATOR that may combine with other OPERATOR
 		else if (nextChar == '=' || nextChar == '!' || nextChar == '>' || nextChar == '<') {
 			if (peek() == '=') {
 				nextStr += next();
 			}
-			tokens.push_back((Token*) new TerminalToken(nextStr));
+			tokens.push_back((SPToken*) new TerminalToken(nextStr));
 		}
 		// validate '||' and '&&' operators
 		else if (nextChar == '|' || nextChar == '&') {
 			if (peek() == nextChar) {
 				nextStr += next();
-				tokens.push_back((Token*) new TerminalToken(nextStr));
+				tokens.push_back((SPToken*) new TerminalToken(nextStr));
 			} else { // invalid SIMPLE syntax
 				throw std::runtime_error("Invalid Syntax: Expected '" + std::to_string(nextChar) + "' but got '" + peek() + "' instead.\n");
 			}
@@ -69,6 +69,6 @@ std::vector<Token*> Lexer::tokenize() {
 		nextStr = "";
 	}
 
-	tokens.push_back((Token*) new EndOfFileToken());
+	tokens.push_back((SPToken*) new EndOfFileToken());
 	return tokens;
 }

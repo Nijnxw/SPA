@@ -1,6 +1,6 @@
 #include "asts/NonContainerStmtASTs.h"
 #include "simple_parser/SPParser.h"
-#include "simple_parser/Token.h"
+#include "simple_parser/SPToken.h"
 
 #include "catch.hpp"
 #include <vector>
@@ -9,7 +9,7 @@
 //                  HAPPY PATHS
 // --------------------------------------------------
 TEST_CASE ("Print 1.2 - Basic print") {
-	std::vector<Token*> input = {
+	std::vector<SPToken*> input = {
 			new NameToken("procedure"), new NameToken("testProgram"), new TerminalToken("{"),
 			new NameToken("print"), new NameToken("x"), new TerminalToken(";"),
 			new TerminalToken("}"), new EndOfFileToken(),
@@ -21,7 +21,7 @@ TEST_CASE ("Print 1.2 - Basic print") {
 	REQUIRE(*output == *NonContainerStmtASTs::getAST1_2());
 }
 TEST_CASE ("Print 1.2a - A few print statements") {
-	std::vector<Token*> input = {
+	std::vector<SPToken*> input = {
 			new NameToken("procedure"), new NameToken("testProgram"), new TerminalToken("{"),
 			new NameToken("print"), new NameToken("x"), new TerminalToken(";"),
 			new NameToken("print"), new NameToken("y"), new TerminalToken(";"),
@@ -46,7 +46,7 @@ TEST_CASE ("Print 1.2a - A few print statements") {
 // --------------------------------------------------
 TEST_CASE ("Test parsing of invalid print statement") {
 	SECTION("Misspell `print` keyword") {
-		std::vector<Token*> input = {
+		std::vector<SPToken*> input = {
 				new NameToken("procedure"), new NameToken("testProgram"),
 				new TerminalToken("{"), new NameToken("preen"),
 				new NameToken("p"), new TerminalToken(";"),
@@ -56,7 +56,7 @@ TEST_CASE ("Test parsing of invalid print statement") {
 		REQUIRE_THROWS_WITH(parser.parseProgram(), "Invalid statement syntax at statement 1.\n");
 	}
 	SECTION ("'print' keyword is case sensitive") {
-		std::vector<Token*> input = {
+		std::vector<SPToken*> input = {
 				new NameToken("procedure"), new NameToken("testProgram"),
 				new TerminalToken("{"), new NameToken("Print"),
 				new NameToken("p"), new TerminalToken(";"),
@@ -66,7 +66,7 @@ TEST_CASE ("Test parsing of invalid print statement") {
 		REQUIRE_THROWS_WITH(parser.parseProgram(), "Invalid statement syntax at statement 1.\n");
 	}
 	SECTION ("Constants as var_name") {
-		std::vector<Token*> input = {
+		std::vector<SPToken*> input = {
 				new NameToken("procedure"), new NameToken("testProgram"),
 				new TerminalToken("{"), new NameToken("print"),
 				new IntegerToken("123"), new TerminalToken(";"),
@@ -76,7 +76,7 @@ TEST_CASE ("Test parsing of invalid print statement") {
 		REQUIRE_THROWS_WITH(parser.parseProgram(), "Expected a variable name but got '123' instead.\n");
 	}
 	SECTION ("Missing var_name") {
-		std::vector<Token*> input = {
+		std::vector<SPToken*> input = {
 				new NameToken("procedure"), new NameToken("testProgram"),
 				new TerminalToken("{"), new NameToken("print"),
 				new TerminalToken(";"),
@@ -86,7 +86,7 @@ TEST_CASE ("Test parsing of invalid print statement") {
 		REQUIRE_THROWS_WITH(parser.parseProgram(), "Expected a variable name but got ';' instead.\n");
 	}
 	SECTION ("Missing ';'") {
-		std::vector<Token*> input = {
+		std::vector<SPToken*> input = {
 				new NameToken("procedure"), new NameToken("testProgram"),
 				new TerminalToken("{"), new NameToken("print"),
 				new NameToken("p"),

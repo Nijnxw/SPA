@@ -1,6 +1,6 @@
 #include "asts/ContainerStmtASTs.h"
 #include "asts/RelationshipASTs.h"
-#include "simple_parser/Token.h"
+#include "simple_parser/SPToken.h"
 #include "simple_parser/SPParser.h"
 #include "models/simple_parser/AST.h"
 
@@ -11,7 +11,7 @@
 //                  HAPPY PATHS
 // --------------------------------------------------
 TEST_CASE ("Call 1.79 - Test call statement (first procedure)") {
-	std::vector<Token*> input = {
+	std::vector<SPToken*> input = {
 			new NameToken("procedure"), 	new NameToken("testProgram"), 		new TerminalToken("{"),
 			new NameToken("call"),				new NameToken("testProgram2"),		new TerminalToken(";"),
 			new TerminalToken("}"),
@@ -28,7 +28,7 @@ TEST_CASE ("Call 1.79 - Test call statement (first procedure)") {
 }
 
 TEST_CASE ("Call 1.80 - Test call statement (second procedure)") {
-	std::vector<Token*> input = {
+	std::vector<SPToken*> input = {
 			new NameToken("procedure"), 	new NameToken("testProgram"), 		new TerminalToken("{"),
 			new NameToken("print"),			new NameToken("x"),							new TerminalToken(";"),
 			new TerminalToken("}"),
@@ -45,7 +45,7 @@ TEST_CASE ("Call 1.80 - Test call statement (second procedure)") {
 }
 
 TEST_CASE ("Call 1.81 - Call nested in If (first procedure)") {
-	std::vector<Token*> input = {
+	std::vector<SPToken*> input = {
 			new NameToken("procedure"), new NameToken("testProgram"), new TerminalToken("{"),
 			new NameToken("if"), new TerminalToken("("),
 			new NameToken("x"), new TerminalToken("<"), new IntegerToken("1"),
@@ -68,7 +68,7 @@ TEST_CASE ("Call 1.81 - Call nested in If (first procedure)") {
 
 TEST_CASE ("Call 1.82 - Call nested in If (second procedure)") {
 
-	std::vector<Token*> input = {
+	std::vector<SPToken*> input = {
 			new NameToken("procedure"), new NameToken("testProgram"), new TerminalToken("{"),
 			new NameToken("print"), new NameToken("x"), new TerminalToken(";"),
 			new TerminalToken("}"),
@@ -90,7 +90,7 @@ TEST_CASE ("Call 1.82 - Call nested in If (second procedure)") {
 }
 
 TEST_CASE ("Call 1.83 - Call nested in While") {
-	std::vector<Token*> input = {
+	std::vector<SPToken*> input = {
 			new NameToken("procedure"), new NameToken("testProgram"), new TerminalToken("{"),
 			new NameToken("while"), new TerminalToken("("),
 			new NameToken("x"), new TerminalToken("<"), new IntegerToken("1"),
@@ -129,7 +129,7 @@ TEST_CASE("Call 3.45 - Multiple call statements in 1 procedure") {
 	 * 7  x = y + 1;
 	 *  }
 	 */
-	std::vector<Token*> input = {
+	std::vector<SPToken*> input = {
 			new NameToken("procedure"), new NameToken("testProgram1"), new TerminalToken("{"),
 			new NameToken("read"), new NameToken("y"), new TerminalToken(";"),
 			new NameToken("call"), new NameToken("testProgram2"), new TerminalToken(";"),
@@ -184,7 +184,7 @@ TEST_CASE("Call 3.51 - Multiple call statements across procedures") {
 	 *     }
 	 *   }
 	 */
-	std::vector<Token*> input = {
+	std::vector<SPToken*> input = {
 			new NameToken("procedure"), new NameToken("testProgram1"), new TerminalToken("{"),
 			new NameToken("call"), new NameToken("testProgram4"), new TerminalToken(";"),
 			new NameToken("read"), new NameToken("y"), new TerminalToken(";"),
@@ -230,7 +230,7 @@ TEST_CASE("Call 3.51 - Multiple call statements across procedures") {
 
 TEST_CASE("'call' keyword is case sensitive") {
 	SECTION("Call 10.19 - 'Call'") {
-		std::vector<Token*> input = {
+		std::vector<SPToken*> input = {
 			new NameToken("procedure"), 	new NameToken("main"), 		new TerminalToken("{"),
 			new NameToken("Call"),			new NameToken("main1"),		new TerminalToken(";"),
 			new TerminalToken("}"),
@@ -243,7 +243,7 @@ TEST_CASE("'call' keyword is case sensitive") {
 		REQUIRE_THROWS_WITH(parser.parseProgram(), "Invalid statement syntax at statement 1.\n");
 	}
 	SECTION("Call 10.20 - 'Call'") {
-		std::vector<Token*> input = {
+		std::vector<SPToken*> input = {
 			new NameToken("procedure"), 	new NameToken("main"), 		new TerminalToken("{"),
 			new NameToken("CALL"),			new NameToken("main1"),		new TerminalToken(";"),
 			new TerminalToken("}"),
@@ -259,7 +259,7 @@ TEST_CASE("'call' keyword is case sensitive") {
 
 
 TEST_CASE ("Call 11.1 - A procedure cannot call a non-existing procedure") {
-	std::vector<Token*> input = {
+	std::vector<SPToken*> input = {
 			new NameToken("procedure"), 	new NameToken("main"), 		new TerminalToken("{"),
 			new NameToken("call"),				new NameToken("main1"),		new TerminalToken(";"),
 			new TerminalToken("}"),
@@ -270,7 +270,7 @@ TEST_CASE ("Call 11.1 - A procedure cannot call a non-existing procedure") {
 }
 
 TEST_CASE ("Call 11.2 - A procedure cannot call itself") {
-	std::vector<Token*> input = {
+	std::vector<SPToken*> input = {
 			new NameToken("procedure"), 	new NameToken("main"), 		new TerminalToken("{"),
 			new NameToken("call"),				new NameToken("main"),		new TerminalToken(";"),
 			new TerminalToken("}"),
@@ -282,7 +282,7 @@ TEST_CASE ("Call 11.2 - A procedure cannot call itself") {
 }
 
 TEST_CASE ("Call 11.3 - Cyclic calls are not allowed (2 procedures)") {
-	std::vector<Token*> input = {
+	std::vector<SPToken*> input = {
 			new NameToken("procedure"), 	new NameToken("main1"), 		new TerminalToken("{"),
 			new NameToken("call"),				new NameToken("main2"),		new TerminalToken(";"),
 			new TerminalToken("}"),
@@ -296,7 +296,7 @@ TEST_CASE ("Call 11.3 - Cyclic calls are not allowed (2 procedures)") {
 }
 
 TEST_CASE ("Call 11.4 - Cyclic calls are not allowed (3 procedures)") {
-	std::vector<Token*> input = {
+	std::vector<SPToken*> input = {
 			new NameToken("procedure"), 	new NameToken("main1"), 		new TerminalToken("{"),
 			new NameToken("call"),				new NameToken("main2"),		new TerminalToken(";"),
 			new TerminalToken("}"),
@@ -313,7 +313,7 @@ TEST_CASE ("Call 11.4 - Cyclic calls are not allowed (3 procedures)") {
 }
 
 TEST_CASE ("Call 11.5 - Invalid proc_name") {
-	std::vector<Token*> input = {
+	std::vector<SPToken*> input = {
 			new NameToken("procedure"), 	new NameToken("main"), 		new TerminalToken("{"),
 			new NameToken("call"),				new IntegerToken("123"),		new TerminalToken(";"),
 			new TerminalToken("}"),
@@ -324,7 +324,7 @@ TEST_CASE ("Call 11.5 - Invalid proc_name") {
 }
 
 TEST_CASE ("Call 11.6 - Missing proc_name") {
-	std::vector<Token*> input = {
+	std::vector<SPToken*> input = {
 			new NameToken("procedure"), 	new NameToken("main"), 		new TerminalToken("{"),
 			new NameToken("call"),				new TerminalToken(";"),
 			new TerminalToken("}"),

@@ -11,12 +11,10 @@ bool CommonLexer::notEOF() { return !stream->eof(); }
 bool CommonLexer::isValidInt(std::string str) {
 	if (str.length() == 1 && isdigit(str[0])) { return true; }
 	if ( str.empty() || str[0] == '0') { return false; }
-	return std::all_of(str.begin(), str.end(),
-										 [](char c) { return isdigit(c); });
+	return std::all_of(str.begin(), str.end(), [](char c) { return isdigit(c); });
 }
 
 bool CommonLexer::isValidName(std::string str) {
 	if (str.empty() || !isalpha(str[0])) { return false; }
-	return std::all_of(str.begin(), str.end(),
-										 [](char c) { return isalnum(c); });
+	return std::all_of(str.begin(), str.end(), [](char c) { return isalnum(c); });
 }

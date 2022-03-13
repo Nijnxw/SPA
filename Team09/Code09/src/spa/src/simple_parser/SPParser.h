@@ -1,6 +1,6 @@
 #pragma once
 
-#include "simple_parser/Token.h"
+#include "simple_parser/SPToken.h"
 #include "models/simple_parser/AST.h"
 #include "models/simple_parser/AssignNode.h"
 #include "models/simple_parser/CallNode.h"
@@ -23,7 +23,7 @@ class SPParser {
 private:
 	int currentIdx = 0;
 	int stmtNo = 0;
-	std::vector<Token*> tokens;
+	std::vector<SPToken*> tokens;
 	std::string exprStr;
 	std::string currProcName;
 	CallStmtValidator callStmtValidator;
@@ -45,8 +45,8 @@ private:
 		{TokenType::NOT_EQUAL, ComparatorOperator::NEQ},
 	};
 
-	Token* peek();
-	Token* get();
+	SPToken* peek();
+	SPToken* get();
 
 	bool isEndOfFile();
 	bool check(TokenType t);
@@ -90,7 +90,7 @@ private:
 	std::shared_ptr<CallNode> parseCall();
 
 public:
-	explicit SPParser(std::vector<Token*> tokens);
+	explicit SPParser(std::vector<SPToken*> tokens);
 
 	AST parseProgram();
 	int getStmtCount() const;

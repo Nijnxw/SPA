@@ -1,13 +1,13 @@
-#include "simple_parser/Token.h"
+#include "simple_parser/SPToken.h"
 #include "simple_parser/Lexer.h"
 
 #include "catch.hpp"
 #include <sstream>
 
-bool compareVectors(const std::vector<Token*>& output, const std::vector<Token*>& expected) {
+bool compareVectors(const std::vector<SPToken*>& output, const std::vector<SPToken*>& expected) {
 	return std::equal(output.begin(), output.end(),
 										expected.begin(), expected.end(),
-										[](Token* t1, Token* t2) { return *t1 == *t2; });
+										[](SPToken* t1, SPToken* t2) { return *t1 == *t2; });
 }
 
 // --------------------------------------------------
@@ -19,8 +19,8 @@ TEST_CASE("Test end of file token") {
 	std::istringstream input(program);
 
 	auto lexer = Lexer(&input);
-	std::vector<Token*> output = lexer.tokenize();
-	std::vector<Token*> expected = { new EndOfFileToken() };
+	std::vector<SPToken*> output = lexer.tokenize();
+	std::vector<SPToken*> expected = {new EndOfFileToken() };
 
 	REQUIRE(compareVectors(output, expected));
 }
@@ -30,8 +30,8 @@ TEST_CASE("Test NAME tokens") {
 	std::istringstream input(program);
 
 	auto lexer = Lexer(&input);
-	std::vector<Token*> output = lexer.tokenize();
-	std::vector<Token*> expected = {
+	std::vector<SPToken*> output = lexer.tokenize();
+	std::vector<SPToken*> expected = {
 			new NameToken("procedure"), new NameToken("ProCedure"),
 			new NameToken("if"),        new NameToken("read"),
 			new NameToken("x1"),        new NameToken("X1"),
@@ -47,8 +47,8 @@ TEST_CASE("Test INTEGER tokens") {
 	std::istringstream input(program);
 
 	auto lexer = Lexer(&input);
-	std::vector<Token*> output = lexer.tokenize();
-	std::vector<Token*> expected = {
+	std::vector<SPToken*> output = lexer.tokenize();
+	std::vector<SPToken*> expected = {
 			new IntegerToken("1"),     new IntegerToken("13"),
 			new IntegerToken("0"),     new IntegerToken("100"),
 			new IntegerToken("93"),   new EndOfFileToken(),
@@ -62,8 +62,8 @@ TEST_CASE("Test OPERATOR tokens") {
 	std::istringstream input(program);
 
 	auto lexer = Lexer(&input);
-	std::vector<Token*> output = lexer.tokenize();
-	std::vector<Token*> expected = {
+	std::vector<SPToken*> output = lexer.tokenize();
+	std::vector<SPToken*> expected = {
 			new TerminalToken("+"), new TerminalToken("&&"),
 			new TerminalToken("="), new TerminalToken("!"),
 			new TerminalToken("!="), new TerminalToken("<"),
@@ -78,8 +78,8 @@ TEST_CASE("Test PUNCTUATOR tokens") {
 	std::istringstream input(program);
 
 	auto lexer = Lexer(&input);
-	std::vector<Token*> output = lexer.tokenize();
-	std::vector<Token*> expected = {
+	std::vector<SPToken*> output = lexer.tokenize();
+	std::vector<SPToken*> expected = {
 			new TerminalToken("{"), new TerminalToken("}"),
 			new TerminalToken("("), new TerminalToken(")"),
 			new TerminalToken(";"), new EndOfFileToken(),
@@ -93,8 +93,8 @@ TEST_CASE("Test all lexical tokens") {
 	std::istringstream input(program);
 
 	auto lexer = Lexer(&input);
-	std::vector<Token*> output = lexer.tokenize();
-	std::vector<Token*> expected = {
+	std::vector<SPToken*> output = lexer.tokenize();
+	std::vector<SPToken*> expected = {
 			new NameToken("if"), new NameToken("while"),
 			new NameToken("procedure"), new TerminalToken("("),
 			new TerminalToken(")"), new TerminalToken("{"),
@@ -128,8 +128,8 @@ TEST_CASE("Test SIMPLE program") {
 	std::istringstream input(program);
 
 	auto lexer = Lexer(&input);
-	std::vector<Token*> output = lexer.tokenize();
-	std::vector<Token*> expected = {
+	std::vector<SPToken*> output = lexer.tokenize();
+	std::vector<SPToken*> expected = {
 			new NameToken("procedure"), new NameToken("sumDigits"), new TerminalToken("{"),
 			new NameToken("read"), new NameToken("number"), new TerminalToken(";"),
 			new NameToken("sum"), new TerminalToken("="), new IntegerToken("0"),

@@ -122,7 +122,9 @@ QueryClauseResult NextEvaluator::getNextTByUnderscore(const std::string& RHS, En
 			return queryResult;
 		}
 
-		std::unordered_set<int> reachableNodes = getReachableNodes(RHSInt, PKB::getReversedCFG());
+		std::vector<std::unordered_set<int>> reversedCfg = PKB::getReversedCFG();
+
+		std::unordered_set<int> reachableNodes = getReachableNodes(RHSInt, reversedCfg);
 		queryResult.setBooleanResult(reachableNodes.size() > 0);
 	}
 	else if (RHSType == EntityType::STMT || RHSType == EntityType::ASSIGN || RHSType == EntityType::IF ||

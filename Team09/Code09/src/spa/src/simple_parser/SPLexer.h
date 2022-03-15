@@ -8,14 +8,14 @@
 #include <fstream>
 #include <vector>
 
-class Lexer:CommonLexer {
+class SPLexer: CommonLexer {
     private:
         void readName();
         void readInteger();
 
     public:
         std::vector<SPToken*> tokens;
-        explicit Lexer(std::istream* new_stream);
+        explicit SPLexer(std::istream* new_stream);
         std::vector<SPToken*> tokenize();
 };
 

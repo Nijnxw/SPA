@@ -1,20 +1,20 @@
-#include "simple_parser/Lexer.h"
+#include "simple_parser/SPLexer.h"
 
-Lexer::Lexer(std::istream* new_stream) : CommonLexer(new_stream){}
+SPLexer::SPLexer(std::istream* new_stream) : CommonLexer(new_stream){}
 
-void Lexer::readName() {
+void SPLexer::readName() {
 	while (isalnum(peek()) != 0) {
 		nextStr += next();
 	}
 }
 
-void Lexer::readInteger() {
+void SPLexer::readInteger() {
 	while(isdigit(peek()) != 0) {
 		nextStr += next();
 	}
 }
 
-std::vector<SPToken*> Lexer::tokenize() {
+std::vector<SPToken*> SPLexer::tokenize() {
 	char nextChar;
     while (notEOF()) {
 			nextChar = next();

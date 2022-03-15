@@ -61,7 +61,13 @@ enum class TokenType {
 	EQUAL,
 
 	//AND
-	AND
+	AND,
+
+	//attr ref
+	STMT_NO,
+	PROC_NAME,
+	VAR_NAME,
+	VALUE,
 };
 
 //unordered map to map raw string tokens to the appropriate token type
@@ -117,5 +123,13 @@ static std::unordered_map<std::string, TokenType> stringTokenMap = {
 
 	//And
 	{"and",		  TokenType::AND},
+
+	//attr ref
+	{"stmt#",	  TokenType::STMT_NO},
+	{"procName",  TokenType::PROC_NAME},
+	{"varName",	  TokenType::VAR_NAME},
+	{"value",	  TokenType::VALUE},
+
+
 
 };

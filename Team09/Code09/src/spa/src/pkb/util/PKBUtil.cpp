@@ -74,6 +74,16 @@ namespace PKBUtil {
         return keySet;
     }
 
+    static std::unordered_set<int> getValueSetFromMapWithSet(std::unordered_map<int, std::unordered_set<int>>& map) {
+        std::unordered_set<int> valueSet;
+        for (auto const& pair : map) {
+            for (auto const& element : pair.second) {
+                valueSet.insert(element);
+            }
+        }
+        return valueSet;
+    }
+
     template <typename T, typename U, typename Hash, typename Pred, typename Alloc>
     static std::tuple<std::vector<T>, std::vector<U>> convertMapToVectorTuple(std::unordered_map<T, U, Hash, Pred, Alloc>& map) {
         std::vector<T> firstColumn;
@@ -82,6 +92,20 @@ namespace PKBUtil {
         for (auto const& pair : map) {
             firstColumn.push_back(pair.first);
             secondColumn.push_back(pair.second);
+        }
+
+        return { firstColumn, secondColumn };
+    }
+
+    static std::tuple<std::vector<int>, std::vector<int>> convertMapWithSetToVectorTuple(std::unordered_map<int, std::unordered_set<int>>& map) {
+        std::vector<int> firstColumn;
+        std::vector<int> secondColumn;
+
+        for (auto const& pair : map) {
+            for (auto const& element : pair.second) {
+                firstColumn.push_back(pair.first);
+                secondColumn.push_back(element);
+            }
         }
 
         return { firstColumn, secondColumn };

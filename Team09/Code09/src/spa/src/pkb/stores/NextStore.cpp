@@ -18,10 +18,19 @@ CFG, vector is 1-indexed
 4 -> {5,6}
 5 -> {2}
 6 -> {2}
+Reverse CFG, vector is 1-indexed
+1 -> {}
+2 -> {1, 5, 6}
+3 -> {2}
+4 -> {3}
+5 -> {4}
+6 -> {4}
 */
 
 void NextStore::clear() {
 	this->cfg.clear();
+	this->reversedCfg.clear();
+	this->procedureNameToLastCFGNodes.clear();
 }
 
 bool NextStore::addCFG(const std::vector<std::unordered_set<int>>& cfg) {
@@ -30,12 +39,20 @@ bool NextStore::addCFG(const std::vector<std::unordered_set<int>>& cfg) {
 	return selfPopulateRelationships();
 }
 
+bool NextStore::addProcedureNameToLastCFGNode(const std::string procedure, const std::unordered_set<int> lastNodes) {
+	return this->procedureNameToLastCFGNodes.insert({ procedure, lastNodes }).second;
+}
+
 std::vector<std::unordered_set<int>> NextStore::getCFG() {
 	return cfg;
 }
 
 std::vector<std::unordered_set<int>> NextStore::getReversedCFG() {
 	return reversedCfg;
+}
+
+std::unordered_map<std::string, std::unordered_set<int>> NextStore::getProcedureNameToLastCFGNode() {
+	return procedureNameToLastCFGNodes;
 }
 
 std::vector<std::unordered_set<int>> NextStore::reverseCFG(const std::vector<std::unordered_set<int>>& cfg) {
@@ -67,4 +84,3 @@ bool NextStore::selfPopulateRelationships() {
 
 	return true;
 }
-

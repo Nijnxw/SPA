@@ -139,11 +139,20 @@ void PQLParser::parseResultClause() {
 }
 
 void PQLParser::parseResultSynonym() {
-	auto nextToken = getValidSynonymToken();;
-	if (!isDeclaredSynonym(nextToken->getValue())) {
+	auto synonymToken = getValidSynonymToken();;
+	if (!isDeclaredSynonym(synonymToken->getValue())) {
 		throw "Result synonym is not declared";
+	}	
+	if (current != end && peekNextToken()->getType() == TokenType::PERIOD) {
+		getNextExpectedToken(TokenType::PERIOD);
+		auto attrRefToken = getNextToken();
+		if (!isValidAttributeRef(Declarations[synonymToken->getValue()], attrRefToken->getType())) { throw "invalid attribute ref"; }
+		resultSynonyms.emplace_back(
+			QueryArgument(std::string(synonymToken->getValue()), Declarations[synonymToken->getValue()], attrRefMapping[attrRefToken->getType()])
+		);
+	} else {
+		resultSynonyms.emplace_back(QueryArgument(std::string(synonymToken->getValue()), Declarations[synonymToken->getValue()]));
 	}
-	resultSynonyms.emplace_back(QueryArgument(std::string(nextToken->getValue()), Declarations[nextToken->getValue()]));
 }
 
 QueryArgument PQLParser::parseArgs(PQLToken* token) {

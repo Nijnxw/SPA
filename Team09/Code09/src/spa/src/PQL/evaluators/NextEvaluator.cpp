@@ -82,7 +82,9 @@ QueryClauseResult NextEvaluator::getNextTByStatementVariable(const std::string& 
 			return queryResult;
 		}
 
-		std::unordered_set<int> reachableNodes = getReachableNodes(RHSInt, PKB::getReversedCFG());
+		std::vector<std::unordered_set<int>> reversedCfg = PKB::getReversedCFG();
+
+		std::unordered_set<int> reachableNodes = getReachableNodes(RHSInt, reversedCfg);
 		queryResult.addColumn(LHS, StmtStmtRelationshipEvaluator::filterStatementsByType(reachableNodes, LHSType));
 	}
 	else if (RHSType == EntityType::STMT || RHSType == EntityType::ASSIGN || RHSType == EntityType::IF ||

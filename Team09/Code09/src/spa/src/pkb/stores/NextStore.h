@@ -21,5 +21,5 @@ public:
 	/* Getters */
 	std::vector<std::unordered_set<int>> getCFG();
 	std::vector<std::unordered_set<int>> getReversedCFG();
-	std::unordered_map<std::string, std::unordered_set<int>> NextStore::getProcedureNameToLastCFGNode();
+	std::unordered_map<std::string, std::unordered_set<int>> getProcedureNameToLastCFGNode();
 };

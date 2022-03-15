@@ -89,10 +89,18 @@ QueryClauseResult NextEvaluator::getNextTByStatementVariable(const std::string& 
 		RHSType == EntityType::WHILE || RHSType == EntityType::PRINT || RHSType == EntityType::READ ||
 		RHSType == EntityType::CALL) { // Next*(s1, s2)
 		std::unordered_map<int, std::unordered_set<int>> nextTPairs = getAllNextTPairs();
+
 		auto [firstEntities, secondEntities] = PKBUtil::convertMapWithSetToVectorTuple(nextTPairs);
 		auto [filteredFirst, filteredSecond] = StmtStmtRelationshipEvaluator::filterStatementPairsByType(firstEntities, secondEntities, LHSType, RHSType);
-		queryResult.addColumn(LHS, filteredFirst);
-		queryResult.addColumn(RHS, filteredSecond);
+
+		if (LHS == RHS) {
+			std::unordered_set<int> set = PKBUtil::getEqualPairs(filteredFirst, filteredSecond);
+			queryResult.addColumn(LHS, set);
+		}
+		else {
+			queryResult.addColumn(LHS, filteredFirst);
+			queryResult.addColumn(RHS, filteredSecond);
+		}
 	}
 	else if (RHSType == EntityType::WILD) { // Next*(s, _)
 		std::unordered_map<int, std::unordered_set<int>> nextTPairs = getAllNextTPairs();

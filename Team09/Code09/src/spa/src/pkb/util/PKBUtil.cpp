@@ -137,6 +137,16 @@ namespace PKBUtil {
         return result;
     }
 
+    static std::unordered_set<int> getEqualPairs(std::vector<int> first, std::vector<int> second) {
+        std::unordered_set<int> result;
+        for (int index = 0; index < first.size(); index++) {
+            if (first[index] == second[index]) {
+                result.insert(first[index]);
+            }
+        }
+        return result;
+    }
+
     template <typename T>
     static std::vector<T> convertUnorderedSetToVector(std::unordered_set<T> set) {
         std::vector<T> vector;

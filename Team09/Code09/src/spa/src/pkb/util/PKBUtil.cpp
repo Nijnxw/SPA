@@ -109,7 +109,30 @@ namespace PKBUtil {
             pair = std::make_pair(firstEntities[i], secondEntities[i]);
             result.insert(pair);
         }
-        
+
         return result;
+    }
+
+    template <typename T>
+    static std::vector<T> convertUnorderedSetToVector(std::unordered_set<T> set) {
+        std::vector<T> vector;
+        vector.reserve(set.size());
+        for (auto it = set.begin(); it != set.end(); ) {
+            vector.push_back(std::move(set.extract(it++).value()));
+        }
+        return vector;
+    }
+
+    template <typename T>
+    static std::tuple<std::vector<T>, std::vector<T>> computeCartesianProduct(std::vector<T> vec1, std::vector<T> vec2) {
+        std::vector<T> resVec1;
+        std::vector<T> resVec2;
+        for (const auto& entry1 : vec1) {
+            for (const auto& entry2 : vec2) {
+                resVec1.push_back(entry1);
+                resVec2.push_back(entry2);
+            }
+        }
+        return { resVec1, resVec2 };
     }
 }

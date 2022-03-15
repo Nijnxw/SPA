@@ -14,5 +14,6 @@ enum class EntityType {
     STRING,
     CONST,
     BOOL,
-    WILD
+    WILD,
+    INVALID
 };

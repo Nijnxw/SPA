@@ -59,7 +59,7 @@ public:
 	static bool addModifiesStatement(int statementNumber, const std::unordered_set<std::string>& variables);
 	static bool addModifiesProcedure(const std::string& procedure, const std::unordered_set<std::string>& variables);
 	static bool addCFG(const std::vector<std::unordered_set<int>>& cfg);
-
+	static bool addProcedureNameToLastCFGNode(const std::string procedure, const std::unordered_set<int> lastNodes);
 
 	/* Getters called by QE */
 	static std::unordered_set<std::string> getProcedures();
@@ -168,8 +168,8 @@ public:
 	static std::tuple<std::vector<int>, std::vector<int>> getAllNextPairs();
 
 	static std::vector<std::unordered_set<int>> getCFG();
-
 	static std::vector<std::unordered_set<int>> getReversedCFG();
+	static std::unordered_map<std::string, std::unordered_set<int>> getProcedureNameToLastCFGNode();
 
 	/* Calls Getters */
 	static bool hasCallsRelationship();

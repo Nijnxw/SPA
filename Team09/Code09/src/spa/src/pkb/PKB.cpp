@@ -103,6 +103,10 @@ bool PKB::addCFG(const std::vector<std::unordered_set<int>>& cfg) {
 	return nextStore.addCFG(cfg);
 }
 
+bool PKB::addProcedureNameToLastCFGNode(const std::string procedure, const std::unordered_set<int> lastNodes) {
+	return nextStore.addProcedureNameToLastCFGNode(procedure, lastNodes);
+}
+
 /* Getters called by Query Evaluator */
 std::unordered_set<std::string> PKB::getProcedures() {
 	return entityStore.getProcedures();
@@ -602,6 +606,10 @@ std::vector<std::unordered_set<int>> PKB::getCFG() {
 
 std::vector<std::unordered_set<int>> PKB::getReversedCFG() {
 	return nextStore.getReversedCFG();
+}
+
+std::unordered_map<std::string, std::unordered_set<int>> PKB::getProcedureNameToLastCFGNode() {
+	return nextStore.getProcedureNameToLastCFGNode();
 }
 
 /* Calls Getters */

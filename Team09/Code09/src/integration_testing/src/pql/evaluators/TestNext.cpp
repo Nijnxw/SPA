@@ -46,6 +46,9 @@ TEST_CASE("Next Relationship API") {
 
 		PKB::addCFG(cfg);
 
+		std::unordered_set<int> endNodes = { 2 };
+		PKB::addProcedureNameToLastCFGNode("Test", endNodes);
+
 		SECTION("CFG same as one added - positive query") {
 			std::vector<std::unordered_set<int>> pkbCFG = PKB::getCFG();
 			REQUIRE(pkbCFG == cfg);
@@ -96,7 +99,26 @@ TEST_CASE("Next Relationship API") {
 			REQUIRE(res.containsValidResult() == false);
 		}
 
-		// TODO: getNextT(LHS int, RHS int) 
+		// getNextT(LHS int, RHS int) 
+		SECTION("Next(1, 2) positive query") {
+			QueryClauseResult res = nextEvaluator.getNextT("1", "2", EntityType::INT, EntityType::INT, false);
+			REQUIRE(res.containsValidResult() == true);
+		}
+
+		SECTION("NextT(3, 3) positive query - same stmt while loop") {
+			QueryClauseResult res = nextEvaluator.getNextT("3", "3", EntityType::INT, EntityType::INT, false);
+			REQUIRE(res.containsValidResult() == true);
+		}
+
+		SECTION("NextT(2, 1) negative query - invalid ordering") {
+			QueryClauseResult res = nextEvaluator.getNextT("2", "1", EntityType::INT, EntityType::INT, false);
+			REQUIRE(res.containsValidResult() == false);
+		}
+
+		SECTION("NextT(7, 8) negative query - invalid numbers") {
+			QueryClauseResult res = nextEvaluator.getNextT("7", "8", EntityType::INT, EntityType::INT, false);
+			REQUIRE(res.containsValidResult() == false);
+		}
 
 		// getNext(LHS int, RHS stmt)
 		SECTION("Next(4, s) positive query") {
@@ -111,7 +133,18 @@ TEST_CASE("Next Relationship API") {
 			REQUIRE(res.containsValidResult() == false);
 		}
 
-		// TODO: getNextT(LHS int, RHS stmt)
+		// getNextT(LHS int, RHS stmt)
+		SECTION("NextT(1, s) positive query") {
+			QueryClauseResult res = nextEvaluator.getNextT("1", "s", EntityType::INT, EntityType::STMT, false);
+			REQUIRE(res.containsValidResult() == true);
+			Table expectedTable = { {"s", {"2", "3", "4", "5", "6"}}};
+			REQUIRE(res == QueryClauseResult(expectedTable));
+		}
+
+		SECTION("NextT(7, s) negative query - invalid number") {
+			QueryClauseResult res = nextEvaluator.getNextT("7", "s", EntityType::INT, EntityType::STMT, false);
+			REQUIRE(res.containsValidResult() == false);
+		}
 
 		// getNext(LHS int, RHS wild)
 		SECTION("Next(3, _) positive query") {
@@ -124,7 +157,16 @@ TEST_CASE("Next Relationship API") {
 			REQUIRE(res.containsValidResult() == false);
 		}
 
-		// TODO: getNextT(LHS int, RHS wild)
+		// getNextT(LHS int, RHS wild)
+		SECTION("NextT(1, _) positive query") {
+			QueryClauseResult res = nextEvaluator.getNextT("1", "_", EntityType::INT, EntityType::WILD, false);
+			REQUIRE(res.containsValidResult() == true);
+		}
+
+		SECTION("NextT(7, _) negative query - invalid number") {
+			QueryClauseResult res = nextEvaluator.getNextT("7", "_", EntityType::INT, EntityType::WILD, false);
+			REQUIRE(res.containsValidResult() == false);
+		}
 
 		// --------------------------------------------------
 		//                  LHS stmt
@@ -147,7 +189,18 @@ TEST_CASE("Next Relationship API") {
 			REQUIRE(res.containsValidResult() == false);
 		}
 
-		// TODO: getNextT(LHS stmt, RHS int)
+		// getNextT(LHS stmt, RHS int)
+		SECTION("Next(s, 2) positive query") {
+			QueryClauseResult res = nextEvaluator.getNextT("s", "2", EntityType::STMT, EntityType::INT, false);
+			REQUIRE(res.containsValidResult() == true);
+			Table expectedTable = { {"s", {"1", "2", "3", "4", "5", "6"}} };
+			REQUIRE(res == QueryClauseResult(expectedTable));
+		}
+
+		SECTION("NextT(s, 7) negative query - invalid number") {
+			QueryClauseResult res = nextEvaluator.getNextT("s", "7", EntityType::STMT, EntityType::INT, false);
+			REQUIRE(res.containsValidResult() == false);
+		}
 
 		// getNext(LHS stmt, RHS stmt)
 		SECTION("Next(s1, s2) positive query") {
@@ -195,7 +248,38 @@ TEST_CASE("Next Relationship API") {
 			REQUIRE(res.containsValidResult() == false);
 		}
 
-		// TODO: getNextT(LHS stmt, RHS stmt)
+		// getNextT(LHS stmt, RHS stmt)
+		SECTION("Next(s1, s2) positive query") {
+			QueryClauseResult res = nextEvaluator.getNextT("s1", "s2", EntityType::STMT, EntityType::STMT, false);
+			REQUIRE(res.containsValidResult() == true);
+			Table expectedTable = {
+				{"s1", {"1", "1", "1", "1", "1", 
+						"2", "2", "2", "2", "2",
+						"3", "3", "3", "3", "3",
+						"4", "4", "4", "4", "4", 
+						"5", "5", "5", "5", "5",
+						"6", "6", "6", "6", "6"}},
+				{"s2", {"2", "3", "4", "5", "6", 
+						"2", "3", "4", "5", "6",
+						"2", "3", "4", "5", "6",
+						"2", "3", "4", "5", "6",
+						"2", "3", "4", "5", "6",
+						"2", "3", "4", "5", "6"}}
+			};
+			REQUIRE(res == QueryClauseResult(expectedTable));
+		}
+
+		SECTION("NextT(s, s) positive query - same synonym statement") {
+			QueryClauseResult res = nextEvaluator.getNextT("s", "s", EntityType::STMT, EntityType::STMT, false);
+			REQUIRE(res.containsValidResult() == true);
+			Table expectedTable = {{"s", {"2", "3", "4", "5", "6",
+										  "2", "3", "4", "5", "6",
+										  "2", "3", "4", "5", "6",
+										  "2", "3", "4", "5", "6",
+										  "2", "3", "4", "5", "6",
+										  "2", "3", "4", "5", "6"}} };
+			REQUIRE(res == QueryClauseResult(expectedTable));
+		}
 
 		// getNext(LHS stmt, RHS wild)
 		SECTION("Next(s, _) positive query") {
@@ -205,8 +289,13 @@ TEST_CASE("Next Relationship API") {
 			REQUIRE(res == QueryClauseResult(expectedTable));
 		}
 
-		// TODO: getNextT(LHS stmt, RHS wild)
-		
+		// getNextT(LHS stmt, RHS wild)
+		SECTION("NextT(s, _) positive query") {
+			QueryClauseResult res = nextEvaluator.getNextT("s", "_", EntityType::STMT, EntityType::WILD, false);
+			REQUIRE(res.containsValidResult() == true);
+			Table expectedTable = { {"s", {"1", "2", "3", "4", "5", "6"}} };
+			REQUIRE(res == QueryClauseResult(expectedTable));
+		}
 
 		// --------------------------------------------------
 		//                  LHS wild
@@ -227,7 +316,16 @@ TEST_CASE("Next Relationship API") {
 			REQUIRE(res.containsValidResult() == false);
 		}
 
-		// TODO: getNextT(LHS wild, RHS int)
+		// getNextT(LHS wild, RHS int)
+		SECTION("NextT(_, 4) positive query") {
+			QueryClauseResult res = nextEvaluator.getNextT("_", "2", EntityType::WILD, EntityType::INT, false);
+			REQUIRE(res.containsValidResult() == true);
+		}
+
+		SECTION("NextT(_, 7) negative query - invalid number") {
+			QueryClauseResult res = nextEvaluator.getNextT("_", "7", EntityType::WILD, EntityType::INT, false);
+			REQUIRE(res.containsValidResult() == false);
+		}
 
 		// getNext(LHS wild, RHS stmt)
 		SECTION("Next(_, s) positive query") {
@@ -237,7 +335,13 @@ TEST_CASE("Next Relationship API") {
 			REQUIRE(res == QueryClauseResult(expectedTable));
 		}
 
-		// TODO: getNextT(LHS wild, RHS stmt)
+		// getNextT(LHS wild, RHS stmt)
+		SECTION("NextT(_, s) positive query") {
+			QueryClauseResult res = nextEvaluator.getNextT("_", "s", EntityType::WILD, EntityType::STMT, false);
+			REQUIRE(res.containsValidResult() == true);
+			Table expectedTable = { {"s", {"2", "3", "4", "5", "6"}} };
+			REQUIRE(res == QueryClauseResult(expectedTable));
+		}
 
 		// getNext(LHS wild, RHS wild)
 		SECTION("Next(_, _) positive query") {
@@ -245,7 +349,11 @@ TEST_CASE("Next Relationship API") {
 			REQUIRE(res.containsValidResult() == true);
 		}
 
-		// TODO: getNextT(LHS wild, RHS wild)
+		// getNextT(LHS wild, RHS wild)
+		SECTION("NextT(_, _) positive query") {
+			QueryClauseResult res = nextEvaluator.getNextT("_", "_", EntityType::WILD, EntityType::WILD, false);
+			REQUIRE(res.containsValidResult() == true);
+		}
 	}
 	PKB::clearAllStores();
 }

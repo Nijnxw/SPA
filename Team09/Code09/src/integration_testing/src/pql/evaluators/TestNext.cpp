@@ -272,12 +272,7 @@ TEST_CASE("Next Relationship API") {
 		SECTION("NextT(s, s) positive query - same synonym statement") {
 			QueryClauseResult res = nextEvaluator.getNextT("s", "s", EntityType::STMT, EntityType::STMT, false);
 			REQUIRE(res.containsValidResult() == true);
-			Table expectedTable = {{"s", {"2", "3", "4", "5", "6",
-										  "2", "3", "4", "5", "6",
-										  "2", "3", "4", "5", "6",
-										  "2", "3", "4", "5", "6",
-										  "2", "3", "4", "5", "6",
-										  "2", "3", "4", "5", "6"}} };
+			Table expectedTable = {{"s", {"2", "3", "4", "5", "6"}} };
 			REQUIRE(res == QueryClauseResult(expectedTable));
 		}
 

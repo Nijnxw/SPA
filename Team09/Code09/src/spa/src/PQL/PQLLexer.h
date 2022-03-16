@@ -5,9 +5,9 @@
 #include "PQL/PQLToken.h"
 #include "Commons/CommonLexer.h"
 
-class Tokeniser:CommonLexer {
+class PQLLexer:CommonLexer {
 public:
-	Tokeniser(std::string);
+	PQLLexer(std::string);
 	std::vector<PQLToken*> tokenise();
 
 private:

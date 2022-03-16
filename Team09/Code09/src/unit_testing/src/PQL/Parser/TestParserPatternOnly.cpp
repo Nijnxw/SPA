@@ -1,6 +1,6 @@
 #include "catch.hpp"
 #include "PQL/PQLParser.h"
-#include "PQL/Tokeniser.h"
+#include "PQL/PQLLexer.h"
 
 TEST_CASE("pattern - variable synonym as first arg") {
 	std::vector<QueryArgument> expectedResultSynonms;
@@ -10,7 +10,7 @@ TEST_CASE("pattern - variable synonym as first arg") {
 
 	SECTION("wildcard as second arg") {
 		std::string queryString = "assign a; variable v; Select a pattern a(v,_)";
-		Tokeniser tokeniser = Tokeniser(queryString);
+		PQLLexer tokeniser = PQLLexer(queryString);
 		std::vector<PQLToken*> PQLTokens = tokeniser.tokenise();
 		PQLParser parser = PQLParser(PQLTokens);
 
@@ -32,7 +32,7 @@ TEST_CASE("pattern - variable synonym as first arg") {
 
 	SECTION("variable factor as second arg") {
 		std::string queryString = "assign a2; variable v1; Select a2 pattern a2(v1,_\"x\"_)";
-		Tokeniser tokeniser = Tokeniser(queryString);
+		PQLLexer tokeniser = PQLLexer(queryString);
 		std::vector<PQLToken*> PQLTokens = tokeniser.tokenise();
 		PQLParser parser = PQLParser(PQLTokens);
 
@@ -54,7 +54,7 @@ TEST_CASE("pattern - variable synonym as first arg") {
 
 	SECTION("integer factor as second arg") {
 		std::string queryString = "assign a1; variable v2; Select a1 pattern a1(v2,_\"1\"_)";
-		Tokeniser tokeniser = Tokeniser(queryString);
+		PQLLexer tokeniser = PQLLexer(queryString);
 		std::vector<PQLToken*> PQLTokens = tokeniser.tokenise();
 		PQLParser parser = PQLParser(PQLTokens);
 
@@ -76,7 +76,7 @@ TEST_CASE("pattern - variable synonym as first arg") {
 
 	SECTION("expr as second arg") {
 		std::string queryString = "assign a1; variable v2; Select a1 pattern a1(v2,_\"1 + 2 + x + x1 * x2 - x3\"_)";
-		Tokeniser tokeniser = Tokeniser(queryString);
+		PQLLexer tokeniser = PQLLexer(queryString);
 		std::vector<PQLToken*> PQLTokens = tokeniser.tokenise();
 		PQLParser parser = PQLParser(PQLTokens);
 
@@ -105,7 +105,7 @@ TEST_CASE("pattern - string (which represents a variable in SIMPLE) as first arg
 
 	SECTION("wildcard as second arg") {
 		std::string queryString = "assign a; Select a pattern a(\"var\",_)";
-		Tokeniser tokeniser = Tokeniser(queryString);
+		PQLLexer tokeniser = PQLLexer(queryString);
 		std::vector<PQLToken*> PQLTokens = tokeniser.tokenise();
 		PQLParser parser = PQLParser(PQLTokens);
 
@@ -126,7 +126,7 @@ TEST_CASE("pattern - string (which represents a variable in SIMPLE) as first arg
 
 	SECTION("variable factor as second arg") {
 		std::string queryString = "assign a; Select a pattern a(\"y\",_\"z\"_)";
-		Tokeniser tokeniser = Tokeniser(queryString);
+		PQLLexer tokeniser = PQLLexer(queryString);
 		std::vector<PQLToken*> PQLTokens = tokeniser.tokenise();
 		PQLParser parser = PQLParser(PQLTokens);
 
@@ -147,7 +147,7 @@ TEST_CASE("pattern - string (which represents a variable in SIMPLE) as first arg
 
 	SECTION("integer factor as second arg") {
 		std::string queryString = "assign a; Select a pattern a(\"z\",_\"123\"_)";
-		Tokeniser tokeniser = Tokeniser(queryString);
+		PQLLexer tokeniser = PQLLexer(queryString);
 		std::vector<PQLToken*> PQLTokens = tokeniser.tokenise();
 		PQLParser parser = PQLParser(PQLTokens);
 
@@ -175,7 +175,7 @@ TEST_CASE("pattern - wildcard as first arg") {
 
 	SECTION("wildcard as second arg") {
 		std::string queryString = "assign a; Select a pattern a(_,_)";
-		Tokeniser tokeniser = Tokeniser(queryString);
+		PQLLexer tokeniser = PQLLexer(queryString);
 		std::vector<PQLToken*> PQLTokens = tokeniser.tokenise();
 		PQLParser parser = PQLParser(PQLTokens);
 
@@ -196,7 +196,7 @@ TEST_CASE("pattern - wildcard as first arg") {
 
 	SECTION("variable factor as second arg") {
 		std::string queryString = "assign a; Select a pattern a(_,_\"abc\"_)";
-		Tokeniser tokeniser = Tokeniser(queryString);
+		PQLLexer tokeniser = PQLLexer(queryString);
 		std::vector<PQLToken*> PQLTokens = tokeniser.tokenise();
 		PQLParser parser = PQLParser(PQLTokens);
 
@@ -217,7 +217,7 @@ TEST_CASE("pattern - wildcard as first arg") {
 
 	SECTION("integer factor as second arg") {
 		std::string queryString = "assign a; Select a pattern a(_,_\"456\"_)";
-		Tokeniser tokeniser = Tokeniser(queryString);
+		PQLLexer tokeniser = PQLLexer(queryString);
 		std::vector<PQLToken*> PQLTokens = tokeniser.tokenise();
 		PQLParser parser = PQLParser(PQLTokens);
 
@@ -244,7 +244,7 @@ TEST_CASE("pattern - different assign-syn") {
 	std::unordered_set<std::string> usedSynonyms;
 
 	std::string queryString = "assign a,a1; variable v;Select a pattern a1(v, _\"879\"_)";
-	Tokeniser tokeniser = Tokeniser(queryString);
+	PQLLexer tokeniser = PQLLexer(queryString);
 	std::vector<PQLToken*> PQLTokens = tokeniser.tokenise();
 	PQLParser parser = PQLParser(PQLTokens);
 
@@ -271,7 +271,7 @@ TEST_CASE("pattern - expr pattern 1") {
 	std::unordered_set<std::string> usedSynonyms;
 
 	std::string queryString = "assign a1; variable v;Select a1 pattern a1(v, _\"((((((879))))))\"_)";
-	Tokeniser tokeniser = Tokeniser(queryString);
+	PQLLexer tokeniser = PQLLexer(queryString);
 	std::vector<PQLToken*> PQLTokens = tokeniser.tokenise();
 	PQLParser parser = PQLParser(PQLTokens);
 
@@ -293,7 +293,7 @@ TEST_CASE("pattern - expr pattern 1") {
 
 TEST_CASE("invalid expr 1") {
 	std::string queryString = "assign a; variable v; Select a pattern a(v, _\"xH 123 + 456\"_)";
-	Tokeniser tokeniser = Tokeniser(queryString);
+	PQLLexer tokeniser = PQLLexer(queryString);
 	std::vector<PQLToken*> PQLTokens = tokeniser.tokenise();
 	PQLParser parser = PQLParser(PQLTokens);
 
@@ -303,7 +303,7 @@ TEST_CASE("invalid expr 1") {
 
 TEST_CASE("invalid expr 2") {
 	std::string queryString = "assign a; variable v; Select a pattern a(v, _\"xH - ( 123 + 456\"_)";
-	Tokeniser tokeniser = Tokeniser(queryString);
+	PQLLexer tokeniser = PQLLexer(queryString);
 	std::vector<PQLToken*> PQLTokens = tokeniser.tokenise();
 	PQLParser parser = PQLParser(PQLTokens);
 
@@ -313,7 +313,7 @@ TEST_CASE("invalid expr 2") {
 
 TEST_CASE("invalid expr 3") {
 	std::string queryString = "assign a; variable v; Select a pattern a(v, _\"xH + () + 123 + 456\"_)";
-	Tokeniser tokeniser = Tokeniser(queryString);
+	PQLLexer tokeniser = PQLLexer(queryString);
 	std::vector<PQLToken*> PQLTokens = tokeniser.tokenise();
 	PQLParser parser = PQLParser(PQLTokens);
 
@@ -323,7 +323,7 @@ TEST_CASE("invalid expr 3") {
 
 TEST_CASE("invalid expr 4") {
 	std::string queryString = "assign a; variable v; Select a pattern a(v, _\"xH  123 + 456)\"_)";
-	Tokeniser tokeniser = Tokeniser(queryString);
+	PQLLexer tokeniser = PQLLexer(queryString);
 	std::vector<PQLToken*> PQLTokens = tokeniser.tokenise();
 	PQLParser parser = PQLParser(PQLTokens);
 
@@ -333,7 +333,7 @@ TEST_CASE("invalid expr 4") {
 
 TEST_CASE("non-var syn as first argument") {
 	std::string queryString = "assign a; read re; Select a pattern a(re, _\"xH\"_)";
-	Tokeniser tokeniser = Tokeniser(queryString);
+	PQLLexer tokeniser = PQLLexer(queryString);
 	std::vector<PQLToken*> PQLTokens = tokeniser.tokenise();
 	PQLParser parser = PQLParser(PQLTokens);
 
@@ -343,7 +343,7 @@ TEST_CASE("non-var syn as first argument") {
 
 TEST_CASE("illegal factor first argument") {
 	std::string queryString = "assign a; Select a pattern a(_, _\"1xH3\"_)";
-	Tokeniser tokeniser = Tokeniser(queryString);
+	PQLLexer tokeniser = PQLLexer(queryString);
 	std::vector<PQLToken*> PQLTokens = tokeniser.tokenise();
 	PQLParser parser = PQLParser(PQLTokens);
 
@@ -353,7 +353,7 @@ TEST_CASE("illegal factor first argument") {
 
 TEST_CASE("integer as first argument") {
 	std::string queryString = "assign a; Select a pattern a(1, _\"xH\"_)";
-	Tokeniser tokeniser = Tokeniser(queryString);
+	PQLLexer tokeniser = PQLLexer(queryString);
 	std::vector<PQLToken*> PQLTokens = tokeniser.tokenise();
 	PQLParser parser = PQLParser(PQLTokens);
 
@@ -363,7 +363,7 @@ TEST_CASE("integer as first argument") {
 
 TEST_CASE("invalid factor, missing right underscore") {
 	std::string queryString = "assign a; variable v; Select a pattern a(v, _\"f2\")";
-	Tokeniser tokeniser = Tokeniser(queryString);
+	PQLLexer tokeniser = PQLLexer(queryString);
 	std::vector<PQLToken*> PQLTokens = tokeniser.tokenise();
 	PQLParser parser = PQLParser(PQLTokens);
 
@@ -373,7 +373,7 @@ TEST_CASE("invalid factor, missing right underscore") {
 
 TEST_CASE("invalid factor, missing left underscore") {
 	std::string queryString = "assign a; Select a pattern a(\"v123\", \"f2\"_)";
-	Tokeniser tokeniser = Tokeniser(queryString);
+	PQLLexer tokeniser = PQLLexer(queryString);
 	std::vector<PQLToken*> PQLTokens = tokeniser.tokenise();
 	PQLParser parser = PQLParser(PQLTokens);
 
@@ -383,7 +383,7 @@ TEST_CASE("invalid factor, missing left underscore") {
 
 TEST_CASE("missing assign-syn") {
 	std::string queryString = "assign a; Select a pattern (_,_)";
-	Tokeniser tokeniser = Tokeniser(queryString);
+	PQLLexer tokeniser = PQLLexer(queryString);
 	std::vector<PQLToken*> PQLTokens = tokeniser.tokenise();
 	PQLParser parser = PQLParser(PQLTokens);
 
@@ -393,7 +393,7 @@ TEST_CASE("missing assign-syn") {
 
 TEST_CASE("missing open paranthesis") {
 	std::string queryString = "assign a; variable v456; Select a pattern a v456,_\"y12\"_)";
-	Tokeniser tokeniser = Tokeniser(queryString);
+	PQLLexer tokeniser = PQLLexer(queryString);
 	std::vector<PQLToken*> PQLTokens = tokeniser.tokenise();
 	PQLParser parser = PQLParser(PQLTokens);
 
@@ -403,7 +403,7 @@ TEST_CASE("missing open paranthesis") {
 
 TEST_CASE("missing first arg") {
 	std::string queryString = "assign a; variable v789; Select a pattern a(,_\"123\"_)";
-	Tokeniser tokeniser = Tokeniser(queryString);
+	PQLLexer tokeniser = PQLLexer(queryString);
 	std::vector<PQLToken*> PQLTokens = tokeniser.tokenise();
 	PQLParser parser = PQLParser(PQLTokens);
 
@@ -413,7 +413,7 @@ TEST_CASE("missing first arg") {
 
 TEST_CASE("missing comma ") {
 	std::string queryString = "assign a; variable va78; Select a pattern a(va78 _\"y123\"_)";
-	Tokeniser tokeniser = Tokeniser(queryString);
+	PQLLexer tokeniser = PQLLexer(queryString);
 	std::vector<PQLToken*> PQLTokens = tokeniser.tokenise();
 	PQLParser parser = PQLParser(PQLTokens);
 
@@ -423,7 +423,7 @@ TEST_CASE("missing comma ") {
 
 TEST_CASE("missing second arg ") {
 	std::string queryString = "assign a; Select a pattern a(_, )";
-	Tokeniser tokeniser = Tokeniser(queryString);
+	PQLLexer tokeniser = PQLLexer(queryString);
 	std::vector<PQLToken*> PQLTokens = tokeniser.tokenise();
 	PQLParser parser = PQLParser(PQLTokens);
 
@@ -433,7 +433,7 @@ TEST_CASE("missing second arg ") {
 
 TEST_CASE("missing close paranthesis") {
 	std::string queryString = "assign a; Select a pattern a(\"v123\", _\"z3\"_ ";
-	Tokeniser tokeniser = Tokeniser(queryString);
+	PQLLexer tokeniser = PQLLexer(queryString);
 	std::vector<PQLToken*> PQLTokens = tokeniser.tokenise();
 	PQLParser parser = PQLParser(PQLTokens);
 
@@ -443,7 +443,7 @@ TEST_CASE("missing close paranthesis") {
 
 TEST_CASE("only 1 arg") {
 	std::string queryString = "assign a; variable v; Select a pattern a(v)";
-	Tokeniser tokeniser = Tokeniser(queryString);
+	PQLLexer tokeniser = PQLLexer(queryString);
 	std::vector<PQLToken*> PQLTokens = tokeniser.tokenise();
 	PQLParser parser = PQLParser(PQLTokens);
 

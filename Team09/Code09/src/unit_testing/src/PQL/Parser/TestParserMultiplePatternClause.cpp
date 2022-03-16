@@ -1,6 +1,6 @@
 #include "catch.hpp"
 #include "PQL/PQLParser.h"
-#include "PQL/Tokeniser.h"
+#include "PQL/PQLLexer.h"
 
 TEST_CASE("multiple pattern clause with AND") {
 	std::vector<QueryArgument> expectedResultSynonms;
@@ -10,7 +10,7 @@ TEST_CASE("multiple pattern clause with AND") {
 
 	SECTION("test case 1") {
 		std::string queryString = "assign a,a1; variable v; Select a pattern a(v,_) and a1(v,_\"pi * diameter * 1234\"_)";
-		Tokeniser tokeniser = Tokeniser(queryString);
+		PQLLexer tokeniser = PQLLexer(queryString);
 		std::vector<PQLToken*> PQLTokens = tokeniser.tokenise();
 		PQLParser parser = PQLParser(PQLTokens);
 

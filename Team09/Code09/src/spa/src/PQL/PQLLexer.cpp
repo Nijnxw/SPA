@@ -6,13 +6,13 @@
 #include <sstream>
 #include <iostream>
 
-#include "PQL/Tokeniser.h"
+#include "PQL/PQLLexer.h"
 #include "PQL/PQLUtils.cpp"
 #include "util/RPN.h"
 
-Tokeniser::Tokeniser(std::string rawQueryString) : CommonLexer(new std::stringstream(rawQueryString)) {}
+PQLLexer::PQLLexer(std::string rawQueryString) : CommonLexer(new std::stringstream(rawQueryString)) {}
 
-void Tokeniser::processRawToken(std::string nextStr) {
+void PQLLexer::processRawToken(std::string nextStr) {
 	if (QPStringTokenMap.find(nextStr) != QPStringTokenMap.end()) {
 		PQLTokens.push_back(new PQLToken(QPStringTokenMap[nextStr], nextStr));
 	}
@@ -30,21 +30,21 @@ void Tokeniser::processRawToken(std::string nextStr) {
 	}
 }
 
-void Tokeniser::pushToken() {
+void PQLLexer::pushToken() {
 	if (nextStr.size() > 0) {
 		processRawToken(nextStr);
 	}
 	nextStr = "";
 }
 
-void Tokeniser::pushSymbolToken(char nextChar) {
+void PQLLexer::pushSymbolToken(char nextChar) {
 	pushToken();
 	nextStr += nextChar;
 	pushToken();
 }
 
 
-std::vector<PQLToken*> Tokeniser::tokenise() {
+std::vector<PQLToken*> PQLLexer::tokenise() {
 	try {
 		char nextChar = next();
 		while (notEOF()) {

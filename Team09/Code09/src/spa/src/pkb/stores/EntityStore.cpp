@@ -57,33 +57,48 @@ bool EntityStore::addWhileStatement(int statementNumber, const std::unordered_se
 }
 
 bool EntityStore::addCallStatement(int statementNumber, const std::string& procedure) {
-	callStatements.insert(statementNumber).second;
-	callStatementsToProcedures.insert({ statementNumber, procedure }).second;
-
-	if (!proceduresToCallStatements.emplace(procedure, std::unordered_set<std::string>{std::to_string(statementNumber)}).second) {
-		proceduresToCallStatements.at(procedure).insert(std::to_string(statementNumber));
+	bool isSuccess = callStatements.insert(statementNumber).second;
+	if (isSuccess) {
+		isSuccess = callStatementsToProcedures.insert({ statementNumber, procedure }).second;
 	}
-	return true;
+	if (isSuccess) {
+		if (!proceduresToCallStatements.emplace(procedure, std::unordered_set<std::string>{std::to_string(statementNumber)}).second) {
+			isSuccess = proceduresToCallStatements.at(procedure).insert(std::to_string(statementNumber)).second;
+		}
+	}
+	return isSuccess;
 }
 
 bool EntityStore::addReadStatement(int statementNumber, const std::string& variable) {
-	readStatements.insert(statementNumber).second;
-	readStatementsToVariables.insert({ statementNumber, variable }).second;
-	readVariables.insert(variable).second;
-	if (!variablesToReadStatements.emplace(variable, std::unordered_set<std::string>{std::to_string(statementNumber)}).second) {
-		variablesToReadStatements.at(variable).insert(std::to_string(statementNumber));
+	bool isSuccess = readStatements.insert(statementNumber).second;
+	if (isSuccess) {
+		isSuccess = readStatementsToVariables.insert({ statementNumber, variable }).second;
 	}
-	return true;
+	if (isSuccess) {
+		isSuccess = readVariables.insert(variable).second;
+	}
+	if (isSuccess) {
+		if (!variablesToReadStatements.emplace(variable, std::unordered_set<std::string>{std::to_string(statementNumber)}).second) {
+			isSuccess = variablesToReadStatements.at(variable).insert(std::to_string(statementNumber)).second;
+		}
+	}
+	return isSuccess;
 }
 
 bool EntityStore::addPrintStatement(int statementNumber, const std::string& variable) {
-	printStatements.insert(statementNumber).second;
-	printStatementsToVariables.insert({ statementNumber, variable }).second;
-	printVariables.insert(variable).second;
-	if (!variablesToPrintStatements.emplace(variable, std::unordered_set<std::string>{std::to_string(statementNumber)}).second) {
-		variablesToPrintStatements.at(variable).insert(std::to_string(statementNumber));
+	bool isSuccess = printStatements.insert(statementNumber).second;
+	if (isSuccess) {
+		isSuccess = printStatementsToVariables.insert({ statementNumber, variable }).second;
 	}
-	return true;
+	if (isSuccess) {
+		isSuccess = printVariables.insert(variable).second;
+	}
+	if (isSuccess) {
+		if (!variablesToPrintStatements.emplace(variable, std::unordered_set<std::string>{std::to_string(statementNumber)}).second) {
+			isSuccess = variablesToPrintStatements.at(variable).insert(std::to_string(statementNumber)).second;
+		}
+	}
+	return isSuccess;
 }
 
 std::unordered_set<std::string> EntityStore::getProcedures() {

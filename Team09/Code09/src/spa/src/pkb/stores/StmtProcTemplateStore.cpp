@@ -3,7 +3,7 @@
 template <typename T>
 void StmtProcTemplateStore<T>::clear() {
 	firstSynonymToSecondSynonyms.clear();
-	secondSynonymToFirstSynonym.clear();
+	secondSynonymToFirstSynonyms.clear();
 	relationshipPairs.clear();
 	relationshipTPairs.clear();
 	firstSynonymToSecondSynonymsT.clear();
@@ -15,7 +15,7 @@ bool StmtProcTemplateStore<T>::addRelationship(T firstSynonym, T secondSynonym) 
 	std::pair<T, T> pair;
 	pair = std::make_pair(firstSynonym, secondSynonym);
 	return relationshipPairs.insert(pair).second && PKBUtil::addToMapWithSet(firstSynonymToSecondSynonyms, firstSynonym, secondSynonym)
-		&& secondSynonymToFirstSynonym.insert({ secondSynonym, firstSynonym }).second;
+		&& PKBUtil::addToMapWithSet(secondSynonymToFirstSynonyms, secondSynonym, firstSynonym);
 }
 
 template <typename T>
@@ -61,7 +61,7 @@ bool StmtProcTemplateStore<T>::isFirstSynonym(T firstSynonym) {
 
 template <typename T>
 bool StmtProcTemplateStore<T>::isSecondSynonym(T secondSynonym) {
-	return secondSynonymToFirstSynonym.count(secondSynonym) > 0;
+	return secondSynonymToFirstSynonyms.count(secondSynonym) > 0;
 }
 
 template <typename T>
@@ -77,12 +77,11 @@ bool StmtProcTemplateStore<T>::isSecondSynonymT(T secondSynonym) {
 template <typename T>
 std::unordered_set<T> StmtProcTemplateStore<T>::getFirstSynonyms(T secondSynonym) {
 	std::unordered_set<T> result;
-	if (secondSynonymToFirstSynonym.count(secondSynonym) <= 0) {
+	if (secondSynonymToFirstSynonyms.count(secondSynonym) <= 0) {
 		return result;
 	}
 
-	result.insert(secondSynonymToFirstSynonym[secondSynonym]);
-	return result;
+	return secondSynonymToFirstSynonyms[secondSynonym];
 }
 
 template <typename T>
@@ -102,7 +101,7 @@ std::unordered_set<T> StmtProcTemplateStore<T>::getAllFirstSynonyms() {
 
 template <typename T>
 std::unordered_set<T> StmtProcTemplateStore<T>::getAllSecondSynonyms() {
-	return PKBUtil::getKeySetFromMap(secondSynonymToFirstSynonym);
+	return PKBUtil::getKeySetFromMap(secondSynonymToFirstSynonyms);
 }
 
 template <typename T>

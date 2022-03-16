@@ -222,13 +222,51 @@ void PQLParser::parseSuchThatClause() {
 	parseRelationshipClause();
 }
 
-QueryArgument PQLParser::parseAssignPatternLHS() {
+QueryArgument PQLParser::parsePatternArgStmtList() {
+	getNextExpectedToken(TokenType::UNDERSCORE);
+	return QueryArgument(std::string("_"), entityTypeMapping[TokenType::UNDERSCORE]);
+}
+
+
+QueryArgument PQLParser::parsePatternVarArgs() {
 	auto nextToken = getNextToken();
 	auto arg = parseArgs(nextToken);
 	if (VarArgTypes.find(arg.getType()) == VarArgTypes.end()) {
 		throw "Invalid arguments for pattern clause.";
 	}
 	return arg;
+}
+
+void PQLParser::parseWhilePattern(PQLToken* synonymToken) {
+	std::vector<QueryArgument> patternArgs;
+	std::unordered_set<std::string> usedSynonyms;
+	usedSynonyms.insert(synonymToken->getValue());
+	QueryArgument arg1 = parsePatternVarArgs();
+	if (arg1.getType() != EntityType::STRING && arg1.getType() != EntityType::WILD) {
+		usedSynonyms.insert(arg1.getValue());
+	}
+	patternArgs.emplace_back(arg1);
+	getNextExpectedToken(TokenType::COMMA);
+	patternArgs.emplace_back(parsePatternArgStmtList());
+	getNextExpectedToken(TokenType::COMMA);
+	patternArgs.emplace_back(parsePatternArgStmtList());
+	getNextExpectedToken(TokenType::CLOSE_PARAN);
+	QueryClauses.push_back(QueryClause(RelationRef::PATTERN_WHILE, patternArgs, usedSynonyms, synonymToken->getValue()));
+}
+
+void PQLParser::parseIfPattern(PQLToken* synonymToken) {
+	std::vector<QueryArgument> patternArgs;
+	std::unordered_set<std::string> usedSynonyms;
+	usedSynonyms.insert(synonymToken->getValue());
+	QueryArgument arg1 = parsePatternVarArgs();
+	if (arg1.getType() != EntityType::STRING && arg1.getType() != EntityType::WILD) {
+		usedSynonyms.insert(arg1.getValue());
+	}
+	patternArgs.emplace_back(arg1);
+	getNextExpectedToken(TokenType::COMMA);
+	patternArgs.emplace_back(parsePatternArgStmtList());
+	getNextExpectedToken(TokenType::CLOSE_PARAN);
+	QueryClauses.push_back(QueryClause(RelationRef::PATTERN_IF, patternArgs, usedSynonyms, synonymToken->getValue()));
 }
 
 QueryArgument PQLParser::parseAssignPatternRHS() {
@@ -264,7 +302,7 @@ void PQLParser::parseAssignPattern(PQLToken* synonymToken) {
 	std::vector<QueryArgument> patternArgs;
 	std::unordered_set<std::string> usedSynonyms;
 	usedSynonyms.insert(synonymToken->getValue());
-	QueryArgument LHS = parseAssignPatternLHS();
+	QueryArgument LHS = parsePatternVarArgs();
 	if (LHS.getType() != EntityType::STRING && LHS.getType() != EntityType::WILD) {
 		usedSynonyms.insert(LHS.getValue());
 	}
@@ -285,13 +323,12 @@ void PQLParser::parseSinglePatternClause() {
 		case (EntityType::ASSIGN):
 			parseAssignPattern(synonymToken);
 			break;
-		//todo ifs and while pattern 
-		//case (EntityType::IF):
-		//	parseIfPattern(synonymToken);
-		//	break;
-		//case (EntityType::WHILE):
-		//	parseWhilePattern(synonymToken);
-		//	break;
+		case (EntityType::IF):
+			parseIfPattern(synonymToken);
+			break;
+		case (EntityType::WHILE):
+			parseWhilePattern(synonymToken);
+			break;
 		default:
 			throw "invalid pattern syn";
 			break;

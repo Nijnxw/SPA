@@ -163,7 +163,12 @@ private:
 	void parseRelationshipClause();
 	void parseSuchThatClause();
 
-	QueryArgument parseAssignPatternLHS();
+	QueryArgument parsePatternArgStmtList();
+	QueryArgument parsePatternVarArgs();
+	QueryArgument parseWhilePatternArg1();
+	void parseWhilePattern(PQLToken* synonymToken);
+	QueryArgument parseIfPatternArg1();
+	void parseIfPattern(PQLToken* synonymToken);
 	QueryArgument parseAssignPatternRHS();
 	void parseAssignPattern(PQLToken* synonymToken);
 	void parseSinglePatternClause();

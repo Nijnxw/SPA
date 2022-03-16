@@ -137,7 +137,7 @@ namespace PKBUtil {
         return result;
     }
 
-    static std::unordered_set<int> getEqualPairs(std::vector<int> first, std::vector<int> second) {
+    static std::unordered_set<int> getEqualPairs(const std::vector<int>& first, const std::vector<int>& second) {
         std::unordered_set<int> result;
         for (int index = 0; index < first.size(); index++) {
             if (first[index] == second[index]) {

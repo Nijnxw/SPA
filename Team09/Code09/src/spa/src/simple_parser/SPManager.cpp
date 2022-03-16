@@ -7,7 +7,7 @@ AST SPManager::parseFile(const std::string& filename) {
 			throw std::runtime_error("File do not exist!\n");
 		}
 
-		Lexer lexer = Lexer(&inputStream);
+		SPLexer lexer = SPLexer(&inputStream);
 		std::vector<SPToken*> tokens = lexer.tokenize();
 
 		SPParser parser = SPParser(tokens);

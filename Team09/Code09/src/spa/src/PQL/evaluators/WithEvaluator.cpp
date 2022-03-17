@@ -50,10 +50,10 @@ QueryClauseResult WithEvaluator::getWithByAttrRef(const std::string& LHSVal, Ent
 	else if (getAttrRefType(LHSEntType, LHSAttrType) == EntityType::INT) {
 		std::vector<int> resSet;
 		if (LHSEntType == RHSEntType) {
-			resSet = PKBUtil::convertUnorderedSetToVector(getAttrRefIntSet(LHSEntType, LHSAttrType));
+			resSet = PKBUtils::convertUnorderedSetToVector(getAttrRefIntSet(LHSEntType, LHSAttrType));
 		}
 		else {
-			resSet = PKBUtil::convertUnorderedSetToVector(PKBUtil::unorderedSetIntersection(
+			resSet = PKBUtils::convertUnorderedSetToVector(PKBUtils::unorderedSetIntersection(
 				getAttrRefIntSet(LHSEntType, LHSAttrType), getAttrRefIntSet(RHSEntType, RHSAttrType)));
 		}
 		if (!resSet.empty()) {
@@ -68,19 +68,19 @@ QueryClauseResult WithEvaluator::getWithByAttrRef(const std::string& LHSVal, Ent
 		if (LHSEntType == RHSEntType) {
 			std::unordered_set<std::string> commonStrs = getAttrRefStrSet(LHSEntType, LHSAttrType);
 			for (const auto& str : commonStrs) {
-				std::vector<std::string> vec = PKBUtil::convertUnorderedSetToVector(getRevMapFromAttr(LHSEntType, str));
-				std::tuple<std::vector<std::string>, std::vector<std::string>> crossedVec = PKBUtil::computeCartesianProduct(vec, vec);
+				std::vector<std::string> vec = PKBUtils::convertUnorderedSetToVector(getRevMapFromAttr(LHSEntType, str));
+				std::tuple<std::vector<std::string>, std::vector<std::string>> crossedVec = PKBUtils::computeCartesianProduct(vec, vec);
 				LHSResSet.insert(LHSResSet.end(), std::get<0>(crossedVec).begin(), std::get<0>(crossedVec).end());
 				RHSResSet.insert(RHSResSet.end(), std::get<1>(crossedVec).begin(), std::get<1>(crossedVec).end());
 			}
 		}
 		else {
-			std::unordered_set<std::string> commonStrs = PKBUtil::unorderedSetIntersection(getAttrRefStrSet(LHSEntType, LHSAttrType), 
+			std::unordered_set<std::string> commonStrs = PKBUtils::unorderedSetIntersection(getAttrRefStrSet(LHSEntType, LHSAttrType), 
 				getAttrRefStrSet(RHSEntType, RHSAttrType));
 			for (const auto& str : commonStrs) {
-				std::vector<std::string> LHSvec = PKBUtil::convertUnorderedSetToVector(getRevMapFromAttr(LHSEntType, str));
-				std::vector<std::string> RHSvec = PKBUtil::convertUnorderedSetToVector(getRevMapFromAttr(RHSEntType, str));
-				std::tuple<std::vector<std::string>, std::vector<std::string>> crossedVec = PKBUtil::computeCartesianProduct(LHSvec, RHSvec);
+				std::vector<std::string> LHSvec = PKBUtils::convertUnorderedSetToVector(getRevMapFromAttr(LHSEntType, str));
+				std::vector<std::string> RHSvec = PKBUtils::convertUnorderedSetToVector(getRevMapFromAttr(RHSEntType, str));
+				std::tuple<std::vector<std::string>, std::vector<std::string>> crossedVec = PKBUtils::computeCartesianProduct(LHSvec, RHSvec);
 				LHSResSet.insert(LHSResSet.end(), std::get<0>(crossedVec).begin(), std::get<0>(crossedVec).end());
 				RHSResSet.insert(RHSResSet.end(), std::get<1>(crossedVec).begin(), std::get<1>(crossedVec).end());
 			}

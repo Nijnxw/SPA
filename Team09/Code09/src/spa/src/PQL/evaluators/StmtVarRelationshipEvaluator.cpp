@@ -35,27 +35,27 @@ QueryClauseResult StmtVarRelationshipEvaluator::getRelationshipByUnderscore(
 		break;
 	case EntityType::ASSIGN: {
 		std::unordered_set<int> assignStmts = PKB::getStatementsWithType(EntityType::ASSIGN);
-		queryResult.addColumn(LHS, PKBUtil::unorderedSetIntersection(relationshipStmts, assignStmts));
+		queryResult.addColumn(LHS, PKBUtils::unorderedSetIntersection(relationshipStmts, assignStmts));
 		break;
 	}
 	case EntityType::READ:
-		queryResult.addColumn(LHS, PKBUtil::unorderedSetIntersection(relationshipStmts,
+		queryResult.addColumn(LHS, PKBUtils::unorderedSetIntersection(relationshipStmts,
 			PKB::getStatementsWithType(EntityType::READ)));
 		break;
 	case EntityType::PRINT:
-		queryResult.addColumn(LHS, PKBUtil::unorderedSetIntersection(relationshipStmts,
+		queryResult.addColumn(LHS, PKBUtils::unorderedSetIntersection(relationshipStmts,
 			PKB::getStatementsWithType(EntityType::PRINT)));
 		break;
 	case EntityType::IF:
-		queryResult.addColumn(LHS,PKBUtil::unorderedSetIntersection(relationshipStmts,
+		queryResult.addColumn(LHS,PKBUtils::unorderedSetIntersection(relationshipStmts,
 			PKB::getStatementsWithType(EntityType::IF)));
 		break;
 	case EntityType::WHILE:
-		queryResult.addColumn(LHS, PKBUtil::unorderedSetIntersection(relationshipStmts,
+		queryResult.addColumn(LHS, PKBUtils::unorderedSetIntersection(relationshipStmts,
 			PKB::getStatementsWithType(EntityType::WHILE)));
 		break;
 	case EntityType::CALL:
-		queryResult.addColumn(LHS, PKBUtil::unorderedSetIntersection(relationshipStmts,
+		queryResult.addColumn(LHS, PKBUtils::unorderedSetIntersection(relationshipStmts,
 			PKB::getStatementsWithType(EntityType::CALL)));
 		break;
 	case EntityType::PROC:
@@ -97,28 +97,28 @@ QueryClauseResult StmtVarRelationshipEvaluator::getRelationshipByVariable(Relati
 		break;
 	case EntityType::ASSIGN: {
 		std::unordered_set<int> assignStmts = PKB::getStatementsWithType(EntityType::ASSIGN);
-		queryResult.addColumn(LHS, PKBUtil::unorderedSetIntersection(relationshipStmts, assignStmts));
+		queryResult.addColumn(LHS, PKBUtils::unorderedSetIntersection(relationshipStmts, assignStmts));
 		break;
 	}
 	case EntityType::PRINT:
 		queryResult.addColumn(LHS,
-			PKBUtil::unorderedSetIntersection(relationshipStmts, PKB::getStatementsWithType(EntityType::PRINT)));
+			PKBUtils::unorderedSetIntersection(relationshipStmts, PKB::getStatementsWithType(EntityType::PRINT)));
 		break;
 	case EntityType::READ:
 		queryResult.addColumn(LHS,
-			PKBUtil::unorderedSetIntersection(relationshipStmts, PKB::getStatementsWithType(EntityType::READ)));
+			PKBUtils::unorderedSetIntersection(relationshipStmts, PKB::getStatementsWithType(EntityType::READ)));
 		break;
 	case EntityType::IF:
 		queryResult.addColumn(LHS,
-			PKBUtil::unorderedSetIntersection(relationshipStmts, PKB::getStatementsWithType(EntityType::IF)));
+			PKBUtils::unorderedSetIntersection(relationshipStmts, PKB::getStatementsWithType(EntityType::IF)));
 		break;
 	case EntityType::WHILE:
 		queryResult.addColumn(LHS,
-			PKBUtil::unorderedSetIntersection(relationshipStmts, PKB::getStatementsWithType(EntityType::WHILE)));
+			PKBUtils::unorderedSetIntersection(relationshipStmts, PKB::getStatementsWithType(EntityType::WHILE)));
 		break;
 	case EntityType::CALL:
 		queryResult.addColumn(LHS,
-			PKBUtil::unorderedSetIntersection(relationshipStmts, PKB::getStatementsWithType(EntityType::CALL)));
+			PKBUtils::unorderedSetIntersection(relationshipStmts, PKB::getStatementsWithType(EntityType::CALL)));
 		break;
 	case EntityType::PROC:
 		if (relationship == RelationRef::USES) {
@@ -164,9 +164,9 @@ QueryClauseResult StmtVarRelationshipEvaluator::getRelationshipBySynonym(Relatio
 		std::unordered_set<int> assignStmts = PKB::getStatementsWithType(EntityType::ASSIGN);
 		std::tie(stmts, vars) = (relationship == RelationRef::MODIFIES)
 			? PKB::getStmtsToModifiedVariable(
-				PKBUtil::unorderedSetIntersection(PKB::getModifiesStatements(), assignStmts))
+				PKBUtils::unorderedSetIntersection(PKB::getModifiesStatements(), assignStmts))
 			: PKB::getStmtsToUsedVariable(
-				PKBUtil::unorderedSetIntersection(PKB::getUsesStatements(), assignStmts));
+				PKBUtils::unorderedSetIntersection(PKB::getUsesStatements(), assignStmts));
 		break;
 	}
 	case EntityType::PRINT: {

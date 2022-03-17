@@ -9,7 +9,7 @@
 
 #include "../../models/EntityType.h"
 #include "../../models/QueryClauseResult.h"
-#include "../util/PKBUtil.cpp"
+#include "util/PKBUtils.cpp"
 
 class Store {
 public:

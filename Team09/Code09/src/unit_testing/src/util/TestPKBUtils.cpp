@@ -1,5 +1,5 @@
 #include "catch.hpp"
-#include "pkb/util/PKBUtil.cpp"
+#include "util/PKBUtils.cpp"
 
 TEST_CASE("PKBUtil Helper Functions") {
 

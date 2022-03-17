@@ -836,3 +836,7 @@ std::tuple<std::vector<std::string>, std::vector<std::string>>
 PKB::getProcsToModifiedVariable(const std::unordered_set<std::string>& procs) {
 	return modifiesStore.getProcToVarByProcs(procs);
 }
+
+bool PKB::isAssignmentStmt(int stmtNum) {
+	return entityStore.isAssignStmt(stmtNum);
+}

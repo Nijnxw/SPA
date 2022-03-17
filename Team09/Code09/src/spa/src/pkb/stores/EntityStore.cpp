@@ -203,3 +203,7 @@ std::unordered_map<std::string, std::unordered_set<std::string>> EntityStore::ge
 std::unordered_map<std::string, std::unordered_set<std::string>> EntityStore::getVariablesToReadStatements() {
 	return variablesToReadStatements;
 }
+
+bool EntityStore::isAssignStmt(const int stmtNum) {
+	return assignStatements.find(stmtNum) != assignStatements.end();
+}

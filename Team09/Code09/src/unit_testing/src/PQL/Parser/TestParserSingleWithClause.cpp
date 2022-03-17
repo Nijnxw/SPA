@@ -226,7 +226,6 @@ TEST_CASE("With - 2nd arg is string") {
 
 }
 
-
 TEST_CASE("With - 2nd arg is int") {
 
 	std::vector<QueryArgument> expectedResultSynonms;

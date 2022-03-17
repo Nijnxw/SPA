@@ -26,12 +26,18 @@ private:
 	std::unordered_set<int> printStatements;
 	std::unordered_set<int> readStatements;
 
+	std::unordered_set<std::string> printVariables;
+	std::unordered_set<std::string> readVariables;
+
 	std::unordered_map<int, AssignStatement> assignStatementsToStructs;
 	std::unordered_map<int, std::unordered_set<std::string>> ifStatementsToConditionalVariables;
 	std::unordered_map<int, std::unordered_set<std::string>> whileStatementsToConditionalVariables;
 	std::unordered_map<int, std::string> callStatementsToProcedures;
 	std::unordered_map<int, std::string> printStatementsToVariables;
 	std::unordered_map<int, std::string> readStatementsToVariables;
+	std::unordered_map<std::string, std::unordered_set<std::string>> proceduresToCallStatements;
+	std::unordered_map<std::string, std::unordered_set<std::string>> variablesToPrintStatements;
+	std::unordered_map<std::string, std::unordered_set<std::string>> variablesToReadStatements;
 
 public:
 	EntityStore();
@@ -55,15 +61,19 @@ public:
 	std::unordered_set<std::string> getVariables();
 	std::unordered_set<std::string> getConstants();
 	std::unordered_set<int> getStatementNumbers();
-	std::unordered_set<int>
-	getStatementsWithType(EntityType statementType); // For getting statement numbers of a specific statement type.
+	std::unordered_set<int> getStatementsWithType(EntityType statementType); // For getting statement numbers of a specific statement type.
 
+	std::unordered_set<std::string> getPrintVariables();
+	std::unordered_set<std::string> getReadVariables();
 	std::unordered_map<int, AssignStatement> getAssignStatementsToStructs();
 	std::unordered_map<int, std::unordered_set<std::string>> getIfStatementsToConditionalVariables();
 	std::unordered_map<int, std::unordered_set<std::string>> getWhileStatementsToConditionalVariables();
 	std::unordered_map<int, std::string> getCallStatementsToProcedures();
 	std::unordered_map<int, std::string> getPrintStatementsToVariables();
 	std::unordered_map<int, std::string> getReadStatementsToVariables();
+	std::unordered_map<std::string, std::unordered_set<std::string>> getProceduresToCallStatements();
+	std::unordered_map<std::string, std::unordered_set<std::string>> getVariablesToPrintStatements();
+	std::unordered_map<std::string, std::unordered_set<std::string>> getVariablesToReadStatements();
 
 	bool isAssignStmt(int stmtNum);
 };

@@ -8,6 +8,7 @@
 #include "PatternIfEvaluator.h"
 #include "PatternWhileEvaluator.h"
 #include "CallsEvaluator.h"
+#include "WithEvaluator.h"
 
 QueryClauseResult ClauseEvaluator::evaluate(const QueryClause& clause, bool isBooleanResult) {
 	QueryArgument firstArg = clause.getArguments().at(0);
@@ -21,6 +22,7 @@ QueryClauseResult ClauseEvaluator::evaluate(const QueryClause& clause, bool isBo
 	PatternIfEvaluator patternIfEvaluator = PatternIfEvaluator();
 	PatternWhileEvaluator patternWhileEvaluator = PatternWhileEvaluator();
 	CallsEvaluator callsEvaluator = CallsEvaluator();
+	WithEvaluator withEvaluator = WithEvaluator();
 
 	switch (clause.getClauseType()) {
 		case RelationRef::FOLLOWS:
@@ -55,6 +57,9 @@ QueryClauseResult ClauseEvaluator::evaluate(const QueryClause& clause, bool isBo
 		case RelationRef::CALLS_T:
 			return callsEvaluator.getCallsT(firstArg.getValue(), secondArg.getValue(), firstArg.getType(),
 											secondArg.getType(), isBooleanResult);
+		case RelationRef::WITH:
+			return withEvaluator.getWith(firstArg.getValue(), firstArg.getType(), firstArg.getAttrRef(),
+				secondArg.getValue(), secondArg.getType(), secondArg.getAttrRef(), isBooleanResult);
 		default:
 			return {};
 	}

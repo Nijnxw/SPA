@@ -44,37 +44,31 @@ AffectsEvaluator::getAffectsT(const std::string& LHS, const std::string& RHS, En
 QueryClauseResult
 AffectsEvaluator::getAffectsByStmtNum(const std::string& LHS, const std::string& RHS, EntityType RHSType,
 									  bool isBooleanResult, bool isAffects, Cache& cache, Cache& revCache) {
-	if (RHSType == EntityType::STMT || RHSType == EntityType::ASSIGN) {
-		terminateFunc = [&LHS, isBooleanResult, cache]() -> bool {
-			if (isBooleanResult) {
-				return cache.find(LHS) != cache.end();
+	if (RHSType == EntityType::INT) {
+		if (cache.find(LHS) != cache.end()) {
+			auto affected = cache.at(LHS);
+			if (affected.find(RHS) != affected.end()) {
+				return {true};
 			}
-			return false;
-		};
-	} else {
-		if (RHSType == EntityType::INT) {
+		}
+
+		terminateFunc = [&LHS, &RHS, cache, this](int curr) -> bool {
 			if (cache.find(LHS) != cache.end()) {
 				auto affected = cache.at(LHS);
-				if (affected.find(RHS) != affected.end()) {
-					return {true};
-				}
+				return affected.find(RHS) != affected.end();
 			}
-
-			terminateFunc = [&LHS, &RHS, cache]() -> bool {
-				if (cache.find(LHS) != cache.end()) {
-					auto affected = cache.at(LHS);
-					return affected.find(RHS) != affected.end();
-				}
-				return false;
-			};
-		} else {
-			terminateFunc = [&LHS, cache]() -> bool {
-				return cache.find(LHS) != cache.end();
-			};
-		}
+			return cfg.at(curr).empty();
+		};
+	} else {
+		terminateFunc = [&LHS, cache, this](int curr) -> bool {
+			if (cache.find(LHS) != cache.end()) {
+				return true;
+			}
+			return cfg.at(curr).empty();
+		};
 	}
 	if ((isAffects && !isAffectsCacheComplete) || (!isAffects && !isAffectsTCacheComplete)) {
-		computeAffects(std::stoi(LHS), 0, isAffects);
+		computeAffects(std::stoi(LHS), cfg.size() - 1, isAffects);
 	}
 	if (isBooleanResult) {
 		return buildBoolResult(LHS, RHS, EntityType::INT, RHSType, cache, revCache);
@@ -86,14 +80,14 @@ QueryClauseResult
 AffectsEvaluator::getAffectsByStmt(const std::string& LHS, const std::string& RHS, EntityType RHSType,
 								   bool isBooleanResult, bool isAffects, Cache& cache, Cache& revCache) {
 	if (RHSType == EntityType::INT) {
-		terminateFunc = [&RHS, isBooleanResult, revCache]() -> bool {
+		terminateFunc = [&RHS, isBooleanResult, revCache](int curr) -> bool {
 			if (isBooleanResult) {
 				return revCache.find(RHS) != revCache.end();
 			}
 			return false;
 		};
 	} else {
-		terminateFunc = [&RHS, isBooleanResult, cache]() -> bool {
+		terminateFunc = [isBooleanResult, cache](int curr) -> bool {
 			if (isBooleanResult) {
 				return !cache.empty();
 			}
@@ -101,10 +95,10 @@ AffectsEvaluator::getAffectsByStmt(const std::string& LHS, const std::string& RH
 		};
 	}
 	if (isAffects && !isAffectsCacheComplete) {
-		computeAffects(1, 0, isAffects);
+		computeAffects(1, cfg.size() - 1, isAffects);
 		isAffectsCacheComplete = true;
 	} else if (!isAffects && !isAffectsTCacheComplete) {
-		computeAffects(1, 0, isAffects);
+		computeAffects(1, cfg.size() - 1, isAffects);
 		isAffectsTCacheComplete = true;
 	}
 	if (isBooleanResult) {
@@ -117,7 +111,7 @@ QueryClauseResult
 AffectsEvaluator::getAffectsByUnderscore(const std::string& RHS, EntityType RHSType, bool isBooleanResult,
 										 bool isAffects, Cache& cache, Cache& revCache) {
 	if (RHSType == EntityType::ASSIGN || RHSType == EntityType::STMT) {
-		terminateFunc = [isBooleanResult, revCache]() -> bool {
+		terminateFunc = [isBooleanResult, revCache](int curr) -> bool {
 			if (isBooleanResult) {
 				return !revCache.empty();
 			}
@@ -125,20 +119,20 @@ AffectsEvaluator::getAffectsByUnderscore(const std::string& RHS, EntityType RHST
 		};
 	} else {
 		if (RHSType == EntityType::INT) {
-			terminateFunc = [&RHS, revCache]() -> bool {
+			terminateFunc = [&RHS, revCache](int curr) -> bool {
 				return revCache.find(RHS) != revCache.end();
 			};
 		} else if (RHSType == EntityType::WILD) {
-			terminateFunc = [cache]() -> bool {
+			terminateFunc = [cache](int curr) -> bool {
 				return !cache.empty();
 			};
 		}
 	}
 	if (isAffects && !isAffectsCacheComplete) {
-		computeAffects(1, 0, isAffects);
+		computeAffects(1, cfg.size() - 1, isAffects);
 		isAffectsCacheComplete = true;
 	} else if (!isAffects && !isAffectsTCacheComplete) {
-		computeAffects(1, 0, isAffects);
+		computeAffects(1, cfg.size() - 1, isAffects);
 		isAffectsTCacheComplete = true;
 	}
 	if (isBooleanResult) {
@@ -215,7 +209,7 @@ AffectsEvaluator::LMT
 AffectsEvaluator::computeAffects(int start, int end, LMT currLMT, bool isAffects) {
 	int currStmtNum = start;
 
-	while (currStmtNum < end) {    // to replace limit to end of cfg
+	while (currStmtNum <= end) {
 		EntityType currStmtType = PKB::getStatementType(currStmtNum);
 		LMT stmtLMT;
 		switch (currStmtType) {
@@ -234,13 +228,14 @@ AffectsEvaluator::computeAffects(int start, int end, LMT currLMT, bool isAffects
 				} else {
 					computeAffectsTStmt(currLMT, currStmtNum, currStmtType);
 				}
-				if (terminateFunc()) {
-					return {};
-				}
-				int next = 0; // get next
+				int next = getNextSmaller(
+					currStmtNum); // check for last statement in while loop to prevent infinite recursion
 				if (PKB::getStatementType(next) == EntityType::WHILE && visitedLoops.find(next) != visitedLoops.end()) {
 					visitedLoops.insert(next);
 					computeAffectsWhile(currLMT, next, currStmtNum, isAffects);
+				}
+				if (terminateFunc(currStmtNum)) {
+					return {};
 				}
 				currStmtNum++;
 				break;
@@ -253,7 +248,7 @@ AffectsEvaluator::computeAffects(int start, int end, LMT currLMT, bool isAffects
 AffectsEvaluator::LMT
 AffectsEvaluator::computeAffectsIfElse(const LMT& prevLMT, int start, int end, bool isAffects) {
 	int firstIfStmt = start + 1;
-	int firstElseStmt = 0;    // call PKB::getNext(start) find larger
+	int firstElseStmt = getNextBigger(start);
 	int lastIfStmt = firstElseStmt - 1;
 	int lastElseStmt = end - 1;
 
@@ -407,4 +402,22 @@ AffectsEvaluator::LMT AffectsEvaluator::mergeLMT(const LMT& first, const LMT& se
 	}
 
 	return merged;
+}
+
+int AffectsEvaluator::getNextSmaller(int currStmtNum) {
+	auto possibleNext = cfg.at(currStmtNum);
+	int smallestNext = *possibleNext.begin();
+	for (auto it = next(possibleNext.begin()); it != possibleNext.end(); it++) {
+		smallestNext = std::min(smallestNext, *it);
+	}
+	return smallestNext;
+}
+
+int AffectsEvaluator::getNextBigger(int currStmtNum) {
+	auto possibleNext = cfg.at(currStmtNum);
+	int biggestNext = *possibleNext.begin();
+	for (auto it = next(possibleNext.begin()); it != possibleNext.end(); it++) {
+		biggestNext = std::max(biggestNext, *it);
+	}
+	return biggestNext;
 }

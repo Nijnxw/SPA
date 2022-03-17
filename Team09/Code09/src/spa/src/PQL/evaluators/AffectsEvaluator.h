@@ -14,6 +14,7 @@
 #include "models/EntityType.h"
 #include "models/QueryClauseResult.h"
 #include "models/QueryClause.h"
+#include "simple_parser/CFGExtractor.h"
 
 class AffectsEvaluator {
 public:
@@ -59,13 +60,17 @@ private:
 	void computeAffectsRead(LMT& currLMT, int currStmtNum);
 	void computeAffectsTRead(LMT& currLMT, int currStmtNum);
 
+	int getNextSmaller(int currStmtNum);
+	int getNextBigger(int currStmtNum);
+
 	static bool isValidArg(const std::string& argValue, EntityType argType);
 	static LMT mergeLMT(const LMT& first, const LMT& second);
 
+	const CFG& cfg = PKB::getCFG();
 	bool isAffectsCacheComplete;
 	bool isAffectsTCacheComplete;
-	std::function<bool()> terminateFunc;
-	std::unordered_set<int> visitedLoops;
+	std::function<bool(int)> terminateFunc;
+	std::unordered_set<int> visitedLoops;    // prevent infinite recursion
 	Cache affectsCache;
 	Cache revAffectsCache;
 	Cache affectsTCache;

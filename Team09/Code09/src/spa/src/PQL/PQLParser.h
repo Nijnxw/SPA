@@ -163,6 +163,7 @@ private:
 	void parseRelationshipClause();
 	void parseSuchThatClause();
 
+
 	QueryArgument parsePatternArgStmtList();
 	QueryArgument parsePatternVarArgs();
 	QueryArgument parseWhilePatternArg1();

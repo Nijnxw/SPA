@@ -677,6 +677,14 @@ bool PKB::isCalleeT(std::string callee) {
 	return callsStore.isSecondSynonymT(callee);
 }
 
+std::string PKB::getCalledProcName(int callStmtNum) {
+	auto callToProcMap = entityStore.getCallStatementsToProcedures();
+	if (callToProcMap.find(callStmtNum) != callToProcMap.end()) {
+		return callToProcMap.at(callStmtNum);
+	}
+	return "";
+}
+
 std::unordered_set<std::string> PKB::getCallees(std::string caller) {
 	return callsStore.getSecondSynonyms(caller);
 }

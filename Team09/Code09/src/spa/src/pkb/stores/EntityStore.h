@@ -55,7 +55,8 @@ public:
 	std::unordered_set<std::string> getVariables();
 	std::unordered_set<std::string> getConstants();
 	std::unordered_set<int> getStatementNumbers();
-	std::unordered_set<int> getStatementsWithType(EntityType statementType); // For getting statement numbers of a specific statement type.
+	std::unordered_set<int>
+	getStatementsWithType(EntityType statementType); // For getting statement numbers of a specific statement type.
 
 	std::unordered_map<int, AssignStatement> getAssignStatementsToStructs();
 	std::unordered_map<int, std::unordered_set<std::string>> getIfStatementsToConditionalVariables();
@@ -63,4 +64,6 @@ public:
 	std::unordered_map<int, std::string> getCallStatementsToProcedures();
 	std::unordered_map<int, std::string> getPrintStatementsToVariables();
 	std::unordered_map<int, std::string> getReadStatementsToVariables();
+
+	bool isAssignStmt(int stmtNum);
 };

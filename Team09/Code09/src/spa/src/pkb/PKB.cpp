@@ -148,6 +148,10 @@ std::unordered_set<int> PKB::getStatementsWithType(EntityType statementType) {
 	return entityStore.getStatementsWithType(statementType);
 }
 
+EntityType PKB::getStatementType(int stmtNum) {
+	return entityStore.getStatementType(stmtNum);
+}
+
 /* StmtStmt Getter Helpers */
 bool PKB::hasStmtStmtRelationship(RelationRef relationship) {
 	switch (relationship) {
@@ -428,12 +432,20 @@ bool PKB::isFolloweeT(int followee) {
 	return followsStore.isSecondSynonymT(followee);
 }
 
-std::unordered_set<int> PKB::getFollowee(int follower) {
-	return followsStore.getSecondSynonyms(follower);
+int PKB::getFollowee(int follower) {
+	std::unordered_set<int> followers = followsStore.getSecondSynonyms(follower);
+	if (followers.empty()) {
+		return 0;
+	}
+	return *followers.begin();
 }
 
-std::unordered_set<int> PKB::getFollower(int followee) {
-	return followsStore.getFirstSynonyms(followee);
+int PKB::getFollower(int followee) {
+	std::unordered_set<int> followees = followsStore.getFirstSynonyms(followee);
+	if (followees.empty()) {
+		return 0;
+	}
+	return *followees.begin();
 }
 
 std::unordered_set<int> PKB::getAllFollowees() {
@@ -572,6 +584,14 @@ bool PKB::isCallerT(std::string caller) {
 
 bool PKB::isCalleeT(std::string callee) {
 	return callsStore.isSecondSynonymT(callee);
+}
+
+std::string PKB::getCalledProcName(int callStmtNum) {
+	std::unordered_map<int, std::string> callToProc = entityStore.getCallStatementsToProcedures();
+	if (callToProc.find(callStmtNum) != callToProc.end()) {
+		return callToProc.at(callStmtNum);
+	}
+	return "";
 }
 
 std::unordered_set<std::string> PKB::getCallees(std::string caller) {
@@ -724,4 +744,8 @@ PKB::getStmtsToModifiedVariable(const std::unordered_set<int>& stmts) {
 std::tuple<std::vector<std::string>, std::vector<std::string>>
 PKB::getProcsToModifiedVariable(const std::unordered_set<std::string>& procs) {
 	return modifiesStore.getProcToVarByProcs(procs);
+}
+
+bool PKB::isAssignmentStmt(int stmtNum) {
+	return entityStore.isAssignStmt(stmtNum);
 }

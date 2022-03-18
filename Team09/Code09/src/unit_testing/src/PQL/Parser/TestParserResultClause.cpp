@@ -28,7 +28,7 @@ TEST_CASE("extension of result clause result clause") {
 
 	SECTION("test case 2") {
 		std::string queryString = "assign a,a1; variable v; Select <a,a1.stmt#,v.varName> ";
-		Tokeniser tokeniser = Tokeniser(queryString);
+		PQLLexer tokeniser = PQLLexer(queryString);
 		std::vector<PQLToken*> PQLTokens = tokeniser.tokenise();
 		PQLParser parser = PQLParser(PQLTokens);
 
@@ -57,7 +57,7 @@ TEST_CASE("extension of result clause result clause") {
 
 	SECTION("test case 4") {
 		std::string queryString = "assign a1; Select a1.stmt# ";
-		Tokeniser tokeniser = Tokeniser(queryString);
+		PQLLexer tokeniser = PQLLexer(queryString);
 		std::vector<PQLToken*> PQLTokens = tokeniser.tokenise();
 		PQLParser parser = PQLParser(PQLTokens);
 

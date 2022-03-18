@@ -28,6 +28,7 @@ Reverse CFG, vector is 1-indexed
 */
 
 void NextStore::clear() {
+	StmtStmtStore::clear();
 	this->cfg.clear();
 	this->reversedCfg.clear();
 	this->procedureNameToLastCFGNodes.clear();

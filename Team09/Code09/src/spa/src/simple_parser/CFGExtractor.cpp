@@ -51,18 +51,24 @@ std::unordered_set<int> CFGExtractor::extractCFGFromStmtLst(int prev, std::vecto
 	return prevStmts;
 }
 
-void CFGExtractor::extractCFGFromProcedure(std::shared_ptr<ProcedureNode> proc) {
-	CFGExtractor::extractCFGFromStmtLst(0, proc->getStmtList());
+std::unordered_set<int> CFGExtractor::extractCFGFromProcedure(std::shared_ptr<ProcedureNode> proc) {
+	std::unordered_set<int> lastStmts = CFGExtractor::extractCFGFromStmtLst(PROG_START, proc->getStmtList());
+	return lastStmts;
 }
 
-void CFGExtractor::extractCFGFromProcedureList(std::unordered_map<std::string, std::shared_ptr<ProcedureNode>> procMap) {
+std::unordered_map<std::string, std::unordered_set<int>>
+CFGExtractor::extractCFGFromProcedureList(std::unordered_map<std::string, std::shared_ptr<ProcedureNode>> procMap) {
+	std::unordered_map<std::string, std::unordered_set<int>> mappings;
 	for (auto& procPair : procMap) {
-		CFGExtractor::extractCFGFromProcedure(procPair.second);
+		std::unordered_set<int> lastStmts = CFGExtractor::extractCFGFromProcedure(procPair.second);
+		mappings.insert({ procPair.first, lastStmts });
 	}
+	return mappings;
 }
 
-CFG CFGExtractor::extractCFG(AST ast, int totalStmts) {
+std::pair<CFG, std::unordered_map<std::string, std::unordered_set<int>>>
+CFGExtractor::extractCFG(AST ast, int totalStmts) {
 	CFGExtractor::initialiseCFG(totalStmts);
-	CFGExtractor::extractCFGFromProcedureList(ast->getProcedureMap());
-	return CFGExtractor::cfg;
+	std::unordered_map<std::string, std::unordered_set<int>> mappings = CFGExtractor::extractCFGFromProcedureList(ast->getProcedureMap());
+	return std::make_pair(CFGExtractor::cfg, mappings);
 }

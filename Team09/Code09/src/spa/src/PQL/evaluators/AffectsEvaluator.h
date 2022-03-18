@@ -18,7 +18,7 @@
 
 class AffectsEvaluator {
 public:
-	AffectsEvaluator() = default;
+	AffectsEvaluator();
 
 	QueryClauseResult
 	getAffects(const std::string& LHS, const std::string& RHS, EntityType LHSType, EntityType RHSType,
@@ -49,25 +49,26 @@ private:
 
 	void computeAffects(int start, int end, bool isAffects);
 	LMT computeAffects(int start, int end, LMT prevLMT, bool isAffects);
-	LMT computeAffectsIfElse(const LMT& prevLMT, int start, int end, bool isAffects);
+	LMT computeAffectsIfElse(const LMT& prevLMT, int start, bool isAffects);
 	LMT computeAffectsWhile(const LMT& prevLMT, int start, int end, bool isAffects);
 	void computeAffectsStmt(LMT& currLMT, int currStmtNum, EntityType currStmtType);
 	void computeAffectsTStmt(LMT& currLMT, int currStmtNum, EntityType currStmtType);
 	void computeAffectsAssign(LMT& currLMT, int currStmtNum);
 	void computeAffectsTAssign(LMT& currLMT, int currStmtNum);
 	void computeAffectsCall(LMT& currLMT, int currStmtNum);
-	void computeAffectsTCall(LMT& currLMT, int currStmtNum);
 	void computeAffectsRead(LMT& currLMT, int currStmtNum);
-	void computeAffectsTRead(LMT& currLMT, int currStmtNum);
 
 	int getNextSmaller(int currStmtNum);
 	int getNextBigger(int currStmtNum);
+	int getLastStmtOfBlock(int currStmtNum);
+	int getNextForIf(int currStmtNum);
+	int getNextForWhile(int currStmtNum);
 	bool isProcLastStmt(int currStmtNum);
 
 	static bool isValidArg(const std::string& argValue, EntityType argType);
 	static LMT mergeLMT(const LMT& first, const LMT& second);
 
-	const CFG& cfg = PKB::getCFG();
+	CFG cfg;
 	bool isAffectsCacheComplete;
 	bool isAffectsTCacheComplete;
 	std::function<bool(int)> terminateFunc;

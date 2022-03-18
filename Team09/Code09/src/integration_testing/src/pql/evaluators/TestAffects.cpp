@@ -53,8 +53,8 @@ TEST_CASE ("Test affects/*") {
 		{9},
 		{10},
 		{11, 12},
-		{13},
-		{13},
+		{6},
+		{6},
 		{14, 16},
 		{15},
 		{17},
@@ -96,9 +96,25 @@ TEST_CASE ("Test affects/*") {
 	PKB::addAssignStatement(21, "v", "z");
 	PKB::addAssignStatement(23, "x", "6");
 
-	PKB::addModifiesProcedure("First", {"x", "z"});
-	PKB::addModifiesProcedure("Second", {"i", "x", "y", "z"});
-	PKB::addModifiesProcedure("Third", {"v", "z"});
+	PKB::addFollows(1, 2);
+	PKB::addFollows(2, 3);
+	PKB::addFollows(4, 5);
+	PKB::addFollows(5, 6);
+	PKB::addFollows(6, 13);
+	PKB::addFollows(7, 8);
+	PKB::addFollows(8, 9);
+	PKB::addFollows(9, 10);
+	PKB::addFollows(13, 17);
+	PKB::addFollows(14, 15);
+	PKB::addFollows(17, 18);
+	PKB::addFollows(18, 19);
+	PKB::addFollows(20, 21);
+	PKB::addFollows(21, 22);
+	PKB::addFollows(22, 23);
+
+	PKB::addModifiesProcedure("First", {"i", "v", "x", "y", "z"});
+	PKB::addModifiesProcedure("Second", {"i", "v", "x", "y", "z"});
+	PKB::addModifiesProcedure("Third", {"v", "x", "z"});
 
 	PKB::addModifiesStatement(1, {"x"});
 	PKB::addModifiesStatement(2, {"z"});
@@ -118,8 +134,12 @@ TEST_CASE ("Test affects/*") {
 	PKB::addModifiesStatement(21, {"v"});
 	PKB::addModifiesStatement(23, {"x"});
 
+	PKB::addUsesStatement(6, {"i", "x", "y"});
 	PKB::addUsesStatement(7, {"x", "y"});
 	PKB::addUsesStatement(9, {"i"});
+	PKB::addUsesStatement(10, {"i"});
+	PKB::addUsesStatement(12, {"i"});
+	PKB::addUsesStatement(13, {"x"});
 	PKB::addUsesStatement(14, {"x"});
 	PKB::addUsesStatement(15, {"x"});
 	PKB::addUsesStatement(17, {"z", "x", "i"});
@@ -337,6 +357,54 @@ TEST_CASE ("Test affects/*") {
 		} SECTION ("LHS ASSIGN - RHS PROC") {
 			QueryClauseResult actual = evaluator.getAffects("a", "p", EntityType::ASSIGN, EntityType::PROC, false);
 			REQUIRE_FALSE(actual.containsValidResult());
+		} SECTION ("LHS READ - RHS INT") {
+			QueryClauseResult actual = evaluator.getAffects("re", "1", EntityType::READ, EntityType::INT, false);
+			REQUIRE_FALSE(actual.containsValidResult());
+		} SECTION ("LHS PRINT - RHS INT") {
+			QueryClauseResult actual = evaluator.getAffects("pn", "1", EntityType::PRINT, EntityType::INT, false);
+			REQUIRE_FALSE(actual.containsValidResult());
+		} SECTION ("LHS CALL - RHS INT") {
+			QueryClauseResult actual = evaluator.getAffects("c", "1", EntityType::CALL, EntityType::INT, false);
+			REQUIRE_FALSE(actual.containsValidResult());
+		} SECTION ("LHS WHILE - RHS INT") {
+			QueryClauseResult actual = evaluator.getAffects("w", "1", EntityType::WHILE, EntityType::INT, false);
+			REQUIRE_FALSE(actual.containsValidResult());
+		} SECTION ("LHS IF - RHS INT") {
+			QueryClauseResult actual = evaluator.getAffects("ifs", "1", EntityType::IF, EntityType::INT, false);
+			REQUIRE_FALSE(actual.containsValidResult());
+		} SECTION ("LHS VAR - RHS INT") {
+			QueryClauseResult actual = evaluator.getAffects("v", "1", EntityType::VAR, EntityType::INT, false);
+			REQUIRE_FALSE(actual.containsValidResult());
+		} SECTION ("LHS CONST - RHS INT") {
+			QueryClauseResult actual = evaluator.getAffects("co", "1", EntityType::CONST, EntityType::INT, false);
+			REQUIRE_FALSE(actual.containsValidResult());
+		} SECTION ("LHS PROC - RHS INT") {
+			QueryClauseResult actual = evaluator.getAffects("p", "1", EntityType::PROC, EntityType::INT, false);
+			REQUIRE_FALSE(actual.containsValidResult());
+		} SECTION ("LHS WILD - RHS READ") {
+			QueryClauseResult actual = evaluator.getAffects("_", "re", EntityType::WILD, EntityType::READ, false);
+			REQUIRE_FALSE(actual.containsValidResult());
+		} SECTION ("LHS WILD - RHS PRINT") {
+			QueryClauseResult actual = evaluator.getAffects("_", "pn", EntityType::WILD, EntityType::PRINT, false);
+			REQUIRE_FALSE(actual.containsValidResult());
+		} SECTION ("LHS WILD - RHS CALL") {
+			QueryClauseResult actual = evaluator.getAffects("_", "c", EntityType::WILD, EntityType::CALL, false);
+			REQUIRE_FALSE(actual.containsValidResult());
+		} SECTION ("LHS WILD - RHS WHILE") {
+			QueryClauseResult actual = evaluator.getAffects("_", "w", EntityType::WILD, EntityType::WHILE, false);
+			REQUIRE_FALSE(actual.containsValidResult());
+		} SECTION ("LHS WILD - RHS IF") {
+			QueryClauseResult actual = evaluator.getAffects("_", "ifs", EntityType::WILD, EntityType::IF, false);
+			REQUIRE_FALSE(actual.containsValidResult());
+		} SECTION ("LHS WILD - RHS VAR") {
+			QueryClauseResult actual = evaluator.getAffects("_", "v", EntityType::WILD, EntityType::VAR, false);
+			REQUIRE_FALSE(actual.containsValidResult());
+		} SECTION ("LHS WILD - RHS CONST") {
+			QueryClauseResult actual = evaluator.getAffects("_", "co", EntityType::WILD, EntityType::CONST, false);
+			REQUIRE_FALSE(actual.containsValidResult());
+		} SECTION ("LHS WILD - RHS PROC") {
+			QueryClauseResult actual = evaluator.getAffects("_", "p", EntityType::WILD, EntityType::PROC, false);
+			REQUIRE_FALSE(actual.containsValidResult());
 		}
 	}
 
@@ -475,7 +543,7 @@ TEST_CASE ("Test affects/*") {
 																	true);
 			REQUIRE(actualBoolRes.containsValidResult());
 
-			QueryClauseResult actualNormRes = evaluator.getAffectsT("a2", "22", EntityType::ASSIGN, EntityType::INT,
+			QueryClauseResult actualNormRes = evaluator.getAffectsT("a2", "19", EntityType::ASSIGN, EntityType::INT,
 																	false);
 			QueryClauseResult expectedNormRes = QueryClauseResult(
 				{{"a2", {"4", "5", "9", "12", "14", "15", "16", "17", "18"}}});
@@ -586,6 +654,54 @@ TEST_CASE ("Test affects/*") {
 			REQUIRE_FALSE(actual.containsValidResult());
 		} SECTION ("LHS ASSIGN - RHS PROC") {
 			QueryClauseResult actual = evaluator.getAffectsT("a", "p", EntityType::ASSIGN, EntityType::PROC, false);
+			REQUIRE_FALSE(actual.containsValidResult());
+		} SECTION ("LHS READ - RHS INT") {
+			QueryClauseResult actual = evaluator.getAffectsT("re", "1", EntityType::READ, EntityType::INT, false);
+			REQUIRE_FALSE(actual.containsValidResult());
+		} SECTION ("LHS PRINT - RHS INT") {
+			QueryClauseResult actual = evaluator.getAffectsT("pn", "1", EntityType::PRINT, EntityType::INT, false);
+			REQUIRE_FALSE(actual.containsValidResult());
+		} SECTION ("LHS CALL - RHS INT") {
+			QueryClauseResult actual = evaluator.getAffectsT("c", "1", EntityType::CALL, EntityType::INT, false);
+			REQUIRE_FALSE(actual.containsValidResult());
+		} SECTION ("LHS WHILE - RHS INT") {
+			QueryClauseResult actual = evaluator.getAffectsT("w", "1", EntityType::WHILE, EntityType::INT, false);
+			REQUIRE_FALSE(actual.containsValidResult());
+		} SECTION ("LHS IF - RHS INT") {
+			QueryClauseResult actual = evaluator.getAffectsT("ifs", "1", EntityType::IF, EntityType::INT, false);
+			REQUIRE_FALSE(actual.containsValidResult());
+		} SECTION ("LHS VAR - RHS INT") {
+			QueryClauseResult actual = evaluator.getAffectsT("v", "1", EntityType::VAR, EntityType::INT, false);
+			REQUIRE_FALSE(actual.containsValidResult());
+		} SECTION ("LHS CONST - RHS INT") {
+			QueryClauseResult actual = evaluator.getAffectsT("co", "1", EntityType::CONST, EntityType::INT, false);
+			REQUIRE_FALSE(actual.containsValidResult());
+		} SECTION ("LHS PROC - RHS INT") {
+			QueryClauseResult actual = evaluator.getAffectsT("p", "1", EntityType::PROC, EntityType::INT, false);
+			REQUIRE_FALSE(actual.containsValidResult());
+		} SECTION ("LHS WILD - RHS READ") {
+			QueryClauseResult actual = evaluator.getAffectsT("_", "re", EntityType::WILD, EntityType::READ, false);
+			REQUIRE_FALSE(actual.containsValidResult());
+		} SECTION ("LHS WILD - RHS PRINT") {
+			QueryClauseResult actual = evaluator.getAffectsT("_", "pn", EntityType::WILD, EntityType::PRINT, false);
+			REQUIRE_FALSE(actual.containsValidResult());
+		} SECTION ("LHS WILD - RHS CALL") {
+			QueryClauseResult actual = evaluator.getAffectsT("_", "c", EntityType::WILD, EntityType::CALL, false);
+			REQUIRE_FALSE(actual.containsValidResult());
+		} SECTION ("LHS WILD - RHS WHILE") {
+			QueryClauseResult actual = evaluator.getAffectsT("_", "w", EntityType::WILD, EntityType::WHILE, false);
+			REQUIRE_FALSE(actual.containsValidResult());
+		} SECTION ("LHS WILD - RHS IF") {
+			QueryClauseResult actual = evaluator.getAffectsT("_", "ifs", EntityType::WILD, EntityType::IF, false);
+			REQUIRE_FALSE(actual.containsValidResult());
+		} SECTION ("LHS WILD - RHS VAR") {
+			QueryClauseResult actual = evaluator.getAffectsT("_", "v", EntityType::WILD, EntityType::VAR, false);
+			REQUIRE_FALSE(actual.containsValidResult());
+		} SECTION ("LHS WILD - RHS CONST") {
+			QueryClauseResult actual = evaluator.getAffectsT("_", "co", EntityType::WILD, EntityType::CONST, false);
+			REQUIRE_FALSE(actual.containsValidResult());
+		} SECTION ("LHS WILD - RHS PROC") {
+			QueryClauseResult actual = evaluator.getAffectsT("_", "p", EntityType::WILD, EntityType::PROC, false);
 			REQUIRE_FALSE(actual.containsValidResult());
 		}
 	}

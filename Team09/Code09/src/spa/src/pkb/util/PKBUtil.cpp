@@ -74,6 +74,16 @@ namespace PKBUtil {
         return keySet;
     }
 
+    static std::unordered_set<int> getValueSetFromMapWithSet(std::unordered_map<int, std::unordered_set<int>>& map) {
+        std::unordered_set<int> valueSet;
+        for (auto const& pair : map) {
+            for (auto const& element : pair.second) {
+                valueSet.insert(element);
+            }
+        }
+        return valueSet;
+    }
+
     template <typename T, typename U, typename Hash, typename Pred, typename Alloc>
     static std::tuple<std::vector<T>, std::vector<U>> convertMapToVectorTuple(std::unordered_map<T, U, Hash, Pred, Alloc>& map) {
         std::vector<T> firstColumn;
@@ -82,6 +92,20 @@ namespace PKBUtil {
         for (auto const& pair : map) {
             firstColumn.push_back(pair.first);
             secondColumn.push_back(pair.second);
+        }
+
+        return { firstColumn, secondColumn };
+    }
+
+    static std::tuple<std::vector<int>, std::vector<int>> convertMapWithSetToVectorTuple(std::unordered_map<int, std::unordered_set<int>>& map) {
+        std::vector<int> firstColumn;
+        std::vector<int> secondColumn;
+
+        for (auto const& pair : map) {
+            for (auto const& element : pair.second) {
+                firstColumn.push_back(pair.first);
+                secondColumn.push_back(element);
+            }
         }
 
         return { firstColumn, secondColumn };
@@ -109,7 +133,40 @@ namespace PKBUtil {
             pair = std::make_pair(firstEntities[i], secondEntities[i]);
             result.insert(pair);
         }
-        
+
         return result;
+    }
+
+    static std::unordered_set<int> getEqualPairs(const std::vector<int>& first, const std::vector<int>& second) {
+        std::unordered_set<int> result;
+        for (int index = 0; index < first.size(); index++) {
+            if (first[index] == second[index]) {
+                result.insert(first[index]);
+            }
+        }
+        return result;
+    }
+
+    template <typename T>
+    static std::vector<T> convertUnorderedSetToVector(std::unordered_set<T> set) {
+        std::vector<T> vector;
+        vector.reserve(set.size());
+        for (auto it = set.begin(); it != set.end(); ) {
+            vector.push_back(std::move(set.extract(it++).value()));
+        }
+        return vector;
+    }
+
+    template <typename T>
+    static std::tuple<std::vector<T>, std::vector<T>> computeCartesianProduct(std::vector<T> vec1, std::vector<T> vec2) {
+        std::vector<T> resVec1;
+        std::vector<T> resVec2;
+        for (const auto& entry1 : vec1) {
+            for (const auto& entry2 : vec2) {
+                resVec1.push_back(entry1);
+                resVec2.push_back(entry2);
+            }
+        }
+        return { resVec1, resVec2 };
     }
 }

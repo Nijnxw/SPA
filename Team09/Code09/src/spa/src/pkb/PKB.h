@@ -58,14 +58,16 @@ public:
 	static bool addUsesProcedure(const std::string& procedure, const std::unordered_set<std::string>& variables);
 	static bool addModifiesStatement(int statementNumber, const std::unordered_set<std::string>& variables);
 	static bool addModifiesProcedure(const std::string& procedure, const std::unordered_set<std::string>& variables);
-	static bool addCFG(const std::vector<std::unordered_set<int>>* cfg);
-
+	static bool addCFG(const std::vector<std::unordered_set<int>>& cfg);
+	static bool addProcedureNameToLastCFGNode(const std::string procedure, const std::unordered_set<int> lastNodes);
 
 	/* Getters called by QE */
 	static std::unordered_set<std::string> getProcedures();
 	static std::unordered_set<std::string> getVariables();
 	static std::unordered_set<std::string> getConstants();
 	static std::unordered_set<int> getStatementNumbers();
+	static std::unordered_set<std::string> getPrintVariables();
+	static std::unordered_set<std::string> getReadVariables();
 
 	static std::unordered_map<int, AssignStatement> getAssignStatementsToStructs();
 	static std::unordered_map<int, std::unordered_set<std::string>> getIfStatementsToConditionalVariables();
@@ -73,6 +75,9 @@ public:
 	static std::unordered_map<int, std::string> getCallStatementsToProcedures();
 	static std::unordered_map<int, std::string> getPrintStatementsToVariables();
 	static std::unordered_map<int, std::string> getReadStatementsToVariables();
+	static std::unordered_map<std::string, std::unordered_set<std::string>> getProceduresToCallStatements();
+	static std::unordered_map<std::string, std::unordered_set<std::string>> getVariablesToPrintStatements();
+	static std::unordered_map<std::string, std::unordered_set<std::string>> getVariablesToReadStatements();
 
 	static std::unordered_set<int> getStatementsWithType(EntityType statementType);
 
@@ -151,6 +156,25 @@ public:
 
 	static std::tuple<std::vector<int>, std::vector<int>> getAllParentPairs();
 	static std::tuple<std::vector<int>, std::vector<int>> getAllParentTPairs();
+
+	/* Next Getters */
+	static bool hasNextRelationship();
+	static bool isNextRelationship(int previousStatement, int nextStatement);
+
+	static bool isPreviousStatement(int previousStatement);
+	static bool isNextStatement(int nextStatement);
+
+	static std::unordered_set<int> getNextStatements(int previousStatement);
+	static std::unordered_set<int> getPreviousStatements(int nextStatement);
+
+	static std::unordered_set<int> getAllNextStatements();
+	static std::unordered_set<int> getAllPreviousStatements();
+
+	static std::tuple<std::vector<int>, std::vector<int>> getAllNextPairs();
+
+	static std::vector<std::unordered_set<int>> getCFG();
+	static std::vector<std::unordered_set<int>> getReversedCFG();
+	static std::unordered_map<std::string, std::unordered_set<int>> getProcedureNameToLastCFGNode();
 
 	/* Calls Getters */
 	static bool hasCallsRelationship();

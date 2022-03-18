@@ -7,7 +7,9 @@ enum class RelationRef {
 	PARENT_T,
 	FOLLOWS,
 	FOLLOWS_T,
-	PATTERN_A,
+	PATTERN_ASSIGN,
+	PATTERN_IF,
+	PATTERN_WHILE,
 	CALLS,
 	CALLS_T,
 	NEXT,
@@ -35,7 +37,7 @@ inline const char* ToString(RelationRef ref) {
 			return "Calls";
 		case RelationRef::CALLS_T:
 			return "Calls*";
-		case RelationRef::PATTERN_A:
+		case RelationRef::PATTERN_ASSIGN:
 			return "PatternA";
 		default:
 			return "";

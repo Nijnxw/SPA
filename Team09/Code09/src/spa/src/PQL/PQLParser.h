@@ -53,6 +53,28 @@ static std::unordered_map<TokenType, EntityType> entityTypeMapping = {
 	{TokenType::STRING, EntityType::STRING},
 };
 
+static std::unordered_map<TokenType, AttributeRef> attrRefMapping = {
+	{TokenType::STMT_NO, AttributeRef::STMT_NO},
+	{TokenType::PROC_NAME, AttributeRef::PROC_NAME},
+	{TokenType::VAR_NAME, AttributeRef::VAR_NAME},
+	{TokenType::VALUE, AttributeRef::VALUE},
+};
+
+static std::unordered_set<AttributeRef> nameAttr = {
+	AttributeRef::PROC_NAME, AttributeRef::VAR_NAME,
+};
+
+static std::unordered_set<AttributeRef> numberAttr = {
+	AttributeRef::VALUE, AttributeRef::STMT_NO
+};
+
+static std::unordered_map <TokenType, std::unordered_set<EntityType>> attrRefEntityTypeMap = {
+	{TokenType::PROC_NAME, {EntityType::CALL, EntityType::PROC}},
+	{TokenType::VAR_NAME, {EntityType::READ, EntityType::PRINT, EntityType::VAR, }},
+	{TokenType::VALUE, {EntityType::CONST}},
+	{TokenType::STMT_NO, {EntityType::READ,EntityType::PRINT,EntityType::WHILE,EntityType::IF,EntityType::ASSIGN,EntityType::CALL,EntityType::STMT}},
+};
+
 static std::unordered_set<EntityType> stmtRef = {
 	EntityType::STMT, EntityType::READ, EntityType::PRINT,
 	EntityType::WHILE, EntityType::IF, EntityType::ASSIGN,
@@ -115,6 +137,10 @@ private:
 	bool isValidSynonym(PQLToken* token);
 	bool isDeclaredSynonym(std::string syn);
 	bool nextIsComma();
+	bool isWithArgNameType(QueryArgument arg);
+	bool isWithArgNumberType(QueryArgument arg);
+	bool isWithArgsSameType(QueryArgument arg1, QueryArgument arg2);
+	bool isValidAttributeRef(EntityType synType, TokenType attributeRef);
 
 	PQLToken* peekNextToken();
 	PQLToken* getNextToken();
@@ -132,13 +158,26 @@ private:
 
 
 	QueryArgument parseArgs(PQLToken* token);
+
 	void parseSingleRelationshipClause();
 	void parseRelationshipClause();
 	void parseSuchThatClause();
-	QueryArgument parseAssignPatternLHS();
+
+
+	QueryArgument parsePatternArgStmtList();
+	QueryArgument parsePatternVarArgs();
+	QueryArgument parseWhilePatternArg1();
+	void parseWhilePattern(PQLToken* synonymToken);
+	QueryArgument parseIfPatternArg1();
+	void parseIfPattern(PQLToken* synonymToken);
 	QueryArgument parseAssignPatternRHS();
 	void parseAssignPattern(PQLToken* synonymToken);
 	void parseSinglePatternClause();
 	void parsePatternClause();
+
+	QueryArgument parseWithArgs();
+	void parseSignleWithClause();
+	void parseWithClause();
+
 	void parseAfterSelect();
 };

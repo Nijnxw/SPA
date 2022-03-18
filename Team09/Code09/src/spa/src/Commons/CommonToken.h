@@ -77,6 +77,12 @@ enum class TokenType {
 	// AND
 	AND,
 
+	//attr ref
+	STMT_NO,
+	PROC_NAME,
+	VAR_NAME,
+	VALUE,
+
 	// End Of File token
 	END_OF_FILE,
 };
@@ -159,6 +165,12 @@ static std::unordered_map<std::string, TokenType> QPStringTokenMap = {
 
 	//And
 	{"and",		  TokenType::AND},
+	//attr ref
+	{"stmt#",	  TokenType::STMT_NO},
+	{"procName",  TokenType::PROC_NAME},
+	{"varName",	  TokenType::VAR_NAME},
+	{"value",	  TokenType::VALUE},
+
 };
 
 class CommonToken {

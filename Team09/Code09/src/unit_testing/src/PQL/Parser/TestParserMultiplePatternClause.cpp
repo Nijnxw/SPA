@@ -20,7 +20,7 @@ TEST_CASE("multiple pattern clause with AND") {
 		clauseArgs.push_back(QueryArgument(std::string("_"), EntityType::WILD));
 		usedSynonyms.insert("a");
 		usedSynonyms.insert("v");
-		expectedClauses.push_back(QueryClause(RelationRef::PATTERN_A, clauseArgs, usedSynonyms, "a"));
+		expectedClauses.push_back(QueryClause(RelationRef::PATTERN_ASSIGN, clauseArgs, usedSynonyms, "a"));
 
 		clauseArgs.clear();
 		usedSynonyms.clear();
@@ -29,7 +29,7 @@ TEST_CASE("multiple pattern clause with AND") {
 		clauseArgs.push_back(QueryArgument(std::string("_pi diameter * 1234 *_"), EntityType::STRING));
 		usedSynonyms.insert("a1");
 		usedSynonyms.insert("v");
-		expectedClauses.push_back(QueryClause(RelationRef::PATTERN_A, clauseArgs, usedSynonyms,"a1"));
+		expectedClauses.push_back(QueryClause(RelationRef::PATTERN_ASSIGN, clauseArgs, usedSynonyms,"a1"));
 
 		Query actualQuery = parser.parse();
 		std::vector<QueryArgument> actualResultSynonms = actualQuery.getResultSynonyms();

@@ -160,4 +160,27 @@ TEST_CASE("PKBUtil Helper Functions") {
 
 			REQUIRE(tuple == expectedTuple);
 		}
+
+		SECTION("convertUnorderedSetToVector positive query") {
+			std::unordered_set<int> firstSet = { 1 };
+			std::unordered_set<int> secondSet = { 1 };
+
+			std::vector<int> firstVector = PKBUtil::convertUnorderedSetToVector(firstSet);
+			std::vector<int> secondVector = PKBUtil::convertUnorderedSetToVector(secondSet);
+
+			REQUIRE(firstVector == secondVector);
+		}
+
+		SECTION("computeCartesianProduct positive query") {
+			std::vector<std::string> firstVec = { "1", "2" };
+			std::vector<std::string> secondVec = { "3", "4" };
+
+			std::tuple<std::vector<std::string>, std::vector<std::string>> res = PKBUtil::computeCartesianProduct(firstVec, secondVec);
+
+			std::vector<std::string> expectedFirstVec = { "1", "1", "2", "2" };
+			std::vector<std::string> expectedSecondVec = { "3", "4", "3", "4" };
+
+			REQUIRE(std::get<0>(res) == expectedFirstVec);
+			REQUIRE(std::get<1>(res) == expectedSecondVec);
+		}
 }

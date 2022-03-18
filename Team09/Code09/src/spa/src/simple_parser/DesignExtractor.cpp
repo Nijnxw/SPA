@@ -257,8 +257,9 @@ void DesignExtractor::extractDesignElements(AST ast, int stmtCount) {
 	EntityStager::clear();
 	DesignExtractor::procCache.clear();
 	processProcedureList(ast, ast->getProcedureMap());
-	CFG cfg = CFGExtractor::extractCFG(ast, stmtCount);
-	EntityStager::stageCFG(cfg);
+	std::pair<CFG, std::unordered_map<std::string, std::unordered_set<int>>> pair = CFGExtractor::extractCFG(ast, stmtCount);
+	EntityStager::stageCFG(pair.first);
+	EntityStager::stageLastStmtMapping(pair.second);
 }
 
 void DesignExtractor::commit() {

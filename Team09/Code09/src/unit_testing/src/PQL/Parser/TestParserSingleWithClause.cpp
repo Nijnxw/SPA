@@ -1,6 +1,6 @@
 #include "catch.hpp"
 #include "PQL/PQLParser.h"
-#include "PQL/Tokeniser.h"
+#include "PQL/PQLLexer.h"
 
 TEST_CASE("With - 2nd arg is string") {
 
@@ -11,7 +11,7 @@ TEST_CASE("With - 2nd arg is string") {
 
 	SECTION("1st arg is string") {
 		std::string queryString = "stmt s; Select s with \"v\"=\"v\"  ";
-		Tokeniser tokeniser = Tokeniser(queryString);
+		PQLLexer tokeniser = PQLLexer(queryString);
 		std::vector<PQLToken*> PQLTokens = tokeniser.tokenise();
 		PQLParser parser = PQLParser(PQLTokens);
 
@@ -30,7 +30,7 @@ TEST_CASE("With - 2nd arg is string") {
 
 	SECTION("1st arg is int") {
 		std::string queryString = "stmt s; Select s with 1=\"v\"  ";
-		Tokeniser tokeniser = Tokeniser(queryString);
+		PQLLexer tokeniser = PQLLexer(queryString);
 		std::vector<PQLToken*> PQLTokens = tokeniser.tokenise();
 		PQLParser parser = PQLParser(PQLTokens);
 
@@ -40,7 +40,7 @@ TEST_CASE("With - 2nd arg is string") {
 
 	SECTION("1st arg is attrref - call.procname") {
 		std::string queryString = "call c; Select c with c.procName=\"v\"  ";
-		Tokeniser tokeniser = Tokeniser(queryString);
+		PQLLexer tokeniser = PQLLexer(queryString);
 		std::vector<PQLToken*> PQLTokens = tokeniser.tokenise();
 		PQLParser parser = PQLParser(PQLTokens);
 
@@ -62,7 +62,7 @@ TEST_CASE("With - 2nd arg is string") {
 
 	SECTION("1st arg is attrRef - procedure.procname") {
 		std::string queryString = "procedure p; Select p with p.procName=\"v\"  ";
-		Tokeniser tokeniser = Tokeniser(queryString);
+		PQLLexer tokeniser = PQLLexer(queryString);
 		std::vector<PQLToken*> PQLTokens = tokeniser.tokenise();
 		PQLParser parser = PQLParser(PQLTokens);
 
@@ -83,7 +83,7 @@ TEST_CASE("With - 2nd arg is string") {
 
 	SECTION("1st arg is attrRef - variable.varname") {
 		std::string queryString = "variable v; Select v with v.varName=\"v\"  ";
-		Tokeniser tokeniser = Tokeniser(queryString);
+		PQLLexer tokeniser = PQLLexer(queryString);
 		std::vector<PQLToken*> PQLTokens = tokeniser.tokenise();
 		PQLParser parser = PQLParser(PQLTokens);
 
@@ -104,7 +104,7 @@ TEST_CASE("With - 2nd arg is string") {
 
 	SECTION("1st arg is attrRef - read.varname") {
 		std::string queryString = "read rd; Select rd with rd.varName=\"v\"  ";
-		Tokeniser tokeniser = Tokeniser(queryString);
+		PQLLexer tokeniser = PQLLexer(queryString);
 		std::vector<PQLToken*> PQLTokens = tokeniser.tokenise();
 		PQLParser parser = PQLParser(PQLTokens);
 
@@ -125,7 +125,7 @@ TEST_CASE("With - 2nd arg is string") {
 
 	SECTION("1st arg is attrRef - print.varName") {
 		std::string queryString = "print pn; Select pn with pn.varName=\"v\"  ";
-		Tokeniser tokeniser = Tokeniser(queryString);
+		PQLLexer tokeniser = PQLLexer(queryString);
 		std::vector<PQLToken*> PQLTokens = tokeniser.tokenise();
 		PQLParser parser = PQLParser(PQLTokens);
 
@@ -146,7 +146,7 @@ TEST_CASE("With - 2nd arg is string") {
 
 	SECTION("1st arg is attrRef - constant.value") {
 		std::string queryString = "constant c; Select c with c.value=\"v\"  ";
-		Tokeniser tokeniser = Tokeniser(queryString);
+		PQLLexer tokeniser = PQLLexer(queryString);
 		std::vector<PQLToken*> PQLTokens = tokeniser.tokenise();
 		PQLParser parser = PQLParser(PQLTokens);
 
@@ -156,7 +156,7 @@ TEST_CASE("With - 2nd arg is string") {
 
 	SECTION("1st arg is attrRef - stmt.stmt#") {
 		std::string queryString = "stmt s; Select s with s.stmt#=\"v\"  ";
-		Tokeniser tokeniser = Tokeniser(queryString);
+		PQLLexer tokeniser = PQLLexer(queryString);
 		std::vector<PQLToken*> PQLTokens = tokeniser.tokenise();
 		PQLParser parser = PQLParser(PQLTokens);
 
@@ -166,7 +166,7 @@ TEST_CASE("With - 2nd arg is string") {
 
 	SECTION("1st arg is attrRef - read.stmt#") {
 		std::string queryString = "read rd; Select rd with rd.stmt#=\"v\"  ";
-		Tokeniser tokeniser = Tokeniser(queryString);
+		PQLLexer tokeniser = PQLLexer(queryString);
 		std::vector<PQLToken*> PQLTokens = tokeniser.tokenise();
 		PQLParser parser = PQLParser(PQLTokens);
 
@@ -176,7 +176,7 @@ TEST_CASE("With - 2nd arg is string") {
 
 	SECTION("1st arg is attrRef - print.stmt#") {
 		std::string queryString = "print pn; Select pn with pn.stmt#=\"v\"  ";
-		Tokeniser tokeniser = Tokeniser(queryString);
+		PQLLexer tokeniser = PQLLexer(queryString);
 		std::vector<PQLToken*> PQLTokens = tokeniser.tokenise();
 		PQLParser parser = PQLParser(PQLTokens);
 
@@ -186,7 +186,7 @@ TEST_CASE("With - 2nd arg is string") {
 
 	SECTION("1st arg is attrRef - call.stmt#") {
 		std::string queryString = "call c; Select c with c.stmt#=\"v\"  ";
-		Tokeniser tokeniser = Tokeniser(queryString);
+		PQLLexer tokeniser = PQLLexer(queryString);
 		std::vector<PQLToken*> PQLTokens = tokeniser.tokenise();
 		PQLParser parser = PQLParser(PQLTokens);
 
@@ -196,7 +196,7 @@ TEST_CASE("With - 2nd arg is string") {
 
 	SECTION("1st arg is attrRef - while.stmt#") {
 		std::string queryString = "while w; Select w with w.stmt#=\"v\"  ";
-		Tokeniser tokeniser = Tokeniser(queryString);
+		PQLLexer tokeniser = PQLLexer(queryString);
 		std::vector<PQLToken*> PQLTokens = tokeniser.tokenise();
 		PQLParser parser = PQLParser(PQLTokens);
 
@@ -206,7 +206,7 @@ TEST_CASE("With - 2nd arg is string") {
 
 	SECTION("1st arg is attrRef - if.stmt#") {
 		std::string queryString = "if ifs; Select ifs with ifs.stmt#=\"v\"  ";
-		Tokeniser tokeniser = Tokeniser(queryString);
+		PQLLexer tokeniser = PQLLexer(queryString);
 		std::vector<PQLToken*> PQLTokens = tokeniser.tokenise();
 		PQLParser parser = PQLParser(PQLTokens);
 
@@ -216,7 +216,7 @@ TEST_CASE("With - 2nd arg is string") {
 
 	SECTION("1st arg is attrRef - assign.stmt#") {
 		std::string queryString = "assign a; Select a with a.stmt#=\"v\"  ";
-		Tokeniser tokeniser = Tokeniser(queryString);
+		PQLLexer tokeniser = PQLLexer(queryString);
 		std::vector<PQLToken*> PQLTokens = tokeniser.tokenise();
 		PQLParser parser = PQLParser(PQLTokens);
 
@@ -235,7 +235,7 @@ TEST_CASE("With - 2nd arg is int") {
 
 	SECTION("1st arg is string") {
 		std::string queryString = "stmt s; Select s with \"v\"=1  ";
-		Tokeniser tokeniser = Tokeniser(queryString);
+		PQLLexer tokeniser = PQLLexer(queryString);
 		std::vector<PQLToken*> PQLTokens = tokeniser.tokenise();
 		PQLParser parser = PQLParser(PQLTokens);
 
@@ -245,7 +245,7 @@ TEST_CASE("With - 2nd arg is int") {
 
 	SECTION("1st arg is int") {
 		std::string queryString = "stmt s; Select s with 1=1 ";
-		Tokeniser tokeniser = Tokeniser(queryString);
+		PQLLexer tokeniser = PQLLexer(queryString);
 		std::vector<PQLToken*> PQLTokens = tokeniser.tokenise();
 		PQLParser parser = PQLParser(PQLTokens);
 
@@ -264,7 +264,7 @@ TEST_CASE("With - 2nd arg is int") {
 
 	SECTION("1st arg is attrref - call.procname") {
 		std::string queryString = "call c; Select c with c.procName=1  ";
-		Tokeniser tokeniser = Tokeniser(queryString);
+		PQLLexer tokeniser = PQLLexer(queryString);
 		std::vector<PQLToken*> PQLTokens = tokeniser.tokenise();
 		PQLParser parser = PQLParser(PQLTokens);
 
@@ -275,7 +275,7 @@ TEST_CASE("With - 2nd arg is int") {
 
 	SECTION("1st arg is attrRef - procedure.procname") {
 		std::string queryString = "procedure p; Select p with p.procName=1  ";
-		Tokeniser tokeniser = Tokeniser(queryString);
+		PQLLexer tokeniser = PQLLexer(queryString);
 		std::vector<PQLToken*> PQLTokens = tokeniser.tokenise();
 		PQLParser parser = PQLParser(PQLTokens);
 
@@ -285,7 +285,7 @@ TEST_CASE("With - 2nd arg is int") {
 
 	SECTION("1st arg is attrRef - variable.varname") {
 		std::string queryString = "variable v; Select v with v.varName=1  ";
-		Tokeniser tokeniser = Tokeniser(queryString);
+		PQLLexer tokeniser = PQLLexer(queryString);
 		std::vector<PQLToken*> PQLTokens = tokeniser.tokenise();
 		PQLParser parser = PQLParser(PQLTokens);
 
@@ -295,7 +295,7 @@ TEST_CASE("With - 2nd arg is int") {
 
 	SECTION("1st arg is attrRef - read.varname") {
 		std::string queryString = "read rd; Select rd with rd.varName=1  ";
-		Tokeniser tokeniser = Tokeniser(queryString);
+		PQLLexer tokeniser = PQLLexer(queryString);
 		std::vector<PQLToken*> PQLTokens = tokeniser.tokenise();
 		PQLParser parser = PQLParser(PQLTokens);
 
@@ -305,7 +305,7 @@ TEST_CASE("With - 2nd arg is int") {
 
 	SECTION("1st arg is attrRef - print.varName") {
 		std::string queryString = "print pn; Select pn with pn.varName=1  ";
-		Tokeniser tokeniser = Tokeniser(queryString);
+		PQLLexer tokeniser = PQLLexer(queryString);
 		std::vector<PQLToken*> PQLTokens = tokeniser.tokenise();
 		PQLParser parser = PQLParser(PQLTokens);
 		Query actualQuery = parser.parse();
@@ -314,7 +314,7 @@ TEST_CASE("With - 2nd arg is int") {
 
 	SECTION("1st arg is attrRef - constant.value") {
 		std::string queryString = "constant c; Select c with c.value=1  ";
-		Tokeniser tokeniser = Tokeniser(queryString);
+		PQLLexer tokeniser = PQLLexer(queryString);
 		std::vector<PQLToken*> PQLTokens = tokeniser.tokenise();
 		PQLParser parser = PQLParser(PQLTokens);
 
@@ -334,7 +334,7 @@ TEST_CASE("With - 2nd arg is int") {
 
 	SECTION("1st arg is attrRef - stmt.stmt#") {
 		std::string queryString = "stmt s; Select s with s.stmt#=1  ";
-		Tokeniser tokeniser = Tokeniser(queryString);
+		PQLLexer tokeniser = PQLLexer(queryString);
 		std::vector<PQLToken*> PQLTokens = tokeniser.tokenise();
 		PQLParser parser = PQLParser(PQLTokens);
 
@@ -354,7 +354,7 @@ TEST_CASE("With - 2nd arg is int") {
 
 	SECTION("1st arg is attrRef - read.stmt#") {
 		std::string queryString = "read rd; Select rd with rd.stmt#=1  ";
-		Tokeniser tokeniser = Tokeniser(queryString);
+		PQLLexer tokeniser = PQLLexer(queryString);
 		std::vector<PQLToken*> PQLTokens = tokeniser.tokenise();
 		PQLParser parser = PQLParser(PQLTokens);
 
@@ -374,7 +374,7 @@ TEST_CASE("With - 2nd arg is int") {
 
 	SECTION("1st arg is attrRef - print.stmt#") {
 		std::string queryString = "print pn; Select pn with pn.stmt#=1  ";
-		Tokeniser tokeniser = Tokeniser(queryString);
+		PQLLexer tokeniser = PQLLexer(queryString);
 		std::vector<PQLToken*> PQLTokens = tokeniser.tokenise();
 		PQLParser parser = PQLParser(PQLTokens);
 
@@ -394,7 +394,7 @@ TEST_CASE("With - 2nd arg is int") {
 
 	SECTION("1st arg is attrRef - call.stmt#") {
 		std::string queryString = "call c; Select c with c.stmt#=1  ";
-		Tokeniser tokeniser = Tokeniser(queryString);
+		PQLLexer tokeniser = PQLLexer(queryString);
 		std::vector<PQLToken*> PQLTokens = tokeniser.tokenise();
 		PQLParser parser = PQLParser(PQLTokens);
 
@@ -414,7 +414,7 @@ TEST_CASE("With - 2nd arg is int") {
 
 	SECTION("1st arg is attrRef - while.stmt#") {
 		std::string queryString = "while w; Select w with w.stmt#=1  ";
-		Tokeniser tokeniser = Tokeniser(queryString);
+		PQLLexer tokeniser = PQLLexer(queryString);
 		std::vector<PQLToken*> PQLTokens = tokeniser.tokenise();
 		PQLParser parser = PQLParser(PQLTokens);
 
@@ -434,7 +434,7 @@ TEST_CASE("With - 2nd arg is int") {
 
 	SECTION("1st arg is attrRef - if.stmt#") {
 		std::string queryString = "if ifs; Select ifs with ifs.stmt#=1  ";
-		Tokeniser tokeniser = Tokeniser(queryString);
+		PQLLexer tokeniser = PQLLexer(queryString);
 		std::vector<PQLToken*> PQLTokens = tokeniser.tokenise();
 		PQLParser parser = PQLParser(PQLTokens);
 
@@ -454,7 +454,7 @@ TEST_CASE("With - 2nd arg is int") {
 
 	SECTION("1st arg is attrRef - assign.stmt#") {
 		std::string queryString = "assign a; Select a with a.stmt#=1  ";
-		Tokeniser tokeniser = Tokeniser(queryString);
+		PQLLexer tokeniser = PQLLexer(queryString);
 		std::vector<PQLToken*> PQLTokens = tokeniser.tokenise();
 		PQLParser parser = PQLParser(PQLTokens);
 

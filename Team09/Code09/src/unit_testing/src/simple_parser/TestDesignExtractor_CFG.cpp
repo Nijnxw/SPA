@@ -5,6 +5,8 @@
 #include "asts/ComplexASTs.h"
 
 #include <memory>
+#include <unordered_map>
+#include <unordered_set>
 #include <vector>
 
 TEST_CASE("CFG 3.1 - Single Read") {
@@ -16,6 +18,12 @@ TEST_CASE("CFG 3.1 - Single Read") {
 	};
 	std::vector<std::unordered_set<int>> actualCFG = EntityStager::getCFG();
 	REQUIRE(expectedCFG == actualCFG);
+
+	std::unordered_map<std::string, std::unordered_set<int>> expectedMappings{
+		{"testProgram", {1}}
+	};
+	std::unordered_map<std::string, std::unordered_set<int>> actualMappings = EntityStager::getStagedProcToLastStmts();
+	REQUIRE(expectedMappings == actualMappings);
 }
 
 TEST_CASE("CFG 3.2 - Single Print") {
@@ -27,6 +35,12 @@ TEST_CASE("CFG 3.2 - Single Print") {
 	};
 	std::vector<std::unordered_set<int>> actualCFG = EntityStager::getCFG();
 	REQUIRE(expectedCFG == actualCFG);
+
+	std::unordered_map<std::string, std::unordered_set<int>> expectedMappings{
+		{"testProgram", {1}}
+	};
+	std::unordered_map<std::string, std::unordered_set<int>> actualMappings = EntityStager::getStagedProcToLastStmts();
+	REQUIRE(expectedMappings == actualMappings);
 }
 
 TEST_CASE("CFG 3.3 - Single Advanced Assign") {
@@ -38,6 +52,12 @@ TEST_CASE("CFG 3.3 - Single Advanced Assign") {
 	};
 	std::vector<std::unordered_set<int>> actualCFG = EntityStager::getCFG();
 	REQUIRE(expectedCFG == actualCFG);
+
+	std::unordered_map<std::string, std::unordered_set<int>> expectedMappings{
+		{"testProgram", {1}}
+	};
+	std::unordered_map<std::string, std::unordered_set<int>> actualMappings = EntityStager::getStagedProcToLastStmts();
+	REQUIRE(expectedMappings == actualMappings);
 }
 
 TEST_CASE("CFG 3.4 - Single Advanced Assign") {
@@ -49,6 +69,12 @@ TEST_CASE("CFG 3.4 - Single Advanced Assign") {
 	};
 	std::vector<std::unordered_set<int>> actualCFG = EntityStager::getCFG();
 	REQUIRE(expectedCFG == actualCFG);
+
+	std::unordered_map<std::string, std::unordered_set<int>> expectedMappings{
+		{"testProgram", {1}}
+	};
+	std::unordered_map<std::string, std::unordered_set<int>> actualMappings = EntityStager::getStagedProcToLastStmts();
+	REQUIRE(expectedMappings == actualMappings);
 }
 
 TEST_CASE("CFG 3.5 - 2 basic statements") {
@@ -60,6 +86,12 @@ TEST_CASE("CFG 3.5 - 2 basic statements") {
 	};
 	std::vector<std::unordered_set<int>> actualCFG = EntityStager::getCFG();
 	REQUIRE(expectedCFG == actualCFG);
+
+	std::unordered_map<std::string, std::unordered_set<int>> expectedMappings{
+		{"testProgram", {2}}
+	};
+	std::unordered_map<std::string, std::unordered_set<int>> actualMappings = EntityStager::getStagedProcToLastStmts();
+	REQUIRE(expectedMappings == actualMappings);
 }
 
 TEST_CASE("CFG 3.6 - 2 basic statements") {
@@ -71,6 +103,12 @@ TEST_CASE("CFG 3.6 - 2 basic statements") {
 	};
 	std::vector<std::unordered_set<int>> actualCFG = EntityStager::getCFG();
 	REQUIRE(expectedCFG == actualCFG);
+
+	std::unordered_map<std::string, std::unordered_set<int>> expectedMappings{
+		{"testProgram", {2}}
+	};
+	std::unordered_map<std::string, std::unordered_set<int>> actualMappings = EntityStager::getStagedProcToLastStmts();
+	REQUIRE(expectedMappings == actualMappings);
 }
 
 TEST_CASE("CFG 3.7 - 2 basic statements") {
@@ -82,6 +120,12 @@ TEST_CASE("CFG 3.7 - 2 basic statements") {
 	};
 	std::vector<std::unordered_set<int>> actualCFG = EntityStager::getCFG();
 	REQUIRE(expectedCFG == actualCFG);
+
+	std::unordered_map<std::string, std::unordered_set<int>> expectedMappings{
+		{"testProgram", {2}}
+	};
+	std::unordered_map<std::string, std::unordered_set<int>> actualMappings = EntityStager::getStagedProcToLastStmts();
+	REQUIRE(expectedMappings == actualMappings);
 }
 
 TEST_CASE("CFG 3.8 - 3 basic statements") {
@@ -93,6 +137,12 @@ TEST_CASE("CFG 3.8 - 3 basic statements") {
 	};
 	std::vector<std::unordered_set<int>> actualCFG = EntityStager::getCFG();
 	REQUIRE(expectedCFG == actualCFG);
+
+	std::unordered_map<std::string, std::unordered_set<int>> expectedMappings{
+		{"testProgram", {3}}
+	};
+	std::unordered_map<std::string, std::unordered_set<int>> actualMappings = EntityStager::getStagedProcToLastStmts();
+	REQUIRE(expectedMappings == actualMappings);
 }
 
 TEST_CASE("CFG 3.9 - 3 basic statements") {
@@ -104,6 +154,12 @@ TEST_CASE("CFG 3.9 - 3 basic statements") {
 	};
 	std::vector<std::unordered_set<int>> actualCFG = EntityStager::getCFG();
 	REQUIRE(expectedCFG == actualCFG);
+
+	std::unordered_map<std::string, std::unordered_set<int>> expectedMappings{
+		{"testProgram", {3}}
+	};
+	std::unordered_map<std::string, std::unordered_set<int>> actualMappings = EntityStager::getStagedProcToLastStmts();
+	REQUIRE(expectedMappings == actualMappings);
 }
 
 TEST_CASE("CFG 3.10 - 3 basic statements") {
@@ -115,6 +171,12 @@ TEST_CASE("CFG 3.10 - 3 basic statements") {
 	};
 	std::vector<std::unordered_set<int>> actualCFG = EntityStager::getCFG();
 	REQUIRE(expectedCFG == actualCFG);
+
+	std::unordered_map<std::string, std::unordered_set<int>> expectedMappings{
+		{"testProgram", {3}}
+	};
+	std::unordered_map<std::string, std::unordered_set<int>> actualMappings = EntityStager::getStagedProcToLastStmts();
+	REQUIRE(expectedMappings == actualMappings);
 }
 
 TEST_CASE("CFG 3.11 - 2 basic statements + 1 container - while at end of procedure") {
@@ -126,6 +188,12 @@ TEST_CASE("CFG 3.11 - 2 basic statements + 1 container - while at end of procedu
 	};
 	std::vector<std::unordered_set<int>> actualCFG = EntityStager::getCFG();
 	REQUIRE(expectedCFG == actualCFG);
+
+	std::unordered_map<std::string, std::unordered_set<int>> expectedMappings{
+		{"testProgram", {3}}
+	};
+	std::unordered_map<std::string, std::unordered_set<int>> actualMappings = EntityStager::getStagedProcToLastStmts();
+	REQUIRE(expectedMappings == actualMappings);
 }
 
 TEST_CASE("CFG 3.12 - 2 basic statements + 1 container - while at start of procedure") {
@@ -137,6 +205,12 @@ TEST_CASE("CFG 3.12 - 2 basic statements + 1 container - while at start of proce
 	};
 	std::vector<std::unordered_set<int>> actualCFG = EntityStager::getCFG();
 	REQUIRE(expectedCFG == actualCFG);
+
+	std::unordered_map<std::string, std::unordered_set<int>> expectedMappings{
+		{"testProgram", {4}}
+	};
+	std::unordered_map<std::string, std::unordered_set<int>> actualMappings = EntityStager::getStagedProcToLastStmts();
+	REQUIRE(expectedMappings == actualMappings);
 }
 
 TEST_CASE("CFG 3.13 - 2 basic statements + 1 container - while at middle of procedure") {
@@ -148,6 +222,12 @@ TEST_CASE("CFG 3.13 - 2 basic statements + 1 container - while at middle of proc
 	};
 	std::vector<std::unordered_set<int>> actualCFG = EntityStager::getCFG();
 	REQUIRE(expectedCFG == actualCFG);
+
+	std::unordered_map<std::string, std::unordered_set<int>> expectedMappings{
+		{"testProgram", {4}}
+	};
+	std::unordered_map<std::string, std::unordered_set<int>> actualMappings = EntityStager::getStagedProcToLastStmts();
+	REQUIRE(expectedMappings == actualMappings);
 }
 
 TEST_CASE("CFG 3.14 - 2 basic statements + 1 container - if at end of procedure") {
@@ -159,6 +239,12 @@ TEST_CASE("CFG 3.14 - 2 basic statements + 1 container - if at end of procedure"
 	};
 	std::vector<std::unordered_set<int>> actualCFG = EntityStager::getCFG();
 	REQUIRE(expectedCFG == actualCFG);
+
+	std::unordered_map<std::string, std::unordered_set<int>> expectedMappings{
+		{"testProgram", {4, 5}}
+	};
+	std::unordered_map<std::string, std::unordered_set<int>> actualMappings = EntityStager::getStagedProcToLastStmts();
+	REQUIRE(expectedMappings == actualMappings);
 }
 
 TEST_CASE("CFG 3.15 - 2 basic statements + 1 container - if at start of procedure") {
@@ -170,6 +256,12 @@ TEST_CASE("CFG 3.15 - 2 basic statements + 1 container - if at start of procedur
 	};
 	std::vector<std::unordered_set<int>> actualCFG = EntityStager::getCFG();
 	REQUIRE(expectedCFG == actualCFG);
+
+	std::unordered_map<std::string, std::unordered_set<int>> expectedMappings{
+		{"testProgram", {5}}
+	};
+	std::unordered_map<std::string, std::unordered_set<int>> actualMappings = EntityStager::getStagedProcToLastStmts();
+	REQUIRE(expectedMappings == actualMappings);
 }
 
 TEST_CASE("CFG 3.16 - 2 basic statements + 1 container - if at middle of procedure") {
@@ -181,6 +273,12 @@ TEST_CASE("CFG 3.16 - 2 basic statements + 1 container - if at middle of procedu
 	};
 	std::vector<std::unordered_set<int>> actualCFG = EntityStager::getCFG();
 	REQUIRE(expectedCFG == actualCFG);
+
+	std::unordered_map<std::string, std::unordered_set<int>> expectedMappings{
+		{"testProgram", {5}}
+	};
+	std::unordered_map<std::string, std::unordered_set<int>> actualMappings = EntityStager::getStagedProcToLastStmts();
+	REQUIRE(expectedMappings == actualMappings);
 }
 
 TEST_CASE("CFG 3.17 - 2 container statements same nesting level") {
@@ -192,6 +290,12 @@ TEST_CASE("CFG 3.17 - 2 container statements same nesting level") {
 	};
 	std::vector<std::unordered_set<int>> actualCFG = EntityStager::getCFG();
 	REQUIRE(expectedCFG == actualCFG);
+
+	std::unordered_map<std::string, std::unordered_set<int>> expectedMappings{
+		{"testProgram", {4, 5}}
+	};
+	std::unordered_map<std::string, std::unordered_set<int>> actualMappings = EntityStager::getStagedProcToLastStmts();
+	REQUIRE(expectedMappings == actualMappings);
 }
 
 TEST_CASE("CFG 3.18 - 1 container - 3 basic statements - while") {
@@ -203,6 +307,12 @@ TEST_CASE("CFG 3.18 - 1 container - 3 basic statements - while") {
 	};
 	std::vector<std::unordered_set<int>> actualCFG = EntityStager::getCFG();
 	REQUIRE(expectedCFG == actualCFG);
+
+	std::unordered_map<std::string, std::unordered_set<int>> expectedMappings{
+		{"testProgram", {1}}
+	};
+	std::unordered_map<std::string, std::unordered_set<int>> actualMappings = EntityStager::getStagedProcToLastStmts();
+	REQUIRE(expectedMappings == actualMappings);
 }
 
 TEST_CASE("CFG 3.19 - 1 container - 3 basic statements - if") {
@@ -214,6 +324,12 @@ TEST_CASE("CFG 3.19 - 1 container - 3 basic statements - if") {
 	};
 	std::vector<std::unordered_set<int>> actualCFG = EntityStager::getCFG();
 	REQUIRE(expectedCFG == actualCFG);
+
+	std::unordered_map<std::string, std::unordered_set<int>> expectedMappings{
+		{"testProgram", {4, 7}}
+	};
+	std::unordered_map<std::string, std::unordered_set<int>> actualMappings = EntityStager::getStagedProcToLastStmts();
+	REQUIRE(expectedMappings == actualMappings);
 }
 
 TEST_CASE("CFG 3.20 - 2 nesting levels; 1 basic statement per level - if-while") {
@@ -225,6 +341,12 @@ TEST_CASE("CFG 3.20 - 2 nesting levels; 1 basic statement per level - if-while")
 	};
 	std::vector<std::unordered_set<int>> actualCFG = EntityStager::getCFG();
 	REQUIRE(expectedCFG == actualCFG);
+
+	std::unordered_map<std::string, std::unordered_set<int>> expectedMappings{
+		{"testProgram", {3, 6}}
+	};
+	std::unordered_map<std::string, std::unordered_set<int>> actualMappings = EntityStager::getStagedProcToLastStmts();
+	REQUIRE(expectedMappings == actualMappings);
 }
 
 TEST_CASE("CFG 3.21 - 2 nesting levels; 1 basic statement per level - if-if") {
@@ -236,6 +358,12 @@ TEST_CASE("CFG 3.21 - 2 nesting levels; 1 basic statement per level - if-if") {
 	};
 	std::vector<std::unordered_set<int>> actualCFG = EntityStager::getCFG();
 	REQUIRE(expectedCFG == actualCFG);
+
+	std::unordered_map<std::string, std::unordered_set<int>> expectedMappings{
+		{"testProgram", {4, 5, 8, 9}}
+	};
+	std::unordered_map<std::string, std::unordered_set<int>> actualMappings = EntityStager::getStagedProcToLastStmts();
+	REQUIRE(expectedMappings == actualMappings);
 }
 
 TEST_CASE("CFG 3.22 - 2 nesting levels; 1 basic statement per level - while-if") {
@@ -247,6 +375,12 @@ TEST_CASE("CFG 3.22 - 2 nesting levels; 1 basic statement per level - while-if")
 	};
 	std::vector<std::unordered_set<int>> actualCFG = EntityStager::getCFG();
 	REQUIRE(expectedCFG == actualCFG);
+
+	std::unordered_map<std::string, std::unordered_set<int>> expectedMappings{
+		{"testProgram", {1}}
+	};
+	std::unordered_map<std::string, std::unordered_set<int>> actualMappings = EntityStager::getStagedProcToLastStmts();
+	REQUIRE(expectedMappings == actualMappings);
 }
 
 TEST_CASE("CFG 3.23 - 2 nesting levels; 1 basic statement per level - while-while") {
@@ -258,6 +392,12 @@ TEST_CASE("CFG 3.23 - 2 nesting levels; 1 basic statement per level - while-whil
 	};
 	std::vector<std::unordered_set<int>> actualCFG = EntityStager::getCFG();
 	REQUIRE(expectedCFG == actualCFG);
+
+	std::unordered_map<std::string, std::unordered_set<int>> expectedMappings{
+		{"testProgram", {1}}
+	};
+	std::unordered_map<std::string, std::unordered_set<int>> actualMappings = EntityStager::getStagedProcToLastStmts();
+	REQUIRE(expectedMappings == actualMappings);
 }
 
 TEST_CASE("CFG 3.24 - 2 nest levels; 3 statements per nest level - if-while perm 1") {
@@ -270,6 +410,12 @@ TEST_CASE("CFG 3.24 - 2 nest levels; 3 statements per nest level - if-while perm
 	};
 	std::vector<std::unordered_set<int>> actualCFG = EntityStager::getCFG();
 	REQUIRE(expectedCFG == actualCFG);
+
+	std::unordered_map<std::string, std::unordered_set<int>> expectedMappings{
+		{"testProgram", {7, 13}}
+	};
+	std::unordered_map<std::string, std::unordered_set<int>> actualMappings = EntityStager::getStagedProcToLastStmts();
+	REQUIRE(expectedMappings == actualMappings);
 }
 
 TEST_CASE("CFG 3.25 - 2 nest levels; 3 statements per nest level - if-while perm 2") {
@@ -282,6 +428,12 @@ TEST_CASE("CFG 3.25 - 2 nest levels; 3 statements per nest level - if-while perm
 	};
 	std::vector<std::unordered_set<int>> actualCFG = EntityStager::getCFG();
 	REQUIRE(expectedCFG == actualCFG);
+
+	std::unordered_map<std::string, std::unordered_set<int>> expectedMappings{
+		{"testProgram", {7, 10}}
+	};
+	std::unordered_map<std::string, std::unordered_set<int>> actualMappings = EntityStager::getStagedProcToLastStmts();
+	REQUIRE(expectedMappings == actualMappings);
 }
 
 TEST_CASE("CFG 3.26 - 2 nest levels; 3 statements per nest level - if-while perm 3") {
@@ -294,6 +446,12 @@ TEST_CASE("CFG 3.26 - 2 nest levels; 3 statements per nest level - if-while perm
 	};
 	std::vector<std::unordered_set<int>> actualCFG = EntityStager::getCFG();
 	REQUIRE(expectedCFG == actualCFG);
+
+	std::unordered_map<std::string, std::unordered_set<int>> expectedMappings{
+		{"testProgram", {4, 13}}
+	};
+	std::unordered_map<std::string, std::unordered_set<int>> actualMappings = EntityStager::getStagedProcToLastStmts();
+	REQUIRE(expectedMappings == actualMappings);
 }
 
 TEST_CASE("CFG 3.27 - 2 nest levels; 3 statements per nest level - while-if loc 1") {
@@ -306,6 +464,12 @@ TEST_CASE("CFG 3.27 - 2 nest levels; 3 statements per nest level - while-if loc 
 	};
 	std::vector<std::unordered_set<int>> actualCFG = EntityStager::getCFG();
 	REQUIRE(expectedCFG == actualCFG);
+
+	std::unordered_map<std::string, std::unordered_set<int>> expectedMappings{
+		{"testProgram", {1}}
+	};
+	std::unordered_map<std::string, std::unordered_set<int>> actualMappings = EntityStager::getStagedProcToLastStmts();
+	REQUIRE(expectedMappings == actualMappings);
 }
 
 TEST_CASE("CFG 3.28 - 2 nest levels; 3 statements per nest level - while-if loc 2") {
@@ -318,6 +482,12 @@ TEST_CASE("CFG 3.28 - 2 nest levels; 3 statements per nest level - while-if loc 
 	};
 	std::vector<std::unordered_set<int>> actualCFG = EntityStager::getCFG();
 	REQUIRE(expectedCFG == actualCFG);
+
+	std::unordered_map<std::string, std::unordered_set<int>> expectedMappings{
+		{"testProgram", {1}}
+	};
+	std::unordered_map<std::string, std::unordered_set<int>> actualMappings = EntityStager::getStagedProcToLastStmts();
+	REQUIRE(expectedMappings == actualMappings);
 }
 
 TEST_CASE("CFG 3.29 - 2 nest levels; 3 statements per nest level - while-if loc 3") {
@@ -330,6 +500,12 @@ TEST_CASE("CFG 3.29 - 2 nest levels; 3 statements per nest level - while-if loc 
 	};
 	std::vector<std::unordered_set<int>> actualCFG = EntityStager::getCFG();
 	REQUIRE(expectedCFG == actualCFG);
+
+	std::unordered_map<std::string, std::unordered_set<int>> expectedMappings{
+		{"testProgram", {1}}
+	};
+	std::unordered_map<std::string, std::unordered_set<int>> actualMappings = EntityStager::getStagedProcToLastStmts();
+	REQUIRE(expectedMappings == actualMappings);
 }
 
 TEST_CASE("CFG 3.30 - 3 levels of nesting - 1 stmt per nest level - if-if-if") {
@@ -341,6 +517,12 @@ TEST_CASE("CFG 3.30 - 3 levels of nesting - 1 stmt per nest level - if-if-if") {
 	};
 	std::vector<std::unordered_set<int>> actualCFG = EntityStager::getCFG();
 	REQUIRE(expectedCFG == actualCFG);
+
+	std::unordered_map<std::string, std::unordered_set<int>> expectedMappings{
+		{"testProgram", {8, 9}}
+	};
+	std::unordered_map<std::string, std::unordered_set<int>> actualMappings = EntityStager::getStagedProcToLastStmts();
+	REQUIRE(expectedMappings == actualMappings);
 }
 
 TEST_CASE("CFG 3.31 - 3 levels of nesting - 1 stmt per nest level - while-while-while") {
@@ -352,6 +534,12 @@ TEST_CASE("CFG 3.31 - 3 levels of nesting - 1 stmt per nest level - while-while-
 	};
 	std::vector<std::unordered_set<int>> actualCFG = EntityStager::getCFG();
 	REQUIRE(expectedCFG == actualCFG);
+
+	std::unordered_map<std::string, std::unordered_set<int>> expectedMappings{
+		{"testProgram", {1}}
+	};
+	std::unordered_map<std::string, std::unordered_set<int>> actualMappings = EntityStager::getStagedProcToLastStmts();
+	REQUIRE(expectedMappings == actualMappings);
 }
 
 TEST_CASE("CFG 3.32 - 3 levels of nesting - 1 stmt per nest level - while-if-while") {
@@ -363,6 +551,12 @@ TEST_CASE("CFG 3.32 - 3 levels of nesting - 1 stmt per nest level - while-if-whi
 	};
 	std::vector<std::unordered_set<int>> actualCFG = EntityStager::getCFG();
 	REQUIRE(expectedCFG == actualCFG);
+
+	std::unordered_map<std::string, std::unordered_set<int>> expectedMappings{
+		{"testProgram", {1}}
+	};
+	std::unordered_map<std::string, std::unordered_set<int>> actualMappings = EntityStager::getStagedProcToLastStmts();
+	REQUIRE(expectedMappings == actualMappings);
 }
 
 TEST_CASE("CFG 3.33 - 3 levels of nesting - 1 stmt per nest level - if-while-if") {
@@ -374,6 +568,12 @@ TEST_CASE("CFG 3.33 - 3 levels of nesting - 1 stmt per nest level - if-while-if"
 	};
 	std::vector<std::unordered_set<int>> actualCFG = EntityStager::getCFG();
 	REQUIRE(expectedCFG == actualCFG);
+
+	std::unordered_map<std::string, std::unordered_set<int>> expectedMappings{
+		{"testProgram", {7, 8}}
+	};
+	std::unordered_map<std::string, std::unordered_set<int>> actualMappings = EntityStager::getStagedProcToLastStmts();
+	REQUIRE(expectedMappings == actualMappings);
 }
 
 TEST_CASE("CFG 3.34 - Complex two procedure") {
@@ -386,6 +586,13 @@ TEST_CASE("CFG 3.34 - Complex two procedure") {
 	};
 	std::vector<std::unordered_set<int>> actualCFG = EntityStager::getCFG();
 	REQUIRE(expectedCFG == actualCFG);
+
+	std::unordered_map<std::string, std::unordered_set<int>> expectedMappings{
+		{"testProgram", {7, 10}}, 
+		{"testProgram2", {14}}
+	};
+	std::unordered_map<std::string, std::unordered_set<int>> actualMappings = EntityStager::getStagedProcToLastStmts();
+	REQUIRE(expectedMappings == actualMappings);
 }
 
 TEST_CASE("CFG 3.35 - Normal Post Declared") {
@@ -397,6 +604,13 @@ TEST_CASE("CFG 3.35 - Normal Post Declared") {
 	};
 	std::vector<std::unordered_set<int>> actualCFG = EntityStager::getCFG();
 	REQUIRE(expectedCFG == actualCFG);
+
+	std::unordered_map<std::string, std::unordered_set<int>> expectedMappings{
+		{"testProgram1", {3}},
+		{"testProgram2", {5}}
+	};
+	std::unordered_map<std::string, std::unordered_set<int>> actualMappings = EntityStager::getStagedProcToLastStmts();
+	REQUIRE(expectedMappings == actualMappings);
 }
 
 TEST_CASE("CFG 3.36 - Normal Pre Declared") {
@@ -408,6 +622,13 @@ TEST_CASE("CFG 3.36 - Normal Pre Declared") {
 	};
 	std::vector<std::unordered_set<int>> actualCFG = EntityStager::getCFG();
 	REQUIRE(expectedCFG == actualCFG);
+
+	std::unordered_map<std::string, std::unordered_set<int>> expectedMappings{
+		{"testProgram1", {2}},
+		{"testProgram2", {5}}
+	};
+	std::unordered_map<std::string, std::unordered_set<int>> actualMappings = EntityStager::getStagedProcToLastStmts();
+	REQUIRE(expectedMappings == actualMappings);
 }
 
 TEST_CASE("CFG 3.37 - Normal Pre declared Nested in If") {
@@ -419,6 +640,13 @@ TEST_CASE("CFG 3.37 - Normal Pre declared Nested in If") {
 	};
 	std::vector<std::unordered_set<int>> actualCFG = EntityStager::getCFG();
 	REQUIRE(expectedCFG == actualCFG);
+
+	std::unordered_map<std::string, std::unordered_set<int>> expectedMappings{
+		{"testProgram1", {2}},
+		{"testProgram2", {5, 6}}
+	};
+	std::unordered_map<std::string, std::unordered_set<int>> actualMappings = EntityStager::getStagedProcToLastStmts();
+	REQUIRE(expectedMappings == actualMappings);
 }
 
 TEST_CASE("CFG 3.38 - Normal Pre declared Nested in Else") {
@@ -430,6 +658,13 @@ TEST_CASE("CFG 3.38 - Normal Pre declared Nested in Else") {
 	};
 	std::vector<std::unordered_set<int>> actualCFG = EntityStager::getCFG();
 	REQUIRE(expectedCFG == actualCFG);
+
+	std::unordered_map<std::string, std::unordered_set<int>> expectedMappings{
+		{"testProgram1", {2}},
+		{"testProgram2", {4, 6}}
+	};
+	std::unordered_map<std::string, std::unordered_set<int>> actualMappings = EntityStager::getStagedProcToLastStmts();
+	REQUIRE(expectedMappings == actualMappings);
 }
 
 TEST_CASE("CFG 3.39 - Normal Post declared Nested in If") {
@@ -441,6 +676,13 @@ TEST_CASE("CFG 3.39 - Normal Post declared Nested in If") {
 	};
 	std::vector<std::unordered_set<int>> actualCFG = EntityStager::getCFG();
 	REQUIRE(expectedCFG == actualCFG);
+
+	std::unordered_map<std::string, std::unordered_set<int>> expectedMappings{
+		{"testProgram1", {3, 4}},
+		{"testProgram2", {6}}
+	};
+	std::unordered_map<std::string, std::unordered_set<int>> actualMappings = EntityStager::getStagedProcToLastStmts();
+	REQUIRE(expectedMappings == actualMappings);
 }
 
 TEST_CASE("CFG 3.40 - Normal Post declared Nested in Else") {
@@ -452,6 +694,13 @@ TEST_CASE("CFG 3.40 - Normal Post declared Nested in Else") {
 	};
 	std::vector<std::unordered_set<int>> actualCFG = EntityStager::getCFG();
 	REQUIRE(expectedCFG == actualCFG);
+
+	std::unordered_map<std::string, std::unordered_set<int>> expectedMappings{
+		{"testProgram1", {2, 4}},
+		{"testProgram2", {6}}
+	};
+	std::unordered_map<std::string, std::unordered_set<int>> actualMappings = EntityStager::getStagedProcToLastStmts();
+	REQUIRE(expectedMappings == actualMappings);
 }
 
 TEST_CASE("CFG 3.41 - Normal Pre declared Nested in While") {
@@ -463,6 +712,13 @@ TEST_CASE("CFG 3.41 - Normal Pre declared Nested in While") {
 	};
 	std::vector<std::unordered_set<int>> actualCFG = EntityStager::getCFG();
 	REQUIRE(expectedCFG == actualCFG);
+
+	std::unordered_map<std::string, std::unordered_set<int>> expectedMappings{
+		{"testProgram1", {1}},
+		{"testProgram2", {3}}
+	};
+	std::unordered_map<std::string, std::unordered_set<int>> actualMappings = EntityStager::getStagedProcToLastStmts();
+	REQUIRE(expectedMappings == actualMappings);
 }
 
 TEST_CASE("CFG 3.42 - Normal Post declared Nested in While") {
@@ -474,6 +730,13 @@ TEST_CASE("CFG 3.42 - Normal Post declared Nested in While") {
 	};
 	std::vector<std::unordered_set<int>> actualCFG = EntityStager::getCFG();
 	REQUIRE(expectedCFG == actualCFG);
+
+	std::unordered_map<std::string, std::unordered_set<int>> expectedMappings{
+		{"testProgram1", {4}},
+		{"testProgram2", {5}}
+	};
+	std::unordered_map<std::string, std::unordered_set<int>> actualMappings = EntityStager::getStagedProcToLastStmts();
+	REQUIRE(expectedMappings == actualMappings);
 }
 
 TEST_CASE("CFG 3.43 - 3 calls sequential predeclared") {
@@ -485,6 +748,14 @@ TEST_CASE("CFG 3.43 - 3 calls sequential predeclared") {
 	};
 	std::vector<std::unordered_set<int>> actualCFG = EntityStager::getCFG();
 	REQUIRE(expectedCFG == actualCFG);
+
+	std::unordered_map<std::string, std::unordered_set<int>> expectedMappings{
+		{"testProgram1", {2}},
+		{"testProgram2", {5}},
+		{"testProgram3", {7}}
+	};
+	std::unordered_map<std::string, std::unordered_set<int>> actualMappings = EntityStager::getStagedProcToLastStmts();
+	REQUIRE(expectedMappings == actualMappings);
 }
 
 TEST_CASE("CFG 3.44 - 3 calls sequential post declared") {
@@ -496,6 +767,14 @@ TEST_CASE("CFG 3.44 - 3 calls sequential post declared") {
 	};
 	std::vector<std::unordered_set<int>> actualCFG = EntityStager::getCFG();
 	REQUIRE(expectedCFG == actualCFG);
+
+	std::unordered_map<std::string, std::unordered_set<int>> expectedMappings{
+		{"testProgram1", {3}},
+		{"testProgram2", {6}},
+		{"testProgram3", {7}}
+	};
+	std::unordered_map<std::string, std::unordered_set<int>> actualMappings = EntityStager::getStagedProcToLastStmts();
+	REQUIRE(expectedMappings == actualMappings);
 }
 
 TEST_CASE("CFG 3.45 - 3 calls forking from top") {
@@ -507,6 +786,14 @@ TEST_CASE("CFG 3.45 - 3 calls forking from top") {
 	};
 	std::vector<std::unordered_set<int>> actualCFG = EntityStager::getCFG();
 	REQUIRE(expectedCFG == actualCFG);
+
+	std::unordered_map<std::string, std::unordered_set<int>> expectedMappings{
+		{"testProgram1", {4}},
+		{"testProgram2", {6}},
+		{"testProgram3", {7}}
+	};
+	std::unordered_map<std::string, std::unordered_set<int>> actualMappings = EntityStager::getStagedProcToLastStmts();
+	REQUIRE(expectedMappings == actualMappings);
 }
 
 TEST_CASE("CFG 3.46 - 3 calls forking from bottom") {
@@ -518,6 +805,14 @@ TEST_CASE("CFG 3.46 - 3 calls forking from bottom") {
 	};
 	std::vector<std::unordered_set<int>> actualCFG = EntityStager::getCFG();
 	REQUIRE(expectedCFG == actualCFG);
+
+	std::unordered_map<std::string, std::unordered_set<int>> expectedMappings{
+		{"testProgram1", {2}},
+		{"testProgram2", {4}},
+		{"testProgram3", {7}}
+	};
+	std::unordered_map<std::string, std::unordered_set<int>> actualMappings = EntityStager::getStagedProcToLastStmts();
+	REQUIRE(expectedMappings == actualMappings);
 }
 
 TEST_CASE("CFG 3.47 - 3 calls forking from middle") {
@@ -529,6 +824,14 @@ TEST_CASE("CFG 3.47 - 3 calls forking from middle") {
 	};
 	std::vector<std::unordered_set<int>> actualCFG = EntityStager::getCFG();
 	REQUIRE(expectedCFG == actualCFG);
+
+	std::unordered_map<std::string, std::unordered_set<int>> expectedMappings{
+		{"testProgram1", {2}},
+		{"testProgram2", {6}},
+		{"testProgram3", {7}}
+	};
+	std::unordered_map<std::string, std::unordered_set<int>> actualMappings = EntityStager::getStagedProcToLastStmts();
+	REQUIRE(expectedMappings == actualMappings);
 }
 
 TEST_CASE("CFG 3.48 - 4 calls sequential call (mix of post and pre declared)") {
@@ -540,6 +843,15 @@ TEST_CASE("CFG 3.48 - 4 calls sequential call (mix of post and pre declared)") {
 	};
 	std::vector<std::unordered_set<int>> actualCFG = EntityStager::getCFG();
 	REQUIRE(expectedCFG == actualCFG);
+
+	std::unordered_map<std::string, std::unordered_set<int>> expectedMappings{
+		{"testProgram1", {3}},
+		{"testProgram2", {6}},
+		{"testProgram3", {7}},
+		{"testProgram4", {9, 11}}
+	};
+	std::unordered_map<std::string, std::unordered_set<int>> actualMappings = EntityStager::getStagedProcToLastStmts();
+	REQUIRE(expectedMappings == actualMappings);
 }
 
 TEST_CASE("CFG 3.49 - 4 calls - 1 - (2, 3, 4)") {
@@ -551,6 +863,15 @@ TEST_CASE("CFG 3.49 - 4 calls - 1 - (2, 3, 4)") {
 	};
 	std::vector<std::unordered_set<int>> actualCFG = EntityStager::getCFG();
 	REQUIRE(expectedCFG == actualCFG);
+
+	std::unordered_map<std::string, std::unordered_set<int>> expectedMappings{
+		{"testProgram1", {5}},
+		{"testProgram2", {7}},
+		{"testProgram3", {8}},
+		{"testProgram4", {10, 11}}
+	};
+	std::unordered_map<std::string, std::unordered_set<int>> actualMappings = EntityStager::getStagedProcToLastStmts();
+	REQUIRE(expectedMappings == actualMappings);
 }
 
 TEST_CASE("CFG 3.50 - 4 calls - (1, 2, 4) - 3") {
@@ -562,6 +883,15 @@ TEST_CASE("CFG 3.50 - 4 calls - (1, 2, 4) - 3") {
 	};
 	std::vector<std::unordered_set<int>> actualCFG = EntityStager::getCFG();
 	REQUIRE(expectedCFG == actualCFG);
+
+	std::unordered_map<std::string, std::unordered_set<int>> expectedMappings{
+		{"testProgram1", {3}},
+		{"testProgram2", {6}},
+		{"testProgram3", {7}},
+		{"testProgram4", {10, 11}}
+	};
+	std::unordered_map<std::string, std::unordered_set<int>> actualMappings = EntityStager::getStagedProcToLastStmts();
+	REQUIRE(expectedMappings == actualMappings);
 }
 
 TEST_CASE("CFG 3.51 - 4 calls - 1 - (3, 4) - 2") {
@@ -573,6 +903,15 @@ TEST_CASE("CFG 3.51 - 4 calls - 1 - (3, 4) - 2") {
 	};
 	std::vector<std::unordered_set<int>> actualCFG = EntityStager::getCFG();
 	REQUIRE(expectedCFG == actualCFG);
+
+	std::unordered_map<std::string, std::unordered_set<int>> expectedMappings{
+		{"testProgram1", {4}},
+		{"testProgram2", {6}},
+		{"testProgram3", {8}},
+		{"testProgram4", {11, 12}}
+	};
+	std::unordered_map<std::string, std::unordered_set<int>> actualMappings = EntityStager::getStagedProcToLastStmts();
+	REQUIRE(expectedMappings == actualMappings);
 }
 
 TEST_CASE("CFG 3.52 - 4 calls - 2 - 4 - (3, 1)") {
@@ -584,6 +923,15 @@ TEST_CASE("CFG 3.52 - 4 calls - 2 - 4 - (3, 1)") {
 	};
 	std::vector<std::unordered_set<int>> actualCFG = EntityStager::getCFG();
 	REQUIRE(expectedCFG == actualCFG);
+
+	std::unordered_map<std::string, std::unordered_set<int>> expectedMappings{
+		{"testProgram1", {2}},
+		{"testProgram2", {5}},
+		{"testProgram3", {6}},
+		{"testProgram4", {9, 11}}
+	};
+	std::unordered_map<std::string, std::unordered_set<int>> actualMappings = EntityStager::getStagedProcToLastStmts();
+	REQUIRE(expectedMappings == actualMappings);
 }
 
 TEST_CASE("CFG 3.53 - 4 calls - (1, 2) - 3 - 4") {
@@ -595,6 +943,15 @@ TEST_CASE("CFG 3.53 - 4 calls - (1, 2) - 3 - 4") {
 	};
 	std::vector<std::unordered_set<int>> actualCFG = EntityStager::getCFG();
 	REQUIRE(expectedCFG == actualCFG);
+
+	std::unordered_map<std::string, std::unordered_set<int>> expectedMappings{
+		{"testProgram1", {3}},
+		{"testProgram2", {6}},
+		{"testProgram3", {8}},
+		{"testProgram4", {10, 11}}
+	};
+	std::unordered_map<std::string, std::unordered_set<int>> actualMappings = EntityStager::getStagedProcToLastStmts();
+	REQUIRE(expectedMappings == actualMappings);
 }
 
 TEST_CASE("CFG 3.54 - 4 calls - (3, (2 - 4)) - 1") {
@@ -606,6 +963,15 @@ TEST_CASE("CFG 3.54 - 4 calls - (3, (2 - 4)) - 1") {
 	};
 	std::vector<std::unordered_set<int>> actualCFG = EntityStager::getCFG();
 	REQUIRE(expectedCFG == actualCFG);
+
+	std::unordered_map<std::string, std::unordered_set<int>> expectedMappings{
+		{"testProgram1", {2}},
+		{"testProgram2", {5}},
+		{"testProgram3", {7}},
+		{"testProgram4", {9, 11}}
+	};
+	std::unordered_map<std::string, std::unordered_set<int>> actualMappings = EntityStager::getStagedProcToLastStmts();
+	REQUIRE(expectedMappings == actualMappings);
 }
 
 TEST_CASE("CFG 3.55 - 4 calls - 2 - ((1 - 4), 3)") {
@@ -617,6 +983,15 @@ TEST_CASE("CFG 3.55 - 4 calls - 2 - ((1 - 4), 3)") {
 	};
 	std::vector<std::unordered_set<int>> actualCFG = EntityStager::getCFG();
 	REQUIRE(expectedCFG == actualCFG);
+
+	std::unordered_map<std::string, std::unordered_set<int>> expectedMappings{
+		{"testProgram1", {3}},
+		{"testProgram2", {7}},
+		{"testProgram3", {8}},
+		{"testProgram4", {10, 11}}
+	};
+	std::unordered_map<std::string, std::unordered_set<int>> actualMappings = EntityStager::getStagedProcToLastStmts();
+	REQUIRE(expectedMappings == actualMappings);
 }
 
 TEST_CASE("CFG 3.56 - 3 if forks converging into single statement") {
@@ -629,6 +1004,12 @@ TEST_CASE("CFG 3.56 - 3 if forks converging into single statement") {
 	};
 	std::vector<std::unordered_set<int>> actualCFG = EntityStager::getCFG();
 	REQUIRE(expectedCFG == actualCFG);
+
+	std::unordered_map<std::string, std::unordered_set<int>> expectedMappings{
+		{"testProgram", {16}}
+	};
+	std::unordered_map<std::string, std::unordered_set<int>> actualMappings = EntityStager::getStagedProcToLastStmts();
+	REQUIRE(expectedMappings == actualMappings);
 }
 
 TEST_CASE("CFG 3.57 - 3 if forks converging to while statement") {
@@ -641,6 +1022,12 @@ TEST_CASE("CFG 3.57 - 3 if forks converging to while statement") {
 	};
 	std::vector<std::unordered_set<int>> actualCFG = EntityStager::getCFG();
 	REQUIRE(expectedCFG == actualCFG);
+
+	std::unordered_map<std::string, std::unordered_set<int>> expectedMappings{
+		{"testProgram", {1}}
+	};
+	std::unordered_map<std::string, std::unordered_set<int>> actualMappings = EntityStager::getStagedProcToLastStmts();
+	REQUIRE(expectedMappings == actualMappings);
 }
 
 TEST_CASE("CFG 4.1 - Complex AST") {
@@ -653,4 +1040,10 @@ TEST_CASE("CFG 4.1 - Complex AST") {
 	};
 	std::vector<std::unordered_set<int>> actualCFG = EntityStager::getCFG();
 	REQUIRE(expectedCFG == actualCFG);
+
+	std::unordered_map<std::string, std::unordered_set<int>> expectedMappings{
+		{"testProgram", {18}}
+	};
+	std::unordered_map<std::string, std::unordered_set<int>> actualMappings = EntityStager::getStagedProcToLastStmts();
+	REQUIRE(expectedMappings == actualMappings);
 }

@@ -6,8 +6,8 @@ template <typename T> class StmtProcTemplateStore : public Store {
 private:
 	std::unordered_map<T, std::unordered_set<T>> firstSynonymToSecondSynonyms;
 	std::unordered_map<T, std::unordered_set<T>> secondSynonymToFirstSynonyms;
-	std::unordered_set<std::pair<T, T>, PKBUtil::pairHashFunction> relationshipPairs;
-	std::unordered_set<std::pair<T, T>, PKBUtil::pairHashFunction> relationshipTPairs;
+	std::unordered_set<std::pair<T, T>, PKBUtils::pairHashFunction> relationshipPairs;
+	std::unordered_set<std::pair<T, T>, PKBUtils::pairHashFunction> relationshipTPairs;
 	std::unordered_map<T, std::unordered_set<T>> firstSynonymToSecondSynonymsT;
 	std::unordered_map<T, std::unordered_set<T>> secondSynonymToFirstSynonymsT;
 public:

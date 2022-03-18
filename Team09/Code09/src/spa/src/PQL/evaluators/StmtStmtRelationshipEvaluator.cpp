@@ -137,12 +137,12 @@ std::unordered_set<int> StmtStmtRelationshipEvaluator::filterStatementsByType(st
 		break;
 	}
 
-	return PKBUtil::unorderedSetIntersection(statements, typeStatements);
+	return PKBUtils::unorderedSetIntersection(statements, typeStatements);
 }
 
 std::tuple<std::vector<int>, std::vector<int>> StmtStmtRelationshipEvaluator::filterStatementPairsByType(std::vector<int> firstEntities,
 	std::vector<int> secondEntities, EntityType LHSType, EntityType RHSType) {
-	std::unordered_set<std::pair<int, int>, PKBUtil::pairHashFunction> statementPairs = PKBUtil::convertVectorTupleToSetPairs(firstEntities, secondEntities);
+	std::unordered_set<std::pair<int, int>, PKBUtils::pairHashFunction> statementPairs = PKBUtils::convertVectorTupleToSetPairs(firstEntities, secondEntities);
 
 	std::unordered_set<int> firstTypeStatements;
 	std::unordered_set<int> secondTypeStatements;
@@ -173,7 +173,7 @@ std::tuple<std::vector<int>, std::vector<int>> StmtStmtRelationshipEvaluator::fi
 		break;
 	}
 
-	std::unordered_set<std::pair<int, int>, PKBUtil::pairHashFunction> firstFilteredStatementPairs;
+	std::unordered_set<std::pair<int, int>, PKBUtils::pairHashFunction> firstFilteredStatementPairs;
 	for (const auto& statement : firstTypeStatements) {
 		for (const auto& pair : statementPairs) {
 			if (pair.first == statement) {
@@ -208,7 +208,7 @@ std::tuple<std::vector<int>, std::vector<int>> StmtStmtRelationshipEvaluator::fi
 		break;
 	}
 
-	std::unordered_set<std::pair<int, int>, PKBUtil::pairHashFunction> secondFilteredStatementPairs;
+	std::unordered_set<std::pair<int, int>, PKBUtils::pairHashFunction> secondFilteredStatementPairs;
 	for (const auto& statement : secondTypeStatements) {
 		for (const auto& pair : firstFilteredStatementPairs) {
 			if (pair.second == statement) {
@@ -217,5 +217,5 @@ std::tuple<std::vector<int>, std::vector<int>> StmtStmtRelationshipEvaluator::fi
 		}
 	}
 
-	return PKBUtil::convertSetPairsToVectorTuple(secondFilteredStatementPairs);
+	return PKBUtils::convertSetPairsToVectorTuple(secondFilteredStatementPairs);
 }

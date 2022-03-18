@@ -1,21 +1,21 @@
 #include "simple_parser/SPParser.h"
-#include "simple_parser/Token.h"
+#include "simple_parser/SPToken.h"
 
 #include "catch.hpp"
 #include <vector>
 
-std::vector<Token*> generateTokens(std::string varName, bool isReadStmt = true) {
+std::vector<SPToken*> generateTokens(std::string varName, bool isReadStmt = true) {
 	if (isReadStmt) {
-		return std::vector<Token*> {
-				new NameToken("procedure"), 	new NameToken("main"),	new PunctuatorToken("{"),
-				new NameToken("read"),		new NameToken(varName),		new PunctuatorToken(";"),
-				new PunctuatorToken("}"),	new EndOfFileToken(),
+		return std::vector<SPToken*> {
+				new NameToken("procedure"), new NameToken("main"), new TerminalToken("{"),
+				new NameToken("read"), new NameToken(varName), new TerminalToken(";"),
+				new TerminalToken("}"), new EndOfFileToken(),
 		};
 	}
-	return std::vector<Token*> {
-			new NameToken("procedure"), 	new NameToken("main"),	new PunctuatorToken("{"),
-			new NameToken(varName),		new OperatorToken("="),	new IntegerToken("1"),
-			new PunctuatorToken(";"),	new PunctuatorToken("}"),	new EndOfFileToken(),
+	return std::vector<SPToken*> {
+			new NameToken("procedure"), new NameToken("main"), new TerminalToken("{"),
+			new NameToken(varName), new TerminalToken("="), new IntegerToken("1"),
+			new TerminalToken(";"), new TerminalToken("}"), new EndOfFileToken(),
 	};
 }
 
@@ -41,7 +41,7 @@ AST generateBasicAST(std::string varName, bool isReadStmt = true) {
 // --------------------------------------------------
 TEST_CASE("Var_name validity 6.1 - Lowercase") {
 	// read main;
-	std::vector<Token*> input = generateTokens("main");
+	std::vector<SPToken*> input = generateTokens("main");
 	SPParser parser = SPParser(input);
 	AST output = parser.parseProgram();
 	REQUIRE(*output == *generateBasicAST("main"));
@@ -49,7 +49,7 @@ TEST_CASE("Var_name validity 6.1 - Lowercase") {
 
 TEST_CASE("Var_name validity 6.2 - Uppercase") {
 	// read MAIN;
-	std::vector<Token*> input = generateTokens("MAIN");
+	std::vector<SPToken*> input = generateTokens("MAIN");
 	SPParser parser = SPParser(input);
 	AST output = parser.parseProgram();
 	REQUIRE(*output == *generateBasicAST("MAIN"));
@@ -57,7 +57,7 @@ TEST_CASE("Var_name validity 6.2 - Uppercase") {
 
 TEST_CASE("Var_name validity 6.3 - Mixed case") {
 	// read mAiN;
-	std::vector<Token*> input = generateTokens("mAiN");
+	std::vector<SPToken*> input = generateTokens("mAiN");
 	SPParser parser = SPParser(input);
 	AST output = parser.parseProgram();
 	REQUIRE(*output == *generateBasicAST("mAiN"));
@@ -65,7 +65,7 @@ TEST_CASE("Var_name validity 6.3 - Mixed case") {
 
 TEST_CASE("Var_name validity 6.4 - Alphanumeric") {
 	// read main1;
-	std::vector<Token*> input = generateTokens("main1");
+	std::vector<SPToken*> input = generateTokens("main1");
 	SPParser parser = SPParser(input);
 	AST output = parser.parseProgram();
 	REQUIRE(*output == *generateBasicAST("main1"));
@@ -73,7 +73,7 @@ TEST_CASE("Var_name validity 6.4 - Alphanumeric") {
 
 TEST_CASE("Var_name validity 6.5 - procedure as var_name") {
 	// procedure = 1;
-	std::vector<Token*> input = generateTokens("procedure", false);
+	std::vector<SPToken*> input = generateTokens("procedure", false);
 	SPParser parser = SPParser(input);
 	AST output = parser.parseProgram();
 	REQUIRE(*output == *generateBasicAST("procedure", false));
@@ -81,7 +81,7 @@ TEST_CASE("Var_name validity 6.5 - procedure as var_name") {
 
 TEST_CASE("Var_name validity 6.6 - read as var_name") {
 	// read = 1;
-	std::vector<Token*> input = generateTokens("read", false);
+	std::vector<SPToken*> input = generateTokens("read", false);
 	SPParser parser = SPParser(input);
 	AST output = parser.parseProgram();
 	REQUIRE(*output == *generateBasicAST("read", false));
@@ -89,7 +89,7 @@ TEST_CASE("Var_name validity 6.6 - read as var_name") {
 
 TEST_CASE("Var_name validity 6.7 - print as var_name") {
 	// print = 1;
-	std::vector<Token*> input = generateTokens("print", false);
+	std::vector<SPToken*> input = generateTokens("print", false);
 	SPParser parser = SPParser(input);
 	AST output = parser.parseProgram();
 	REQUIRE(*output == *generateBasicAST("print", false));
@@ -97,7 +97,7 @@ TEST_CASE("Var_name validity 6.7 - print as var_name") {
 
 TEST_CASE("Var_name validity 6.8 - while as var_name") {
 	// while = 1;
-	std::vector<Token*> input = generateTokens("while", false);
+	std::vector<SPToken*> input = generateTokens("while", false);
 	SPParser parser = SPParser(input);
 	AST output = parser.parseProgram();
 	REQUIRE(*output == *generateBasicAST("while", false));
@@ -105,7 +105,7 @@ TEST_CASE("Var_name validity 6.8 - while as var_name") {
 
 TEST_CASE("Var_name validity 6.9 - if as var_name") {
 	// if = 1;
-	std::vector<Token*> input = generateTokens("if", false);
+	std::vector<SPToken*> input = generateTokens("if", false);
 	SPParser parser = SPParser(input);
 	AST output = parser.parseProgram();
 	REQUIRE(*output == *generateBasicAST("if", false));
@@ -113,7 +113,7 @@ TEST_CASE("Var_name validity 6.9 - if as var_name") {
 
 TEST_CASE("Var_name validity 6.10 - else as var_name") {
 	// else = 1;
-	std::vector<Token*> input = generateTokens("else", false);
+	std::vector<SPToken*> input = generateTokens("else", false);
 	SPParser parser = SPParser(input);
 	AST output = parser.parseProgram();
 	REQUIRE(*output == *generateBasicAST("else", false));
@@ -121,7 +121,7 @@ TEST_CASE("Var_name validity 6.10 - else as var_name") {
 
 TEST_CASE("Var_name validity 6.11 - then as var_name") {
 	// then = 1;
-	std::vector<Token*> input = generateTokens("then", false);
+	std::vector<SPToken*> input = generateTokens("then", false);
 	SPParser parser = SPParser(input);
 	AST output = parser.parseProgram();
 	REQUIRE(*output == *generateBasicAST("then", false));
@@ -129,18 +129,18 @@ TEST_CASE("Var_name validity 6.11 - then as var_name") {
 
 TEST_CASE("Var_name validity 6.12 - var_name can be as long as possible") {
 	// read supercalifragilisticexpialidocious;
-	std::vector<Token*> input = generateTokens("supercalifragilisticexpialidocious");
+	std::vector<SPToken*> input = generateTokens("supercalifragilisticexpialidocious");
 	SPParser parser = SPParser(input);
 	AST output = parser.parseProgram();
 	REQUIRE(*output == *generateBasicAST("supercalifragilisticexpialidocious"));
 }
 
 TEST_CASE("Const validity 7.1 - constant") {
-	std::vector<Token*> input = {
-			new NameToken("procedure"), 	new NameToken("main"),	new PunctuatorToken("{"),
-			new NameToken("x"),			new OperatorToken("="),
+	std::vector<SPToken*> input = {
+			new NameToken("procedure"), new NameToken("main"), new TerminalToken("{"),
+			new NameToken("x"), new TerminalToken("="),
 			new IntegerToken("12345"),
-			new PunctuatorToken(";"),	new PunctuatorToken("}"),	new EndOfFileToken(),
+			new TerminalToken(";"), new TerminalToken("}"), new EndOfFileToken(),
 	};
 	SPParser parser = SPParser(input);
 	AST output = parser.parseProgram();
@@ -160,11 +160,11 @@ TEST_CASE("Const validity 7.1 - constant") {
 }
 
 TEST_CASE("Const validity 7.2 - const can be as long as possible") {
-	std::vector<Token*> input = {
-			new NameToken("procedure"), 	new NameToken("main"),	new PunctuatorToken("{"),
-			new NameToken("x"),			new OperatorToken("="),
+	std::vector<SPToken*> input = {
+			new NameToken("procedure"), new NameToken("main"), new TerminalToken("{"),
+			new NameToken("x"), new TerminalToken("="),
 			new IntegerToken("1234567890987654321234567890987654321"),
-			new PunctuatorToken(";"),	new PunctuatorToken("}"),	new EndOfFileToken(),
+			new TerminalToken(";"), new TerminalToken("}"), new EndOfFileToken(),
 	};
 	SPParser parser = SPParser(input);
 	AST output = parser.parseProgram();
@@ -188,11 +188,11 @@ TEST_CASE("Const validity 7.2 - const can be as long as possible") {
 // --------------------------------------------------
 TEST_CASE("Var_name validity 6.13 - var_name cannot start with a digit") {
 	// procedure main { read 1main; }
-	std::vector<Token*> input {
-			new NameToken("procedure"), 	new NameToken("main"),	new PunctuatorToken("{"),
-			new NameToken("read"),		new IntegerToken("1"), 	new NameToken("main"),
-			new PunctuatorToken(";"),
-			new PunctuatorToken("}"),	new EndOfFileToken(),
+	std::vector<SPToken*> input {
+			new NameToken("procedure"), new NameToken("main"), new TerminalToken("{"),
+			new NameToken("read"), new IntegerToken("1"), new NameToken("main"),
+			new TerminalToken(";"),
+			new TerminalToken("}"), new EndOfFileToken(),
 	};;
 	SPParser parser = SPParser(input);
 	REQUIRE_THROWS_WITH(parser.parseProgram(), "Expected a variable name but got '1' instead.\n");
@@ -200,11 +200,11 @@ TEST_CASE("Var_name validity 6.13 - var_name cannot start with a digit") {
 
 TEST_CASE("Var_name validity 6.14 - var_name cannot have symbols") {
 	// procedure main { read m*in; }
-	std::vector<Token*> input {
-			new NameToken("procedure"), 	new NameToken("main"),	new PunctuatorToken("{"),
-			new NameToken("read"),		new NameToken("m"),		new OperatorToken("*"),
-			new NameToken("in"),	 		new PunctuatorToken(";"),
-			new PunctuatorToken("}"),	new EndOfFileToken(),
+	std::vector<SPToken*> input {
+			new NameToken("procedure"), new NameToken("main"), new TerminalToken("{"),
+			new NameToken("read"), new NameToken("m"), new TerminalToken("*"),
+			new NameToken("in"), new TerminalToken(";"),
+			new TerminalToken("}"), new EndOfFileToken(),
 	};;
 	SPParser parser = SPParser(input);
 	REQUIRE_THROWS_WITH(parser.parseProgram(), "Expected ';' but got '*' instead.\n");

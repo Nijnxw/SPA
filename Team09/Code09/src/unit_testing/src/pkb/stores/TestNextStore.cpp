@@ -183,8 +183,8 @@ TEST_CASE("NextStore API") {
 
 			std::tuple<std::vector<int>, std::vector<int>> expectedRes = { firstColumn, secondColumn };
 			
-			std::unordered_set<std::pair<int, int>, PKBUtil::pairHashFunction> set = PKBUtil::convertVectorTupleToSetPairs(std::get<0>(res), std::get<1>(res));
-			std::unordered_set<std::pair<int, int>, PKBUtil::pairHashFunction> expectedSet = PKBUtil::convertVectorTupleToSetPairs(std::get<0>(expectedRes), std::get<1>(expectedRes));
+			std::unordered_set<std::pair<int, int>, PKBUtils::pairHashFunction> set = PKBUtils::convertVectorTupleToSetPairs(std::get<0>(res), std::get<1>(res));
+			std::unordered_set<std::pair<int, int>, PKBUtils::pairHashFunction> expectedSet = PKBUtils::convertVectorTupleToSetPairs(std::get<0>(expectedRes), std::get<1>(expectedRes));
 
 			REQUIRE(set == expectedSet);
 		}

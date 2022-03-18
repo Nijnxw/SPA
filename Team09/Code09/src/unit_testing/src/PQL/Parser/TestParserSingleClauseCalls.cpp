@@ -1,6 +1,6 @@
 #include "catch.hpp"
 #include "PQL/PQLParser.h"
-#include "PQL/Tokeniser.h"
+#include "PQL/PQLLexer.h"
 
 //---------------------------------------------------------------//
 //			                Happy Paths			                 //
@@ -19,7 +19,7 @@ TEST_CASE("Calls - 2nd arg is proc synonym") {
 
 	SECTION("C(p,p1)") {
 		std::string queryString = "procedure p,p1; Select p such that Calls(p,p1)";
-		Tokeniser tokeniser = Tokeniser(queryString);
+		PQLLexer tokeniser = PQLLexer(queryString);
 		std::vector<PQLToken*> PQLTokens = tokeniser.tokenise();
 		PQLParser parser = PQLParser(PQLTokens);
 
@@ -40,7 +40,7 @@ TEST_CASE("Calls - 2nd arg is proc synonym") {
 
 	SECTION("c(\"main\",v)") {
 		std::string queryString = "procedure p; Select p such that Calls(\"main\",p)";
-		Tokeniser tokeniser = Tokeniser(queryString);
+		PQLLexer tokeniser = PQLLexer(queryString);
 		std::vector<PQLToken*> PQLTokens = tokeniser.tokenise();
 		PQLParser parser = PQLParser(PQLTokens);
 
@@ -61,7 +61,7 @@ TEST_CASE("Calls - 2nd arg is proc synonym") {
 	SECTION("c(_,p)") {
 
 		std::string queryString = "procedure p; Select p such that Calls(_,p)";
-		Tokeniser tokeniser = Tokeniser(queryString);
+		PQLLexer tokeniser = PQLLexer(queryString);
 		std::vector<PQLToken*> PQLTokens = tokeniser.tokenise();
 		PQLParser parser = PQLParser(PQLTokens);
 
@@ -91,7 +91,7 @@ TEST_CASE("Calls - 2nd arg is var name") {
 
 	SECTION("C(p,\"test1\")") {
 		std::string queryString = "procedure p; Select p such that Calls(p,\"test1\")";
-		Tokeniser tokeniser = Tokeniser(queryString);
+		PQLLexer tokeniser = PQLLexer(queryString);
 		std::vector<PQLToken*> PQLTokens = tokeniser.tokenise();
 		PQLParser parser = PQLParser(PQLTokens);
 
@@ -111,7 +111,7 @@ TEST_CASE("Calls - 2nd arg is var name") {
 
 	SECTION("c(\"main\",\"test2\")") {
 		std::string queryString = "procedure p; Select p such that Calls(\"main\",\"test2\")";
-		Tokeniser tokeniser = Tokeniser(queryString);
+		PQLLexer tokeniser = PQLLexer(queryString);
 		std::vector<PQLToken*> PQLTokens = tokeniser.tokenise();
 		PQLParser parser = PQLParser(PQLTokens);
 
@@ -131,7 +131,7 @@ TEST_CASE("Calls - 2nd arg is var name") {
 	SECTION("c(_,\"test3\")") {
 
 		std::string queryString = "procedure p; Select p such that Calls(_,\"test3\")";
-		Tokeniser tokeniser = Tokeniser(queryString);
+		PQLLexer tokeniser = PQLLexer(queryString);
 		std::vector<PQLToken*> PQLTokens = tokeniser.tokenise();
 		PQLParser parser = PQLParser(PQLTokens);
 
@@ -161,7 +161,7 @@ TEST_CASE("Calls - 2nd arg is wildcard") {
 
 	SECTION("C(p,_)") {
 		std::string queryString = "procedure p; Select p such that Calls(p,_)";
-		Tokeniser tokeniser = Tokeniser(queryString);
+		PQLLexer tokeniser = PQLLexer(queryString);
 		std::vector<PQLToken*> PQLTokens = tokeniser.tokenise();
 		PQLParser parser = PQLParser(PQLTokens);
 
@@ -181,7 +181,7 @@ TEST_CASE("Calls - 2nd arg is wildcard") {
 
 	SECTION("c(\"main\",_)") {
 		std::string queryString = "procedure p; Select p such that Calls(\"main\",_)";
-		Tokeniser tokeniser = Tokeniser(queryString);
+		PQLLexer tokeniser = PQLLexer(queryString);
 		std::vector<PQLToken*> PQLTokens = tokeniser.tokenise();
 		PQLParser parser = PQLParser(PQLTokens);
 
@@ -201,7 +201,7 @@ TEST_CASE("Calls - 2nd arg is wildcard") {
 	SECTION("c(_,_)") {
 
 		std::string queryString = "procedure p; Select p such that Calls(_,_)";
-		Tokeniser tokeniser = Tokeniser(queryString);
+		PQLLexer tokeniser = PQLLexer(queryString);
 		std::vector<PQLToken*> PQLTokens = tokeniser.tokenise();
 		PQLParser parser = PQLParser(PQLTokens);
 
@@ -225,7 +225,7 @@ TEST_CASE("Calls - 2nd arg is wildcard") {
 
 TEST_CASE("Calls - read synonym as first arg") {
 	std::string queryString = "read re; procedure p; Select p such that Calls(re,p)";
-	Tokeniser tokeniser = Tokeniser(queryString);
+	PQLLexer tokeniser = PQLLexer(queryString);
 	std::vector<PQLToken*> PQLTokens = tokeniser.tokenise();
 	PQLParser parser = PQLParser(PQLTokens);
 
@@ -235,7 +235,7 @@ TEST_CASE("Calls - read synonym as first arg") {
 
 TEST_CASE("Calls - var synonym as first arg") {
 	std::string queryString = "variable v; procedure p; Select p such that Calls(v,p)";
-	Tokeniser tokeniser = Tokeniser(queryString);
+	PQLLexer tokeniser = PQLLexer(queryString);
 	std::vector<PQLToken*> PQLTokens = tokeniser.tokenise();
 	PQLParser parser = PQLParser(PQLTokens);
 
@@ -245,7 +245,7 @@ TEST_CASE("Calls - var synonym as first arg") {
 
 TEST_CASE("Calls - const synonym as first arg") {
 	std::string queryString = "procedure p; constant c; Select p such that Calls(c,p)";
-	Tokeniser tokeniser = Tokeniser(queryString);
+	PQLLexer tokeniser = PQLLexer(queryString);
 	std::vector<PQLToken*> PQLTokens = tokeniser.tokenise();
 	PQLParser parser = PQLParser(PQLTokens);
 
@@ -255,7 +255,7 @@ TEST_CASE("Calls - const synonym as first arg") {
 
 TEST_CASE("Calls - print synonym as first arg") {
 	std::string queryString = "print pn; procedure p; Select p such that Calls(pn,p)";
-	Tokeniser tokeniser = Tokeniser(queryString);
+	PQLLexer tokeniser = PQLLexer(queryString);
 	std::vector<PQLToken*> PQLTokens = tokeniser.tokenise();
 	PQLParser parser = PQLParser(PQLTokens);
 
@@ -265,7 +265,7 @@ TEST_CASE("Calls - print synonym as first arg") {
 
 TEST_CASE("Calls - stmt synonym as first arg") {
 	std::string queryString = "stmt s; procedure p; Select p such that Calls(s,p)";
-	Tokeniser tokeniser = Tokeniser(queryString);
+	PQLLexer tokeniser = PQLLexer(queryString);
 	std::vector<PQLToken*> PQLTokens = tokeniser.tokenise();
 	PQLParser parser = PQLParser(PQLTokens);
 
@@ -275,7 +275,7 @@ TEST_CASE("Calls - stmt synonym as first arg") {
 
 TEST_CASE("Calls - if synonym as first arg") {
 	std::string queryString = "procedure p; if ifs; Select p such that Calls(ifs,p)";
-	Tokeniser tokeniser = Tokeniser(queryString);
+	PQLLexer tokeniser = PQLLexer(queryString);
 	std::vector<PQLToken*> PQLTokens = tokeniser.tokenise();
 	PQLParser parser = PQLParser(PQLTokens);
 
@@ -285,7 +285,7 @@ TEST_CASE("Calls - if synonym as first arg") {
 
 TEST_CASE("Calls - while synonym as first arg") {
 	std::string queryString = "procedure p; while w; Select p such that Calls(w,p)";
-	Tokeniser tokeniser = Tokeniser(queryString);
+	PQLLexer tokeniser = PQLLexer(queryString);
 	std::vector<PQLToken*> PQLTokens = tokeniser.tokenise();
 	PQLParser parser = PQLParser(PQLTokens);
 
@@ -295,7 +295,7 @@ TEST_CASE("Calls - while synonym as first arg") {
 
 TEST_CASE("Calls - missing open paran") {
 	std::string queryString = "assign a; select a such that Calls a, 1)";
-	Tokeniser tokeniser = Tokeniser(queryString);
+	PQLLexer tokeniser = PQLLexer(queryString);
 	std::vector<PQLToken*> PQLTokens = tokeniser.tokenise();
 	PQLParser parser = PQLParser(PQLTokens);
 
@@ -305,7 +305,7 @@ TEST_CASE("Calls - missing open paran") {
 
 TEST_CASE("Calls - missing first") {
 	std::string queryString = "assign a; select a such that Calls (, 1)";
-	Tokeniser tokeniser = Tokeniser(queryString);
+	PQLLexer tokeniser = PQLLexer(queryString);
 	std::vector<PQLToken*> PQLTokens = tokeniser.tokenise();
 	PQLParser parser = PQLParser(PQLTokens);
 
@@ -315,7 +315,7 @@ TEST_CASE("Calls - missing first") {
 
 TEST_CASE("Calls - missing comma") {
 	std::string queryString = "assign a; select a such that Calls (a 1)";
-	Tokeniser tokeniser = Tokeniser(queryString);
+	PQLLexer tokeniser = PQLLexer(queryString);
 	std::vector<PQLToken*> PQLTokens = tokeniser.tokenise();
 	PQLParser parser = PQLParser(PQLTokens);
 
@@ -325,7 +325,7 @@ TEST_CASE("Calls - missing comma") {
 
 TEST_CASE("Calls - missing second arg") {
 	std::string queryString = "assign a; select a such that Calls (a, )";
-	Tokeniser tokeniser = Tokeniser(queryString);
+	PQLLexer tokeniser = PQLLexer(queryString);
 	std::vector<PQLToken*> PQLTokens = tokeniser.tokenise();
 	PQLParser parser = PQLParser(PQLTokens);
 
@@ -335,7 +335,7 @@ TEST_CASE("Calls - missing second arg") {
 
 TEST_CASE("Calls - missing close paran") {
 	std::string queryString = "assign a; select a such that Calls (a, 1";
-	Tokeniser tokeniser = Tokeniser(queryString);
+	PQLLexer tokeniser = PQLLexer(queryString);
 	std::vector<PQLToken*> PQLTokens = tokeniser.tokenise();
 	PQLParser parser = PQLParser(PQLTokens);
 
@@ -345,7 +345,7 @@ TEST_CASE("Calls - missing close paran") {
 
 TEST_CASE("Calls - insufficient arguments") {
 	std::string queryString = "assign a; select a such that Calls (a)";
-	Tokeniser tokeniser = Tokeniser(queryString);
+	PQLLexer tokeniser = PQLLexer(queryString);
 	std::vector<PQLToken*> PQLTokens = tokeniser.tokenise();
 	PQLParser parser = PQLParser(PQLTokens);
 

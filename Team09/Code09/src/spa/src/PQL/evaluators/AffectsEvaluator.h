@@ -62,6 +62,7 @@ private:
 
 	int getNextSmaller(int currStmtNum);
 	int getNextBigger(int currStmtNum);
+	bool isProcLastStmt(int currStmtNum);
 
 	static bool isValidArg(const std::string& argValue, EntityType argType);
 	static LMT mergeLMT(const LMT& first, const LMT& second);

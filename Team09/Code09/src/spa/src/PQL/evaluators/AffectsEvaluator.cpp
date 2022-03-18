@@ -57,15 +57,24 @@ AffectsEvaluator::getAffectsByStmtNum(const std::string& LHS, const std::string&
 				auto affected = cache.at(LHS);
 				return affected.find(RHS) != affected.end();
 			}
-			return cfg.at(curr).empty();
+			return isProcLastStmt(curr);
 		};
-	} else {
+	} else if (RHSType == EntityType::WILD) {
+		if (cache.find(LHS) != cache.end()) {
+			return {true};
+		}
 		terminateFunc = [&LHS, cache, this](int curr) -> bool {
 			if (cache.find(LHS) != cache.end()) {
 				return true;
 			}
-			return cfg.at(curr).empty();
+			return isProcLastStmt(curr);
 		};
+	} else if (RHSType == EntityType::ASSIGN || RHSType == EntityType::STMT) {
+		terminateFunc = [cache, this](int curr) -> bool {
+			return isProcLastStmt(curr);
+		};
+	} else {
+		return {};    // graceful handling of semantic error
 	}
 	if ((isAffects && !isAffectsCacheComplete) || (!isAffects && !isAffectsTCacheComplete)) {
 		computeAffects(std::stoi(LHS), cfg.size() - 1, isAffects);
@@ -86,13 +95,15 @@ AffectsEvaluator::getAffectsByStmt(const std::string& LHS, const std::string& RH
 			}
 			return false;
 		};
-	} else {
+	} else if (RHSType == EntityType::STMT || RHSType == EntityType::ASSIGN || RHSType == EntityType::WILD) {
 		terminateFunc = [isBooleanResult, cache](int curr) -> bool {
 			if (isBooleanResult) {
 				return !cache.empty();
 			}
 			return false;
 		};
+	} else {
+		return {};    // graceful handling of semantic error
 	}
 	if (isAffects && !isAffectsCacheComplete) {
 		computeAffects(1, cfg.size() - 1, isAffects);
@@ -117,16 +128,22 @@ AffectsEvaluator::getAffectsByUnderscore(const std::string& RHS, EntityType RHST
 			}
 			return false;
 		};
-	} else {
-		if (RHSType == EntityType::INT) {
-			terminateFunc = [&RHS, revCache](int curr) -> bool {
-				return revCache.find(RHS) != revCache.end();
-			};
-		} else if (RHSType == EntityType::WILD) {
-			terminateFunc = [cache](int curr) -> bool {
-				return !cache.empty();
-			};
+	} else if (RHSType == EntityType::INT) {
+		if (revCache.find(RHS) != revCache.end()) {
+			return {true};
 		}
+		terminateFunc = [&RHS, revCache](int curr) -> bool {
+			return revCache.find(RHS) != revCache.end();
+		};
+	} else if (RHSType == EntityType::WILD) {
+		if (!cache.empty()) {
+			return {true};
+		}
+		terminateFunc = [cache](int curr) -> bool {
+			return !cache.empty();
+		};
+	} else {
+		return {};    // graceful handling of semantic error
 	}
 	if (isAffects && !isAffectsCacheComplete) {
 		computeAffects(1, cfg.size() - 1, isAffects);
@@ -220,6 +237,9 @@ AffectsEvaluator::computeAffects(int start, int end, LMT currLMT, bool isAffects
 			case EntityType::WHILE:
 				visitedLoops.insert(currStmtNum);
 				computeAffectsWhile(currLMT, currStmtNum, PKB::getFollower(currStmtNum), isAffects);
+				if (terminateFunc(currStmtNum)) {
+					return {};
+				}
 				currStmtNum = PKB::getFollower(currStmtNum);
 				break;
 			default:
@@ -420,4 +440,13 @@ int AffectsEvaluator::getNextBigger(int currStmtNum) {
 		biggestNext = std::max(biggestNext, *it);
 	}
 	return biggestNext;
+}
+
+bool AffectsEvaluator::isProcLastStmt(int currStmtNum) {
+	EntityType stmtType = PKB::getStatementType(currStmtNum);
+	auto nextStmts = cfg.at(currStmtNum);
+	if (stmtType == EntityType::WHILE) {
+		return nextStmts.size() == 1;
+	}
+	return nextStmts.empty();
 }

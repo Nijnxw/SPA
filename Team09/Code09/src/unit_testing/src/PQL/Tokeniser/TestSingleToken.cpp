@@ -1,5 +1,5 @@
 #include "catch.hpp"
-#include "PQL/Tokeniser.h"
+#include "PQL/PQLLexer.h"
 #include "TestingUtils.cpp"
 
 //----------------------------------------------------------------//
@@ -10,9 +10,9 @@
 //	    design enitiy tokens       //
 //---------------------------------//
 
-TEST_CASE("PQL Tokeniser individual token test case 1: statement") {
+TEST_CASE("PQL PQLLexer individual token test case 1: statement") {
 	std::string queryString = "stmt";
-	auto tokeniser = Tokeniser(queryString);
+	auto tokeniser = PQLLexer(queryString);
 	std::vector<PQLToken*> actualPQLTokens = tokeniser.tokenise();
 
 	std::vector<PQLToken*> expectedPQLTokens = {
@@ -25,7 +25,7 @@ TEST_CASE("PQL Tokeniser individual token test case 1: statement") {
 
 TEST_CASE("PQL tokeniser individual token test case 2: read") {
 	std::string queryString = "read";
-	Tokeniser tokeniser = Tokeniser(queryString);
+	PQLLexer tokeniser = PQLLexer(queryString);
 	std::vector<PQLToken*> PQLTokens = tokeniser.tokenise();
 
 	std::vector<PQLToken*> expectedPQLTokens = {
@@ -38,7 +38,7 @@ TEST_CASE("PQL tokeniser individual token test case 2: read") {
 
 TEST_CASE("PQL tokeniser individual token test case 3: print") {
 	std::string queryString = "print";
-	Tokeniser tokeniser = Tokeniser(queryString);
+	PQLLexer tokeniser = PQLLexer(queryString);
 	std::vector<PQLToken*> PQLTokens = tokeniser.tokenise();
 
 	std::vector<PQLToken*> expectedPQLTokens = {
@@ -51,7 +51,7 @@ TEST_CASE("PQL tokeniser individual token test case 3: print") {
 
 TEST_CASE("PQL tokeniser individual token  test case 4: while") {
 	std::string queryString = "while";
-	Tokeniser tokeniser = Tokeniser(queryString);
+	PQLLexer tokeniser = PQLLexer(queryString);
 	std::vector<PQLToken*> PQLTokens = tokeniser.tokenise();
 
 	std::vector<PQLToken*> expectedPQLTokens = {
@@ -64,7 +64,7 @@ TEST_CASE("PQL tokeniser individual token  test case 4: while") {
 
 TEST_CASE("PQL tokeniser individual token test case 5: if") {
 	std::string queryString = "if";
-	Tokeniser tokeniser = Tokeniser(queryString);
+	PQLLexer tokeniser = PQLLexer(queryString);
 	std::vector<PQLToken*> PQLTokens = tokeniser.tokenise();
 
 	std::vector<PQLToken*> expectedPQLTokens = {
@@ -77,7 +77,7 @@ TEST_CASE("PQL tokeniser individual token test case 5: if") {
 
 TEST_CASE("PQL tokeniser individual token test case 6: assign") {
 	std::string queryString = "assign";
-	Tokeniser tokeniser = Tokeniser(queryString);
+	PQLLexer tokeniser = PQLLexer(queryString);
 	std::vector<PQLToken*> PQLTokens = tokeniser.tokenise();
 
 	std::vector<PQLToken*> expectedPQLTokens = {
@@ -90,7 +90,7 @@ TEST_CASE("PQL tokeniser individual token test case 6: assign") {
 
 TEST_CASE("PQL tokeniser individual token test case 7: variable") {
 	std::string queryString = "variable";
-	Tokeniser tokeniser = Tokeniser(queryString);
+	PQLLexer tokeniser = PQLLexer(queryString);
 	std::vector<PQLToken*> PQLTokens = tokeniser.tokenise();
 
 	std::vector<PQLToken*> expectedPQLTokens = {
@@ -103,7 +103,7 @@ TEST_CASE("PQL tokeniser individual token test case 7: variable") {
 
 TEST_CASE("PQL tokeniser individual token test case 8: constant") {
 	std::string queryString = "constant";
-	Tokeniser tokeniser = Tokeniser(queryString);
+	PQLLexer tokeniser = PQLLexer(queryString);
 	std::vector<PQLToken*> PQLTokens = tokeniser.tokenise();
 
 	std::vector<PQLToken*> expectedPQLTokens = {
@@ -116,7 +116,7 @@ TEST_CASE("PQL tokeniser individual token test case 8: constant") {
 
 TEST_CASE("PQL tokeniser individual token test case 9: procedure") {
 	std::string queryString = "procedure";
-	Tokeniser tokeniser = Tokeniser(queryString);
+	PQLLexer tokeniser = PQLLexer(queryString);
 	std::vector<PQLToken*> PQLTokens = tokeniser.tokenise();
 
 	std::vector<PQLToken*> expectedPQLTokens = {
@@ -129,7 +129,7 @@ TEST_CASE("PQL tokeniser individual token test case 9: procedure") {
 
 TEST_CASE("PQL tokeniser individual token test case 36: call") {
 	std::string queryString = "call";
-	Tokeniser tokeniser = Tokeniser(queryString);
+	PQLLexer tokeniser = PQLLexer(queryString);
 	std::vector<PQLToken*> PQLTokens = tokeniser.tokenise();
 
 	std::vector<PQLToken*> expectedPQLTokens = {
@@ -146,7 +146,7 @@ TEST_CASE("PQL tokeniser individual token test case 36: call") {
 
 TEST_CASE("PQL tokeniser individual token test case 10: such") {
 	std::string queryString = "such";
-	Tokeniser tokeniser = Tokeniser(queryString);
+	PQLLexer tokeniser = PQLLexer(queryString);
 	std::vector<PQLToken*> PQLTokens = tokeniser.tokenise();
 
 	std::vector<PQLToken*> expectedPQLTokens = {
@@ -159,7 +159,7 @@ TEST_CASE("PQL tokeniser individual token test case 10: such") {
 
 TEST_CASE("PQL tokeniser individual token test case 11: that") {
 	std::string queryString = "that";
-	Tokeniser tokeniser = Tokeniser(queryString);
+	PQLLexer tokeniser = PQLLexer(queryString);
 	std::vector<PQLToken*> PQLTokens = tokeniser.tokenise();
 
 	std::vector<PQLToken*> expectedPQLTokens = {
@@ -172,7 +172,7 @@ TEST_CASE("PQL tokeniser individual token test case 11: that") {
 
 TEST_CASE("PQL tokeniser individual token test case 12: Follows") {
 	std::string queryString = "Follows";
-	Tokeniser tokeniser = Tokeniser(queryString);
+	PQLLexer tokeniser = PQLLexer(queryString);
 	std::vector<PQLToken*> PQLTokens = tokeniser.tokenise();
 
 	std::vector<PQLToken*> expectedPQLTokens = {
@@ -185,7 +185,7 @@ TEST_CASE("PQL tokeniser individual token test case 12: Follows") {
 
 TEST_CASE("PQL tokeniser individual token test case 13: Follows*") {
 	std::string queryString = "Follows*";
-	Tokeniser tokeniser = Tokeniser(queryString);
+	PQLLexer tokeniser = PQLLexer(queryString);
 	std::vector<PQLToken*> PQLTokens = tokeniser.tokenise();
 
 	std::vector<PQLToken*> expectedPQLTokens = {
@@ -198,7 +198,7 @@ TEST_CASE("PQL tokeniser individual token test case 13: Follows*") {
 
 TEST_CASE("PQL tokeniser individual token test case 14: Parent") {
 	std::string queryString = "Parent";
-	Tokeniser tokeniser = Tokeniser(queryString);
+	PQLLexer tokeniser = PQLLexer(queryString);
 	std::vector<PQLToken*> PQLTokens = tokeniser.tokenise();
 
 	std::vector<PQLToken*> expectedPQLTokens = {
@@ -211,7 +211,7 @@ TEST_CASE("PQL tokeniser individual token test case 14: Parent") {
 
 TEST_CASE("PQL tokeniser individual token test case 15: Parent*") {
 	std::string queryString = "Parent*";
-	Tokeniser tokeniser = Tokeniser(queryString);
+	PQLLexer tokeniser = PQLLexer(queryString);
 	std::vector<PQLToken*> PQLTokens = tokeniser.tokenise();
 
 	std::vector<PQLToken*> expectedPQLTokens = {
@@ -224,7 +224,7 @@ TEST_CASE("PQL tokeniser individual token test case 15: Parent*") {
 
 TEST_CASE("PQL tokeniser individual token test case 16: Uses") {
 	std::string queryString = "Uses";
-	Tokeniser tokeniser = Tokeniser(queryString);
+	PQLLexer tokeniser = PQLLexer(queryString);
 	std::vector<PQLToken*> PQLTokens = tokeniser.tokenise();
 
 	std::vector<PQLToken*> expectedPQLTokens = {
@@ -237,7 +237,7 @@ TEST_CASE("PQL tokeniser individual token test case 16: Uses") {
 
 TEST_CASE("PQL tokeniser individual token test case 17: Modifies") {
 	std::string queryString = "Modifies";
-	Tokeniser tokeniser = Tokeniser(queryString);
+	PQLLexer tokeniser = PQLLexer(queryString);
 	std::vector<PQLToken*> PQLTokens = tokeniser.tokenise();
 
 	std::vector<PQLToken*> expectedPQLTokens = {
@@ -250,7 +250,7 @@ TEST_CASE("PQL tokeniser individual token test case 17: Modifies") {
 
 TEST_CASE("PQL tokeniser individual token test case 37: Calls") {
 	std::string queryString = "Calls";
-	Tokeniser tokeniser = Tokeniser(queryString);
+	PQLLexer tokeniser = PQLLexer(queryString);
 	std::vector<PQLToken*> PQLTokens = tokeniser.tokenise();
 
 	std::vector<PQLToken*> expectedPQLTokens = {
@@ -263,7 +263,7 @@ TEST_CASE("PQL tokeniser individual token test case 37: Calls") {
 
 TEST_CASE("PQL tokeniser individual token test case 38: Calls*") {
 	std::string queryString = "Calls*";
-	Tokeniser tokeniser = Tokeniser(queryString);
+	PQLLexer tokeniser = PQLLexer(queryString);
 	std::vector<PQLToken*> PQLTokens = tokeniser.tokenise();
 
 	std::vector<PQLToken*> expectedPQLTokens = {
@@ -276,7 +276,7 @@ TEST_CASE("PQL tokeniser individual token test case 38: Calls*") {
 
 TEST_CASE("PQL tokeniser individual token test case 39: Next") {
 	std::string queryString = "Next";
-	Tokeniser tokeniser = Tokeniser(queryString);
+	PQLLexer tokeniser = PQLLexer(queryString);
 	std::vector<PQLToken*> PQLTokens = tokeniser.tokenise();
 
 	std::vector<PQLToken*> expectedPQLTokens = {
@@ -289,7 +289,7 @@ TEST_CASE("PQL tokeniser individual token test case 39: Next") {
 
 TEST_CASE("PQL tokeniser individual token test case 40: Next*") {
 	std::string queryString = "Next*";
-	Tokeniser tokeniser = Tokeniser(queryString);
+	PQLLexer tokeniser = PQLLexer(queryString);
 	std::vector<PQLToken*> PQLTokens = tokeniser.tokenise();
 
 	std::vector<PQLToken*> expectedPQLTokens = {
@@ -302,7 +302,7 @@ TEST_CASE("PQL tokeniser individual token test case 40: Next*") {
 
 TEST_CASE("PQL tokeniser individual token test case 39: Affects") {
 	std::string queryString = "Affects";
-	Tokeniser tokeniser = Tokeniser(queryString);
+	PQLLexer tokeniser = PQLLexer(queryString);
 	std::vector<PQLToken*> PQLTokens = tokeniser.tokenise();
 
 	std::vector<PQLToken*> expectedPQLTokens = {
@@ -315,7 +315,7 @@ TEST_CASE("PQL tokeniser individual token test case 39: Affects") {
 
 TEST_CASE("PQL tokeniser individual token test case 40: Affects*") {
 	std::string queryString = "Affects*";
-	Tokeniser tokeniser = Tokeniser(queryString);
+	PQLLexer tokeniser = PQLLexer(queryString);
 	std::vector<PQLToken*> PQLTokens = tokeniser.tokenise();
 
 	std::vector<PQLToken*> expectedPQLTokens = {
@@ -333,7 +333,7 @@ TEST_CASE("PQL tokeniser individual token test case 40: Affects*") {
 
 TEST_CASE("PQL tokeniser individual token test case 18: pattern") {
 	std::string queryString = "pattern";
-	Tokeniser tokeniser = Tokeniser(queryString);
+	PQLLexer tokeniser = PQLLexer(queryString);
 	std::vector<PQLToken*> PQLTokens = tokeniser.tokenise();
 
 	std::vector<PQLToken*> expectedPQLTokens = {
@@ -350,7 +350,7 @@ TEST_CASE("PQL tokeniser individual token test case 18: pattern") {
 
 TEST_CASE("PQL tokeniser individual token test case 19: open paranthesis") {
 	std::string queryString = "(";
-	Tokeniser tokeniser = Tokeniser(queryString);
+	PQLLexer tokeniser = PQLLexer(queryString);
 	std::vector<PQLToken*> PQLTokens = tokeniser.tokenise();
 
 	std::vector<PQLToken*> expectedPQLTokens = {
@@ -363,7 +363,7 @@ TEST_CASE("PQL tokeniser individual token test case 19: open paranthesis") {
 
 TEST_CASE("PQL tokeniser individual token test case 20: close paranthesis") {
 	std::string queryString = ")";
-	Tokeniser tokeniser = Tokeniser(queryString);
+	PQLLexer tokeniser = PQLLexer(queryString);
 	std::vector<PQLToken*> PQLTokens = tokeniser.tokenise();
 
 	std::vector<PQLToken*> expectedPQLTokens = {
@@ -376,7 +376,7 @@ TEST_CASE("PQL tokeniser individual token test case 20: close paranthesis") {
 
 TEST_CASE("PQL tokeniser individual token test case 41: open angled") {
 	std::string queryString = "<";
-	Tokeniser tokeniser = Tokeniser(queryString);
+	PQLLexer tokeniser = PQLLexer(queryString);
 	std::vector<PQLToken*> PQLTokens = tokeniser.tokenise();
 
 	std::vector<PQLToken*> expectedPQLTokens = {
@@ -389,7 +389,7 @@ TEST_CASE("PQL tokeniser individual token test case 41: open angled") {
 
 TEST_CASE("PQL tokeniser individual token test case 42: close angled") {
 	std::string queryString = ">";
-	Tokeniser tokeniser = Tokeniser(queryString);
+	PQLLexer tokeniser = PQLLexer(queryString);
 	std::vector<PQLToken*> PQLTokens = tokeniser.tokenise();
 
 	std::vector<PQLToken*> expectedPQLTokens = {
@@ -402,7 +402,7 @@ TEST_CASE("PQL tokeniser individual token test case 42: close angled") {
 
 TEST_CASE("PQL tokeniser individual token test case 21: comma") {
 	std::string queryString = ",";
-	Tokeniser tokeniser = Tokeniser(queryString);
+	PQLLexer tokeniser = PQLLexer(queryString);
 	std::vector<PQLToken*> PQLTokens = tokeniser.tokenise();
 
 	std::vector<PQLToken*> expectedPQLTokens = {
@@ -415,7 +415,7 @@ TEST_CASE("PQL tokeniser individual token test case 21: comma") {
 
 TEST_CASE("PQL tokeniser individual token test case 22: semi-colon") {
 	std::string queryString = ";";
-	Tokeniser tokeniser = Tokeniser(queryString);
+	PQLLexer tokeniser = PQLLexer(queryString);
 	std::vector<PQLToken*> PQLTokens = tokeniser.tokenise();
 
 	std::vector<PQLToken*> expectedPQLTokens = {
@@ -428,7 +428,7 @@ TEST_CASE("PQL tokeniser individual token test case 22: semi-colon") {
 
 TEST_CASE("PQL tokeniser individual token test case 23: underscore") {
 	std::string queryString = "_";
-	Tokeniser tokeniser = Tokeniser(queryString);
+	PQLLexer tokeniser = PQLLexer(queryString);
 	std::vector<PQLToken*> PQLTokens = tokeniser.tokenise();
 
 	std::vector<PQLToken*> expectedPQLTokens = {
@@ -441,7 +441,7 @@ TEST_CASE("PQL tokeniser individual token test case 23: underscore") {
 
 TEST_CASE("PQL tokeniser individual token test case 43: period") {
 	std::string queryString = ".";
-	Tokeniser tokeniser = Tokeniser(queryString);
+	PQLLexer tokeniser = PQLLexer(queryString);
 	std::vector<PQLToken*> PQLTokens = tokeniser.tokenise();
 
 	std::vector<PQLToken*> expectedPQLTokens = {
@@ -458,7 +458,7 @@ TEST_CASE("PQL tokeniser individual token test case 43: period") {
 
 TEST_CASE("PQL tokeniser individual token test case 24: select") {
 	std::string queryString = "Select";
-	Tokeniser tokeniser = Tokeniser(queryString);
+	PQLLexer tokeniser = PQLLexer(queryString);
 	std::vector<PQLToken*> PQLTokens = tokeniser.tokenise();
 
 	std::vector<PQLToken*> expectedPQLTokens = {
@@ -471,7 +471,7 @@ TEST_CASE("PQL tokeniser individual token test case 24: select") {
 
 TEST_CASE("PQL tokeniser individual token test case 44: boolean") {
 	std::string queryString = "BOOLEAN";
-	Tokeniser tokeniser = Tokeniser(queryString);
+	PQLLexer tokeniser = PQLLexer(queryString);
 	std::vector<PQLToken*> PQLTokens = tokeniser.tokenise();
 
 	std::vector<PQLToken*> expectedPQLTokens = {
@@ -488,7 +488,7 @@ TEST_CASE("PQL tokeniser individual token test case 44: boolean") {
 
 TEST_CASE("PQL tokeniser individual token test case 45: with") {
 	std::string queryString = "with";
-	Tokeniser tokeniser = Tokeniser(queryString);
+	PQLLexer tokeniser = PQLLexer(queryString);
 	std::vector<PQLToken*> PQLTokens = tokeniser.tokenise();
 
 	std::vector<PQLToken*> expectedPQLTokens = {
@@ -501,7 +501,7 @@ TEST_CASE("PQL tokeniser individual token test case 45: with") {
 
 TEST_CASE("PQL tokeniser individual token test case 46: =") {
 	std::string queryString = "=";
-	Tokeniser tokeniser = Tokeniser(queryString);
+	PQLLexer tokeniser = PQLLexer(queryString);
 	std::vector<PQLToken*> PQLTokens = tokeniser.tokenise();
 
 	std::vector<PQLToken*> expectedPQLTokens = {
@@ -518,7 +518,7 @@ TEST_CASE("PQL tokeniser individual token test case 46: =") {
 
 TEST_CASE("PQL tokeniser individual token test case 46: and") {
 	std::string queryString = "and";
-	Tokeniser tokeniser = Tokeniser(queryString);
+	PQLLexer tokeniser = PQLLexer(queryString);
 	std::vector<PQLToken*> PQLTokens = tokeniser.tokenise();
 
 	std::vector<PQLToken*> expectedPQLTokens = {
@@ -535,7 +535,7 @@ TEST_CASE("PQL tokeniser individual token test case 46: and") {
 
 TEST_CASE("PQL tokeniser individual token test case 25: integer") {
 	std::string queryString = "0123456789";
-	Tokeniser tokeniser = Tokeniser(queryString);
+	PQLLexer tokeniser = PQLLexer(queryString);
 	std::vector<PQLToken*> PQLTokens = tokeniser.tokenise();
 
 	std::vector<PQLToken*> expectedPQLTokens = {
@@ -552,7 +552,7 @@ TEST_CASE("PQL tokeniser individual token test case 25: integer") {
 
 TEST_CASE("PQL tokeniser individual token test case 26: synonym letters only") {
 	std::string queryString = "w";
-	Tokeniser tokeniser = Tokeniser(queryString);
+	PQLLexer tokeniser = PQLLexer(queryString);
 	std::vector<PQLToken*> PQLTokens = tokeniser.tokenise();
 
 	std::vector<PQLToken*> expectedPQLTokens = {
@@ -565,7 +565,7 @@ TEST_CASE("PQL tokeniser individual token test case 26: synonym letters only") {
 
 TEST_CASE("PQL tokeniser individual token test case 26: synonym letters + digits") {
 	std::string queryString = "w1";
-	Tokeniser tokeniser = Tokeniser(queryString);
+	PQLLexer tokeniser = PQLLexer(queryString);
 	std::vector<PQLToken*> PQLTokens = tokeniser.tokenise();
 
 	std::vector<PQLToken*> expectedPQLTokens = {
@@ -578,7 +578,7 @@ TEST_CASE("PQL tokeniser individual token test case 26: synonym letters + digits
 
 TEST_CASE("PQL tokeniser individual token test case 27: string letters only") {
 	std::string queryString = "\"TESTING\"";
-	Tokeniser tokeniser = Tokeniser(queryString);
+	PQLLexer tokeniser = PQLLexer(queryString);
 	std::vector<PQLToken*> PQLTokens = tokeniser.tokenise();
 
 	std::vector<PQLToken*> expectedPQLTokens = {
@@ -591,7 +591,7 @@ TEST_CASE("PQL tokeniser individual token test case 27: string letters only") {
 
 TEST_CASE("PQL tokeniser individual token test case 28: string letters + digits") {
 	std::string queryString = "\"TESTING\"";
-	Tokeniser tokeniser = Tokeniser(queryString);
+	PQLLexer tokeniser = PQLLexer(queryString);
 	std::vector<PQLToken*> PQLTokens = tokeniser.tokenise();
 
 	std::vector<PQLToken*> expectedPQLTokens = {
@@ -605,7 +605,7 @@ TEST_CASE("PQL tokeniser individual token test case 28: string letters + digits"
 
 TEST_CASE("PQL tokeniser individual token test case 29: factor (string) digits") {
 	std::string queryString = "\"1234\"";
-	Tokeniser tokeniser = Tokeniser(queryString);
+	PQLLexer tokeniser = PQLLexer(queryString);
 	std::vector<PQLToken*> PQLTokens = tokeniser.tokenise();
 
 	std::vector<PQLToken*> expectedPQLTokens = {
@@ -623,14 +623,14 @@ TEST_CASE("PQL tokeniser individual token test case 29: factor (string) digits")
 
 TEST_CASE("PQL tokeniser individual token test case 34: invalid ident (punctuator present)") {
 	std::string queryString = "q@werty";
-	Tokeniser tokeniser = Tokeniser(queryString);
+	PQLLexer tokeniser = PQLLexer(queryString);
 	std::vector<PQLToken*> tokens = tokeniser.tokenise();
 	REQUIRE(tokens.empty());
 }
 
 TEST_CASE("PQL tokeniser individual token test case 35: symbols not in list of allowed symbols") {
 	std::string queryString = "@";
-	Tokeniser tokeniser = Tokeniser(queryString);
+	PQLLexer tokeniser = PQLLexer(queryString);
 	std::vector<PQLToken*> tokens = tokeniser.tokenise();
 	REQUIRE(tokens.empty());
 }

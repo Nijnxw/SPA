@@ -1,6 +1,6 @@
 #include "catch.hpp"
 #include "PQL/PQLParser.h"
-#include "PQL/Tokeniser.h"
+#include "PQL/PQLLexer.h"
 
 TEST_CASE("pattern - if pattern") {
 	std::vector<QueryArgument> expectedResultSynonms;
@@ -10,7 +10,7 @@ TEST_CASE("pattern - if pattern") {
 
 	SECTION("variable as first arg") {
 		std::string queryString = "if ifs; variable v; Select ifs pattern ifs(v,_)";
-		Tokeniser tokeniser = Tokeniser(queryString);
+		PQLLexer tokeniser = PQLLexer(queryString);
 		std::vector<PQLToken*> PQLTokens = tokeniser.tokenise();
 		PQLParser parser = PQLParser(PQLTokens);
 
@@ -32,7 +32,7 @@ TEST_CASE("pattern - if pattern") {
 
 	SECTION("wild as first arg") {
 		std::string queryString = "if ifs; Select ifs pattern ifs(_,_)";
-		Tokeniser tokeniser = Tokeniser(queryString);
+		PQLLexer tokeniser = PQLLexer(queryString);
 		std::vector<PQLToken*> PQLTokens = tokeniser.tokenise();
 		PQLParser parser = PQLParser(PQLTokens);
 
@@ -53,7 +53,7 @@ TEST_CASE("pattern - if pattern") {
 
 	SECTION("string as first arg") {
 		std::string queryString = "if ifs; Select ifs pattern ifs(\"v\",_)";
-		Tokeniser tokeniser = Tokeniser(queryString);
+		PQLLexer tokeniser = PQLLexer(queryString);
 		std::vector<PQLToken*> PQLTokens = tokeniser.tokenise();
 		PQLParser parser = PQLParser(PQLTokens);
 
@@ -81,7 +81,7 @@ TEST_CASE("pattern - if pattern unhappy paths") {
 
 	SECTION("expected stmt list") {
 		std::string queryString = "if ifs; variable v; stmt s; Select ifs pattern ifs(v,s)";
-		Tokeniser tokeniser = Tokeniser(queryString);
+		PQLLexer tokeniser = PQLLexer(queryString);
 		std::vector<PQLToken*> PQLTokens = tokeniser.tokenise();
 		PQLParser parser = PQLParser(PQLTokens);
 
@@ -91,7 +91,7 @@ TEST_CASE("pattern - if pattern unhappy paths") {
 
 	SECTION("non var arg synonym as first arg") {
 		std::string queryString = "if ifs; variable v; stmt s; Select ifs pattern ifs(s,_)";
-		Tokeniser tokeniser = Tokeniser(queryString);
+		PQLLexer tokeniser = PQLLexer(queryString);
 		std::vector<PQLToken*> PQLTokens = tokeniser.tokenise();
 		PQLParser parser = PQLParser(PQLTokens);
 
@@ -101,7 +101,7 @@ TEST_CASE("pattern - if pattern unhappy paths") {
 
 	SECTION("integer as first arg") {
 		std::string queryString = "if ifs; variable v; stmt s; Select ifs pattern ifs(1,_)";
-		Tokeniser tokeniser = Tokeniser(queryString);
+		PQLLexer tokeniser = PQLLexer(queryString);
 		std::vector<PQLToken*> PQLTokens = tokeniser.tokenise();
 		PQLParser parser = PQLParser(PQLTokens);
 
@@ -111,7 +111,7 @@ TEST_CASE("pattern - if pattern unhappy paths") {
 
 	SECTION("expr as first arg") {
 		std::string queryString = "if ifs; variable v; stmt s; Select ifs pattern ifs(\"123\",_)";
-		Tokeniser tokeniser = Tokeniser(queryString);
+		PQLLexer tokeniser = PQLLexer(queryString);
 		std::vector<PQLToken*> PQLTokens = tokeniser.tokenise();
 		PQLParser parser = PQLParser(PQLTokens);
 

@@ -1,6 +1,6 @@
 #include "catch.hpp"
 #include "PQL/PQLParser.h"
-#include "PQL/Tokeniser.h"
+#include "PQL/PQLLexer.h"
 
 TEST_CASE("multiple rel clause with AND") {
 	std::vector<QueryArgument> expectedResultSynonms;
@@ -10,7 +10,7 @@ TEST_CASE("multiple rel clause with AND") {
 
 	SECTION("test case 1") {
 		std::string queryString = "read re; Select re such that Next(1,re) and Next(2,3)";
-		Tokeniser tokeniser = Tokeniser(queryString);
+		PQLLexer tokeniser = PQLLexer(queryString);
 		std::vector<PQLToken*> PQLTokens = tokeniser.tokenise();
 		PQLParser parser = PQLParser(PQLTokens);
 

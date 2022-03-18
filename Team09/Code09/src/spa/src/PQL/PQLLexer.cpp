@@ -6,50 +6,53 @@
 #include <sstream>
 #include <iostream>
 
-#include "PQL/Tokeniser.h"
+#include "PQL/PQLLexer.h"
 #include "PQL/PQLUtils.cpp"
 #include "util/RPN.h"
 
-Tokeniser::Tokeniser(std::string rawQueryString) : rawQuery(new std::stringstream(rawQueryString)) {}
+PQLLexer::PQLLexer(std::string rawQueryString) : CommonLexer(new std::stringstream(rawQueryString)) {}
 
-void Tokeniser::processRawToken(std::string rawToken) {
-	if (stringTokenMap.find(rawToken) != stringTokenMap.end()) {
-		PQLTokens.push_back(new PQLToken(stringTokenMap[rawToken], rawToken));
-	} else if (isInStringLiteral(rawToken)) {
-		const std::string content = trimWhitespaces(rawToken.substr(1, rawToken.size() - 2));
-		PQLTokens.push_back(new PQLToken(TokenType::STRING, content));
-	} else if (isIdent(rawToken)) {
-		PQLTokens.push_back(new PQLToken(TokenType::SYNONYM, rawToken));
-	} else if (isInt(rawToken)) {
-		PQLTokens.push_back(new PQLToken(TokenType::INTEGER, rawToken));
-	} else {
-		throw "Unknown syntax : " + rawToken + "\n";
+void PQLLexer::processRawToken(std::string nextStr) {
+	if (QPStringTokenMap.find(nextStr) != QPStringTokenMap.end()) {
+		PQLTokens.push_back(new PQLToken(QPStringTokenMap[nextStr], nextStr));
+	}
+	else if (isInStringLiteral(nextStr)) {
+		const std::string ident = trimWhitespaces(nextStr.substr(1, nextStr.size() - 2));
+		PQLTokens.push_back(new PQLToken(TokenType::STRING, ident));
+	} else if (isIdent(nextStr)) {
+		PQLTokens.push_back(new PQLToken(TokenType::SYNONYM, nextStr));
+	}
+	else if (isInt(nextStr)) {
+		PQLTokens.push_back(new PQLToken(TokenType::INTEGER, nextStr));
+	}
+	else {
+		throw "Unknown syntax : " + nextStr + "\n";
 	}
 }
 
-void Tokeniser::pushToken() {
-	if (rawToken.size() > 0) {
-		processRawToken(rawToken);
+void PQLLexer::pushToken() {
+	if (nextStr.size() > 0) {
+		processRawToken(nextStr);
 	}
-	rawToken = "";
+	nextStr = "";
 }
 
-void Tokeniser::pushSymbolToken(char nextChar) {
+void PQLLexer::pushSymbolToken(char nextChar) {
 	pushToken();
-	rawToken += nextChar;
+	nextStr += nextChar;
 	pushToken();
 }
 
 
-std::vector<PQLToken*> Tokeniser::tokenise() {
+std::vector<PQLToken*> PQLLexer::tokenise() {
 	try {
-		char nextChar = rawQuery->get();
-		while (!rawQuery->eof()) {
+		char nextChar = next();
+		while (notEOF()) {
 			switch (nextChar) {
 			//Start of string
 			case '"':
 				isWithinStringLiterals = !isWithinStringLiterals;
-				rawToken += nextChar;
+				nextStr += nextChar;
 				break;
 
 			//White spaces
@@ -60,7 +63,7 @@ std::vector<PQLToken*> Tokeniser::tokenise() {
 				if (!isWithinStringLiterals) {
 					pushToken();
 				} else {
-					rawToken += nextChar;
+					nextStr += nextChar;
 				}
 				break;
 
@@ -70,7 +73,7 @@ std::vector<PQLToken*> Tokeniser::tokenise() {
 			case '/':
 			case '%':
 				if (isWithinStringLiterals) {
-					rawToken += nextChar;
+					nextStr += nextChar;
 				}
 				break;
 
@@ -78,7 +81,7 @@ std::vector<PQLToken*> Tokeniser::tokenise() {
 			case '(':
 			case ')':
 				if (isWithinStringLiterals) {
-					rawToken += nextChar;
+					nextStr += nextChar;
 				} else {
 					pushSymbolToken(nextChar);
 				}
@@ -96,10 +99,10 @@ std::vector<PQLToken*> Tokeniser::tokenise() {
 				break;
 
 			default:
-				rawToken += nextChar;
+				nextStr += nextChar;
 				break;
 			}
-			nextChar = rawQuery->get();
+			nextChar = next();
 		}
 		if (isWithinStringLiterals) {
 			throw "Unclosed string in query.";

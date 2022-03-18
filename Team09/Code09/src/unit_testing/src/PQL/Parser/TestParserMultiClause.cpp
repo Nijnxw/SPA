@@ -1,6 +1,6 @@
 #include "catch.hpp"
 #include "PQL/PQLParser.h"
-#include "PQL/Tokeniser.h"
+#include "PQL/PQLLexer.h"
 
 TEST_CASE("Modifies + pattern") {
 	std::vector<QueryArgument> expectedResultSynonms;
@@ -12,7 +12,7 @@ TEST_CASE("Modifies + pattern") {
 
 	SECTION("1 synonym (pattern), no common syn") {
 		std::string queryString = "assign a; Select a such that Modifies(3,\"var\") pattern a(_,\"x\")";
-		Tokeniser tokeniser = Tokeniser(queryString);
+		PQLLexer tokeniser = PQLLexer(queryString);
 		std::vector<PQLToken*> PQLTokens = tokeniser.tokenise();
 		PQLParser parser = PQLParser(PQLTokens);
 		Query actualQuery = parser.parse();
@@ -40,7 +40,7 @@ TEST_CASE("Modifies + pattern") {
 
 	SECTION("2 synonym (1 rel, 1pattern), common var syn") {
 		std::string queryString = "assign a1; variable v;Select a1 such that Modifies(4,v) pattern a1(v,\"z\")";
-		Tokeniser tokeniser = Tokeniser(queryString);
+		PQLLexer tokeniser = PQLLexer(queryString);
 		std::vector<PQLToken*> PQLTokens = tokeniser.tokenise();
 		PQLParser parser = PQLParser(PQLTokens);
 		Query actualQuery = parser.parse();
@@ -70,7 +70,7 @@ TEST_CASE("Modifies + pattern") {
 
 	SECTION("2 synonym (2pattern), no common syn") {
 		std::string queryString = "assign a2; variable v1; Select a2 such that Modifies(2,\"c\") pattern a2(v1,\"d\")";
-		Tokeniser tokeniser = Tokeniser(queryString);
+		PQLLexer tokeniser = PQLLexer(queryString);
 		std::vector<PQLToken*> PQLTokens = tokeniser.tokenise();
 		PQLParser parser = PQLParser(PQLTokens);
 		Query actualQuery = parser.parse();
@@ -99,7 +99,7 @@ TEST_CASE("Modifies + pattern") {
 
 	SECTION("3 synonym (2rel, 1pattern), common assign syn") {
 		std::string queryString = "assign a3; variable v2; Select a3 such that Modifies(a3,v2) pattern a3(\"test2\",\"test1\")";
-		Tokeniser tokeniser = Tokeniser(queryString);
+		PQLLexer tokeniser = PQLLexer(queryString);
 		std::vector<PQLToken*> PQLTokens = tokeniser.tokenise();
 		PQLParser parser = PQLParser(PQLTokens);
 		Query actualQuery = parser.parse();
@@ -129,7 +129,7 @@ TEST_CASE("Modifies + pattern") {
 
 	SECTION("3 synonym (1rel, 2pattern), no common syn") {
 		std::string queryString = "assign a4; variable v2,v3; Select a4 such that Modifies(5,v2) pattern a4(v3,\"test3\")";
-		Tokeniser tokeniser = Tokeniser(queryString);
+		PQLLexer tokeniser = PQLLexer(queryString);
 		std::vector<PQLToken*> PQLTokens = tokeniser.tokenise();
 		PQLParser parser = PQLParser(PQLTokens);
 		Query actualQuery = parser.parse();
@@ -159,7 +159,7 @@ TEST_CASE("Modifies + pattern") {
 
 	SECTION("4 synonym , 1 common syn on var") {
 		std::string queryString = "assign a5,a6; variable v5; Select a5 such that Modifies(a6,v5) pattern a5(v5,\"asdf\")";
-		Tokeniser tokeniser = Tokeniser(queryString);
+		PQLLexer tokeniser = PQLLexer(queryString);
 		std::vector<PQLToken*> PQLTokens = tokeniser.tokenise();
 		PQLParser parser = PQLParser(PQLTokens);
 		Query actualQuery = parser.parse();
@@ -190,7 +190,7 @@ TEST_CASE("Modifies + pattern") {
 
 	SECTION("3 synonym (1rel, 2pattern), 1 common syn on var") {
 		std::string queryString = "assign assign; variable var; Select assign such that Modifies(123,var) pattern assign(var,\"y\")";
-		Tokeniser tokeniser = Tokeniser(queryString);
+		PQLLexer tokeniser = PQLLexer(queryString);
 		std::vector<PQLToken*> PQLTokens = tokeniser.tokenise();
 		PQLParser parser = PQLParser(PQLTokens);
 		Query actualQuery = parser.parse();
@@ -229,7 +229,7 @@ TEST_CASE("Uses + pattern") {
 
 	SECTION("1 synonym (pattern), no common syn") {
 		std::string queryString = "assign as; Select as such that Uses(13,\"variable\") pattern as(\"b\",\"a\")";
-		Tokeniser tokeniser = Tokeniser(queryString);
+		PQLLexer tokeniser = PQLLexer(queryString);
 		std::vector<PQLToken*> PQLTokens = tokeniser.tokenise();
 		PQLParser parser = PQLParser(PQLTokens);
 		Query actualQuery = parser.parse();
@@ -257,7 +257,7 @@ TEST_CASE("Uses + pattern") {
 
 	SECTION("2 synonym (1 rel, 1pattern), NO common syn") {
 		std::string queryString = "assign an; variable vd; Select an such that Uses(15,\"Cout\") pattern an(vd,\"Cx\")";
-		Tokeniser tokeniser = Tokeniser(queryString);
+		PQLLexer tokeniser = PQLLexer(queryString);
 		std::vector<PQLToken*> PQLTokens = tokeniser.tokenise();
 		PQLParser parser = PQLParser(PQLTokens);
 		Query actualQuery = parser.parse();
@@ -286,7 +286,7 @@ TEST_CASE("Uses + pattern") {
 
 	SECTION("3 synonym (2rel, 1pattern), No common syn") {
 		std::string queryString = "assign x1, x2; variable y1; Select x1 such that Uses(x1,y1) pattern x2(\"piece\",\"cost\")";
-		Tokeniser tokeniser = Tokeniser(queryString);
+		PQLLexer tokeniser = PQLLexer(queryString);
 		std::vector<PQLToken*> PQLTokens = tokeniser.tokenise();
 		PQLParser parser = PQLParser(PQLTokens);
 		Query actualQuery = parser.parse();
@@ -316,7 +316,7 @@ TEST_CASE("Uses + pattern") {
 
 	SECTION("3 synonym (1rel, 2pattern), common assign syn") {
 		std::string queryString = "assign x3; variable y2,y3; Select x3 such that Uses(x3,y2) pattern x3(y3,\"test3\")";
-		Tokeniser tokeniser = Tokeniser(queryString);
+		PQLLexer tokeniser = PQLLexer(queryString);
 		std::vector<PQLToken*> PQLTokens = tokeniser.tokenise();
 		PQLParser parser = PQLParser(PQLTokens);
 		Query actualQuery = parser.parse();
@@ -347,7 +347,7 @@ TEST_CASE("Uses + pattern") {
 
 	SECTION("4 synonym, common var syn") {
 		std::string queryString = "assign as1,as2; variable vr2; Select as1 such that Modifies(as1,vr2) pattern as2(vr2,\"e\")";
-		Tokeniser tokeniser = Tokeniser(queryString);
+		PQLLexer tokeniser = PQLLexer(queryString);
 		std::vector<PQLToken*> PQLTokens = tokeniser.tokenise();
 		PQLParser parser = PQLParser(PQLTokens);
 		Query actualQuery = parser.parse();
@@ -387,7 +387,7 @@ TEST_CASE("Follows + pattern") {
 
 	SECTION("1 synonym (pattern), no common syn") {
 		std::string queryString = "assign pattern; Select pattern such that Follows(14,15) pattern pattern(_,_)";
-		Tokeniser tokeniser = Tokeniser(queryString);
+		PQLLexer tokeniser = PQLLexer(queryString);
 		std::vector<PQLToken*> PQLTokens = tokeniser.tokenise();
 		PQLParser parser = PQLParser(PQLTokens);
 		Query actualQuery = parser.parse();
@@ -415,7 +415,7 @@ TEST_CASE("Follows + pattern") {
 
 	SECTION("2 synonym (1 rel, 1pattern), common assign syn") {
 		std::string queryString = "assign while; Select while such that Follows(while,16) pattern while(\"jb\",\"Cnp\")";
-		Tokeniser tokeniser = Tokeniser(queryString);
+		PQLLexer tokeniser = PQLLexer(queryString);
 		std::vector<PQLToken*> PQLTokens = tokeniser.tokenise();
 		PQLParser parser = PQLParser(PQLTokens);
 		Query actualQuery = parser.parse();
@@ -444,7 +444,7 @@ TEST_CASE("Follows + pattern") {
 
 	SECTION("2 synonym (2 pattern), no common syn") {
 		std::string queryString = "assign variable; variable stmt ;Select variable such that Follows(17,18) pattern variable(stmt,\"jp\")";
-		Tokeniser tokeniser = Tokeniser(queryString);
+		PQLLexer tokeniser = PQLLexer(queryString);
 		std::vector<PQLToken*> PQLTokens = tokeniser.tokenise();
 		PQLParser parser = PQLParser(PQLTokens);
 		Query actualQuery = parser.parse();
@@ -473,7 +473,7 @@ TEST_CASE("Follows + pattern") {
 
 	SECTION("3 synonym (2rel, 1pattern), No common syn") {
 		std::string queryString = "assign if, print, van;  Select if such that Follows(if,van) pattern print(\"lom\",\"bind\")";
-		Tokeniser tokeniser = Tokeniser(queryString);
+		PQLLexer tokeniser = PQLLexer(queryString);
 		std::vector<PQLToken*> PQLTokens = tokeniser.tokenise();
 		PQLParser parser = PQLParser(PQLTokens);
 		Query actualQuery = parser.parse();
@@ -505,7 +505,7 @@ TEST_CASE("Follows + pattern") {
 
 	SECTION("3 synonym (1rel, 2pattern), common assign syn") {
 		std::string queryString = "assign asn, asn1; variable d2; Select asn such that Follows(asn,12) pattern asn(d2,\"test4\")";
-		Tokeniser tokeniser = Tokeniser(queryString);
+		PQLLexer tokeniser = PQLLexer(queryString);
 		std::vector<PQLToken*> PQLTokens = tokeniser.tokenise();
 		PQLParser parser = PQLParser(PQLTokens);
 		Query actualQuery = parser.parse();
@@ -535,7 +535,7 @@ TEST_CASE("Follows + pattern") {
 
 	SECTION("4 synonym, common assign syn") {
 		std::string queryString = "assign as1,as2; variable vr4; Select as1 such that Follows(as1,as2) pattern as1(vr4,\"e\")";
-		Tokeniser tokeniser = Tokeniser(queryString);
+		PQLLexer tokeniser = PQLLexer(queryString);
 		std::vector<PQLToken*> PQLTokens = tokeniser.tokenise();
 		PQLParser parser = PQLParser(PQLTokens);
 		Query actualQuery = parser.parse();
@@ -575,7 +575,7 @@ TEST_CASE("Follows* + pattern") {
 
 	SECTION("1 synonym (pattern), no common syn") {
 		std::string queryString = "assign constant; Select constant such that Follows*(24,35) pattern constant(_,_\"value\"_)";
-		Tokeniser tokeniser = Tokeniser(queryString);
+		PQLLexer tokeniser = PQLLexer(queryString);
 		std::vector<PQLToken*> PQLTokens = tokeniser.tokenise();
 		PQLParser parser = PQLParser(PQLTokens);
 		Query actualQuery = parser.parse();
@@ -603,7 +603,7 @@ TEST_CASE("Follows* + pattern") {
 
 	SECTION("2 synonym (1 rel, 1pattern), common assign syn") {
 		std::string queryString = "assign read; Select read such that Follows*(read,26) pattern read(\"jn\",\"jnp\")";
-		Tokeniser tokeniser = Tokeniser(queryString);
+		PQLLexer tokeniser = PQLLexer(queryString);
 		std::vector<PQLToken*> PQLTokens = tokeniser.tokenise();
 		PQLParser parser = PQLParser(PQLTokens);
 		Query actualQuery = parser.parse();
@@ -632,7 +632,7 @@ TEST_CASE("Follows* + pattern") {
 
 	SECTION("3 synonym (2rel, 1pattern), common assign syn") {
 		std::string queryString = "assign Follows, vat;  Select Follows such that Follows*(Follows,vat) pattern Follows(\"msg\",\"msg2\")";
-		Tokeniser tokeniser = Tokeniser(queryString);
+		PQLLexer tokeniser = PQLLexer(queryString);
 		std::vector<PQLToken*> PQLTokens = tokeniser.tokenise();
 		PQLParser parser = PQLParser(PQLTokens);
 		Query actualQuery = parser.parse();
@@ -664,7 +664,7 @@ TEST_CASE("Follows* + pattern") {
 
 	SECTION("3 synonym (1rel, 2pattern), no common syn") {
 		std::string queryString = "assign asn2, asn3; variable d24; Select asn2 such that Follows*(asn2,22) pattern asn3(d24,\"test24\")";
-		Tokeniser tokeniser = Tokeniser(queryString);
+		PQLLexer tokeniser = PQLLexer(queryString);
 		std::vector<PQLToken*> PQLTokens = tokeniser.tokenise();
 		PQLParser parser = PQLParser(PQLTokens);
 		Query actualQuery = parser.parse();
@@ -694,7 +694,7 @@ TEST_CASE("Follows* + pattern") {
 
 	SECTION("4 synonym, common assign syn") {
 		std::string queryString = "assign asm,asc; variable vr24; Select asm such that Follows*(asm,asc) pattern asm(vr24,\"tel\")";
-		Tokeniser tokeniser = Tokeniser(queryString);
+		PQLLexer tokeniser = PQLLexer(queryString);
 		std::vector<PQLToken*> PQLTokens = tokeniser.tokenise();
 		PQLParser parser = PQLParser(PQLTokens);
 		Query actualQuery = parser.parse();
@@ -734,7 +734,7 @@ TEST_CASE("Parent + pattern") {
 
 	SECTION("1 synonym (pattern), no common syn") {
 		std::string queryString = "assign such; Select such such that Parent(124,135) pattern such(_,_\"cost\"_)";
-		Tokeniser tokeniser = Tokeniser(queryString);
+		PQLLexer tokeniser = PQLLexer(queryString);
 		std::vector<PQLToken*> PQLTokens = tokeniser.tokenise();
 		PQLParser parser = PQLParser(PQLTokens);
 		Query actualQuery = parser.parse();
@@ -762,7 +762,7 @@ TEST_CASE("Parent + pattern") {
 
 	SECTION("2 synonym (1 rel, 1pattern), common assign syn") {
 		std::string queryString = "assign constant; Select constant such that Parent(constant,26) pattern constant(\"jne\",\"jep\")";
-		Tokeniser tokeniser = Tokeniser(queryString);
+		PQLLexer tokeniser = PQLLexer(queryString);
 		std::vector<PQLToken*> PQLTokens = tokeniser.tokenise();
 		PQLParser parser = PQLParser(PQLTokens);
 		Query actualQuery = parser.parse();
@@ -791,7 +791,7 @@ TEST_CASE("Parent + pattern") {
 
 	SECTION("3 synonym (2rel, 1pattern), common assign syn") {
 		std::string queryString = "assign Parent, vm;  Select Parent such that Parent(Parent,vm) pattern Parent(\"msg\",\"msg2\")";
-		Tokeniser tokeniser = Tokeniser(queryString);
+		PQLLexer tokeniser = PQLLexer(queryString);
 		std::vector<PQLToken*> PQLTokens = tokeniser.tokenise();
 		PQLParser parser = PQLParser(PQLTokens);
 		Query actualQuery = parser.parse();
@@ -823,7 +823,7 @@ TEST_CASE("Parent + pattern") {
 
 	SECTION("3 synonym (1rel, 2pattern), no common syn") {
 		std::string queryString = "assign ab2; variable x24; if ifs; Select ab2 such that Parent(ifs,12) pattern ab2(x24,\"test124\")";
-		Tokeniser tokeniser = Tokeniser(queryString);
+		PQLLexer tokeniser = PQLLexer(queryString);
 		std::vector<PQLToken*> PQLTokens = tokeniser.tokenise();
 		PQLParser parser = PQLParser(PQLTokens);
 		Query actualQuery = parser.parse();
@@ -853,7 +853,7 @@ TEST_CASE("Parent + pattern") {
 
 	SECTION("4 synonym, no common syn") {
 		std::string queryString = "assign a123,a456; if ifs2; variable vr124; Select a456 such that Parent(ifs2,a123) pattern a456(vr124,\"tele\")";
-		Tokeniser tokeniser = Tokeniser(queryString);
+		PQLLexer tokeniser = PQLLexer(queryString);
 		std::vector<PQLToken*> PQLTokens = tokeniser.tokenise();
 		PQLParser parser = PQLParser(PQLTokens);
 		Query actualQuery = parser.parse();
@@ -893,7 +893,7 @@ TEST_CASE("Parent* + pattern") {
 
 	SECTION("1 synonym (pattern), no common syn") {
 		std::string queryString = "assign that; Select that such that Parent*(124,135) pattern that(_,_\"cost\"_)";
-		Tokeniser tokeniser = Tokeniser(queryString);
+		PQLLexer tokeniser = PQLLexer(queryString);
 		std::vector<PQLToken*> PQLTokens = tokeniser.tokenise();
 		PQLParser parser = PQLParser(PQLTokens);
 		Query actualQuery = parser.parse();
@@ -921,7 +921,7 @@ TEST_CASE("Parent* + pattern") {
 
 	SECTION("2 synonym (1 rel, 1pattern), no common syn") {
 		std::string queryString = "assign procedure, line2; Select procedure such that Parent*(line2,4) pattern procedure(\"jne\",\"jep\")";
-		Tokeniser tokeniser = Tokeniser(queryString);
+		PQLLexer tokeniser = PQLLexer(queryString);
 		std::vector<PQLToken*> PQLTokens = tokeniser.tokenise();
 		PQLParser parser = PQLParser(PQLTokens);
 		Query actualQuery = parser.parse();
@@ -950,7 +950,7 @@ TEST_CASE("Parent* + pattern") {
 
 	SECTION("3 synonym (2rel, 1pattern), no common syn") {
 		std::string queryString = "assign assign1; stmt s1, s2;  Select assign1 such that Parent*(s1,s2) pattern assign1(\"msg\",\"msg2\")";
-		Tokeniser tokeniser = Tokeniser(queryString);
+		PQLLexer tokeniser = PQLLexer(queryString);
 		std::vector<PQLToken*> PQLTokens = tokeniser.tokenise();
 		PQLParser parser = PQLParser(PQLTokens);
 		Query actualQuery = parser.parse();
@@ -982,7 +982,7 @@ TEST_CASE("Parent* + pattern") {
 
 	SECTION("3 synonym (1rel, 2pattern), common assign syn") {
 		std::string queryString = "assign ab12; variable x24; Select ab12 such that Parent*(13,ab12) pattern ab12(x24,\"test124\")";
-		Tokeniser tokeniser = Tokeniser(queryString);
+		PQLLexer tokeniser = PQLLexer(queryString);
 		std::vector<PQLToken*> PQLTokens = tokeniser.tokenise();
 		PQLParser parser = PQLParser(PQLTokens);
 		Query actualQuery = parser.parse();
@@ -1012,7 +1012,7 @@ TEST_CASE("Parent* + pattern") {
 
 	SECTION("4 synonym, no common syn") {
 		std::string queryString = "assign a123,a456; if ifs2; variable vr124; Select a456 such that Parent*(ifs2,a123) pattern a456(vr124,\"tele\")";
-		Tokeniser tokeniser = Tokeniser(queryString);
+		PQLLexer tokeniser = PQLLexer(queryString);
 		std::vector<PQLToken*> PQLTokens = tokeniser.tokenise();
 		PQLParser parser = PQLParser(PQLTokens);
 		Query actualQuery = parser.parse();

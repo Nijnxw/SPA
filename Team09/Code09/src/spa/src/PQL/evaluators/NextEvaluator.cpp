@@ -92,11 +92,11 @@ QueryClauseResult NextEvaluator::getNextTByStatementVariable(const std::string& 
 		RHSType == EntityType::CALL) { // Next*(s1, s2)
 		std::unordered_map<int, std::unordered_set<int>> nextTPairs = getAllNextTPairs();
 
-		auto [firstEntities, secondEntities] = PKBUtil::convertMapWithSetToVectorTuple(nextTPairs);
+		auto [firstEntities, secondEntities] = PKBUtils::convertMapWithSetToVectorTuple(nextTPairs);
 		auto [filteredFirst, filteredSecond] = StmtStmtRelationshipEvaluator::filterStatementPairsByType(firstEntities, secondEntities, LHSType, RHSType);
 
 		if (LHS == RHS) {
-			std::unordered_set<int> set = PKBUtil::getEqualPairs(filteredFirst, filteredSecond);
+			std::unordered_set<int> set = PKBUtils::getEqualPairs(filteredFirst, filteredSecond);
 			queryResult.addColumn(LHS, set);
 		}
 		else {
@@ -106,7 +106,7 @@ QueryClauseResult NextEvaluator::getNextTByStatementVariable(const std::string& 
 	}
 	else if (RHSType == EntityType::WILD) { // Next*(s, _)
 		std::unordered_map<int, std::unordered_set<int>> nextTPairs = getAllNextTPairs();
-		std::unordered_set<int> statements = PKBUtil::getKeySetFromMap(nextTPairs);
+		std::unordered_set<int> statements = PKBUtils::getKeySetFromMap(nextTPairs);
 		queryResult.addColumn(LHS, StmtStmtRelationshipEvaluator::filterStatementsByType(statements, LHSType));
 	}
 
@@ -133,7 +133,7 @@ QueryClauseResult NextEvaluator::getNextTByUnderscore(const std::string& RHS, En
 		RHSType == EntityType::WHILE || RHSType == EntityType::PRINT || RHSType == EntityType::READ ||
 		RHSType == EntityType::CALL) { // Next*(_, s)
 		std::unordered_map<int, std::unordered_set<int>> nextTPairs = getAllNextTPairs();
-		std::unordered_set<int> statements = PKBUtil::getValueSetFromMapWithSet(nextTPairs);
+		std::unordered_set<int> statements = PKBUtils::getValueSetFromMapWithSet(nextTPairs);
 		queryResult.addColumn(RHS, StmtStmtRelationshipEvaluator::filterStatementsByType(statements, RHSType));
 	}
 	else if (RHSType == EntityType::WILD) { // Next*(_, _)
@@ -196,7 +196,7 @@ void NextEvaluator::modifiedDFS(int currNode, const std::vector<std::unordered_s
 	int numPairs = nextTPairs[currNode].size();
 	
 	for (const auto& reachableNode : reachableNodes) {
-		PKBUtil::addToMapWithSet(nextTPairs, currNode, reachableNode);
+		PKBUtils::addToMapWithSet(nextTPairs, currNode, reachableNode);
 	}
 
 	if (nextTPairs[currNode].size() == numPairs) {

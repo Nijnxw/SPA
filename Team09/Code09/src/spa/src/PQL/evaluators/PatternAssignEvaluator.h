@@ -5,7 +5,7 @@
 #include <unordered_set>
 
 #include "pkb/PKB.h"
-#include "pkb/util/PKBUtil.cpp"
+#include "util/PKBUtils.cpp"
 #include "models/EntityType.h"
 #include "models/AssignStatement.h"
 #include "models/QueryClauseResult.h"

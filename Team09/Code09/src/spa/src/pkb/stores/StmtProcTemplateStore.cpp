@@ -14,16 +14,16 @@ template <typename T>
 bool StmtProcTemplateStore<T>::addRelationship(T firstSynonym, T secondSynonym) {
 	std::pair<T, T> pair;
 	pair = std::make_pair(firstSynonym, secondSynonym);
-	return relationshipPairs.insert(pair).second && PKBUtil::addToMapWithSet(firstSynonymToSecondSynonyms, firstSynonym, secondSynonym)
-		&& PKBUtil::addToMapWithSet(secondSynonymToFirstSynonyms, secondSynonym, firstSynonym);
+	return relationshipPairs.insert(pair).second && PKBUtils::addToMapWithSet(firstSynonymToSecondSynonyms, firstSynonym, secondSynonym)
+		&& PKBUtils::addToMapWithSet(secondSynonymToFirstSynonyms, secondSynonym, firstSynonym);
 }
 
 template <typename T>
 bool StmtProcTemplateStore<T>::addRelationshipT(T firstSynonym, T secondSynonym) {
 	std::pair<T, T> pair;
 	pair = std::make_pair(firstSynonym, secondSynonym);
-	return relationshipTPairs.insert(pair).second && PKBUtil::addToMapWithSet(firstSynonymToSecondSynonymsT, firstSynonym, secondSynonym)
-		&& PKBUtil::addToMapWithSet(secondSynonymToFirstSynonymsT, secondSynonym, firstSynonym);
+	return relationshipTPairs.insert(pair).second && PKBUtils::addToMapWithSet(firstSynonymToSecondSynonymsT, firstSynonym, secondSynonym)
+		&& PKBUtils::addToMapWithSet(secondSynonymToFirstSynonymsT, secondSynonym, firstSynonym);
 }
 
 template <typename T>
@@ -96,12 +96,12 @@ std::unordered_set<T> StmtProcTemplateStore<T>::getSecondSynonyms(T firstSynonym
 
 template <typename T>
 std::unordered_set<T> StmtProcTemplateStore<T>::getAllFirstSynonyms() {
-	return PKBUtil::getKeySetFromMap(firstSynonymToSecondSynonyms);
+	return PKBUtils::getKeySetFromMap(firstSynonymToSecondSynonyms);
 }
 
 template <typename T>
 std::unordered_set<T> StmtProcTemplateStore<T>::getAllSecondSynonyms() {
-	return PKBUtil::getKeySetFromMap(secondSynonymToFirstSynonyms);
+	return PKBUtils::getKeySetFromMap(secondSynonymToFirstSynonyms);
 }
 
 template <typename T>
@@ -126,22 +126,22 @@ std::unordered_set<T> StmtProcTemplateStore<T>::getSecondSynonymsT(T firstSynony
 
 template <typename T>
 std::unordered_set<T> StmtProcTemplateStore<T>::getAllFirstSynonymsT() {
-	return PKBUtil::getKeySetFromMap(firstSynonymToSecondSynonymsT);
+	return PKBUtils::getKeySetFromMap(firstSynonymToSecondSynonymsT);
 }
 
 template <typename T>
 std::unordered_set<T> StmtProcTemplateStore<T>::getAllSecondSynonymsT() {
-	return PKBUtil::getKeySetFromMap(secondSynonymToFirstSynonymsT);
+	return PKBUtils::getKeySetFromMap(secondSynonymToFirstSynonymsT);
 }
 
 template <typename T>
 std::tuple<std::vector<T>, std::vector<T>> StmtProcTemplateStore<T>::getAllRelationshipPairs() {
-	return PKBUtil::convertSetPairsToVectorTuple(relationshipPairs);
+	return PKBUtils::convertSetPairsToVectorTuple(relationshipPairs);
 }
 
 template <typename T>
 std::tuple<std::vector<T>, std::vector<T>> StmtProcTemplateStore<T>::getAllRelationshipTPairs() {
-	return PKBUtil::convertSetPairsToVectorTuple(relationshipTPairs);
+	return PKBUtils::convertSetPairsToVectorTuple(relationshipTPairs);
 }
 
 template class StmtProcTemplateStore<int>;

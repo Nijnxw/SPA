@@ -4,7 +4,7 @@
 #include <unordered_map>
 #include <vector>
 
-namespace PKBUtil {
+namespace PKBUtils {
     struct pairHashFunction {
         template <typename T, typename U>
         std::size_t operator()(const std::pair<T, U>& x) const
@@ -125,8 +125,8 @@ namespace PKBUtil {
     }
 
     template <typename T>
-    static std::unordered_set<std::pair<T, T>, PKBUtil::pairHashFunction> convertVectorTupleToSetPairs(std::vector<T> firstEntities, std::vector<T> secondEntities) {
-        std::unordered_set<std::pair<T, T>, PKBUtil::pairHashFunction> result;
+    static std::unordered_set<std::pair<T, T>, PKBUtils::pairHashFunction> convertVectorTupleToSetPairs(std::vector<T> firstEntities, std::vector<T> secondEntities) {
+        std::unordered_set<std::pair<T, T>, PKBUtils::pairHashFunction> result;
 
         for (int i = 0; i < firstEntities.size(); i++) {
             std::pair<T, T> pair;

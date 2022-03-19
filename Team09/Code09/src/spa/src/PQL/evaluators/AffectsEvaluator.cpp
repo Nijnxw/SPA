@@ -230,7 +230,7 @@ AffectsEvaluator::buildClauseResult(const std::string& LHS, const std::string& R
 	return {};
 }
 
-void AffectsEvaluator::computeAffects(int start, int end, bool isAffects) {
+void AffectsEvaluator::computeAffects(int start, int end, bool isAffects) {    // start point
 	computeAffects(start, end, {}, isAffects);
 }
 
@@ -253,17 +253,10 @@ AffectsEvaluator::computeAffects(int start, int end, LMT currLMT, bool isAffects
 				currStmtNum = getNextForWhile(currStmtNum);
 				break;
 			default:
-				if (isAffects) {
-					computeAffectsStmt(currLMT, currStmtNum, currStmtType);
-				} else {
-					computeAffectsTStmt(currLMT, currStmtNum, currStmtType);
-				}
-				int next = getNextSmaller(
-					currStmtNum); // check for last statement in while loop to prevent infinite recursion
+				computeAffectsStmt(currLMT, currStmtNum, currStmtType, isAffects);
+				int next = getNextSmaller(currStmtNum);
 				if (PKB::getStatementType(next) == EntityType::WHILE && visitedLoops.find(next) == visitedLoops.end()) {
-					visitedLoops.insert(next);
-					currLMT = computeAffectsWhile(currLMT, next, getNextForWhile(next + 1), isAffects);
-					currStmtNum = getNextForWhile(next);
+					currStmtNum = next;
 					continue;
 				}
 				currStmtNum++;
@@ -303,26 +296,14 @@ AffectsEvaluator::computeAffectsWhile(const LMT& prevLMT, int start, int end, bo
 	return mergeLMT(currLMT, prevLMT);
 }
 
-void AffectsEvaluator::computeAffectsStmt(LMT& currLMT, int currStmtNum, EntityType currStmtType) {
+void AffectsEvaluator::computeAffectsStmt(LMT& currLMT, int currStmtNum, EntityType currStmtType, bool isAffects) {
 	switch (currStmtType) {
 		case EntityType::ASSIGN:
-			computeAffectsAssign(currLMT, currStmtNum);
-			break;
-		case EntityType::CALL:
-			computeAffectsCall(currLMT, currStmtNum);
-			break;
-		case EntityType::READ:
-			computeAffectsRead(currLMT, currStmtNum);
-			break;
-		default:
-			return;
-	}
-}
-
-void AffectsEvaluator::computeAffectsTStmt(LMT& currLMT, int currStmtNum, EntityType currStmtType) {
-	switch (currStmtType) {
-		case EntityType::ASSIGN:
-			computeAffectsTAssign(currLMT, currStmtNum);
+			if (isAffects) {
+				computeAffectsAssign(currLMT, currStmtNum);
+			} else {
+				computeAffectsTAssign(currLMT, currStmtNum);
+			}
 			break;
 		case EntityType::CALL:
 			computeAffectsCall(currLMT, currStmtNum);

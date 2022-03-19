@@ -10,7 +10,6 @@
 #include <utility>
 
 #include "pkb/PKB.h"
-#include "pkb/util/PKBUtil.cpp"
 #include "models/EntityType.h"
 #include "models/QueryClauseResult.h"
 #include "models/QueryClause.h"
@@ -51,8 +50,7 @@ private:
 	LMT computeAffects(int start, int end, LMT prevLMT, bool isAffects);
 	LMT computeAffectsIfElse(const LMT& prevLMT, int start, bool isAffects);
 	LMT computeAffectsWhile(const LMT& prevLMT, int start, int end, bool isAffects);
-	void computeAffectsStmt(LMT& currLMT, int currStmtNum, EntityType currStmtType);
-	void computeAffectsTStmt(LMT& currLMT, int currStmtNum, EntityType currStmtType);
+	void computeAffectsStmt(LMT& currLMT, int currStmtNum, EntityType currStmtType, bool isAffects);
 	void computeAffectsAssign(LMT& currLMT, int currStmtNum);
 	void computeAffectsTAssign(LMT& currLMT, int currStmtNum);
 	void computeAffectsCall(LMT& currLMT, int currStmtNum);

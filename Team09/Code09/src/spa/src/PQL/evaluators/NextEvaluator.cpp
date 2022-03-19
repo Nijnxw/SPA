@@ -193,15 +193,22 @@ std::unordered_map<int, std::unordered_set<int>> NextEvaluator::getAllNextTPairs
 }
 
 void NextEvaluator::modifiedDFS(int currNode, const std::vector<std::unordered_set<int>>& reversedCfg, std::unordered_set<int>& reachableNodes, std::unordered_map<int, std::unordered_set<int>>& nextTPairs) {
-	int numPairs = nextTPairs[currNode].size();
+	int numPairs;
+	if (nextTPairs.count(currNode) <= 0) {
+		numPairs = 0;
+	} else {
+		numPairs = nextTPairs[currNode].size();
+	}
 	
 	for (const auto& reachableNode : reachableNodes) {
 		PKBUtils::addToMapWithSet(nextTPairs, currNode, reachableNode);
 	}
 
-	if (nextTPairs[currNode].size() == numPairs) {
-		if (!reachableNodes.empty()) {
-			return;
+	if (nextTPairs.count(currNode) > 0) {
+		if (nextTPairs[currNode].size() == numPairs) {
+			if (!reachableNodes.empty()) {
+				return;
+			}
 		}
 	}
 

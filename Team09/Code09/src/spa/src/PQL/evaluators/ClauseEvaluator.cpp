@@ -8,6 +8,7 @@
 #include "PatternIfEvaluator.h"
 #include "PatternWhileEvaluator.h"
 #include "CallsEvaluator.h"
+#include "NextEvaluator.h"
 #include "WithEvaluator.h"
 
 QueryClauseResult ClauseEvaluator::evaluate(const QueryClause& clause, bool isBooleanResult) {
@@ -22,6 +23,7 @@ QueryClauseResult ClauseEvaluator::evaluate(const QueryClause& clause, bool isBo
 	PatternIfEvaluator patternIfEvaluator = PatternIfEvaluator();
 	PatternWhileEvaluator patternWhileEvaluator = PatternWhileEvaluator();
 	CallsEvaluator callsEvaluator = CallsEvaluator();
+	NextEvaluator nextEvaluator = NextEvaluator();
 	WithEvaluator withEvaluator = WithEvaluator();
 
 	switch (clause.getClauseType()) {
@@ -57,6 +59,12 @@ QueryClauseResult ClauseEvaluator::evaluate(const QueryClause& clause, bool isBo
 		case RelationRef::CALLS_T:
 			return callsEvaluator.getCallsT(firstArg.getValue(), secondArg.getValue(), firstArg.getType(),
 											secondArg.getType(), isBooleanResult);
+		case RelationRef::NEXT:
+			return nextEvaluator.getNext(firstArg.getValue(), secondArg.getValue(), firstArg.getType(),
+				secondArg.getType(), isBooleanResult);
+		case RelationRef::NEXT_T:
+			return nextEvaluator.getNextT(firstArg.getValue(), secondArg.getValue(), firstArg.getType(),
+				secondArg.getType(), isBooleanResult);
 		case RelationRef::WITH:
 			return withEvaluator.getWith(firstArg.getValue(), firstArg.getType(), firstArg.getAttrRef(),
 				secondArg.getValue(), secondArg.getType(), secondArg.getAttrRef(), isBooleanResult);

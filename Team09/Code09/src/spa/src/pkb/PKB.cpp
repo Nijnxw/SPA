@@ -160,6 +160,10 @@ std::unordered_set<int> PKB::getStatementsWithType(EntityType statementType) {
 	return entityStore.getStatementsWithType(statementType);
 }
 
+EntityType PKB::getStatementType(int stmtNum) {
+	return entityStore.getStatementType(stmtNum);
+}
+
 std::unordered_map<std::string, std::unordered_set<std::string>> PKB::getProceduresToCallStatements() {
 	return entityStore.getProceduresToCallStatements();
 }
@@ -470,12 +474,20 @@ bool PKB::isFolloweeT(int followee) {
 	return followsStore.isSecondSynonymT(followee);
 }
 
-std::unordered_set<int> PKB::getFollowee(int follower) {
-	return followsStore.getSecondSynonyms(follower);
+int PKB::getFollowee(int follower) {
+	std::unordered_set<int> followers = followsStore.getSecondSynonyms(follower);
+	if (followers.empty()) {
+		return 0;
+	}
+	return *followers.begin();
 }
 
-std::unordered_set<int> PKB::getFollower(int followee) {
-	return followsStore.getFirstSynonyms(followee);
+int PKB::getFollower(int followee) {
+	std::unordered_set<int> followees = followsStore.getFirstSynonyms(followee);
+	if (followees.empty()) {
+		return 0;
+	}
+	return *followees.begin();
 }
 
 std::unordered_set<int> PKB::getAllFollowees() {
@@ -665,6 +677,14 @@ bool PKB::isCalleeT(std::string callee) {
 	return callsStore.isSecondSynonymT(callee);
 }
 
+std::string PKB::getCalledProcName(int callStmtNum) {
+	auto callToProcMap = entityStore.getCallStatementsToProcedures();
+	if (callToProcMap.find(callStmtNum) != callToProcMap.end()) {
+		return callToProcMap.at(callStmtNum);
+	}
+	return "";
+}
+
 std::unordered_set<std::string> PKB::getCallees(std::string caller) {
 	return callsStore.getSecondSynonyms(caller);
 }
@@ -815,4 +835,8 @@ PKB::getStmtsToModifiedVariable(const std::unordered_set<int>& stmts) {
 std::tuple<std::vector<std::string>, std::vector<std::string>>
 PKB::getProcsToModifiedVariable(const std::unordered_set<std::string>& procs) {
 	return modifiesStore.getProcToVarByProcs(procs);
+}
+
+bool PKB::isAssignmentStmt(int stmtNum) {
+	return entityStore.isAssignStmt(stmtNum);
 }

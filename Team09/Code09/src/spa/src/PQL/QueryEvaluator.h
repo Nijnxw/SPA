@@ -7,12 +7,15 @@
 #include "pkb/stores/ModifiesStore.h"
 #include "pkb/stores/UsesStore.h"
 #include "models/optimizer/OptimizerGroup.h"
+#include "PQL/evaluators/ClauseEvaluator.h"
 
 class QueryEvaluator {
 public:
 	static Table evaluate(Query& query);
 
 private:
+	static ClauseEvaluator clauseEvaluator;
+
 	static Table evaluateBooleanQuery(const std::vector<QueryClause>& clausesWithoutSyn,
 									  const std::vector<OptimizerGroup>& groupsWithoutSelect);
 	static Table evaluateNormalQuery(const std::unordered_set<std::string>& resultSynSet,

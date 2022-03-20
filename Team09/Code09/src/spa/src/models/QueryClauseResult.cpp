@@ -1,7 +1,7 @@
 #include "QueryClauseResult.h"
 #include "util/QueryUtils.h"
 
-QueryClauseResult::QueryClauseResult() {}
+QueryClauseResult::QueryClauseResult(bool boolResult) : booleanResult(boolResult) {}
 
 QueryClauseResult::QueryClauseResult(const Table& table) : table(table), booleanResult(table.size() != 0) {}
 

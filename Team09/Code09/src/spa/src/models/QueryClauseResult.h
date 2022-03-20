@@ -16,7 +16,8 @@ private:
 	bool booleanResult = false;
 
 public:
-	QueryClauseResult();
+	QueryClauseResult() = default;
+	QueryClauseResult(bool boolResult);
 	QueryClauseResult(const Table& table);
 	bool operator==(const QueryClauseResult& other) const;
 	Table getTable() const;

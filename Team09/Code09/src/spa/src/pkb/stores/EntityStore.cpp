@@ -43,17 +43,21 @@ bool EntityStore::addStatementNumber(int statementNumber) {
 	return statements.insert(statementNumber).second;
 }
 
-bool EntityStore::addAssignStatement(int statementNumber, const std::string& leftHandSide, const std::string& rightHandSide) {
+bool EntityStore::addAssignStatement(int statementNumber, const std::string& leftHandSide,
+									 const std::string& rightHandSide) {
 	AssignStatement assignStatement(statementNumber, leftHandSide, rightHandSide);
-	return assignStatements.insert(statementNumber).second && assignStatementsToStructs.insert({ statementNumber, assignStatement }).second;
+	return assignStatements.insert(statementNumber).second &&
+		   assignStatementsToStructs.insert({statementNumber, assignStatement}).second;
 }
 
 bool EntityStore::addIfStatement(int statementNumber, const std::unordered_set<std::string>& conditionalVariables) {
-	return ifStatements.insert(statementNumber).second && ifStatementsToConditionalVariables.insert({ statementNumber, conditionalVariables }).second;
+	return ifStatements.insert(statementNumber).second &&
+		   ifStatementsToConditionalVariables.insert({statementNumber, conditionalVariables}).second;
 }
 
 bool EntityStore::addWhileStatement(int statementNumber, const std::unordered_set<std::string>& conditionalVariables) {
-	return whileStatements.insert(statementNumber).second && whileStatementsToConditionalVariables.insert({ statementNumber, conditionalVariables }).second;
+	return whileStatements.insert(statementNumber).second &&
+		   whileStatementsToConditionalVariables.insert({statementNumber, conditionalVariables}).second;
 }
 
 bool EntityStore::addCallStatement(int statementNumber, const std::string& procedure) {
@@ -115,6 +119,25 @@ std::unordered_set<std::string> EntityStore::getConstants() {
 
 std::unordered_set<int> EntityStore::getStatementNumbers() {
 	return statements;
+}
+
+EntityType EntityStore::getStatementType(int stmtNum) {
+	if (assignStatements.find(stmtNum) != assignStatements.end()) {
+		return EntityType::ASSIGN;
+	}
+	if (ifStatements.find(stmtNum) != ifStatements.end()) {
+		return EntityType::IF;
+	}
+	if (whileStatements.find(stmtNum) != whileStatements.end()) {
+		return EntityType::WHILE;
+	}
+	if (callStatements.find(stmtNum) != callStatements.end()) {
+		return EntityType::CALL;
+	}
+	if (printStatements.find(stmtNum) != printStatements.end()) {
+		return EntityType::PRINT;
+	}
+	return EntityType::READ;
 }
 
 std::unordered_set<int> EntityStore::getStatementsWithType(EntityType statementType) {
@@ -191,4 +214,8 @@ std::unordered_map<std::string, std::unordered_set<std::string>> EntityStore::ge
 
 std::unordered_map<std::string, std::unordered_set<std::string>> EntityStore::getVariablesToReadStatements() {
 	return variablesToReadStatements;
+}
+
+bool EntityStore::isAssignStmt(const int stmtNum) {
+	return assignStatements.find(stmtNum) != assignStatements.end();
 }

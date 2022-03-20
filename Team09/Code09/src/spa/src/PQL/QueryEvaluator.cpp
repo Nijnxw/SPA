@@ -1,9 +1,10 @@
 #include "QueryEvaluator.h"
 #include "models/QueryClauseResult.h"
 #include "PQL/evaluators/EntityEvaluator.h"
-#include "PQL/evaluators/ClauseEvaluator.h"
 #include "util/QueryUtils.h"
 #include "Optimizer.h"
+
+ClauseEvaluator QueryEvaluator::clauseEvaluator{};
 
 Table QueryEvaluator::evaluate(Query& query) {
 	std::vector<QueryArgument> selectSynNotInClauses;
@@ -20,6 +21,8 @@ Table QueryEvaluator::evaluate(Query& query) {
 	if (query.isBooleanQuery()) {
 		return evaluateBooleanQuery(clausesWithoutSyn, clauseGroups);
 	}
+
+	clauseEvaluator = ClauseEvaluator();
 
 	std::vector<QueryArgument> resultSyns = query.getResultSynonyms();
 	std::unordered_set<std::string> resultSynSet;
@@ -90,7 +93,7 @@ Table QueryEvaluator::evaluateNormalQuery(const std::unordered_set<std::string>&
 
 bool QueryEvaluator::evaluateClausesWithoutSyn(const std::vector<QueryClause>& clauses) {
 	for (const auto& clause: clauses) {
-		QueryClauseResult clauseRes = ClauseEvaluator::evaluate(clause, true);
+		QueryClauseResult clauseRes = clauseEvaluator.evaluate(clause, true);
 		if (!clauseRes.containsValidResult()) {
 			return false;
 		}
@@ -114,7 +117,7 @@ bool QueryEvaluator::evaluateGroupWithoutSelect(const OptimizerGroup& group) {
 	std::vector<QueryClause> groupClauses = group.getClauses();
 	std::vector<QueryClauseResult> results;
 	if (groupClauses.size() == 1) {
-		QueryClauseResult clauseRes = ClauseEvaluator::evaluate(groupClauses.front(), true);
+		QueryClauseResult clauseRes = clauseEvaluator.evaluate(groupClauses.front(), true);
 		if (!clauseRes.containsValidResult()) {
 			return false;
 		}
@@ -122,7 +125,7 @@ bool QueryEvaluator::evaluateGroupWithoutSelect(const OptimizerGroup& group) {
 	}
 
 	for (const auto& clause: groupClauses) {
-		QueryClauseResult clauseRes = ClauseEvaluator::evaluate(clause, false);
+		QueryClauseResult clauseRes = clauseEvaluator.evaluate(clause, false);
 		if (!clauseRes.containsValidResult()) {
 			return false;
 		}
@@ -140,7 +143,7 @@ Table QueryEvaluator::evaluateGroupWithSelect(const OptimizerGroup& group) {
 	std::vector<QueryClauseResult> results;
 
 	for (const auto& clause: groupClauses) {
-		QueryClauseResult clauseRes = ClauseEvaluator::evaluate(clause, false);
+		QueryClauseResult clauseRes = clauseEvaluator.evaluate(clause, false);
 		if (!clauseRes.containsValidResult()) {
 			return {};
 		}

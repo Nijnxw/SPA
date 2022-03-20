@@ -4,8 +4,6 @@
 #include "PQL/QueryEvaluator.h"
 #include "QueryResultProjector.h"
 
-#include <iostream>
-
 const std::vector<PQLToken*> PQL::tokenise(std::string query) {
 	auto tokeniser = PQLLexer(query);
 	return tokeniser.tokenise();

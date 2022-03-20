@@ -1,5 +1,6 @@
-#include "util/RPNToken.h"
+#pragma once
 
+#include "util/RPNToken.h"
 #include <cctype>
 #include <stack>
 #include <sstream>

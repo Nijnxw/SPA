@@ -79,7 +79,9 @@ PatternConditionEvaluator::getPatternByUnderscore(const std::string& clauseSyn, 
 
 	for (auto const& pair : statementNumbersToConditionalVariables) {
 		int statementNum = pair.first;
-		statementNumbers.push_back(statementNum);
+		if (pair.second.size() > 0) { // Only if the if/while has variables
+			statementNumbers.push_back(statementNum);
+		}
 	}
 
 	queryResult.addColumn(clauseSyn, statementNumbers);

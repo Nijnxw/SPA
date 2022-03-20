@@ -31,7 +31,7 @@ TEST_CASE("pattern - while pattern") {
 	}
 
 	SECTION("wild as first arg") {
-		std::string queryString = "while w; Select w pattern w(_,_,_)";
+		std::string queryString = "while w; Select w pattern w(_,_)";
 		PQLLexer tokeniser = PQLLexer(queryString);
 		std::vector<PQLToken*> PQLTokens = tokeniser.tokenise();
 		PQLParser parser = PQLParser(PQLTokens);
@@ -52,7 +52,7 @@ TEST_CASE("pattern - while pattern") {
 	}
 
 	SECTION("string as first arg") {
-		std::string queryString = "while w; Select w pattern w(\"v\",_,_)";
+		std::string queryString = "while w; Select w pattern w(\"v\",_)";
 		PQLLexer tokeniser = PQLLexer(queryString);
 		std::vector<PQLToken*> PQLTokens = tokeniser.tokenise();
 		PQLParser parser = PQLParser(PQLTokens);
@@ -80,7 +80,7 @@ TEST_CASE("pattern - while pattern unhappy paths") {
 	std::unordered_set<std::string> usedSynonyms;
 
 	SECTION("expected stmt list") {
-		std::string queryString = "while w; variable v; stmt s; Select w pattern w(v,s,_)";
+		std::string queryString = "while w; variable v; stmt s; Select w pattern w(v,s)";
 		PQLLexer tokeniser = PQLLexer(queryString);
 		std::vector<PQLToken*> PQLTokens = tokeniser.tokenise();
 		PQLParser parser = PQLParser(PQLTokens);
@@ -90,7 +90,7 @@ TEST_CASE("pattern - while pattern unhappy paths") {
 	}
 
 	SECTION("non var arg synonym as first arg") {
-		std::string queryString = "while w; variable v; stmt s; Select w pattern w(s,_,_)";
+		std::string queryString = "while w; variable v; stmt s; Select w pattern w(s,_)";
 		PQLLexer tokeniser = PQLLexer(queryString);
 		std::vector<PQLToken*> PQLTokens = tokeniser.tokenise();
 		PQLParser parser = PQLParser(PQLTokens);
@@ -100,7 +100,7 @@ TEST_CASE("pattern - while pattern unhappy paths") {
 	}
 
 	SECTION("integer as first arg") {
-		std::string queryString = "while w; variable v; stmt s; Select w pattern w(1,_,_)";
+		std::string queryString = "while w; variable v; stmt s; Select w pattern w(1,_)";
 		PQLLexer tokeniser = PQLLexer(queryString);
 		std::vector<PQLToken*> PQLTokens = tokeniser.tokenise();
 		PQLParser parser = PQLParser(PQLTokens);
@@ -110,7 +110,7 @@ TEST_CASE("pattern - while pattern unhappy paths") {
 	}
 
 	SECTION("expr as first arg") {
-		std::string queryString = "while w; variable v; stmt s; Select w pattern w(\"123\",_,_)";
+		std::string queryString = "while w; variable v; stmt s; Select w pattern w(\"123\",_)";
 		PQLLexer tokeniser = PQLLexer(queryString);
 		std::vector<PQLToken*> PQLTokens = tokeniser.tokenise();
 		PQLParser parser = PQLParser(PQLTokens);

@@ -32,12 +32,22 @@ private:
 	QueryClauseResult
 	getAffectsByStmtNum(const std::string& LHS, const std::string& RHS, EntityType RHSType, bool isBooleanResult,
 						bool isAffects, Cache& cache, Cache& revCache);
+	void setTermFuncAffectsByIntInt(const std::string& LHS, const std::string& RHS, Cache& cache);
+	void setTermFuncAffectsByIntWild(const std::string& LHS, Cache& cache);
+	void setTermFuncAffectsByIntStmt();
+
 	QueryClauseResult
 	getAffectsByStmt(const std::string& LHS, const std::string& RHS, EntityType RHSType, bool isBooleanResult,
 					 bool isAffects, Cache& cache, Cache& revCache);
+	void setTermFuncAffectsByStmtInt(const std::string& RHS, bool isBooleanResult, Cache& revCache);
+	void setTermFuncAffectsByStmt(const std::string& LHS, const std::string& RHS, bool isBooleanResult, Cache& cache);
+
 	QueryClauseResult
 	getAffectsByUnderscore(const std::string& RHS, EntityType RHSType, bool isBooleanResult, bool isAffects,
 						   Cache& cache, Cache& revCache);
+	void setTermFuncAffectsByWildStmt(bool isBooleanResult, Cache& revCache);
+	void setTermFuncAffectsByWildInt(const std::string& RHS, Cache& revCache);
+	void setTermFuncAffectsByWildWild(Cache& cache);
 
 	QueryClauseResult
 	buildBoolResult(const std::string& LHS, const std::string& RHS, EntityType LHSType, EntityType RHSType,
@@ -45,6 +55,9 @@ private:
 	QueryClauseResult
 	buildClauseResult(const std::string& LHS, const std::string& RHS, EntityType LHSType, EntityType RHSType,
 					  Cache& cache, Cache& revCache);
+	QueryClauseResult buildClauseResultIntStmt(const std::string& num, const std::string& syn, Cache& cache);
+	QueryClauseResult buildClauseResultStmtStmt(const std::string& LHS, const std::string& RHS, Cache& cache);
+	QueryClauseResult buildClauseResultStmtWild(const std::string& syn, Cache& cache);
 
 	void computeAffects(int start, int end, bool isAffects);
 	LMT computeAffects(int start, int end, LMT prevLMT, bool isAffects);
@@ -56,9 +69,9 @@ private:
 	void computeAffectsCall(LMT& currLMT, int currStmtNum);
 	void computeAffectsRead(LMT& currLMT, int currStmtNum);
 
-	int getNextSmaller(int currStmtNum);
 	int getNextBigger(int currStmtNum);
 	int getLastStmtOfBlock(int currStmtNum);
+	int getNextForStmt(int currStmtNum);
 	int getNextForIf(int currStmtNum);
 	int getNextForWhile(int currStmtNum);
 	bool isProcLastStmt(int currStmtNum);

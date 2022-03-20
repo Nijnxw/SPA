@@ -55,28 +55,14 @@ AffectsEvaluator::getAffectsByStmtNum(const std::string& LHS, const std::string&
 				return {true};
 			}
 		}
-
-		terminateFunc = [&LHS, &RHS, &cache, this](int curr) -> bool {
-			if (cache.find(LHS) != cache.end()) {
-				auto affected = cache.at(LHS);
-				return affected.find(RHS) != affected.end();
-			}
-			return isProcLastStmt(curr);
-		};
+		setTermFuncAffectsByIntInt(LHS, RHS, cache);
 	} else if (RHSType == EntityType::WILD) {
 		if (cache.find(LHS) != cache.end()) {
 			return {true};
 		}
-		terminateFunc = [&LHS, &cache, this](int curr) -> bool {
-			if (cache.find(LHS) != cache.end()) {
-				return true;
-			}
-			return isProcLastStmt(curr);
-		};
+		setTermFuncAffectsByIntWild(LHS, cache);
 	} else if (RHSType == EntityType::ASSIGN || RHSType == EntityType::STMT) {
-		terminateFunc = [this](int curr) -> bool {
-			return isProcLastStmt(curr);
-		};
+		setTermFuncAffectsByIntStmt();
 	} else {
 		return {};    // graceful handling of semantic error
 	}
@@ -93,19 +79,9 @@ QueryClauseResult
 AffectsEvaluator::getAffectsByStmt(const std::string& LHS, const std::string& RHS, EntityType RHSType,
 								   bool isBooleanResult, bool isAffects, Cache& cache, Cache& revCache) {
 	if (RHSType == EntityType::INT) {
-		terminateFunc = [&RHS, isBooleanResult, &revCache](int curr) -> bool {
-			if (isBooleanResult) {
-				return revCache.find(RHS) != revCache.end();
-			}
-			return false;
-		};
+		setTermFuncAffectsByStmtInt(RHS, isBooleanResult, revCache);
 	} else if (RHSType == EntityType::STMT || RHSType == EntityType::ASSIGN || RHSType == EntityType::WILD) {
-		terminateFunc = [isBooleanResult, &cache](int curr) -> bool {
-			if (isBooleanResult) {
-				return !cache.empty();
-			}
-			return false;
-		};
+		setTermFuncAffectsByStmt(LHS, RHS, isBooleanResult, cache);
 	} else {
 		return {};    // graceful handling of semantic error
 	}
@@ -126,12 +102,7 @@ QueryClauseResult
 AffectsEvaluator::getAffectsByUnderscore(const std::string& RHS, EntityType RHSType, bool isBooleanResult,
 										 bool isAffects, Cache& cache, Cache& revCache) {
 	if (RHSType == EntityType::ASSIGN || RHSType == EntityType::STMT) {
-		terminateFunc = [isBooleanResult, &revCache](int curr) -> bool {
-			if (isBooleanResult) {
-				return !revCache.empty();
-			}
-			return false;
-		};
+		setTermFuncAffectsByWildStmt(isBooleanResult, revCache);
 		if (isAffects && !isAffectsCacheComplete) {
 			computeAffects(1, cfg.size() - 1, isAffects);
 			isAffectsCacheComplete = !isBooleanResult;
@@ -140,20 +111,14 @@ AffectsEvaluator::getAffectsByUnderscore(const std::string& RHS, EntityType RHST
 			isAffectsTCacheComplete = !isBooleanResult;
 		}
 	} else {
-		if (RHSType == EntityType::INT) {
-			if (revCache.find(RHS) != revCache.end()) {
-				return {true};
-			}
-			terminateFunc = [&RHS, &revCache](int curr) -> bool {
-				return revCache.find(RHS) != revCache.end();
-			};
+		if (RHSType == EntityType::INT && revCache.find(RHS) != revCache.end()) {
+			return {true};
+		} else if (RHSType == EntityType::INT) {
+			setTermFuncAffectsByWildInt(RHS, revCache);
+		} else if (RHSType == EntityType::WILD && !cache.empty()) {
+			return {true};
 		} else if (RHSType == EntityType::WILD) {
-			if (!cache.empty()) {
-				return {true};
-			}
-			terminateFunc = [&cache](int curr) -> bool {
-				return !cache.empty();
-			};
+			setTermFuncAffectsByWildWild(cache);
 		} else {
 			return {}; // graceful handling of semantic error
 		}
@@ -167,6 +132,76 @@ AffectsEvaluator::getAffectsByUnderscore(const std::string& RHS, EntityType RHST
 		return buildBoolResult("_", RHS, EntityType::WILD, RHSType, cache, revCache);
 	}
 	return buildClauseResult("_", RHS, EntityType::WILD, RHSType, cache, revCache);
+}
+
+void
+AffectsEvaluator::setTermFuncAffectsByIntInt(const std::string& LHS, const std::string& RHS, Cache& cache) {
+	terminateFunc = [&LHS, &RHS, &cache, this](int curr) -> bool {
+		if (cache.find(LHS) != cache.end()) {
+			auto affected = cache.at(LHS);
+			return affected.find(RHS) != affected.end();
+		}
+		return isProcLastStmt(curr);
+	};
+}
+
+void AffectsEvaluator::setTermFuncAffectsByIntWild(const std::string& LHS, Cache& cache) {
+	terminateFunc = [&LHS, &cache, this](int curr) -> bool {
+		if (cache.find(LHS) != cache.end()) {
+			return true;
+		}
+		return isProcLastStmt(curr);
+	};
+}
+
+void AffectsEvaluator::setTermFuncAffectsByIntStmt() {
+	terminateFunc = [this](int curr) -> bool {
+		return isProcLastStmt(curr);
+	};
+}
+
+void AffectsEvaluator::setTermFuncAffectsByStmtInt(const std::string& RHS, bool isBooleanResult, Cache& revCache) {
+	terminateFunc = [&RHS, isBooleanResult, &revCache](int curr) -> bool {
+		if (isBooleanResult) {
+			return revCache.find(RHS) != revCache.end();
+		}
+		return false;
+	};
+}
+
+void AffectsEvaluator::setTermFuncAffectsByStmt(const std::string& LHS, const std::string& RHS, bool isBooleanResult,
+												Cache& cache) {
+	terminateFunc = [LHS, RHS, isBooleanResult, &cache](int curr) -> bool {
+		std::string currString = std::to_string(curr);
+		if (isBooleanResult && LHS != RHS) {
+			return !cache.empty();
+		} else if (isBooleanResult && cache.find(currString) != cache.end()) {
+			auto affected = cache.at(currString);
+			return affected.find(currString) != affected.end();
+		}
+		return false;
+	};
+}
+
+void AffectsEvaluator::setTermFuncAffectsByWildStmt(bool isBooleanResult, Cache& revCache) {
+	terminateFunc = [isBooleanResult, &revCache](int curr) -> bool {
+		if (isBooleanResult) {
+			return !revCache.empty();
+		}
+		return false;
+	};
+}
+
+void AffectsEvaluator::setTermFuncAffectsByWildInt(const std::string& RHS, Cache& revCache) {
+	terminateFunc = [&RHS, &revCache](int curr) -> bool {
+		return revCache.find(RHS) != revCache.end();
+	};
+}
+
+void AffectsEvaluator::setTermFuncAffectsByWildWild(Cache& cache) {
+	terminateFunc = [&cache](int curr) -> bool {
+		return !cache.empty();
+	};
 }
 
 QueryClauseResult
@@ -192,42 +227,59 @@ QueryClauseResult
 AffectsEvaluator::buildClauseResult(const std::string& LHS, const std::string& RHS, EntityType LHSType,
 									EntityType RHSType, Cache& cache, Cache& revCache) {
 	if (LHSType == EntityType::INT && (RHSType == EntityType::STMT || RHSType == EntityType::ASSIGN)) {
-		if (cache.find(LHS) != cache.end()) {
-			auto affected = cache.at(LHS);
-			std::vector<std::string> rowValues = {affected.begin(), affected.end()};
-			return {{{RHS, rowValues}}};
-		}
+		return buildClauseResultIntStmt(LHS, RHS, cache);
 	} else if ((LHSType == EntityType::STMT || LHSType == EntityType::ASSIGN) && RHSType == EntityType::INT) {
-		if (revCache.find(RHS) != revCache.end()) {
-			auto affectee = revCache.at(RHS);
-			std::vector<std::string> rowValues = {affectee.begin(), affectee.end()};
-			return {{{LHS, rowValues}}};
-		}
+		return buildClauseResultIntStmt(RHS, LHS, revCache);
 	} else if ((LHSType == EntityType::STMT || LHSType == EntityType::ASSIGN) &&
 			   (RHSType == EntityType::STMT || RHSType == EntityType::ASSIGN)) {
-		std::vector<std::string> lhsValues;
-		std::vector<std::string> rhsValues;
-		for (const auto& keyVal: cache) {
-			for (const auto& affected: keyVal.second) {
-				lhsValues.push_back(keyVal.first);
-				rhsValues.push_back(affected);
-			}
-		}
-		return {{{LHS, lhsValues}, {RHS, rhsValues}}};
+		return buildClauseResultStmtStmt(LHS, RHS, cache);
 	} else if (LHSType == EntityType::STMT || LHSType == EntityType::ASSIGN) {
-		std::vector<std::string> lhsValues;
-		for (const auto& keyVal: cache) {
-			lhsValues.push_back(keyVal.first);
-		}
-		return {{{LHS, lhsValues}}};
+		return buildClauseResultStmtWild(LHS, cache);
 	} else {
-		std::vector<std::string> rhsValues;
-		for (const auto& keyVal: revCache) {
-			rhsValues.push_back(keyVal.first);
-		}
-		return {{{RHS, rhsValues}}};
+		return buildClauseResultStmtWild(RHS, revCache);
 	}
 	return {};
+}
+
+QueryClauseResult
+AffectsEvaluator::buildClauseResultIntStmt(const std::string& num, const std::string& syn, Cache& cache) {
+	if (cache.find(num) != cache.end()) {
+		auto affected = cache.at(num);
+		std::vector<std::string> rowValues = {affected.begin(), affected.end()};
+		return {{{syn, rowValues}}};
+	}
+	return {};
+}
+
+QueryClauseResult
+AffectsEvaluator::buildClauseResultStmtStmt(const std::string& LHS, const std::string& RHS, Cache& cache) {
+	std::vector<std::string> lhsValues;
+	std::vector<std::string> rhsValues;
+	if (LHS == RHS) {
+		for (const auto& keyVal: cache) {
+			auto affected = keyVal.second;
+			if (affected.find(keyVal.first) != affected.end()) {
+				lhsValues.push_back(keyVal.first);
+			}
+		}
+		return {{{LHS, lhsValues}}};
+	}
+
+	for (const auto& keyVal: cache) {
+		for (const auto& affected: keyVal.second) {
+			lhsValues.push_back(keyVal.first);
+			rhsValues.push_back(affected);
+		}
+	}
+	return {{{LHS, lhsValues}, {RHS, rhsValues}}};
+}
+
+QueryClauseResult AffectsEvaluator::buildClauseResultStmtWild(const std::string& syn, Cache& cache) {
+	std::vector<std::string> rowValues;
+	for (const auto& keyVal: cache) {
+		rowValues.push_back(keyVal.first);
+	}
+	return {{{syn, rowValues}}};
 }
 
 void AffectsEvaluator::computeAffects(int start, int end, bool isAffects) {    // start point
@@ -248,19 +300,19 @@ AffectsEvaluator::computeAffects(int start, int end, LMT currLMT, bool isAffects
 				currStmtNum = getNextForIf(currStmtNum);
 				break;
 			case EntityType::WHILE:
-				visitedLoops.insert(currStmtNum);
-				currLMT = computeAffectsWhile(currLMT, currStmtNum, getNextForWhile(currStmtNum), isAffects);
+				if (visitedLoops.find(currStmtNum) == visitedLoops.end()) {
+					visitedLoops.insert(currStmtNum);
+					currLMT = computeAffectsWhile(currLMT, currStmtNum, getNextForWhile(currStmtNum), isAffects);
+				}
 				currStmtNum = getNextForWhile(currStmtNum);
 				break;
 			default:
 				computeAffectsStmt(currLMT, currStmtNum, currStmtType, isAffects);
-				int next = getNextSmaller(currStmtNum);
-				if (PKB::getStatementType(next) == EntityType::WHILE && visitedLoops.find(next) == visitedLoops.end()) {
-					currStmtNum = next;
-					continue;
-				}
-				currStmtNum++;
+				currStmtNum = getNextForStmt(currStmtNum);
 				break;
+		}
+		if (terminateFunc(prevStmtNum)) {
+			return {};
 		}
 		if (isProcLastStmt(prevStmtNum)) {
 			currLMT.clear();
@@ -395,18 +447,6 @@ AffectsEvaluator::LMT AffectsEvaluator::mergeLMT(const LMT& first, const LMT& se
 	return merged;
 }
 
-int AffectsEvaluator::getNextSmaller(int currStmtNum) {
-	auto possibleNext = cfg.at(currStmtNum);
-	if (possibleNext.empty()) {
-		return 0;
-	}
-	int smallestNext = *possibleNext.begin();
-	for (auto it = next(possibleNext.begin()); it != possibleNext.end(); it++) {
-		smallestNext = std::min(smallestNext, *it);
-	}
-	return smallestNext;
-}
-
 int AffectsEvaluator::getNextBigger(int currStmtNum) {
 	auto possibleNext = cfg.at(currStmtNum);
 	if (possibleNext.empty()) {
@@ -440,6 +480,24 @@ bool AffectsEvaluator::isProcLastStmt(int currStmtNum) {
 			return nextStmts.size() == 1;
 		}
 		return nextStmts.empty();
+	}
+}
+
+int AffectsEvaluator::getNextForStmt(int currStmtNum) {
+	auto possibleNext = cfg.at(currStmtNum);
+	if (possibleNext.empty()) {
+		return currStmtNum + 1;
+	}
+
+	int next = *possibleNext.begin();
+	if (PKB::getStatementType(next) == EntityType::WHILE) {
+		if (visitedLoops.find(next) == visitedLoops.end()) {
+			return next;
+		} else {
+			return getNextForWhile(next);
+		}
+	} else {
+		return next;
 	}
 }
 

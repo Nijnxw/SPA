@@ -230,8 +230,6 @@ void PQLParser::parseWhilePattern(PQLToken* synonymToken) {
 	patternArgs.emplace_back(arg1);
 	getNextExpectedToken(TokenType::COMMA);
 	patternArgs.emplace_back(parsePatternArgStmtList());
-	getNextExpectedToken(TokenType::COMMA);
-	patternArgs.emplace_back(parsePatternArgStmtList());
 	getNextExpectedToken(TokenType::CLOSE_PARAN);
 	QueryClauses.push_back(QueryClause(RelationRef::PATTERN_WHILE, patternArgs, usedSynonyms, synonymToken->getValue()));
 }
@@ -245,6 +243,8 @@ void PQLParser::parseIfPattern(PQLToken* synonymToken) {
 		usedSynonyms.insert(arg1.getValue());
 	}
 	patternArgs.emplace_back(arg1);
+	getNextExpectedToken(TokenType::COMMA);
+	patternArgs.emplace_back(parsePatternArgStmtList());
 	getNextExpectedToken(TokenType::COMMA);
 	patternArgs.emplace_back(parsePatternArgStmtList());
 	getNextExpectedToken(TokenType::CLOSE_PARAN);

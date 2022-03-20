@@ -9,14 +9,13 @@ TEST_CASE("pattern - while pattern") {
 	std::unordered_set<std::string> usedSynonyms;
 
 	SECTION("variable as first arg") {
-		std::string queryString = "while w; variable v; Select w pattern w(v,_,_)";
+		std::string queryString = "while w; variable v; Select w pattern w(v,_)";
 		Tokeniser tokeniser = Tokeniser(queryString);
 		std::vector<PQLToken*> PQLTokens = tokeniser.tokenise();
 		PQLParser parser = PQLParser(PQLTokens);
 
 		expectedResultSynonms.push_back(QueryArgument(std::string("w"), EntityType::WHILE));
 		clauseArgs.push_back(QueryArgument(std::string("v"), EntityType::VAR));
-		clauseArgs.push_back(QueryArgument(std::string("_"), EntityType::WILD));
 		clauseArgs.push_back(QueryArgument(std::string("_"), EntityType::WILD));
 		usedSynonyms.insert("w");
 		usedSynonyms.insert("v");
@@ -26,18 +25,18 @@ TEST_CASE("pattern - while pattern") {
 		std::vector<QueryArgument> actualResultSynonms = actualQuery.getResultSynonyms();
 		std::vector<QueryClause> actualClauses = actualQuery.getClauses();
 		bool isClausesEqual = std::equal(expectedClauses.begin(), expectedClauses.end(), actualClauses.begin());
-		bool isResultSynonymEqual = std::equal(expectedResultSynonms.begin(), expectedResultSynonms.end(), actualResultSynonms.begin());
+		bool isResultSynonymEqual = std::equal(expectedResultSynonms.begin(), expectedResultSynonms.end(),
+			actualResultSynonms.begin());
 		REQUIRE((isClausesEqual && isResultSynonymEqual));
 	}
 
 	SECTION("wild as first arg") {
-		std::string queryString = "while w; Select w pattern w(_,_,_)";
+		std::string queryString = "while w; Select w pattern w(_,_)";
 		Tokeniser tokeniser = Tokeniser(queryString);
 		std::vector<PQLToken*> PQLTokens = tokeniser.tokenise();
 		PQLParser parser = PQLParser(PQLTokens);
 
 		expectedResultSynonms.push_back(QueryArgument(std::string("w"), EntityType::WHILE));
-		clauseArgs.push_back(QueryArgument(std::string("_"), EntityType::WILD));
 		clauseArgs.push_back(QueryArgument(std::string("_"), EntityType::WILD));
 		clauseArgs.push_back(QueryArgument(std::string("_"), EntityType::WILD));
 		usedSynonyms.insert("w");
@@ -47,12 +46,13 @@ TEST_CASE("pattern - while pattern") {
 		std::vector<QueryArgument> actualResultSynonms = actualQuery.getResultSynonyms();
 		std::vector<QueryClause> actualClauses = actualQuery.getClauses();
 		bool isClausesEqual = std::equal(expectedClauses.begin(), expectedClauses.end(), actualClauses.begin());
-		bool isResultSynonymEqual = std::equal(expectedResultSynonms.begin(), expectedResultSynonms.end(), actualResultSynonms.begin());
+		bool isResultSynonymEqual = std::equal(expectedResultSynonms.begin(), expectedResultSynonms.end(),
+			actualResultSynonms.begin());
 		REQUIRE((isClausesEqual && isResultSynonymEqual));
 	}
 
 	SECTION("string as first arg") {
-		std::string queryString = "while w; Select w pattern w(\"v\",_,_)";
+		std::string queryString = "while w; Select w pattern w(\"v\",_)";
 		Tokeniser tokeniser = Tokeniser(queryString);
 		std::vector<PQLToken*> PQLTokens = tokeniser.tokenise();
 		PQLParser parser = PQLParser(PQLTokens);
@@ -60,7 +60,6 @@ TEST_CASE("pattern - while pattern") {
 		expectedResultSynonms.push_back(QueryArgument(std::string("w"), EntityType::WHILE));
 		clauseArgs.push_back(QueryArgument(std::string("v"), EntityType::STRING));
 		clauseArgs.push_back(QueryArgument(std::string("_"), EntityType::WILD));
-		clauseArgs.push_back(QueryArgument(std::string("_"), EntityType::WILD));
 		usedSynonyms.insert("w");
 		expectedClauses.push_back(QueryClause(RelationRef::PATTERN_WHILE, clauseArgs, usedSynonyms, "w"));
 
@@ -68,7 +67,8 @@ TEST_CASE("pattern - while pattern") {
 		std::vector<QueryArgument> actualResultSynonms = actualQuery.getResultSynonyms();
 		std::vector<QueryClause> actualClauses = actualQuery.getClauses();
 		bool isClausesEqual = std::equal(expectedClauses.begin(), expectedClauses.end(), actualClauses.begin());
-		bool isResultSynonymEqual = std::equal(expectedResultSynonms.begin(), expectedResultSynonms.end(), actualResultSynonms.begin());
+		bool isResultSynonymEqual = std::equal(expectedResultSynonms.begin(), expectedResultSynonms.end(),
+			actualResultSynonms.begin());
 		REQUIRE((isClausesEqual && isResultSynonymEqual));
 	}
 }
@@ -80,7 +80,7 @@ TEST_CASE("pattern - while pattern unhappy paths") {
 	std::unordered_set<std::string> usedSynonyms;
 
 	SECTION("expected stmt list") {
-		std::string queryString = "while w; variable v; stmt s; Select w pattern w(v,s,_)";
+		std::string queryString = "while w; variable v; stmt s; Select w pattern w(v,s)";
 		Tokeniser tokeniser = Tokeniser(queryString);
 		std::vector<PQLToken*> PQLTokens = tokeniser.tokenise();
 		PQLParser parser = PQLParser(PQLTokens);
@@ -90,7 +90,7 @@ TEST_CASE("pattern - while pattern unhappy paths") {
 	}
 
 	SECTION("non var arg synonym as first arg") {
-		std::string queryString = "while w; variable v; stmt s; Select w pattern w(s,_,_)";
+		std::string queryString = "while w; variable v; stmt s; Select w pattern w(s,_)";
 		Tokeniser tokeniser = Tokeniser(queryString);
 		std::vector<PQLToken*> PQLTokens = tokeniser.tokenise();
 		PQLParser parser = PQLParser(PQLTokens);
@@ -100,7 +100,7 @@ TEST_CASE("pattern - while pattern unhappy paths") {
 	}
 
 	SECTION("integer as first arg") {
-		std::string queryString = "while w; variable v; stmt s; Select w pattern w(1,_,_)";
+		std::string queryString = "while w; variable v; stmt s; Select w pattern w(1,_)";
 		Tokeniser tokeniser = Tokeniser(queryString);
 		std::vector<PQLToken*> PQLTokens = tokeniser.tokenise();
 		PQLParser parser = PQLParser(PQLTokens);
@@ -110,7 +110,7 @@ TEST_CASE("pattern - while pattern unhappy paths") {
 	}
 
 	SECTION("expr as first arg") {
-		std::string queryString = "while w; variable v; stmt s; Select w pattern w(\"123\",_,_)";
+		std::string queryString = "while w; variable v; stmt s; Select w pattern w(\"123\",_)";
 		Tokeniser tokeniser = Tokeniser(queryString);
 		std::vector<PQLToken*> PQLTokens = tokeniser.tokenise();
 		PQLParser parser = PQLParser(PQLTokens);

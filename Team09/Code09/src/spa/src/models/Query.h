@@ -15,5 +15,5 @@ public:
 private:
 	std::vector<QueryArgument> resultSynonyms;
 	std::vector<QueryClause> clauses;
-	bool isBoolean;
+	bool isBoolean = false;
 };

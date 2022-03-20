@@ -1,6 +1,6 @@
 #include "catch.hpp"
 #include "PQL/PQLParser.h"
-#include "PQL/Tokeniser.h"
+#include "PQL/PQLLexer.h"
 
 TEST_CASE("pattern - if pattern") {
 	std::vector<QueryArgument> expectedResultSynonms;
@@ -9,6 +9,7 @@ TEST_CASE("pattern - if pattern") {
 	std::unordered_set<std::string> usedSynonyms;
 
 	SECTION("variable as first arg") {
+
 		std::string queryString = "if ifs; variable v; Select ifs pattern ifs(v,_,_)";
 		Tokeniser tokeniser = Tokeniser(queryString);
 		std::vector<PQLToken*> PQLTokens = tokeniser.tokenise();

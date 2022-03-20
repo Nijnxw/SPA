@@ -1,11 +1,11 @@
 #include "catch.hpp"
-#include "PQL/Tokeniser.h"
+#include "PQL/PQLLexer.h"
 #include "TestingUtils.cpp"
 
 TEST_CASE("PQL tokeniser query clause test case 1 : such that + parent_T clause") {
 	std::vector<PQLToken*> expectedPQLTokens;
 	std::string queryString = "Select w such\t that  Parent*(1,w)";
-	Tokeniser tokeniser = Tokeniser(queryString);
+	PQLLexer tokeniser = PQLLexer(queryString);
 
 	expectedPQLTokens.push_back(new PQLToken(TokenType::SELECT, "Select"));
 	expectedPQLTokens.push_back(new PQLToken(TokenType::SYNONYM, "w"));
@@ -27,7 +27,7 @@ TEST_CASE("PQL tokeniser query clause test case 1 : such that + parent_T clause"
 TEST_CASE("PQL tokeniser query clause test case 2 : such that + parent clause") {
 	std::vector<PQLToken*> expectedPQLTokens;
 	std::string queryString = "Select ifs such that  Parent(1,_)";
-	Tokeniser tokeniser = Tokeniser(queryString);
+	PQLLexer tokeniser = PQLLexer(queryString);
 
 	expectedPQLTokens.push_back(new PQLToken(TokenType::SELECT, "Select"));
 	expectedPQLTokens.push_back(new PQLToken(TokenType::SYNONYM, "ifs"));
@@ -49,7 +49,7 @@ TEST_CASE("PQL tokeniser query clause test case 2 : such that + parent clause") 
 TEST_CASE("PQL tokeniser query clause test case 3 : such that + follows clause") {
 	std::vector<PQLToken*> expectedPQLTokens;
 	std::string queryString = "Select v such\t that  Follows(v,1)";
-	Tokeniser tokeniser = Tokeniser(queryString);
+	PQLLexer tokeniser = PQLLexer(queryString);
 
 	expectedPQLTokens.push_back(new PQLToken(TokenType::SELECT, "Select"));
 	expectedPQLTokens.push_back(new PQLToken(TokenType::SYNONYM, "v"));
@@ -71,7 +71,7 @@ TEST_CASE("PQL tokeniser query clause test case 3 : such that + follows clause")
 TEST_CASE("PQL tokeniser query clause test case 4 : such that + follows_T clause") {
 	std::vector<PQLToken*> expectedPQLTokens;
 	std::string queryString = "Select v such\t that  Follows*(v,_)";
-	Tokeniser tokeniser = Tokeniser(queryString);
+	PQLLexer tokeniser = PQLLexer(queryString);
 
 	expectedPQLTokens.push_back(new PQLToken(TokenType::SELECT, "Select"));
 	expectedPQLTokens.push_back(new PQLToken(TokenType::SYNONYM, "v"));
@@ -93,7 +93,7 @@ TEST_CASE("PQL tokeniser query clause test case 4 : such that + follows_T clause
 TEST_CASE("PQL tokeniser query clause test case 5 : such that + Modifies clause") {
 	std::vector<PQLToken*> expectedPQLTokens;
 	std::string queryString = "Select v such\t that  Modifies(1,v)";
-	Tokeniser tokeniser = Tokeniser(queryString);
+	PQLLexer tokeniser = PQLLexer(queryString);
 
 	expectedPQLTokens.push_back(new PQLToken(TokenType::SELECT, "Select"));
 	expectedPQLTokens.push_back(new PQLToken(TokenType::SYNONYM, "v"));
@@ -115,7 +115,7 @@ TEST_CASE("PQL tokeniser query clause test case 5 : such that + Modifies clause"
 TEST_CASE("PQL tokeniser query clause test case 6 : such that + Uses clause") {
 	std::vector<PQLToken*> expectedPQLTokens;
 	std::string queryString = "Select zv such\t that  Uses(zv,\"proc\")";
-	Tokeniser tokeniser = Tokeniser(queryString);
+	PQLLexer tokeniser = PQLLexer(queryString);
 
 	expectedPQLTokens.push_back(new PQLToken(TokenType::SELECT, "Select"));
 	expectedPQLTokens.push_back(new PQLToken(TokenType::SYNONYM, "zv"));
@@ -139,7 +139,7 @@ TEST_CASE("PQL tokeniser query clause test case 6 : such that + Uses clause") {
 TEST_CASE("PQL tokeniser query clause test case 7 : such that + pattern clause") {
 	std::vector<PQLToken*> expectedPQLTokens;
 	std::string queryString = "Select a such\t that  pattern a(_, _ \"23\"_)";
-	Tokeniser tokeniser = Tokeniser(queryString);
+	PQLLexer tokeniser = PQLLexer(queryString);
 
 	expectedPQLTokens.push_back(new PQLToken(TokenType::SELECT, "Select"));
 	expectedPQLTokens.push_back(new PQLToken(TokenType::SYNONYM, "a"));
@@ -164,7 +164,7 @@ TEST_CASE("PQL tokeniser query clause test case 7 : such that + pattern clause")
 TEST_CASE("PQL tokeniser query clause test case 8 : such that + pattern clause") {
 	std::vector<PQLToken*> expectedPQLTokens;
 	std::string queryString = "Select a such\t that  pattern a(\"proc\", \"VAR\")";
-	Tokeniser tokeniser = Tokeniser(queryString);
+	PQLLexer tokeniser = PQLLexer(queryString);
 
 	expectedPQLTokens.push_back(new PQLToken(TokenType::SELECT, "Select"));
 	expectedPQLTokens.push_back(new PQLToken(TokenType::SYNONYM, "a"));
@@ -187,7 +187,7 @@ TEST_CASE("PQL tokeniser query clause test case 8 : such that + pattern clause")
 TEST_CASE("PQL tokeniser query clause test case 9 : pattern clause and query clause 1") {
 	std::vector<PQLToken*> expectedPQLTokens;
 	std::string queryString = "Select a such\t that  pattern a(b, \"23\") Parent*(_,_)";
-	Tokeniser tokeniser = Tokeniser(queryString);
+	PQLLexer tokeniser = PQLLexer(queryString);
 
 	expectedPQLTokens.push_back(new PQLToken(TokenType::SELECT, "Select"));
 	expectedPQLTokens.push_back(new PQLToken(TokenType::SYNONYM, "a"));
@@ -216,7 +216,7 @@ TEST_CASE("PQL tokeniser query clause test case 9 : pattern clause and query cla
 TEST_CASE("PQL tokeniser query clause test case 10 : pattern clause and query clause 2") {
 	std::vector<PQLToken*> expectedPQLTokens;
 	std::string queryString = "Select a such\t that  pattern a(_, _) Follows*(1, 2)";
-	Tokeniser tokeniser = Tokeniser(queryString);
+	PQLLexer tokeniser = PQLLexer(queryString);
 
 	expectedPQLTokens.push_back(new PQLToken(TokenType::SELECT, "Select"));
 	expectedPQLTokens.push_back(new PQLToken(TokenType::SYNONYM, "a"));
@@ -245,7 +245,7 @@ TEST_CASE("PQL tokeniser query clause test case 10 : pattern clause and query cl
 TEST_CASE("PQL tokeniser query clause test case 8 : pattern clause and query clause 3") {
 	std::vector<PQLToken*> expectedPQLTokens;
 	std::string queryString = "Select a such\t that  pattern a(_, \"23\") Uses(1, s)";
-	Tokeniser tokeniser = Tokeniser(queryString);
+	PQLLexer tokeniser = PQLLexer(queryString);
 
 	expectedPQLTokens.push_back(new PQLToken(TokenType::SELECT, "Select"));
 	expectedPQLTokens.push_back(new PQLToken(TokenType::SYNONYM, "a"));

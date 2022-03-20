@@ -1,10 +1,10 @@
 #include "catch.hpp"
-#include "PQL/Tokeniser.h"
+#include "PQL/PQLLexer.h"
 #include "TestingUtils.cpp"
 
 TEST_CASE("PQL tokeniser declaration statement test case 1: single declaration, statement") {
 	std::string queryString = "stmt s;";
-	auto tokeniser = Tokeniser(queryString);
+	auto tokeniser = PQLLexer(queryString);
 	std::vector<PQLToken*> PQLTokens = tokeniser.tokenise();
 
 	std::vector<PQLToken*> expectedPQLTokens = {
@@ -19,7 +19,7 @@ TEST_CASE("PQL tokeniser declaration statement test case 1: single declaration, 
 
 TEST_CASE("PQL tokeniser declaration statement test case 2: single declaration, print + valid synonym") {
 	std::string queryString = "print pn123;";
-	auto tokeniser = Tokeniser(queryString);
+	auto tokeniser = PQLLexer(queryString);
 	std::vector<PQLToken*> PQLTokens = tokeniser.tokenise();
 
 	std::vector<PQLToken*> expectedPQLTokens = {
@@ -34,7 +34,7 @@ TEST_CASE("PQL tokeniser declaration statement test case 2: single declaration, 
 
 TEST_CASE("PQL tokeniser declaration statement test case 3: single declaration, while + keyword") {
 	std::string queryString = "while Select;";
-	auto tokeniser = Tokeniser(queryString);
+	auto tokeniser = PQLLexer(queryString);
 	std::vector<PQLToken*> PQLTokens = tokeniser.tokenise();
 
 	std::vector<PQLToken*> expectedPQLTokens = {
@@ -47,10 +47,10 @@ TEST_CASE("PQL tokeniser declaration statement test case 3: single declaration, 
 	REQUIRE(result);
 }
 
-//Tokeniser will still pass this test case because tokeniser is only concern about the lexical rules of each token from the input, not the syntax of the input 
+//PQLLexer will still pass this test case because tokeniser is only concern about the lexical rules of each token from the input, not the syntax of the input 
 TEST_CASE("PQL tokeniser declaration statement test case 4: single declaration, variable + integer") {
 	std::string queryString = "variable 123;";
-	auto tokeniser = Tokeniser(queryString);
+	auto tokeniser = PQLLexer(queryString);
 	std::vector<PQLToken*> PQLTokens = tokeniser.tokenise();
 
 	std::vector<PQLToken*> expectedPQLTokens = {
@@ -65,7 +65,7 @@ TEST_CASE("PQL tokeniser declaration statement test case 4: single declaration, 
 
 TEST_CASE("PQL tokeniser declaration statement test case 5: double declaration, constant + 2 synonyms") {
 	std::string queryString = "constant c1,c2;";
-	auto tokeniser = Tokeniser(queryString);
+	auto tokeniser = PQLLexer(queryString);
 	std::vector<PQLToken*> PQLTokens = tokeniser.tokenise();
 
 	std::vector<PQLToken*> expectedPQLTokens = {
@@ -82,7 +82,7 @@ TEST_CASE("PQL tokeniser declaration statement test case 5: double declaration, 
 
 TEST_CASE("PQL tokeniser declaration statement test case 6: multi declaration, read + 3 synonyms") {
 	std::string queryString = "read r1,r2 , r3;";
-	auto tokeniser = Tokeniser(queryString);
+	auto tokeniser = PQLLexer(queryString);
 	std::vector<PQLToken*> PQLTokens = tokeniser.tokenise();
 
 	std::vector<PQLToken*> expectedPQLTokens = {
@@ -101,7 +101,7 @@ TEST_CASE("PQL tokeniser declaration statement test case 6: multi declaration, r
 
 TEST_CASE("PQL tokeniser declaration statement test case 7: single declaration, call") {
 	std::string queryString = "call c;";
-	auto tokeniser = Tokeniser(queryString);
+	auto tokeniser = PQLLexer(queryString);
 	std::vector<PQLToken*> PQLTokens = tokeniser.tokenise();
 
 	std::vector<PQLToken*> expectedPQLTokens = {
@@ -116,7 +116,7 @@ TEST_CASE("PQL tokeniser declaration statement test case 7: single declaration, 
 
 TEST_CASE("PQL tokeniser declaration statement test case 8: single declaration, if") {
 	std::string queryString = "if ifs;";
-	auto tokeniser = Tokeniser(queryString);
+	auto tokeniser = PQLLexer(queryString);
 	std::vector<PQLToken*> PQLTokens = tokeniser.tokenise();
 
 	std::vector<PQLToken*> expectedPQLTokens = {
@@ -131,7 +131,7 @@ TEST_CASE("PQL tokeniser declaration statement test case 8: single declaration, 
 
 TEST_CASE("PQL tokeniser declaration statement test case 9: single declaration, assign") {
 	std::string queryString = "assign a;";
-	auto tokeniser = Tokeniser(queryString);
+	auto tokeniser = PQLLexer(queryString);
 	std::vector<PQLToken*> PQLTokens = tokeniser.tokenise();
 
 	std::vector<PQLToken*> expectedPQLTokens = {
@@ -146,7 +146,7 @@ TEST_CASE("PQL tokeniser declaration statement test case 9: single declaration, 
 
 TEST_CASE("PQL tokeniser declaration statement test case 1: single declaration, procedure") {
 	std::string queryString = "procedure proc;";
-	auto tokeniser = Tokeniser(queryString);
+	auto tokeniser = PQLLexer(queryString);
 	std::vector<PQLToken*> PQLTokens = tokeniser.tokenise();
 
 	std::vector<PQLToken*> expectedPQLTokens = {

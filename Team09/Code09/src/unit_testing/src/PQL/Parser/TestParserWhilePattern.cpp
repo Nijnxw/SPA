@@ -1,6 +1,6 @@
 #include "catch.hpp"
 #include "PQL/PQLParser.h"
-#include "PQL/Tokeniser.h"
+#include "PQL/PQLLexer.h"
 
 TEST_CASE("pattern - while pattern") {
 	std::vector<QueryArgument> expectedResultSynonms;

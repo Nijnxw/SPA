@@ -89,10 +89,10 @@ TEST_CASE("ModifiesStore API") {
 
 			std::tuple<std::vector<std::string>, std::vector<std::string>> expectedRes = { firstColumn, secondColumn };
 
-			std::unordered_set<std::pair<std::string, std::string>, PKBUtil::pairHashFunction> set = 
-				PKBUtil::convertVectorTupleToSetPairs(std::get<0>(res), std::get<1>(res));
-			std::unordered_set<std::pair<std::string, std::string>, PKBUtil::pairHashFunction> expectedSet =
-				PKBUtil::convertVectorTupleToSetPairs(std::get<0>(expectedRes), std::get<1>(expectedRes));
+			std::unordered_set<std::pair<std::string, std::string>, PKBUtils::pairHashFunction> set = 
+				PKBUtils::convertVectorTupleToSetPairs(std::get<0>(res), std::get<1>(res));
+			std::unordered_set<std::pair<std::string, std::string>, PKBUtils::pairHashFunction> expectedSet =
+				PKBUtils::convertVectorTupleToSetPairs(std::get<0>(expectedRes), std::get<1>(expectedRes));
 
 			REQUIRE(set == expectedSet);
 		}
@@ -109,10 +109,10 @@ TEST_CASE("ModifiesStore API") {
 
 			std::tuple<std::vector<std::string>, std::vector<std::string>> expectedRes = { firstColumn, secondColumn };
 
-			std::unordered_set<std::pair<std::string, std::string>, PKBUtil::pairHashFunction> set =
-				PKBUtil::convertVectorTupleToSetPairs(std::get<0>(res), std::get<1>(res));
-			std::unordered_set<std::pair<std::string, std::string>, PKBUtil::pairHashFunction> expectedSet =
-				PKBUtil::convertVectorTupleToSetPairs(std::get<0>(expectedRes), std::get<1>(expectedRes));
+			std::unordered_set<std::pair<std::string, std::string>, PKBUtils::pairHashFunction> set =
+				PKBUtils::convertVectorTupleToSetPairs(std::get<0>(res), std::get<1>(res));
+			std::unordered_set<std::pair<std::string, std::string>, PKBUtils::pairHashFunction> expectedSet =
+				PKBUtils::convertVectorTupleToSetPairs(std::get<0>(expectedRes), std::get<1>(expectedRes));
 
 			REQUIRE(set == expectedSet);
 		}
@@ -188,10 +188,10 @@ TEST_CASE("ModifiesStore API") {
 
 			std::tuple<std::vector<std::string>, std::vector<std::string>> expectedRes = { firstColumn, secondColumn };
 
-			std::unordered_set<std::pair<std::string, std::string>, PKBUtil::pairHashFunction> set =
-				PKBUtil::convertVectorTupleToSetPairs(std::get<0>(res), std::get<1>(res));
-			std::unordered_set<std::pair<std::string, std::string>, PKBUtil::pairHashFunction> expectedSet =
-				PKBUtil::convertVectorTupleToSetPairs(std::get<0>(expectedRes), std::get<1>(expectedRes));
+			std::unordered_set<std::pair<std::string, std::string>, PKBUtils::pairHashFunction> set =
+				PKBUtils::convertVectorTupleToSetPairs(std::get<0>(res), std::get<1>(res));
+			std::unordered_set<std::pair<std::string, std::string>, PKBUtils::pairHashFunction> expectedSet =
+				PKBUtils::convertVectorTupleToSetPairs(std::get<0>(expectedRes), std::get<1>(expectedRes));
 
 			REQUIRE(set == expectedSet);
 		}
@@ -201,9 +201,9 @@ TEST_CASE("ModifiesStore API") {
 			std::vector<std::string> firstColumn;
 			std::vector<std::string> secondColumn;
 
-			std::unordered_set<std::pair<std::string, std::string>, PKBUtil::pairHashFunction> set =
-				PKBUtil::convertVectorTupleToSetPairs(std::get<0>(res), std::get<1>(res));
-			std::unordered_set<std::pair<std::string, std::string>, PKBUtil::pairHashFunction> expectedSet = {};
+			std::unordered_set<std::pair<std::string, std::string>, PKBUtils::pairHashFunction> set =
+				PKBUtils::convertVectorTupleToSetPairs(std::get<0>(res), std::get<1>(res));
+			std::unordered_set<std::pair<std::string, std::string>, PKBUtils::pairHashFunction> expectedSet = {};
 
 			REQUIRE(set == expectedSet);
 		}
@@ -213,9 +213,9 @@ TEST_CASE("ModifiesStore API") {
 			std::vector<std::string> firstColumn;
 			std::vector<std::string> secondColumn;
 
-			std::unordered_set<std::pair<std::string, std::string>, PKBUtil::pairHashFunction> set =
-				PKBUtil::convertVectorTupleToSetPairs(std::get<0>(res), std::get<1>(res));
-			std::unordered_set<std::pair<std::string, std::string>, PKBUtil::pairHashFunction> expectedSet = {};
+			std::unordered_set<std::pair<std::string, std::string>, PKBUtils::pairHashFunction> set =
+				PKBUtils::convertVectorTupleToSetPairs(std::get<0>(res), std::get<1>(res));
+			std::unordered_set<std::pair<std::string, std::string>, PKBUtils::pairHashFunction> expectedSet = {};
 
 			REQUIRE(set == expectedSet);
 		}

@@ -1,5 +1,5 @@
 #include "PQL/PQL.h"
-#include "PQL/Tokeniser.h"
+#include "PQL/PQLLexer.h"
 #include "PQL/PQLParser.h"
 #include "PQL/QueryEvaluator.h"
 #include "QueryResultProjector.h"
@@ -7,7 +7,7 @@
 #include <iostream>
 
 const std::vector<PQLToken*> PQL::tokenise(std::string query) {
-	auto tokeniser = Tokeniser(query);
+	auto tokeniser = PQLLexer(query);
 	return tokeniser.tokenise();
 }
 

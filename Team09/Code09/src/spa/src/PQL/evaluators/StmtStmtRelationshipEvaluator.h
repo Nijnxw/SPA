@@ -5,14 +5,14 @@
 #include <unordered_set>
 
 #include "pkb/PKB.h"
-#include "pkb/util/PKBUtil.cpp"
+#include "util/PKBUtils.cpp"
 #include "models/EntityType.h"
 
 #include "RelationshipEvaluator.h"
 #include "TransitiveRelationshipEvaluator.h"
 
 class StmtStmtRelationshipEvaluator : public RelationshipEvaluator, public TransitiveRelationshipEvaluator {
-private:
+protected:
 	QueryClauseResult
 		getRelationshipByStatementNumber(RelationRef relationship, const std::string& LHS, const std::string& RHS, EntityType RHSType);
 	QueryClauseResult

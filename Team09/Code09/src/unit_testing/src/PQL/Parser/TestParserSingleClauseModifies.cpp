@@ -1,6 +1,6 @@
 #include "catch.hpp"
 #include "PQL/PQLParser.h"
-#include "PQL/Tokeniser.h"
+#include "PQL/PQLLexer.h"
 
 //---------------------------------------------------------------//
 //			                Happy Paths			                 //
@@ -19,7 +19,7 @@ TEST_CASE("Modifies - 2nd arg is var synonym") {
 
 	SECTION("M(re,v)") {
 		std::string queryString = "read re; variable v; Select re such that Modifies(re,v)";
-		Tokeniser tokeniser = Tokeniser(queryString);
+		PQLLexer tokeniser = PQLLexer(queryString);
 		std::vector<PQLToken*> PQLTokens = tokeniser.tokenise();
 		PQLParser parser = PQLParser(PQLTokens);
 
@@ -40,7 +40,7 @@ TEST_CASE("Modifies - 2nd arg is var synonym") {
 
 	SECTION("M(s,v)") {
 		std::string queryString = "stmt s; variable v; Select v such that Modifies(s,v)";
-		Tokeniser tokeniser = Tokeniser(queryString);
+		PQLLexer tokeniser = PQLLexer(queryString);
 		std::vector<PQLToken*> PQLTokens = tokeniser.tokenise();
 		PQLParser parser = PQLParser(PQLTokens);
 
@@ -62,7 +62,7 @@ TEST_CASE("Modifies - 2nd arg is var synonym") {
 	SECTION("M(w,v)") {
 
 		std::string queryString = "while w; variable v; Select w such that Modifies(w,v)";
-		Tokeniser tokeniser = Tokeniser(queryString);
+		PQLLexer tokeniser = PQLLexer(queryString);
 		std::vector<PQLToken*> PQLTokens = tokeniser.tokenise();
 		PQLParser parser = PQLParser(PQLTokens);
 
@@ -83,7 +83,7 @@ TEST_CASE("Modifies - 2nd arg is var synonym") {
 
 	SECTION("M(ifs, v)") {
 		std::string queryString = "if ifs; variable v; Select ifs such that Modifies(ifs,v)";
-		Tokeniser tokeniser = Tokeniser(queryString);
+		PQLLexer tokeniser = PQLLexer(queryString);
 		std::vector<PQLToken*> PQLTokens = tokeniser.tokenise();
 		PQLParser parser = PQLParser(PQLTokens);
 
@@ -104,7 +104,7 @@ TEST_CASE("Modifies - 2nd arg is var synonym") {
 
 	SECTION("M(a,v)") {
 		std::string queryString = "assign a; variable v; Select a such that Modifies(a,v)";
-		Tokeniser tokeniser = Tokeniser(queryString);
+		PQLLexer tokeniser = PQLLexer(queryString);
 		std::vector<PQLToken*> PQLTokens = tokeniser.tokenise();
 		PQLParser parser = PQLParser(PQLTokens);
 
@@ -125,7 +125,7 @@ TEST_CASE("Modifies - 2nd arg is var synonym") {
 
 	SECTION("M(2,v)") {
 		std::string queryString = "variable v; Select v such that Modifies(2,v)";
-		Tokeniser tokeniser = Tokeniser(queryString);
+		PQLLexer tokeniser = PQLLexer(queryString);
 		std::vector<PQLToken*> PQLTokens = tokeniser.tokenise();
 		PQLParser parser = PQLParser(PQLTokens);
 
@@ -157,7 +157,7 @@ TEST_CASE("Modifies - 2nd arg is var name") {
 
 	SECTION("M(re,\"v\")") {
 		std::string queryString = "read re; variable v; Select re such that Modifies(re,\"v\")";
-		Tokeniser tokeniser = Tokeniser(queryString);
+		PQLLexer tokeniser = PQLLexer(queryString);
 		std::vector<PQLToken*> PQLTokens = tokeniser.tokenise();
 		PQLParser parser = PQLParser(PQLTokens);
 
@@ -177,7 +177,7 @@ TEST_CASE("Modifies - 2nd arg is var name") {
 
 	SECTION("M(s,\"v1\")") {
 		std::string queryString = "stmt s; variable v; Select s such that Modifies(s,\"v1\")";
-		Tokeniser tokeniser = Tokeniser(queryString);
+		PQLLexer tokeniser = PQLLexer(queryString);
 		std::vector<PQLToken*> PQLTokens = tokeniser.tokenise();
 		PQLParser parser = PQLParser(PQLTokens);
 
@@ -197,7 +197,7 @@ TEST_CASE("Modifies - 2nd arg is var name") {
 
 	SECTION("M(w,\"v12\")") {
 		std::string queryString = "while w; variable v; Select w such that Modifies(w,\"v12\")";
-		Tokeniser tokeniser = Tokeniser(queryString);
+		PQLLexer tokeniser = PQLLexer(queryString);
 		std::vector<PQLToken*> PQLTokens = tokeniser.tokenise();
 		PQLParser parser = PQLParser(PQLTokens);
 
@@ -217,7 +217,7 @@ TEST_CASE("Modifies - 2nd arg is var name") {
 
 	SECTION("M(ifs,\"var\")") {
 		std::string queryString = "if ifs; variable v; Select ifs such that Modifies(ifs,\"var\")";
-		Tokeniser tokeniser = Tokeniser(queryString);
+		PQLLexer tokeniser = PQLLexer(queryString);
 		std::vector<PQLToken*> PQLTokens = tokeniser.tokenise();
 		PQLParser parser = PQLParser(PQLTokens);
 
@@ -237,7 +237,7 @@ TEST_CASE("Modifies - 2nd arg is var name") {
 
 	SECTION("M(a,\"var1\")") {
 		std::string queryString = "assign a; variable v; Select a such that Modifies(a,\"var1\")";
-		Tokeniser tokeniser = Tokeniser(queryString);
+		PQLLexer tokeniser = PQLLexer(queryString);
 		std::vector<PQLToken*> PQLTokens = tokeniser.tokenise();
 		PQLParser parser = PQLParser(PQLTokens);
 
@@ -257,7 +257,7 @@ TEST_CASE("Modifies - 2nd arg is var name") {
 
 	SECTION("M(3,\"vN\")") {
 		std::string queryString = "variable v; Select v such that Modifies(2,\"vN\")";
-		Tokeniser tokeniser = Tokeniser(queryString);
+		PQLLexer tokeniser = PQLLexer(queryString);
 		std::vector<PQLToken*> PQLTokens = tokeniser.tokenise();
 		PQLParser parser = PQLParser(PQLTokens);
 
@@ -287,7 +287,7 @@ TEST_CASE("Modifies - 2nd arg is wildcard") {
 
 	SECTION("M(re,_) + multiple whitespaces") {
 		std::string queryString = "read re; variable v; Select re such that Modifies(re,         _)";
-		Tokeniser tokeniser = Tokeniser(queryString);
+		PQLLexer tokeniser = PQLLexer(queryString);
 		std::vector<PQLToken*> PQLTokens = tokeniser.tokenise();
 		PQLParser parser = PQLParser(PQLTokens);
 
@@ -307,7 +307,7 @@ TEST_CASE("Modifies - 2nd arg is wildcard") {
 	
 	SECTION("M(s,_) + tab line in between args") {
 		std::string queryString = "stmt s; variable v; Select s such that Modifies(s,\t_)";
-		Tokeniser tokeniser = Tokeniser(queryString);
+		PQLLexer tokeniser = PQLLexer(queryString);
 		std::vector<PQLToken*> PQLTokens = tokeniser.tokenise();
 		PQLParser parser = PQLParser(PQLTokens);
 
@@ -327,7 +327,7 @@ TEST_CASE("Modifies - 2nd arg is wildcard") {
 
 	SECTION("PQL parser single clause test case 19: M(w,_) + multiple new line") {
 		std::string queryString = "while w; variable v; Select w such that Modifies(w,\n\n\n_)";
-		Tokeniser tokeniser = Tokeniser(queryString);
+		PQLLexer tokeniser = PQLLexer(queryString);
 		std::vector<PQLToken*> PQLTokens = tokeniser.tokenise();
 		PQLParser parser = PQLParser(PQLTokens);
 
@@ -347,7 +347,7 @@ TEST_CASE("Modifies - 2nd arg is wildcard") {
 
 	SECTION("PQL parser single clause test case 20: M(ifs,_)") {
 		std::string queryString = "if ifs; variable v; Select ifs such that Modifies(ifs,_)";
-		Tokeniser tokeniser = Tokeniser(queryString);
+		PQLLexer tokeniser = PQLLexer(queryString);
 		std::vector<PQLToken*> PQLTokens = tokeniser.tokenise();
 		PQLParser parser = PQLParser(PQLTokens);
 
@@ -367,7 +367,7 @@ TEST_CASE("Modifies - 2nd arg is wildcard") {
 
 	SECTION("M(a,_) + new line in between args") {
 		std::string queryString = "assign a; variable v; Select a such that Modifies(a, \n _)";
-		Tokeniser tokeniser = Tokeniser(queryString);
+		PQLLexer tokeniser = PQLLexer(queryString);
 		std::vector<PQLToken*> PQLTokens = tokeniser.tokenise();
 		PQLParser parser = PQLParser(PQLTokens);
 
@@ -388,7 +388,7 @@ TEST_CASE("Modifies - 2nd arg is wildcard") {
 
 	SECTION("M(2,_) + whitespace") {
 		std::string queryString = "variable v; Select v such that Modifies(2, _)";
-		Tokeniser tokeniser = Tokeniser(queryString);
+		PQLLexer tokeniser = PQLLexer(queryString);
 		std::vector<PQLToken*> PQLTokens = tokeniser.tokenise();
 		PQLParser parser = PQLParser(PQLTokens);
 
@@ -412,7 +412,7 @@ TEST_CASE("Modifies - 2nd arg is wildcard") {
 
 TEST_CASE("Modifies - wildcard as first arg") {
 	std::string queryString = "variable v; Select v such that Modifies(_,v)";
-	Tokeniser tokeniser = Tokeniser(queryString);
+	PQLLexer tokeniser = PQLLexer(queryString);
 	std::vector<PQLToken*> PQLTokens = tokeniser.tokenise();
 	PQLParser parser = PQLParser(PQLTokens);
 
@@ -422,7 +422,7 @@ TEST_CASE("Modifies - wildcard as first arg") {
 
 TEST_CASE("Modifies - print synonym as first arg") {
 	std::string queryString = "print pn; variable v; Select v such that Modifies(pn,v)";
-	Tokeniser tokeniser = Tokeniser(queryString);
+	PQLLexer tokeniser = PQLLexer(queryString);
 	std::vector<PQLToken*> PQLTokens = tokeniser.tokenise();
 	PQLParser parser = PQLParser(PQLTokens);
 
@@ -432,7 +432,7 @@ TEST_CASE("Modifies - print synonym as first arg") {
 
 TEST_CASE("Modifies - var synonym as first arg") {
 	std::string queryString = "variable v,v2; Select v such that Modifies(v2,v)";
-	Tokeniser tokeniser = Tokeniser(queryString);
+	PQLLexer tokeniser = PQLLexer(queryString);
 	std::vector<PQLToken*> PQLTokens = tokeniser.tokenise();
 	PQLParser parser = PQLParser(PQLTokens);
 
@@ -442,7 +442,7 @@ TEST_CASE("Modifies - var synonym as first arg") {
 
 TEST_CASE("Modifies - const synonym as first arg") {
 	std::string queryString = "variable v; constant c; Select v such that Modifies(c,v)";
-	Tokeniser tokeniser = Tokeniser(queryString);
+	PQLLexer tokeniser = PQLLexer(queryString);
 	std::vector<PQLToken*> PQLTokens = tokeniser.tokenise();
 	PQLParser parser = PQLParser(PQLTokens);
 
@@ -452,7 +452,7 @@ TEST_CASE("Modifies - const synonym as first arg") {
 
 TEST_CASE("Modifies - missing open paran") {
 	std::string queryString = "assign a; select a such that Modifies a, 1)";
-	Tokeniser tokeniser = Tokeniser(queryString);
+	PQLLexer tokeniser = PQLLexer(queryString);
 	std::vector<PQLToken*> PQLTokens = tokeniser.tokenise();
 	PQLParser parser = PQLParser(PQLTokens);
 
@@ -462,7 +462,7 @@ TEST_CASE("Modifies - missing open paran") {
 
 TEST_CASE("Modifies - missing first") {
 	std::string queryString = "assign a; select a such that Modifies (, 1)";
-	Tokeniser tokeniser = Tokeniser(queryString);
+	PQLLexer tokeniser = PQLLexer(queryString);
 	std::vector<PQLToken*> PQLTokens = tokeniser.tokenise();
 	PQLParser parser = PQLParser(PQLTokens);
 
@@ -472,7 +472,7 @@ TEST_CASE("Modifies - missing first") {
 
 TEST_CASE("Modifies - missing comma") {
 	std::string queryString = "assign a; select a such that Modifies (a 1)";
-	Tokeniser tokeniser = Tokeniser(queryString);
+	PQLLexer tokeniser = PQLLexer(queryString);
 	std::vector<PQLToken*> PQLTokens = tokeniser.tokenise();
 	PQLParser parser = PQLParser(PQLTokens);
 
@@ -482,7 +482,7 @@ TEST_CASE("Modifies - missing comma") {
 
 TEST_CASE("Modifies - missing second arg") {
 	std::string queryString = "assign a; select a such that Modifies (a, )";
-	Tokeniser tokeniser = Tokeniser(queryString);
+	PQLLexer tokeniser = PQLLexer(queryString);
 	std::vector<PQLToken*> PQLTokens = tokeniser.tokenise();
 	PQLParser parser = PQLParser(PQLTokens);
 
@@ -492,7 +492,7 @@ TEST_CASE("Modifies - missing second arg") {
 
 TEST_CASE("Modifies - missing close paran") {
 	std::string queryString = "assign a; select a such that Modifies (a, 1";
-	Tokeniser tokeniser = Tokeniser(queryString);
+	PQLLexer tokeniser = PQLLexer(queryString);
 	std::vector<PQLToken*> PQLTokens = tokeniser.tokenise();
 	PQLParser parser = PQLParser(PQLTokens);
 
@@ -502,7 +502,7 @@ TEST_CASE("Modifies - missing close paran") {
 
 TEST_CASE("Modifies - insufficient arguments") {
 	std::string queryString = "assign a; select a such that Modifies (a)";
-	Tokeniser tokeniser = Tokeniser(queryString);
+	PQLLexer tokeniser = PQLLexer(queryString);
 	std::vector<PQLToken*> PQLTokens = tokeniser.tokenise();
 	PQLParser parser = PQLParser(PQLTokens);
 

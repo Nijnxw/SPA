@@ -27,7 +27,9 @@ void EntityStager::clear() {
 	stagedModifiesStatement.clear();
 	stagedModifiesProcedure.clear();
 	stagedCFG.clear();
+	stagedProcToLastStmts.clear();
 }
+
 //helper function
 template <typename T>
 std::unordered_set<int> getStmtNoFromSet(std::unordered_map<int, T> store) {
@@ -37,7 +39,6 @@ std::unordered_set<int> getStmtNoFromSet(std::unordered_map<int, T> store) {
 	}
 	return output;
 }
-
 
 // getters
 std::unordered_set<std::string> EntityStager::getStagedProcedures() {
@@ -144,6 +145,10 @@ std::vector<std::unordered_set<int>> EntityStager::getCFG() {
 	return stagedCFG;
 }
 
+std::unordered_map<std::string, std::unordered_set<int>> EntityStager::getStagedProcToLastStmts() {
+	return stagedProcToLastStmts;
+}
+
 // stagers
 void EntityStager::stageProcedure(const std::string& procedure) {
 	stagedProcedures.insert(procedure);
@@ -234,8 +239,12 @@ void EntityStager::stageCFG(std::vector<std::unordered_set<int>> cfg) {
 	stagedCFG = cfg;
 }
 
+void EntityStager::stageLastStmtMapping(std::unordered_map<std::string, std::unordered_set<int>> mappings) {
+	stagedProcToLastStmts = mappings;
+}
+
 void EntityStager::commit() {
-	PKB::addCFG(&stagedCFG);
+	PKB::addCFG(stagedCFG);
 	for (auto& proc: stagedProcedures) { PKB::addProcedure(proc); }
 	for (auto& var: stagedConstants) { PKB::addConstant(var); }
 	for (auto& con: stagedVariables) { PKB::addVariable(con); }
@@ -280,6 +289,9 @@ void EntityStager::commit() {
 	}
 	for (auto& usesP: stagedUsesProcedure) {
 		PKB::addUsesProcedure(usesP.first, usesP.second);
+	}
+	for (auto& lasts : stagedProcToLastStmts) {
+		PKB::addProcedureNameToLastCFGNode(lasts.first, lasts.second);
 	}
 	EntityStager::clear();
 }

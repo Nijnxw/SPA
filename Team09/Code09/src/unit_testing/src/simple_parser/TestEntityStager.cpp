@@ -44,7 +44,6 @@ TEST_CASE("Test EntityStager interaction with PKB") {
 		{1}, {2}, {3, 10}, {4, 7}, {5, 6}, {1}, {1}, {8, 9}, {1}, {1},
 		{11, 14}, {12, 13}, {1}, {1}, {15, 16}, {1}, {1}
 	});
-
 	EntityStager::commit();
 
 	std::unordered_set<std::string> expectedProc;

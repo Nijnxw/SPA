@@ -1,5 +1,5 @@
 #include "catch.hpp"
-#include "pkb/util/PKBUtil.cpp"
+#include "util/PKBUtils.cpp"
 
 TEST_CASE("PKBUtil Helper Functions") {
 
@@ -16,7 +16,7 @@ TEST_CASE("PKBUtil Helper Functions") {
 			setTwo.insert(4);
 			setTwo.insert(5);
 
-			std::unordered_set<int> res = PKBUtil::unorderedSetIntersection(setOne, setTwo);
+			std::unordered_set<int> res = PKBUtils::unorderedSetIntersection(setOne, setTwo);
 			std::unordered_set<int> expectedSet = { 2, 3 };
 			REQUIRE(res == expectedSet);
 		}
@@ -24,7 +24,7 @@ TEST_CASE("PKBUtil Helper Functions") {
 		SECTION("addToMapWithSet(map, key, value) positive query when key does not exist") {
 			std::unordered_map<int, std::unordered_set<int>> map;
 			
-			bool isAdded = PKBUtil::addToMapWithSet(map, 1, 2);
+			bool isAdded = PKBUtils::addToMapWithSet(map, 1, 2);
 			REQUIRE(isAdded == true);
 
 			std::unordered_map<int, std::unordered_set<int>> expectedMap;
@@ -38,7 +38,7 @@ TEST_CASE("PKBUtil Helper Functions") {
 			std::unordered_set<int> set = { 2 };
 			map.insert({ 1, set });
 
-			bool isAdded = PKBUtil::addToMapWithSet(map, 1, 3);
+			bool isAdded = PKBUtils::addToMapWithSet(map, 1, 3);
 			REQUIRE(isAdded == true);
 
 			std::unordered_map<int, std::unordered_set<int>> expectedMap;
@@ -50,7 +50,7 @@ TEST_CASE("PKBUtil Helper Functions") {
 		SECTION("addToMapWithVector(map, key, value) positive query when key does not exist") {
 			std::unordered_map<int, std::vector<int>> map;
 
-			bool isAdded = PKBUtil::addToMapWithVector(map, 1, 2);
+			bool isAdded = PKBUtils::addToMapWithVector(map, 1, 2);
 			REQUIRE(isAdded == true);
 
 			std::unordered_map<int, std::vector<int>> expectedMap;
@@ -64,7 +64,7 @@ TEST_CASE("PKBUtil Helper Functions") {
 			std::vector<int> vector = { 2 };
 			map.insert({ 1, vector });
 
-			bool isAdded = PKBUtil::addToMapWithVector(map, 1, 3);
+			bool isAdded = PKBUtils::addToMapWithVector(map, 1, 3);
 			REQUIRE(isAdded == true);
 
 			std::unordered_map<int, std::vector<int>> expectedMap;
@@ -76,7 +76,7 @@ TEST_CASE("PKBUtil Helper Functions") {
 		SECTION("getKeySetFromMap(map) positive query when key does not exist") {
 			std::unordered_map<int, int> map;
 
-			std::unordered_set<int> set = PKBUtil::getKeySetFromMap(map);
+			std::unordered_set<int> set = PKBUtils::getKeySetFromMap(map);
 
 			std::unordered_set<int> expectedSet;
 			REQUIRE(set == expectedSet);
@@ -86,7 +86,7 @@ TEST_CASE("PKBUtil Helper Functions") {
 			std::unordered_map<int, int> map;
 			map.insert({ 1, 2 });
 
-			std::unordered_set<int> set = PKBUtil::getKeySetFromMap(map);
+			std::unordered_set<int> set = PKBUtils::getKeySetFromMap(map);
 
 			std::unordered_set<int> expectedSet = { 1 };
 			REQUIRE(set == expectedSet);
@@ -95,7 +95,7 @@ TEST_CASE("PKBUtil Helper Functions") {
 		SECTION("convertMapToVectorTuple positive query when key does not exist") {
 			std::unordered_map<int, int> map;
 
-			std::tuple<std::vector<int>, std::vector<int>> tuple = PKBUtil::convertMapToVectorTuple(map);
+			std::tuple<std::vector<int>, std::vector<int>> tuple = PKBUtils::convertMapToVectorTuple(map);
 
 			std::vector<int> firstColumn;
 			std::vector<int> secondColumn;
@@ -108,7 +108,7 @@ TEST_CASE("PKBUtil Helper Functions") {
 			std::unordered_map<int, int> map;
 			map.insert({ 1, 2 });
 
-			std::tuple<std::vector<int>, std::vector<int>> tuple = PKBUtil::convertMapToVectorTuple(map);
+			std::tuple<std::vector<int>, std::vector<int>> tuple = PKBUtils::convertMapToVectorTuple(map);
 
 			std::vector<int> firstColumn = { 1 };
 			std::vector<int> secondColumn = { 2 };
@@ -118,9 +118,9 @@ TEST_CASE("PKBUtil Helper Functions") {
 		}
 
 		SECTION("convertSetPairsToVectorTuple positive query when key does not exist") {
-			std::unordered_set<std::pair<int, int>, PKBUtil::pairHashFunction> set;
+			std::unordered_set<std::pair<int, int>, PKBUtils::pairHashFunction> set;
 
-			std::tuple<std::vector<int>, std::vector<int>> tuple = PKBUtil::convertSetPairsToVectorTuple(set);
+			std::tuple<std::vector<int>, std::vector<int>> tuple = PKBUtils::convertSetPairsToVectorTuple(set);
 
 			std::vector<int> firstColumn;
 			std::vector<int> secondColumn;
@@ -130,13 +130,13 @@ TEST_CASE("PKBUtil Helper Functions") {
 		}
 
 		SECTION("convertSetPairsToVectorTuple positive query when key exists") {
-			std::unordered_set<std::pair<int, int>, PKBUtil::pairHashFunction> set;
+			std::unordered_set<std::pair<int, int>, PKBUtils::pairHashFunction> set;
 
 			std::pair<int, int> pair;
 			pair = std::make_pair(1, 2);
 			set.insert(pair);
 
-			std::tuple<std::vector<int>, std::vector<int>> tuple = PKBUtil::convertSetPairsToVectorTuple(set);
+			std::tuple<std::vector<int>, std::vector<int>> tuple = PKBUtils::convertSetPairsToVectorTuple(set);
 
 			std::vector<int> firstColumn = { 1 };
 			std::vector<int> secondColumn = { 2 };
@@ -149,15 +149,38 @@ TEST_CASE("PKBUtil Helper Functions") {
 			std::vector<int> firstColumn = { 1 };
 			std::vector<int> secondColumn = { 2 };
 
-			std::unordered_set<std::pair<int, int>, PKBUtil::pairHashFunction> tuple = 
-				PKBUtil::convertVectorTupleToSetPairs(firstColumn, secondColumn);
+			std::unordered_set<std::pair<int, int>, PKBUtils::pairHashFunction> tuple = 
+				PKBUtils::convertVectorTupleToSetPairs(firstColumn, secondColumn);
 
-			std::unordered_set<std::pair<int, int>, PKBUtil::pairHashFunction> expectedTuple;
+			std::unordered_set<std::pair<int, int>, PKBUtils::pairHashFunction> expectedTuple;
 
 			std::pair<int, int> pair;
 			pair = std::make_pair(1, 2);
 			expectedTuple.insert(pair);
 
 			REQUIRE(tuple == expectedTuple);
+		}
+
+		SECTION("convertUnorderedSetToVector positive query") {
+			std::unordered_set<int> firstSet = { 1 };
+			std::unordered_set<int> secondSet = { 1 };
+
+			std::vector<int> firstVector = PKBUtils::convertUnorderedSetToVector(firstSet);
+			std::vector<int> secondVector = PKBUtils::convertUnorderedSetToVector(secondSet);
+
+			REQUIRE(firstVector == secondVector);
+		}
+
+		SECTION("computeCartesianProduct positive query") {
+			std::vector<std::string> firstVec = { "1", "2" };
+			std::vector<std::string> secondVec = { "3", "4" };
+
+			std::tuple<std::vector<std::string>, std::vector<std::string>> res = PKBUtils::computeCartesianProduct(firstVec, secondVec);
+
+			std::vector<std::string> expectedFirstVec = { "1", "1", "2", "2" };
+			std::vector<std::string> expectedSecondVec = { "3", "4", "3", "4" };
+
+			REQUIRE(std::get<0>(res) == expectedFirstVec);
+			REQUIRE(std::get<1>(res) == expectedSecondVec);
 		}
 }

@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Lexer.h"
+#include "SPLexer.h"
 #include "DesignExtractor.h"
 #include "models/simple_parser/AST.h"
 #include "simple_parser/SPParser.h"

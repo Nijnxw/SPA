@@ -11,6 +11,8 @@
 
 using CFG = std::vector<std::unordered_set<int>>;
 
+#define PROG_START 0
+
 class CFGExtractor {
 private:
 	static inline CFG cfg;
@@ -20,9 +22,9 @@ private:
 	static std::unordered_set<int> extractCFGFromWhileNode(std::shared_ptr<WhileNode> whiles);
 	static std::unordered_set<int> extractCFGFromIfNode(std::shared_ptr<IfNode> ifs);
 	static std::unordered_set<int> extractCFGFromStmtLst(int prev, std::vector<std::shared_ptr<StmtNode>> stmtLst);
-	static void extractCFGFromProcedure(std::shared_ptr<ProcedureNode> proc);
-	static void extractCFGFromProcedureList(std::unordered_map<std::string, std::shared_ptr<ProcedureNode>> procMap);
+	static std::unordered_set<int> extractCFGFromProcedure(std::shared_ptr<ProcedureNode> proc);
+	static std::unordered_map<std::string, std::unordered_set<int>> extractCFGFromProcedureList(std::unordered_map<std::string, std::shared_ptr<ProcedureNode>> procMap);
 
 public:
-	static CFG extractCFG(AST ast, int totalStmts);
+	static std::pair<CFG, std::unordered_map<std::string, std::unordered_set<int>>> extractCFG(AST ast, int totalStmts);
 };

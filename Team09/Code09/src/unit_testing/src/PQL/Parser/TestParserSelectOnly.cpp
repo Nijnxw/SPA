@@ -1,6 +1,6 @@
 #include "catch.hpp"
 #include "PQL/PQLParser.h"
-#include "PQL/Tokeniser.h"
+#include "PQL/PQLLexer.h"
 
 TEST_CASE("Valid synonym after select - one character in synonym Query parse s as stmt synonym w / o errors") {
 	std::vector<QueryArgument> expectedResultSynonms;
@@ -8,7 +8,7 @@ TEST_CASE("Valid synonym after select - one character in synonym Query parse s a
 	std::vector<QueryArgument> clauseArgs;
 	std::unordered_set<std::string> usedSynonyms;
 	std::string queryString = "stmt s; Select s ";
-	Tokeniser tokeniser = Tokeniser(queryString);
+	PQLLexer tokeniser = PQLLexer(queryString);
 	std::vector<PQLToken*> PQLTokens = tokeniser.tokenise();
 	PQLParser parser = PQLParser(PQLTokens);
 
@@ -28,7 +28,7 @@ TEST_CASE("Valid synonym after select - alphanumeric synonym Query parse a1 as a
 	std::vector<QueryArgument> clauseArgs;
 	std::unordered_set<std::string> usedSynonyms;
 	std::string queryString = "assign a1; Select a1 ";
-	Tokeniser tokeniser = Tokeniser(queryString);
+	PQLLexer tokeniser = PQLLexer(queryString);
 	std::vector<PQLToken*> PQLTokens = tokeniser.tokenise();
 	PQLParser parser = PQLParser(PQLTokens);
 
@@ -48,7 +48,7 @@ TEST_CASE("Valid synonym after select - Synonym of variable length Query parse a
 	std::vector<QueryArgument> clauseArgs;
 	std::unordered_set<std::string> usedSynonyms;
 	std::string queryString = "variable abcdef12345; Select abcdef12345 ";
-	Tokeniser tokeniser = Tokeniser(queryString);
+	PQLLexer tokeniser = PQLLexer(queryString);
 	std::vector<PQLToken*> PQLTokens = tokeniser.tokenise();
 	PQLParser parser = PQLParser(PQLTokens);
 
@@ -68,7 +68,7 @@ TEST_CASE("Valid synonym after select - pattern Keyword as synonym Query parse p
 	std::vector<QueryArgument> clauseArgs;
 	std::unordered_set<std::string> usedSynonyms;
 	std::string queryString = "procedure pattern; Select pattern ";
-	Tokeniser tokeniser = Tokeniser(queryString);
+	PQLLexer tokeniser = PQLLexer(queryString);
 	std::vector<PQLToken*> PQLTokens = tokeniser.tokenise();
 	PQLParser parser = PQLParser(PQLTokens);
 
@@ -88,7 +88,7 @@ TEST_CASE("Valid synonym after select - pattern Keyword as synonym Query parse s
 	std::vector<QueryArgument> clauseArgs;
 	std::unordered_set<std::string> usedSynonyms;
 	std::string queryString = "while such; Select such";
-	Tokeniser tokeniser = Tokeniser(queryString);
+	PQLLexer tokeniser = PQLLexer(queryString);
 	std::vector<PQLToken*> PQLTokens = tokeniser.tokenise();
 	PQLParser parser = PQLParser(PQLTokens);
 
@@ -108,7 +108,7 @@ TEST_CASE("Valid synonym after select - pattern Keyword as synonym Query parse t
 	std::vector<QueryArgument> clauseArgs;
 	std::unordered_set<std::string> usedSynonyms;
 	std::string queryString = "read that; Select that";
-	Tokeniser tokeniser = Tokeniser(queryString);
+	PQLLexer tokeniser = PQLLexer(queryString);
 	std::vector<PQLToken*> PQLTokens = tokeniser.tokenise();
 	PQLParser parser = PQLParser(PQLTokens);
 
@@ -128,7 +128,7 @@ TEST_CASE("Valid synonym after select - pattern Keyword as synonym Query parse U
 	std::vector<QueryArgument> clauseArgs;
 	std::unordered_set<std::string> usedSynonyms;
 	std::string queryString = "print Uses; Select Uses";
-	Tokeniser tokeniser = Tokeniser(queryString);
+	PQLLexer tokeniser = PQLLexer(queryString);
 	std::vector<PQLToken*> PQLTokens = tokeniser.tokenise();
 	PQLParser parser = PQLParser(PQLTokens);
 
@@ -148,7 +148,7 @@ TEST_CASE("Valid synonym after select - pattern Keyword as synonym Query parse M
 	std::vector<QueryArgument> clauseArgs;
 	std::unordered_set<std::string> usedSynonyms;
 	std::string queryString = "if Modifies; Select Modifies";
-	Tokeniser tokeniser = Tokeniser(queryString);
+	PQLLexer tokeniser = PQLLexer(queryString);
 	std::vector<PQLToken*> PQLTokens = tokeniser.tokenise();
 	PQLParser parser = PQLParser(PQLTokens);
 
@@ -168,7 +168,7 @@ TEST_CASE("Valid synonym after select - pattern Keyword as synonym Query parse F
 	std::vector<QueryArgument> clauseArgs;
 	std::unordered_set<std::string> usedSynonyms;
 	std::string queryString = "constant Follows; Select Follows";
-	Tokeniser tokeniser = Tokeniser(queryString);
+	PQLLexer tokeniser = PQLLexer(queryString);
 	std::vector<PQLToken*> PQLTokens = tokeniser.tokenise();
 	PQLParser parser = PQLParser(PQLTokens);
 
@@ -188,7 +188,7 @@ TEST_CASE("Valid synonym after select - pattern Keyword as synonym Query parse S
 	std::vector<QueryArgument> clauseArgs;
 	std::unordered_set<std::string> usedSynonyms;
 	std::string queryString = "stmt Select; Select Select";
-	Tokeniser tokeniser = Tokeniser(queryString);
+	PQLLexer tokeniser = PQLLexer(queryString);
 	std::vector<PQLToken*> PQLTokens = tokeniser.tokenise();
 	PQLParser parser = PQLParser(PQLTokens);
 
@@ -208,7 +208,7 @@ TEST_CASE("Valid synonym after select - pattern Keyword as synonym Query parse P
 	std::vector<QueryArgument> clauseArgs;
 	std::unordered_set<std::string> usedSynonyms;
 	std::string queryString = "stmt Parent; Select Parent";
-	Tokeniser tokeniser = Tokeniser(queryString);
+	PQLLexer tokeniser = PQLLexer(queryString);
 	std::vector<PQLToken*> PQLTokens = tokeniser.tokenise();
 	PQLParser parser = PQLParser(PQLTokens);
 
@@ -228,7 +228,7 @@ TEST_CASE("Valid synonym after select - pattern Keyword as synonym Query parse s
 	std::vector<QueryArgument> clauseArgs;
 	std::unordered_set<std::string> usedSynonyms;
 	std::string queryString = "stmt stmt; Select stmt";
-	Tokeniser tokeniser = Tokeniser(queryString);
+	PQLLexer tokeniser = PQLLexer(queryString);
 	std::vector<PQLToken*> PQLTokens = tokeniser.tokenise();
 	PQLParser parser = PQLParser(PQLTokens);
 
@@ -248,7 +248,7 @@ TEST_CASE("Valid synonym after select - pattern Keyword as synonym Query parse p
 	std::vector<QueryArgument> clauseArgs;
 	std::unordered_set<std::string> usedSynonyms;
 	std::string queryString = "print print; Select print";
-	Tokeniser tokeniser = Tokeniser(queryString);
+	PQLLexer tokeniser = PQLLexer(queryString);
 	std::vector<PQLToken*> PQLTokens = tokeniser.tokenise();
 	PQLParser parser = PQLParser(PQLTokens);
 
@@ -268,7 +268,7 @@ TEST_CASE("Valid synonym after select - pattern Keyword as synonym Query parse r
 	std::vector<QueryArgument> clauseArgs;
 	std::unordered_set<std::string> usedSynonyms;
 	std::string queryString = "read read; Select read";
-	Tokeniser tokeniser = Tokeniser(queryString);
+	PQLLexer tokeniser = PQLLexer(queryString);
 	std::vector<PQLToken*> PQLTokens = tokeniser.tokenise();
 	PQLParser parser = PQLParser(PQLTokens);
 
@@ -288,7 +288,7 @@ TEST_CASE("Valid synonym after select - pattern Keyword as synonym Query parse i
 	std::vector<QueryArgument> clauseArgs;
 	std::unordered_set<std::string> usedSynonyms;
 	std::string queryString = "if if; Select if";
-	Tokeniser tokeniser = Tokeniser(queryString);
+	PQLLexer tokeniser = PQLLexer(queryString);
 	std::vector<PQLToken*> PQLTokens = tokeniser.tokenise();
 	PQLParser parser = PQLParser(PQLTokens);
 
@@ -308,7 +308,7 @@ TEST_CASE("Valid synonym after select - pattern Keyword as synonym Query parse w
 	std::vector<QueryArgument> clauseArgs;
 	std::unordered_set<std::string> usedSynonyms;
 	std::string queryString = "while while; Select while";
-	Tokeniser tokeniser = Tokeniser(queryString);
+	PQLLexer tokeniser = PQLLexer(queryString);
 	std::vector<PQLToken*> PQLTokens = tokeniser.tokenise();
 	PQLParser parser = PQLParser(PQLTokens);
 
@@ -328,7 +328,7 @@ TEST_CASE("Valid synonym after select - pattern Keyword as synonym Query parse a
 	std::vector<QueryArgument> clauseArgs;
 	std::unordered_set<std::string> usedSynonyms;
 	std::string queryString = "assign assign; Select assign";
-	Tokeniser tokeniser = Tokeniser(queryString);
+	PQLLexer tokeniser = PQLLexer(queryString);
 	std::vector<PQLToken*> PQLTokens = tokeniser.tokenise();
 	PQLParser parser = PQLParser(PQLTokens);
 
@@ -348,7 +348,7 @@ TEST_CASE("Valid synonym after select - pattern Keyword as synonym Query parse v
 	std::vector<QueryArgument> clauseArgs;
 	std::unordered_set<std::string> usedSynonyms;
 	std::string queryString = "variable variable; Select variable";
-	Tokeniser tokeniser = Tokeniser(queryString);
+	PQLLexer tokeniser = PQLLexer(queryString);
 	std::vector<PQLToken*> PQLTokens = tokeniser.tokenise();
 	PQLParser parser = PQLParser(PQLTokens);
 
@@ -368,7 +368,7 @@ TEST_CASE("Valid synonym after select - pattern Keyword as synonym Query parse p
 	std::vector<QueryArgument> clauseArgs;
 	std::unordered_set<std::string> usedSynonyms;
 	std::string queryString = "procedure procedure; Select procedure";
-	Tokeniser tokeniser = Tokeniser(queryString);
+	PQLLexer tokeniser = PQLLexer(queryString);
 	std::vector<PQLToken*> PQLTokens = tokeniser.tokenise();
 	PQLParser parser = PQLParser(PQLTokens);
 
@@ -388,7 +388,7 @@ TEST_CASE("Valid synonym after select - pattern Keyword as synonym Query parse c
 	std::vector<QueryArgument> clauseArgs;
 	std::unordered_set<std::string> usedSynonyms;
 	std::string queryString = "constant constant; Select constant";
-	Tokeniser tokeniser = Tokeniser(queryString);
+	PQLLexer tokeniser = PQLLexer(queryString);
 	std::vector<PQLToken*> PQLTokens = tokeniser.tokenise();
 	PQLParser parser = PQLParser(PQLTokens);
 
@@ -408,7 +408,7 @@ TEST_CASE("Parsing of multiple declarations") {
 	std::vector<QueryArgument> clauseArgs;
 	std::unordered_set<std::string> usedSynonyms;
 	std::string queryString = "constant c1,c2; stmt s; Select c2 ";
-	Tokeniser tokeniser = Tokeniser(queryString);
+	PQLLexer tokeniser = PQLLexer(queryString);
 	std::vector<PQLToken*> PQLTokens = tokeniser.tokenise();
 	PQLParser parser = PQLParser(PQLTokens);
 
@@ -428,7 +428,7 @@ TEST_CASE("Parsing of multiple declarations") {
 
 TEST_CASE("invalid synonym") {
 	std::string queryString = "while 1w; Select 1w ";
-	Tokeniser tokeniser = Tokeniser(queryString);
+	PQLLexer tokeniser = PQLLexer(queryString);
 	std::vector<PQLToken*> PQLTokens = tokeniser.tokenise();
 	PQLParser parser = PQLParser(PQLTokens);
 	Query actualQuery = parser.parse();
@@ -438,7 +438,7 @@ TEST_CASE("invalid synonym") {
 
 TEST_CASE("integer as synonym") {
 	std::string queryString = "variable 1; Select 1 ";
-	Tokeniser tokeniser = Tokeniser(queryString);
+	PQLLexer tokeniser = PQLLexer(queryString);
 	std::vector<PQLToken*> PQLTokens = tokeniser.tokenise();
 	PQLParser parser = PQLParser(PQLTokens);
 	Query actualQuery = parser.parse();
@@ -448,7 +448,7 @@ TEST_CASE("integer as synonym") {
 
 TEST_CASE("result synonym does not exist") {
 	std::string queryString = "constant c; Select c1 ";
-	Tokeniser tokeniser = Tokeniser(queryString);
+	PQLLexer tokeniser = PQLLexer(queryString);
 	std::vector<PQLToken*> PQLTokens = tokeniser.tokenise();
 	PQLParser parser = PQLParser(PQLTokens);
 	Query actualQuery = parser.parse();
@@ -458,7 +458,7 @@ TEST_CASE("result synonym does not exist") {
 
 TEST_CASE("missing declarations") {
 	std::string queryString = "read ; Select r1 ";
-	Tokeniser tokeniser = Tokeniser(queryString);
+	PQLLexer tokeniser = PQLLexer(queryString);
 	std::vector<PQLToken*> PQLTokens = tokeniser.tokenise();
 	PQLParser parser = PQLParser(PQLTokens);
 	Query actualQuery = parser.parse();
@@ -468,7 +468,7 @@ TEST_CASE("missing declarations") {
 
 TEST_CASE("missing semi colon") {
 	std::string queryString = "constant c Select c";
-	Tokeniser tokeniser = Tokeniser(queryString);
+	PQLLexer tokeniser = PQLLexer(queryString);
 	std::vector<PQLToken*> PQLTokens = tokeniser.tokenise();
 	PQLParser parser = PQLParser(PQLTokens);
 	Query actualQuery = parser.parse();
@@ -478,7 +478,7 @@ TEST_CASE("missing semi colon") {
 
 TEST_CASE("no result synonym after select") {
 	std::string queryString = "assign a; Select  ";
-	Tokeniser tokeniser = Tokeniser(queryString);
+	PQLLexer tokeniser = PQLLexer(queryString);
 	std::vector<PQLToken*> PQLTokens = tokeniser.tokenise();
 	PQLParser parser = PQLParser(PQLTokens);
 	Query actualQuery = parser.parse();
@@ -488,7 +488,7 @@ TEST_CASE("no result synonym after select") {
 
 TEST_CASE("missing declaration statement") {
 	std::string queryString = "a; Select  a";
-	Tokeniser tokeniser = Tokeniser(queryString);
+	PQLLexer tokeniser = PQLLexer(queryString);
 	std::vector<PQLToken*> PQLTokens = tokeniser.tokenise();
 	PQLParser parser = PQLParser(PQLTokens);
 	Query actualQuery = parser.parse();
@@ -498,7 +498,7 @@ TEST_CASE("missing declaration statement") {
 
 TEST_CASE("missing Select statement") {
 	std::string queryString = "assign a;  a";
-	Tokeniser tokeniser = Tokeniser(queryString);
+	PQLLexer tokeniser = PQLLexer(queryString);
 	std::vector<PQLToken*> PQLTokens = tokeniser.tokenise();
 	PQLParser parser = PQLParser(PQLTokens);
 	Query actualQuery = parser.parse();

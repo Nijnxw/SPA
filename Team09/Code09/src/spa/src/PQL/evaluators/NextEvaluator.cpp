@@ -1,7 +1,9 @@
 #include "NextEvaluator.h"
 
 NextEvaluator::NextEvaluator()
-	: StmtStmtRelationshipEvaluator() {}
+	: StmtStmtRelationshipEvaluator() {
+	isNextTCacheComplete = false;
+}
 
 QueryClauseResult NextEvaluator::getRelationship(RelationRef relationship, const std::string& LHS, const std::string& RHS, EntityType LHSType, EntityType RHSType,
 	bool isBooleanResult) {
@@ -41,30 +43,41 @@ QueryClauseResult NextEvaluator::getNextTByStatementNumber(const std::string& LH
 
 	int LHSInt = std::stoi(LHS);
 
-	if (LHSInt < 1 || LHSInt > cfg.size() - 1) {
-		return queryResult;
-	}
-
-	std::unordered_set<int> reachableNodes = getReachableNodes(LHSInt, cfg);
-
-	if (reachableNodes.size() <= 0) {
+	if (isNodeNotInCFG(LHSInt, cfg)) {
 		return queryResult;
 	}
 
 	if (RHSType == EntityType::INT) { // Next*(1, 2)
 		int RHSInt = std::stoi(RHS);
-		if (RHSInt < 1 || RHSInt > cfg.size() - 1) {
+
+		if (isNodeNotInCFG(RHSInt, cfg)) {
 			return queryResult;
-		} 
-		queryResult.setBooleanResult(reachableNodes.count(RHSInt) > 0);
-	}
-	else if (RHSType == EntityType::STMT || RHSType == EntityType::ASSIGN || RHSType == EntityType::IF ||
+		}
+
+		if (nextTCache.count(LHSInt) > 0) {
+			if (nextTCache.at(LHSInt).count(RHSInt) > 0) {
+				queryResult.setBooleanResult(true);
+			}
+		} else {
+			queryResult.setBooleanResult(isReachableFromNode(LHSInt, RHSInt, cfg, true));
+		}
+	} else if (RHSType == EntityType::STMT || RHSType == EntityType::ASSIGN || RHSType == EntityType::IF ||
 		RHSType == EntityType::WHILE || RHSType == EntityType::PRINT || RHSType == EntityType::READ ||
 		RHSType == EntityType::CALL) { // Next*(1, s)
-		queryResult.addColumn(RHS, StmtStmtRelationshipEvaluator::filterStatementsByType(reachableNodes, RHSType));
-	}
-	else if (RHSType == EntityType::WILD) { // Next*(1, _)
-		queryResult.setBooleanResult(reachableNodes.size() > 0);
+		if (isNextTCacheComplete) {
+			queryResult.addColumn(RHS, StmtStmtRelationshipEvaluator::filterStatementsByType(nextTCache[LHSInt], RHSType));
+		}
+		else {
+			std::unordered_set<int> reachableNodes = getReachableNodes(LHSInt, cfg, true);
+
+			if (reachableNodes.size() <= 0) {
+				return queryResult;
+			}
+
+			queryResult.addColumn(RHS, StmtStmtRelationshipEvaluator::filterStatementsByType(reachableNodes, RHSType));
+		}
+	} else if (RHSType == EntityType::WILD) { // Next*(1, _)
+		queryResult.setBooleanResult(hasNeighbours(LHSInt, cfg));
 	}
 
 	return queryResult;
@@ -78,19 +91,29 @@ QueryClauseResult NextEvaluator::getNextTByStatementVariable(const std::string& 
 
 		int RHSInt = std::stoi(RHS);
 
-		if (RHSInt < 1 || RHSInt > cfg.size() - 1) {
+		if (isNodeNotInCFG(RHSInt, cfg)) {
 			return queryResult;
 		}
 
-		std::vector<std::unordered_set<int>> reversedCfg = PKB::getReversedCFG();
+		if (isNextTCacheComplete) {
+			queryResult.addColumn(LHS, StmtStmtRelationshipEvaluator::filterStatementsByType(nextTCache[RHSInt], LHSType));
+		}
+		else {
+			std::vector<std::unordered_set<int>> reversedCfg = PKB::getReversedCFG();
 
-		std::unordered_set<int> reachableNodes = getReachableNodes(RHSInt, reversedCfg);
-		queryResult.addColumn(LHS, StmtStmtRelationshipEvaluator::filterStatementsByType(reachableNodes, LHSType));
-	}
-	else if (RHSType == EntityType::STMT || RHSType == EntityType::ASSIGN || RHSType == EntityType::IF ||
+			std::unordered_set<int> reachableNodes = getReachableNodes(RHSInt, reversedCfg, false);
+			queryResult.addColumn(LHS, StmtStmtRelationshipEvaluator::filterStatementsByType(reachableNodes, LHSType));
+		}
+	} else if (RHSType == EntityType::STMT || RHSType == EntityType::ASSIGN || RHSType == EntityType::IF ||
 		RHSType == EntityType::WHILE || RHSType == EntityType::PRINT || RHSType == EntityType::READ ||
 		RHSType == EntityType::CALL) { // Next*(s1, s2)
-		std::unordered_map<int, std::unordered_set<int>> nextTPairs = getAllNextTPairs();
+		std::unordered_map<int, std::unordered_set<int>> nextTPairs;
+
+		if (isNextTCacheComplete) {
+			nextTPairs = nextTCache;
+		} else {
+			nextTPairs = getAllNextTPairs();
+		}
 
 		auto [firstEntities, secondEntities] = PKBUtils::convertMapWithSetToVectorTuple(nextTPairs);
 		auto [filteredFirst, filteredSecond] = StmtStmtRelationshipEvaluator::filterStatementPairsByType(firstEntities, secondEntities, LHSType, RHSType);
@@ -103,10 +126,8 @@ QueryClauseResult NextEvaluator::getNextTByStatementVariable(const std::string& 
 			queryResult.addColumn(LHS, filteredFirst);
 			queryResult.addColumn(RHS, filteredSecond);
 		}
-	}
-	else if (RHSType == EntityType::WILD) { // Next*(s, _)
-		std::unordered_map<int, std::unordered_set<int>> nextTPairs = getAllNextTPairs();
-		std::unordered_set<int> statements = PKBUtils::getKeySetFromMap(nextTPairs);
+	} else if (RHSType == EntityType::WILD) { // Next*(s, _)
+		std::unordered_set<int> statements = PKB::getAllStmtStmtFirstEntities(RelationRef::NEXT);
 		queryResult.addColumn(LHS, StmtStmtRelationshipEvaluator::filterStatementsByType(statements, LHSType));
 	}
 
@@ -120,23 +141,19 @@ QueryClauseResult NextEvaluator::getNextTByUnderscore(const std::string& RHS, En
 
 		int RHSInt = std::stoi(RHS);
 
-		if (RHSInt < 1 || RHSInt > cfg.size() - 1) {
+		if (isNodeNotInCFG(RHSInt, cfg)) {
 			return queryResult;
 		}
 
 		std::vector<std::unordered_set<int>> reversedCfg = PKB::getReversedCFG();
 
-		std::unordered_set<int> reachableNodes = getReachableNodes(RHSInt, reversedCfg);
-		queryResult.setBooleanResult(reachableNodes.size() > 0);
-	}
-	else if (RHSType == EntityType::STMT || RHSType == EntityType::ASSIGN || RHSType == EntityType::IF ||
+		queryResult.setBooleanResult(hasNeighbours(RHSInt, reversedCfg));
+	} else if (RHSType == EntityType::STMT || RHSType == EntityType::ASSIGN || RHSType == EntityType::IF ||
 		RHSType == EntityType::WHILE || RHSType == EntityType::PRINT || RHSType == EntityType::READ ||
 		RHSType == EntityType::CALL) { // Next*(_, s)
-		std::unordered_map<int, std::unordered_set<int>> nextTPairs = getAllNextTPairs();
-		std::unordered_set<int> statements = PKBUtils::getValueSetFromMapWithSet(nextTPairs);
+		std::unordered_set<int> statements = PKB::getAllStmtStmtSecondEntities(RelationRef::NEXT);
 		queryResult.addColumn(RHS, StmtStmtRelationshipEvaluator::filterStatementsByType(statements, RHSType));
-	}
-	else if (RHSType == EntityType::WILD) { // Next*(_, _)
+	} else if (RHSType == EntityType::WILD) { // Next*(_, _)
 		if (PKB::hasNextRelationship()) {
 			queryResult.setBooleanResult(true);
 		}
@@ -145,7 +162,53 @@ QueryClauseResult NextEvaluator::getNextTByUnderscore(const std::string& RHS, En
 	return queryResult;
 }
 
-std::unordered_set<int> NextEvaluator::getReachableNodes(int startNode, std::vector<std::unordered_set<int>>& cfg) {
+bool NextEvaluator::isNodeNotInCFG(int node, std::vector<std::unordered_set<int>>& cfg) {
+	return node < 1 || node > cfg.size() - 1;
+}
+
+bool NextEvaluator::hasNeighbours(int startNode, std::vector<std::unordered_set<int>>& cfg) {
+	return cfg.at(startNode).size() > 0;
+}
+
+bool NextEvaluator::isReachableFromNode(int startNode, int endNode, std::vector<std::unordered_set<int>>& cfg, bool isForwardCfg) {
+	int numNodes = cfg.size();
+	bool* visited = new bool[numNodes];
+
+	// Take note that index 0 is never used.
+	for (int i = 0; i < numNodes; i++) {
+		visited[i] = false;
+	}
+
+	std::list<int> queue;
+	queue.push_back(startNode);
+
+	while (!queue.empty()) {
+		int currNode = queue.front();
+		queue.pop_front();
+
+		for (const auto& neighbour : cfg.at(currNode)) {
+			
+			if (isForwardCfg) {
+				nextTCache[currNode].emplace(neighbour);
+			} else {
+				revNextTCache[currNode].emplace(neighbour);
+			}
+
+			if (neighbour == endNode) {
+				return true;
+			}
+
+			if (!visited[neighbour]) {
+				visited[neighbour] = true;
+				queue.push_back(neighbour);
+			}
+		}
+	}
+
+	return false;
+}
+
+std::unordered_set<int> NextEvaluator::getReachableNodes(int startNode, std::vector<std::unordered_set<int>>& cfg, bool isForwardCfg) {
 	int numNodes = cfg.size();
 	bool* visited = new bool[numNodes];
 
@@ -164,6 +227,12 @@ std::unordered_set<int> NextEvaluator::getReachableNodes(int startNode, std::vec
 		queue.pop_front();
 
 		for (const auto& neighbour : cfg.at(currNode)) {
+			if (isForwardCfg) {
+				nextTCache[currNode].emplace(neighbour);
+			} else {
+				revNextTCache[currNode].emplace(neighbour);
+			}
+
 			if (!visited[neighbour]) {
 				visited[neighbour] = true;
 				queue.push_back(neighbour);
@@ -189,6 +258,8 @@ std::unordered_map<int, std::unordered_set<int>> NextEvaluator::getAllNextTPairs
 		}
 	}
 
+	isNextTCacheComplete = true;
+
 	return nextTPairs;
 }
 
@@ -201,6 +272,8 @@ void NextEvaluator::modifiedDFS(int currNode, const std::vector<std::unordered_s
 	}
 	
 	for (const auto& reachableNode : reachableNodes) {
+		nextTCache[currNode].emplace(reachableNode);
+		revNextTCache[reachableNode].emplace(currNode);
 		PKBUtils::addToMapWithSet(nextTPairs, currNode, reachableNode);
 	}
 

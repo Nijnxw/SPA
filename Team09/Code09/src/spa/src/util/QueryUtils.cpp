@@ -210,9 +210,9 @@ std::unordered_set<std::string> QueryUtils::stringifyRows(Table table, std::vect
 	auto numRows = table.at(colOrder.front()).size();
 	for (auto i = 0; i < numRows; i++) {
 		std::string row;
-		for (const auto& col: colOrder) {
-			row += table.at(col).at(i);
-			if (col != colOrder.back()) {
+		for (auto it = colOrder.begin(); it != colOrder.end(); it++) {
+			row += table.at(*it).at(i);
+			if (next(it) != colOrder.end()) {
 				row += " ";
 			}
 		}

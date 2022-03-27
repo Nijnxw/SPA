@@ -7,7 +7,7 @@
 ClauseEvaluator QueryEvaluator::clauseEvaluator{};
 
 Table QueryEvaluator::evaluate(Query& query) {
-	std::unordered_set<QueryArgument, std::hash<QueryArgument>> selectSynNotInClauses;
+	std::unordered_set<QueryArgument, std::hash<QueryArgument>, QueryArgumentSetEqual> selectSynNotInClauses;
 	std::unordered_set<QueryArgument, std::hash<QueryArgument>> synWithRef;
 	std::vector<QueryClause> clausesWithoutSyn;
 	std::vector<OptimizerGroup> clauseGroups;
@@ -53,7 +53,7 @@ Table QueryEvaluator::evaluateBooleanQuery(const std::vector<QueryClause>& claus
 }
 
 Table QueryEvaluator::evaluateNormalQuery(const std::unordered_set<std::string>& resultSynSet,
-										  const std::unordered_set<QueryArgument, std::hash<QueryArgument>>& selectSynNotInClauses,
+										  const std::unordered_set<QueryArgument, std::hash<QueryArgument>, QueryArgumentSetEqual>& selectSynNotInClauses,
 										  const std::unordered_set<QueryArgument, std::hash<QueryArgument>>& synWithRef,
 										  const std::vector<QueryClause>& clausesWithoutSyn,
 										  const std::vector<OptimizerGroup>& clauseGroups) {
@@ -108,7 +108,8 @@ bool QueryEvaluator::evaluateClausesWithoutSyn(const std::vector<QueryClause>& c
 }
 
 std::vector<QueryClauseResult>
-QueryEvaluator::evaluateSynNotInClause(const std::unordered_set<QueryArgument, std::hash<QueryArgument>>& syns) {
+QueryEvaluator::evaluateSynNotInClause(
+	const std::unordered_set<QueryArgument, std::hash<QueryArgument>, QueryArgumentSetEqual>& syns) {
 	std::vector<QueryClauseResult> results;
 	for (const auto& syn: syns) {
 		QueryClauseResult entityResult;

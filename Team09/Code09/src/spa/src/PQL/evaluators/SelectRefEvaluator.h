@@ -9,7 +9,8 @@
 
 class SelectRefEvaluator {
 public:
-	static void evaluate(Table& results, const std::unordered_set<QueryArgument, std::hash<QueryArgument>>& args);
+	static void evaluate(Table& results,
+						 const std::unordered_set<QueryArgument, std::hash<QueryArgument>>& args);
 private:
 	static void supplementResults(Table& results, const QueryArgument& arg);
 };

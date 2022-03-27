@@ -1,7 +1,8 @@
 #include "SelectRefEvaluator.h"
 
 void
-SelectRefEvaluator::evaluate(Table& results, const std::unordered_set<QueryArgument, std::hash<QueryArgument>>& args) {
+SelectRefEvaluator::evaluate(Table& results,
+							 const std::unordered_set<QueryArgument, std::hash<QueryArgument>>& args) {
 	for (const auto& arg: args) {
 		supplementResults(results, arg);
 	}

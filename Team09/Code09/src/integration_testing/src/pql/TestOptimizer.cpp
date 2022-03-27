@@ -75,7 +75,7 @@ TEST_CASE("Test optimizer extraction logic") {
 	};
 	Query query = {resultSyns, clauses, false};
 
-	std::unordered_set<QueryArgument, std::hash<QueryArgument>> actualSynNotInClauses;
+	std::unordered_set<QueryArgument, std::hash<QueryArgument>, QueryArgumentSetEqual> actualSynNotInClauses;
 	std::unordered_set<QueryArgument, std::hash<QueryArgument>> actualSynWithRef;
 	std::vector<QueryClause> actualClausesWithoutSyn;
 	std::vector<OptimizerGroup> actualGroupClauses;
@@ -96,7 +96,8 @@ TEST_CASE("Test optimizer extraction logic") {
 	group3.addEdge(clause4);
 	group3.addEdge(clause5);
 
-	std::unordered_set<QueryArgument, std::hash<QueryArgument>> expectedSynNotInClauses = {{"s", EntityType::STMT}};
+	std::unordered_set<QueryArgument, std::hash<QueryArgument>, QueryArgumentSetEqual> expectedSynNotInClauses = {
+		{"s", EntityType::STMT}};
 	std::vector<QueryClause> expectedClausesWithoutSyn = {clause9};
 	std::vector<OptimizerGroup> expectedGroupClauses = {group2, group1, group3};
 

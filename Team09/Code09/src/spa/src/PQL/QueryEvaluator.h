@@ -20,7 +20,7 @@ private:
 	static Table evaluateBooleanQuery(const std::vector<QueryClause>& clausesWithoutSyn,
 									  const std::vector<OptimizerGroup>& groupsWithoutSelect);
 	static Table evaluateNormalQuery(const std::unordered_set<std::string>& resultSynSet,
-									 const std::unordered_set<QueryArgument, std::hash<QueryArgument>>& selectSynNotInClauses,
+									 const std::unordered_set<QueryArgument, std::hash<QueryArgument>, QueryArgumentSetEqual>& selectSynNotInClauses,
 									 const std::unordered_set<QueryArgument, std::hash<QueryArgument>>& refInClauses,
 									 const std::vector<QueryClause>& clausesWithoutSyn,
 									 const std::vector<OptimizerGroup>& clauseGroups);
@@ -33,7 +33,8 @@ private:
 
 	static bool evaluateClausesWithoutSyn(const std::vector<QueryClause>& clauses);
 	static std::vector<QueryClauseResult>
-	evaluateSynNotInClause(const std::unordered_set<QueryArgument, std::hash<QueryArgument>>& syns);
+	evaluateSynNotInClause(
+		const std::unordered_set<QueryArgument, std::hash<QueryArgument>, QueryArgumentSetEqual>& syns);
 	static bool evaluateGroupWithoutSelect(const OptimizerGroup& group);
 	static Table evaluateGroupWithSelect(const OptimizerGroup& group);
 };

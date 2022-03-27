@@ -1,11 +1,11 @@
 #include "Optimizer.h"
 
-std::tuple<std::unordered_set<QueryArgument, std::hash<QueryArgument>>, std::unordered_set<QueryArgument, std::hash<QueryArgument>>, std::vector<QueryClause>, std::vector<OptimizerGroup>>
+std::tuple<std::unordered_set<QueryArgument, std::hash<QueryArgument>, QueryArgumentSetEqual>, std::unordered_set<QueryArgument, std::hash<QueryArgument>>, std::vector<QueryClause>, std::vector<OptimizerGroup>>
 Optimizer::optimize(Query& query) {
 
 	OptimizerQuery queryGraph;
 	std::unordered_set<std::string> usedSynonyms;
-	std::unordered_set<QueryArgument, std::hash<QueryArgument>> synNotInClauses;
+	std::unordered_set<QueryArgument, std::hash<QueryArgument>, QueryArgumentSetEqual> synNotInClauses;
 	std::unordered_set<QueryArgument, std::hash<QueryArgument>> synWithRef;
 	std::vector<QueryClause> clausesWithoutSyn;        // each of these clauses return a boolean (should evaluate first)
 	std::vector<OptimizerGroup> clauseGroups;

@@ -22,6 +22,12 @@ private:
 	AttributeRef attributeRef;
 };
 
+struct QueryArgumentSetEqual {
+	bool operator()(const QueryArgument& arg1, const QueryArgument& arg2) const {
+		return arg1.getValue() == arg2.getValue();
+	}
+};
+
 template<>
 struct std::hash<QueryArgument> {
 	std::size_t operator()(const QueryArgument& arg) const {

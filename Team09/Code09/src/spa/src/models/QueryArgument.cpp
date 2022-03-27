@@ -1,11 +1,11 @@
 #include <string>
 #include "QueryArgument.h"
 
-QueryArgument::QueryArgument(const std::string& value, EntityType type, AttributeRef attributeRef) 
+QueryArgument::QueryArgument(const std::string& value, EntityType type, AttributeRef attributeRef)
 	: value(value), type(type), attributeRef(attributeRef) {}
 
-const std::string& QueryArgument::getValue() const {
-    return value;
+std::string QueryArgument::getValue() const {
+	return value;
 }
 
 EntityType QueryArgument::getType() const {
@@ -14,4 +14,8 @@ EntityType QueryArgument::getType() const {
 
 AttributeRef QueryArgument::getAttrRef() const {
 	return attributeRef;
+}
+
+std::string QueryArgument::toString() const {
+	return value + ToString(attributeRef);
 }

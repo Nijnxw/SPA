@@ -7,12 +7,13 @@
 class QueryArgument {
 public:
 	QueryArgument(const std::string& value, EntityType type, AttributeRef attributeRef = AttributeRef::NONE);
-	const std::string& getValue() const;
+	std::string getValue() const;
 	EntityType getType() const;
 	AttributeRef getAttrRef() const;
+	std::string toString() const;
 
 	bool operator==(const QueryArgument& other) const {
-		return type == other.getType() && value == other.getValue() && attributeRef == other.getAttrRef() ;
+		return type == other.type && value == other.value && attributeRef == other.attributeRef;
 	}
 
 private:

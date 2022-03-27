@@ -7,7 +7,8 @@
 ClauseEvaluator QueryEvaluator::clauseEvaluator{};
 
 Table QueryEvaluator::evaluate(Query& query) {
-	std::vector<QueryArgument> selectSynNotInClauses;
+	std::unordered_set<QueryArgument, std::hash<QueryArgument>> selectSynNotInClauses;
+	std::unordered_set<QueryArgument, std::hash<QueryArgument>> synWithRef;
 	std::vector<QueryClause> clausesWithoutSyn;
 	std::vector<OptimizerGroup> clauseGroups;
 
@@ -15,7 +16,7 @@ Table QueryEvaluator::evaluate(Query& query) {
 		return {};
 	}
 
-	std::tie(selectSynNotInClauses, clausesWithoutSyn, clauseGroups) = Optimizer::optimize(
+	std::tie(selectSynNotInClauses, synWithRef, clausesWithoutSyn, clauseGroups) = Optimizer::optimize(
 		query);
 
 	if (query.isBooleanQuery()) {
@@ -29,7 +30,7 @@ Table QueryEvaluator::evaluate(Query& query) {
 	std::transform(resultSyns.begin(), resultSyns.end(), std::inserter(resultSynSet, resultSynSet.begin()),
 				   [](const QueryArgument& arg) -> std::string { return arg.getValue(); });
 
-	return evaluateNormalQuery(resultSynSet, selectSynNotInClauses, clausesWithoutSyn, clauseGroups);
+	return evaluateNormalQuery(resultSynSet, selectSynNotInClauses, synWithRef, clausesWithoutSyn, clauseGroups);
 }
 
 Table QueryEvaluator::evaluateBooleanQuery(const std::vector<QueryClause>& clausesWithoutSyn,
@@ -52,7 +53,8 @@ Table QueryEvaluator::evaluateBooleanQuery(const std::vector<QueryClause>& claus
 }
 
 Table QueryEvaluator::evaluateNormalQuery(const std::unordered_set<std::string>& resultSynSet,
-										  const std::vector<QueryArgument>& selectSynNotInClauses,
+										  const std::unordered_set<QueryArgument, std::hash<QueryArgument>>& selectSynNotInClauses,
+										  const std::unordered_set<QueryArgument, std::hash<QueryArgument>>& synWithRef,
 										  const std::vector<QueryClause>& clausesWithoutSyn,
 										  const std::vector<OptimizerGroup>& clauseGroups) {
 
@@ -72,6 +74,8 @@ Table QueryEvaluator::evaluateNormalQuery(const std::unordered_set<std::string>&
 			if (intermediateRes.empty()) {
 				return {};
 			}
+
+			filterIntermediateResults(intermediateRes, resultSynSet);
 			groupWithSelectResults.push_back(intermediateRes);
 			continue;
 		}
@@ -79,16 +83,18 @@ Table QueryEvaluator::evaluateNormalQuery(const std::unordered_set<std::string>&
 			return {};
 		}
 	}
-
+	Table finalResults;
 	if (!groupWithSelectResults.empty() && selectSynNotInClauses.empty()) {
-		return mergeGroupResults(groupWithSelectResults);
+		finalResults = mergeGroupResults(groupWithSelectResults);
 	} else if (groupWithSelectResults.empty() && !selectSynNotInClauses.empty()) {
-		return mergeGroupResults(entityResults);
+		finalResults = mergeGroupResults(entityResults);
 	} else {
 		Table synNotInClausesResults = mergeGroupResults(entityResults);
 		Table clausesWithSelectResults = mergeGroupResults(groupWithSelectResults);
-		return QueryUtils::crossProduct(synNotInClausesResults, clausesWithSelectResults);
+		finalResults = QueryUtils::crossProduct(synNotInClausesResults, clausesWithSelectResults);
 	}
+	SelectRefEvaluator::evaluate(finalResults, synWithRef);
+	return finalResults;
 }
 
 bool QueryEvaluator::evaluateClausesWithoutSyn(const std::vector<QueryClause>& clauses) {
@@ -101,10 +107,12 @@ bool QueryEvaluator::evaluateClausesWithoutSyn(const std::vector<QueryClause>& c
 	return true;
 }
 
-std::vector<QueryClauseResult> QueryEvaluator::evaluateSynNotInClause(const std::vector<QueryArgument>& syns) {
+std::vector<QueryClauseResult>
+QueryEvaluator::evaluateSynNotInClause(const std::unordered_set<QueryArgument, std::hash<QueryArgument>>& syns) {
 	std::vector<QueryClauseResult> results;
 	for (const auto& syn: syns) {
-		QueryClauseResult entityResult = EntityEvaluator::evaluate(syn);
+		QueryClauseResult entityResult;
+		entityResult = EntityEvaluator::evaluate(syn);
 		if (!entityResult.containsValidResult()) {
 			return {};
 		}
@@ -203,4 +211,15 @@ Table QueryEvaluator::mergeRelatedClauseResults(const std::vector<QueryClauseRes
 	}
 
 	return finalResults;
+}
+
+void QueryEvaluator::filterIntermediateResults(Table& results, const std::unordered_set<std::string>& resultSynSet) {
+	for (auto it = results.begin(); it != results.end();) {
+		if (resultSynSet.find(it->first) == resultSynSet.end()) {
+			it = results.erase(it);
+		} else {
+			it++;
+		}
+	}
+
 }

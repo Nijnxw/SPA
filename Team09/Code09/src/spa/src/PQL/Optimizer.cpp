@@ -1,11 +1,12 @@
 #include "Optimizer.h"
 
-std::tuple<std::vector<QueryArgument>, std::vector<QueryClause>, std::vector<OptimizerGroup>>
+std::tuple<std::unordered_set<QueryArgument, std::hash<QueryArgument>>, std::unordered_set<QueryArgument, std::hash<QueryArgument>>, std::vector<QueryClause>, std::vector<OptimizerGroup>>
 Optimizer::optimize(Query& query) {
 
 	OptimizerQuery queryGraph;
 	std::unordered_set<std::string> usedSynonyms;
-	std::vector<QueryArgument> synNotInClauses = query.getResultSynonyms();
+	std::unordered_set<QueryArgument, std::hash<QueryArgument>> synNotInClauses;
+	std::unordered_set<QueryArgument, std::hash<QueryArgument>> synWithRef;
 	std::vector<QueryClause> clausesWithoutSyn;        // each of these clauses return a boolean (should evaluate first)
 	std::vector<OptimizerGroup> clauseGroups;
 
@@ -24,11 +25,17 @@ Optimizer::optimize(Query& query) {
 	clauseGroups = queryGraph.groupClauses();
 	std::sort(clauseGroups.begin(), clauseGroups.end());
 
-	synNotInClauses.erase(std::remove_if(synNotInClauses.begin(), synNotInClauses.end(),
-										 [&](const QueryArgument& arg) {
-											 return usedSynonyms.count(arg.getValue());
-										 }),
-						  synNotInClauses.end());
+	for (const auto& syn: query.getResultSynonyms()) {
+		if (usedSynonyms.find(syn.getValue()) == usedSynonyms.end()) {
+			synNotInClauses.insert(syn);
+		}
+	}
 
-	return {synNotInClauses, clausesWithoutSyn, clauseGroups};
+	for (const auto& syn: query.getResultSynonyms()) {
+		if (syn.getAttrRef() != AttributeRef::NONE) {
+			synWithRef.insert(syn);
+		}
+	}
+
+	return {synNotInClauses, synWithRef, clausesWithoutSyn, clauseGroups};
 }

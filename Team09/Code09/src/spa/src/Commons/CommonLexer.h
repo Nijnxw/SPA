@@ -14,6 +14,8 @@ protected:
     bool notEOF();
     bool isValidInt(std::string str);
     bool isValidName(std::string str);
+    void readName();
+    void readInteger();
 
 private:
     std::istream* stream;

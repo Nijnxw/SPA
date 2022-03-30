@@ -9,10 +9,6 @@
 #include <vector>
 
 class SPLexer: CommonLexer {
-    private:
-        void readName();
-        void readInteger();
-
     public:
         std::vector<SPToken*> tokens;
         explicit SPLexer(std::istream* new_stream);

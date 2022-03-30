@@ -2,18 +2,6 @@
 
 SPLexer::SPLexer(std::istream* new_stream) : CommonLexer(new_stream){}
 
-void SPLexer::readName() {
-	while (isalnum(peek()) != 0) {
-		nextStr += next();
-	}
-}
-
-void SPLexer::readInteger() {
-	while(isdigit(peek()) != 0) {
-		nextStr += next();
-	}
-}
-
 std::vector<SPToken*> SPLexer::tokenize() {
 	char nextChar;
     while (notEOF()) {

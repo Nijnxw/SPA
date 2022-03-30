@@ -16,5 +16,8 @@ private:
 	void processRawToken(std::string rawToken);
 	void pushToken();
 	void pushSymbolToken(char nextChar);
+	void readString();
+	bool isAllowedSymbolOutsideStringLiterals(char nextChar);
+	bool nextTokenIsAllowedSymbolAfterName(char nextChar);
 };
 

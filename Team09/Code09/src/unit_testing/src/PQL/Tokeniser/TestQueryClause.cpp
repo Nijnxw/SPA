@@ -270,3 +270,31 @@ TEST_CASE("PQL tokeniser query clause test case 8 : pattern clause and query cla
 	bool result = compareVectors(PQLTokens, expectedPQLTokens);
 	REQUIRE(result);
 }
+
+TEST_CASE("PQL tokeniser query clause test case 9 : with clause and query clause 3") {
+	std::vector<PQLToken*> expectedPQLTokens;
+	std::string queryString = "Select a with a.stmt#=1such that Uses(1, s)";
+	PQLLexer tokeniser = PQLLexer(queryString);
+
+	expectedPQLTokens.push_back(new PQLToken(TokenType::SELECT, "Select"));
+	expectedPQLTokens.push_back(new PQLToken(TokenType::SYNONYM, "a"));
+	expectedPQLTokens.push_back(new PQLToken(TokenType::WITH, "with"));
+	expectedPQLTokens.push_back(new PQLToken(TokenType::SYNONYM, "a"));
+	expectedPQLTokens.push_back(new PQLToken(TokenType::PERIOD, "."));
+	expectedPQLTokens.push_back(new PQLToken(TokenType::STMT_NO, "stmt#"));
+	expectedPQLTokens.push_back(new PQLToken(TokenType::EQUAL, "="));
+	expectedPQLTokens.push_back(new PQLToken(TokenType::INTEGER, "1"));
+	expectedPQLTokens.push_back(new PQLToken(TokenType::SUCH, "such"));
+	expectedPQLTokens.push_back(new PQLToken(TokenType::THAT, "that"));
+	expectedPQLTokens.push_back(new PQLToken(TokenType::USES, "Uses"));
+	expectedPQLTokens.push_back(new PQLToken(TokenType::OPEN_PARAN, "("));
+	expectedPQLTokens.push_back(new PQLToken(TokenType::INTEGER, "1"));
+	expectedPQLTokens.push_back(new PQLToken(TokenType::COMMA, ","));
+	expectedPQLTokens.push_back(new PQLToken(TokenType::SYNONYM, "s"));
+	expectedPQLTokens.push_back(new PQLToken(TokenType::CLOSE_PARAN, ")"));
+
+	std::vector<PQLToken*> PQLTokens = tokeniser.tokenise();
+
+	bool result = compareVectors(PQLTokens, expectedPQLTokens);
+	REQUIRE(result);
+}

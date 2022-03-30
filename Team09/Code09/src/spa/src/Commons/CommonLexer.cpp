@@ -18,3 +18,16 @@ bool CommonLexer::isValidName(std::string str) {
 	if (str.empty() || !isalpha(str[0])) { return false; }
 	return std::all_of(str.begin(), str.end(), [](char c) { return isalnum(c); });
 }
+
+void CommonLexer::readName() {
+	while (isalnum(peek()) != 0) {
+		nextStr += next();
+	} 
+
+}
+
+void CommonLexer::readInteger() {
+	while (isdigit(peek()) != 0) {
+		nextStr += next();
+	}
+}

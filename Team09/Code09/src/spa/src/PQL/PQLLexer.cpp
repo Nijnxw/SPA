@@ -2,6 +2,7 @@
 #include <cctype>
 #include <vector>
 #include <unordered_map>
+#include <unordered_set>
 #include <stdexcept>
 #include <sstream>
 #include <iostream>
@@ -43,69 +44,50 @@ void PQLLexer::pushSymbolToken(char nextChar) {
 	pushToken();
 }
 
+void PQLLexer::readString() {
+	char nextStrChar = next();
+	while (notEOF()) {
+		nextStr += nextStrChar;
+		if (nextStrChar == '"') { break; }
+		nextStrChar = next();
+	}
+}
+
+bool PQLLexer::isAllowedSymbolOutsideStringLiterals(char nextChar) {
+	std::unordered_set<char> allowedSymbols = { ';','_',',','.','=','<','>','(',')' };
+	return allowedSymbols.find(nextChar) != allowedSymbols.end();
+}
+
+bool PQLLexer::nextTokenIsAllowedSymbolAfterName(char nextChar) {
+	std::unordered_set<char> allowedSymbols = { '#','*' };
+	return allowedSymbols.find(nextChar) != allowedSymbols.end();
+}
+
 
 std::vector<PQLToken*> PQLLexer::tokenise() {
 	try {
 		char nextChar = next();
 		while (notEOF()) {
-			switch (nextChar) {
-			//Start of string
-			case '"':
-				isWithinStringLiterals = !isWithinStringLiterals;
+			if (nextChar == '"') {
 				nextStr += nextChar;
-				break;
-
-			//White spaces
-			case ' ':
-			case '\t':
-			case '\n':
-				// ignore whitespace if its within string literals
-				if (!isWithinStringLiterals) {
-					pushToken();
-				} else {
-					nextStr += nextChar;
-				}
-				break;
-
-			//operator symbols that only appear within string literals
-			case '+':
-			case '-':
-			case '/':
-			case '%':
-				if (isWithinStringLiterals) {
-					nextStr += nextChar;
-				}
-				break;
-
-			//symbols that can appear in and outside string literals
-			case '(':
-			case ')':
-				if (isWithinStringLiterals) {
-					nextStr += nextChar;
-				} else {
-					pushSymbolToken(nextChar);
-				}
-				break;
-			
-			//symbols that does not appear in string literals at all 
-			case '_':
-			case ',':
-			case ';':
-			case '.':
-			case '<':
-			case '>':
-			case '=':
+				readString();
+			} else if (isspace(nextChar)) {
+				pushToken();
+			} else if (isalpha(nextChar)) {
+				nextStr += nextChar;
+				readName();
+				if (nextTokenIsAllowedSymbolAfterName(peek())) { nextStr += next(); }
+				pushToken();
+			} else if (isdigit(nextChar)) {
+				nextStr += nextChar;
+				readInteger();
+				pushToken();
+			} else if (isAllowedSymbolOutsideStringLiterals(nextChar)) {
 				pushSymbolToken(nextChar);
-				break;
-
-			default:
-				nextStr += nextChar;
-				break;
+			} else {
+				throw "invalid character detected ";
 			}
 			nextChar = next();
-		}
-		if (isWithinStringLiterals) {
-			throw "Unclosed string in query.";
 		}
 		pushToken();
 	}

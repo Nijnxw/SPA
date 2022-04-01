@@ -75,11 +75,14 @@ TEST_CASE("Test optimizer extraction logic") {
 	};
 	Query query = {resultSyns, clauses, false};
 
-	std::vector<QueryArgument> actualSynNotInClauses;
+	std::unordered_set<QueryArgument, std::hash<QueryArgument>, QueryArgumentSetEqual> actualSynNotInClauses;
+	std::unordered_set<QueryArgument, std::hash<QueryArgument>> actualSynWithRef;
 	std::vector<QueryClause> actualClausesWithoutSyn;
 	std::vector<OptimizerGroup> actualGroupClauses;
 
-	std::tie(actualSynNotInClauses, actualClausesWithoutSyn, actualGroupClauses) = Optimizer::optimize(query);
+	std::tie(actualSynNotInClauses, actualSynWithRef, actualClausesWithoutSyn,
+			 actualGroupClauses) = Optimizer::optimize(
+		query);
 
 	OptimizerGroup group1 = OptimizerGroup();
 	group1.addEdge(clause6);
@@ -93,11 +96,13 @@ TEST_CASE("Test optimizer extraction logic") {
 	group3.addEdge(clause4);
 	group3.addEdge(clause5);
 
-	std::vector<QueryArgument> expectedSynNotInClauses = {{"s", EntityType::STMT}};
+	std::unordered_set<QueryArgument, std::hash<QueryArgument>, QueryArgumentSetEqual> expectedSynNotInClauses = {
+		{"s", EntityType::STMT}};
 	std::vector<QueryClause> expectedClausesWithoutSyn = {clause9};
 	std::vector<OptimizerGroup> expectedGroupClauses = {group2, group1, group3};
 
 	REQUIRE(actualSynNotInClauses == expectedSynNotInClauses);
+	REQUIRE(actualSynWithRef.empty());
 	REQUIRE(actualClausesWithoutSyn == expectedClausesWithoutSyn);
 	REQUIRE(actualGroupClauses == expectedGroupClauses);
 }

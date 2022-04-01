@@ -7,18 +7,25 @@
 class QueryArgument {
 public:
 	QueryArgument(const std::string& value, EntityType type, AttributeRef attributeRef = AttributeRef::NONE);
-	const std::string& getValue() const;
+	std::string getValue() const;
 	EntityType getType() const;
 	AttributeRef getAttrRef() const;
+	std::string toString() const;
 
 	bool operator==(const QueryArgument& other) const {
-		return type == other.getType() && value == other.getValue() && attributeRef == other.getAttrRef() ;
+		return type == other.type && value == other.value && attributeRef == other.attributeRef;
 	}
 
 private:
 	std::string value;  // can either be a literal or variable name (depending on type)
 	EntityType type;
 	AttributeRef attributeRef;
+};
+
+struct QueryArgumentSetEqual {
+	bool operator()(const QueryArgument& arg1, const QueryArgument& arg2) const {
+		return arg1.getValue() == arg2.getValue();
+	}
 };
 
 template<>

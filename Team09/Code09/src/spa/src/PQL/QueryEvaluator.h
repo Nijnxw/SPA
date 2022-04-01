@@ -8,6 +8,7 @@
 #include "pkb/stores/UsesStore.h"
 #include "models/optimizer/OptimizerGroup.h"
 #include "PQL/evaluators/ClauseEvaluator.h"
+#include "PQL/evaluators/SelectRefEvaluator.h"
 
 class QueryEvaluator {
 public:
@@ -19,7 +20,8 @@ private:
 	static Table evaluateBooleanQuery(const std::vector<QueryClause>& clausesWithoutSyn,
 									  const std::vector<OptimizerGroup>& groupsWithoutSelect);
 	static Table evaluateNormalQuery(const std::unordered_set<std::string>& resultSynSet,
-									 const std::vector<QueryArgument>& selectSynNotInClauses,
+									 const std::unordered_set<QueryArgument, std::hash<QueryArgument>, QueryArgumentSetEqual>& selectSynNotInClauses,
+									 const std::unordered_set<QueryArgument, std::hash<QueryArgument>>& refInClauses,
 									 const std::vector<QueryClause>& clausesWithoutSyn,
 									 const std::vector<OptimizerGroup>& clauseGroups);
 
@@ -27,8 +29,12 @@ private:
 	static Table mergeGroupResults(const std::vector<QueryClauseResult>& results);
 	static Table mergeRelatedClauseResults(const std::vector<QueryClauseResult>& results);
 
+	static void filterIntermediateResults(Table& results, const std::unordered_set<std::string>& resultSynSet);
+
 	static bool evaluateClausesWithoutSyn(const std::vector<QueryClause>& clauses);
-	static std::vector<QueryClauseResult> evaluateSynNotInClause(const std::vector<QueryArgument>& syns);
+	static std::vector<QueryClauseResult>
+	evaluateSynNotInClause(
+		const std::unordered_set<QueryArgument, std::hash<QueryArgument>, QueryArgumentSetEqual>& syns);
 	static bool evaluateGroupWithoutSelect(const OptimizerGroup& group);
 	static Table evaluateGroupWithSelect(const OptimizerGroup& group);
 };

@@ -72,7 +72,7 @@ TEST_CASE("QueryEvaluator evaluate normal synonym queries") {
 		std::vector<QueryClause> clauses = {stClause};
 		Query query = Query(selectSynonyms, clauses, false);
 
-		QueryClauseResult expected = {{{"s", {"1", "2", "2"}}, {"v", {"a", "a", "c"}}}};
+		QueryClauseResult expected = {{{"v", {"a", "a", "c"}}}};
 		QueryClauseResult actual = {QueryEvaluator::evaluate(query)};
 
 		REQUIRE(actual == expected);
@@ -215,7 +215,7 @@ TEST_CASE("QueryEvaluator evaluate normal synonym queries") {
 		std::vector<QueryClause> clauses = {stClause, pAClause};
 		Query query = Query(selectSynonyms, clauses, false);
 
-		QueryClauseResult expected = {{{"ifs", {"1", "1", "1"}}, {"s", {"5", "6", "7"}}}};
+		QueryClauseResult expected = {{{"ifs", {"1", "1", "1"}}}};
 		QueryClauseResult actual = {QueryEvaluator::evaluate(query)};
 
 		REQUIRE(actual == expected);
@@ -345,7 +345,7 @@ TEST_CASE("QueryEvaluator evaluate normal synonym queries") {
 		std::vector<QueryClause> clauses = {stClause, pAClause};
 		Query query = Query(selectSynonyms, clauses, false);
 
-		QueryClauseResult expected = {{{"s", {"1", "1"}}, {"a", {"4", "6"}}}};
+		QueryClauseResult expected = {{{"s", {"1", "1"}}}};
 		QueryClauseResult actual = {QueryEvaluator::evaluate(query)};
 
 		REQUIRE(actual == expected);
@@ -388,11 +388,7 @@ TEST_CASE("QueryEvaluator evaluate normal synonym queries") {
 		std::vector<QueryClause> clauses = {stClause, pAClause};
 		Query query = Query(selectSynonyms, clauses, false);
 
-		QueryClauseResult expected = {
-			{{"s", {"2", "2", "4", "4", "1", "1", "4", "3"}},
-			 {"v", {"x", "x", "x", "x", "x", "x", "z", "z"}},
-			 {"a", {"2", "4", "2", "4", "2", "4", "1", "1"}}
-			}};
+		QueryClauseResult expected = {{{"a", {"2", "4", "2", "4", "2", "4", "1", "1"}}}};
 		QueryClauseResult actual = {QueryEvaluator::evaluate(query)};
 
 		REQUIRE(actual == expected);
@@ -435,7 +431,7 @@ TEST_CASE("QueryEvaluator evaluate normal synonym queries") {
 		std::vector<QueryClause> clauses = {stClause, pAClause};
 		Query query = Query(selectSynonyms, clauses, false);
 
-		QueryClauseResult expected = {{{"a", {"1", "3", "4"}}, {"v", {"y", "x", "y"}}}};
+		QueryClauseResult expected = {{{"a", {"1", "3", "4"}}}};
 		QueryClauseResult actual = {QueryEvaluator::evaluate(query)};
 
 		REQUIRE(actual == expected);
@@ -475,15 +471,14 @@ TEST_CASE("QueryEvaluator evaluate normal synonym queries") {
 			{"p", EntityType::PROC},
 			{"v", EntityType::VAR}
 		};
-		std::unordered_set<std::string> usesUsedSynonyms = {"p",
-															"v"};
+		std::unordered_set<std::string> usesUsedSynonyms = {"p", "v"};
 		QueryClause usesClause = QueryClause(RelationRef::USES, usesClauseArguments, usesUsedSynonyms);
 
 		std::vector<QueryArgument> selectSynonyms = {{"a", EntityType::ASSIGN}};
 		std::vector<QueryClause> clauses = {callsClause, pAClause, usesClause};
 		Query query = Query(selectSynonyms, clauses, false);
 
-		QueryClauseResult expected = {{{"p", {"proc1", "proc1"}}, {"v", {"x", "y"}}, {"a", {"2", "3"}}}};
+		QueryClauseResult expected = {{{"a", {"2", "3"}}}};
 		QueryClauseResult actual = {QueryEvaluator::evaluate(query)};
 
 		REQUIRE(actual == expected);
@@ -539,7 +534,6 @@ TEST_CASE("QueryEvaluator evaluate normal synonym queries") {
 
 		QueryClauseResult expected = {{
 										  {"p", {"proc1", "proc1", "proc1", "proc2", "proc2", "proc2"}},
-										  {"v", {"x", "y", "z", "x", "y", "z"}},
 										  {"a", {"2", "3", "4", "2", "3", "4"}}
 									  }};
 		QueryClauseResult actual = {QueryEvaluator::evaluate(query)};
@@ -595,7 +589,6 @@ TEST_CASE("QueryEvaluator evaluate normal synonym queries") {
 
 		QueryClauseResult expected = {{
 										  {"s", {"2", "2", "2", "3", "3", "3", "4", "4", "4"}},
-										  {"v", {"x", "y", "z", "x", "y", "z", "x", "y", "z"}},
 										  {"a", {"2", "3", "4", "2", "3", "4", "2", "3", "4"}}
 									  }};
 		QueryClauseResult actual = {QueryEvaluator::evaluate(query)};

@@ -4,6 +4,7 @@
 #include <unordered_map>
 #include <unordered_set>
 #include <vector>
+#include <sstream>
 #include "models/QueryClauseResult.h"
 
 struct PairHash {
@@ -20,9 +21,9 @@ public:
 	static Table hashJoin(const Table& firstResult, const Table& secondResult);
 	static Table crossProduct(const Table& firstResult, const Table& secondResult);
 
-	static std::unordered_set<std::string> stringifyRows(Table table, std::vector<std::string> colOrder);
+	static std::unordered_set<std::string> stringifyRows(const Table& table, const std::vector<std::string>& colOrder);
 	// always order the headers in ascending order before converting each row value to space separated string
-	static std::unordered_set<std::string> stringifyRows(Table table);
+	static std::unordered_set<std::string> stringifyRows(const Table& table);
 
 private:
 	static std::unordered_set<std::string> getCommonHeaders(const Table& firstTable, const Table& secondTable);
@@ -32,6 +33,5 @@ private:
 	selectTupleToString(const std::unordered_set<std::string>& headers, size_t rowNum, const Table& table);
 	static void
 	hashJoinHelper(const std::unordered_set<std::string>& commonTableHeaders, const Table& firstTable,
-				   size_t numFirstTableRows, const Table& secondTable, Table& resultTable,
-				   size_t numSecondTableRows);
+				   size_t numFirstTableRows, const Table& secondTable, size_t numSecondTableRows, Table& resultTable);
 };

@@ -11,7 +11,7 @@ Table QueryEvaluator::evaluate(Query& query) {
 		return {};
 	}
 
-	auto[selectSynNotInClauses, synWithRef, clausesWithoutSyn, clauseGroups] = Optimizer::optimize(query);
+	const auto&[selectSynNotInClauses, synWithRef, clausesWithoutSyn, clauseGroups] = Optimizer::optimize(query);
 
 	clauseEvaluator = ClauseEvaluator();
 

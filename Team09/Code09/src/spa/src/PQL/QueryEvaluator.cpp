@@ -13,11 +13,11 @@ Table QueryEvaluator::evaluate(Query& query) {
 
 	auto[selectSynNotInClauses, synWithRef, clausesWithoutSyn, clauseGroups] = Optimizer::optimize(query);
 
+	clauseEvaluator = ClauseEvaluator();
+
 	if (query.isBooleanQuery()) {
 		return evaluateBooleanQuery(clausesWithoutSyn, clauseGroups);
 	}
-
-	clauseEvaluator = ClauseEvaluator();
 
 	const std::vector<QueryArgument>& resultSyns = query.getResultSynonyms();
 	std::unordered_set<std::string> resultSynSet;

@@ -21,9 +21,9 @@ public:
 
 private:
 	QueryClauseResult getRelationshipByUnderscore(
-		RelationRef relationship, const std::string& LHS, const std::string& RHS, EntityType LHSType);
+		RelationRef relationship, const std::string& LHS, const std::string& RHS, EntityType LHSType, bool isBooleanResult);
 	QueryClauseResult getRelationshipByVariable(
-		RelationRef relationship, const std::string& LHS, const std::string& RHS, EntityType LHSType);
+		RelationRef relationship, const std::string& LHS, const std::string& RHS, EntityType LHSType, bool isBooleanResult);
 	QueryClauseResult getRelationshipBySynonym(
-		RelationRef relationship, const std::string& LHS, const std::string& RHS, EntityType LHSType);
+		RelationRef relationship, const std::string& LHS, const std::string& RHS, EntityType LHSType, bool isBooleanResult);
 };

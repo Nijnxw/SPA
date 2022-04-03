@@ -5,11 +5,11 @@ QueryClauseResult
 
 	switch (RHSType) {
 	case EntityType::STRING:
-		return getRelationshipByVariable(relationship, LHS, RHS, LHSType);
+		return getRelationshipByVariable(relationship, LHS, RHS, LHSType, isBooleanResult);
 	case EntityType::VAR:
-		return getRelationshipBySynonym(relationship, LHS, RHS, LHSType);
+		return getRelationshipBySynonym(relationship, LHS, RHS, LHSType, isBooleanResult);
 	case EntityType::WILD:
-		return getRelationshipByUnderscore(relationship, LHS, RHS, LHSType);
+		return getRelationshipByUnderscore(relationship, LHS, RHS, LHSType, isBooleanResult);
 	default:
 		QueryClauseResult emptyQueryResult;
 		return emptyQueryResult;
@@ -17,7 +17,7 @@ QueryClauseResult
 }
 
 QueryClauseResult StmtVarRelationshipEvaluator::getRelationshipByUnderscore(
-	RelationRef relationship, const std::string& LHS, const std::string& RHS, EntityType LHSType) {
+	RelationRef relationship, const std::string& LHS, const std::string& RHS, EntityType LHSType, bool isBooleanResult) {
 	QueryClauseResult queryResult;
 	std::unordered_set<int> relationshipStmts = (relationship == RelationRef::MODIFIES)
 		? PKB::getModifiesStatements()
@@ -35,28 +35,28 @@ QueryClauseResult StmtVarRelationshipEvaluator::getRelationshipByUnderscore(
 		break;
 	case EntityType::ASSIGN: {
 		std::unordered_set<int> assignStmts = PKB::getStatementsWithType(EntityType::ASSIGN);
-		queryResult.addColumn(LHS, PKBUtils::unorderedSetIntersection(relationshipStmts, assignStmts));
+		queryResult.addColumn(LHS, PKBUtils::unorderedSetIntersection(relationshipStmts, assignStmts, isBooleanResult));
 		break;
 	}
 	case EntityType::READ:
 		queryResult.addColumn(LHS, PKBUtils::unorderedSetIntersection(relationshipStmts,
-			PKB::getStatementsWithType(EntityType::READ)));
+			PKB::getStatementsWithType(EntityType::READ), isBooleanResult));
 		break;
 	case EntityType::PRINT:
 		queryResult.addColumn(LHS, PKBUtils::unorderedSetIntersection(relationshipStmts,
-			PKB::getStatementsWithType(EntityType::PRINT)));
+			PKB::getStatementsWithType(EntityType::PRINT), isBooleanResult));
 		break;
 	case EntityType::IF:
 		queryResult.addColumn(LHS,PKBUtils::unorderedSetIntersection(relationshipStmts,
-			PKB::getStatementsWithType(EntityType::IF)));
+			PKB::getStatementsWithType(EntityType::IF), isBooleanResult));
 		break;
 	case EntityType::WHILE:
 		queryResult.addColumn(LHS, PKBUtils::unorderedSetIntersection(relationshipStmts,
-			PKB::getStatementsWithType(EntityType::WHILE)));
+			PKB::getStatementsWithType(EntityType::WHILE), isBooleanResult));
 		break;
 	case EntityType::CALL:
 		queryResult.addColumn(LHS, PKBUtils::unorderedSetIntersection(relationshipStmts,
-			PKB::getStatementsWithType(EntityType::CALL)));
+			PKB::getStatementsWithType(EntityType::CALL), isBooleanResult));
 		break;
 	case EntityType::PROC:
 		if (relationship == RelationRef::USES) {
@@ -78,7 +78,7 @@ QueryClauseResult StmtVarRelationshipEvaluator::getRelationshipByUnderscore(
 	return queryResult;
 }
 
-QueryClauseResult StmtVarRelationshipEvaluator::getRelationshipByVariable(RelationRef relationship, const std::string& LHS, const std::string& RHS, EntityType LHSType) {
+QueryClauseResult StmtVarRelationshipEvaluator::getRelationshipByVariable(RelationRef relationship, const std::string& LHS, const std::string& RHS, EntityType LHSType, bool isBooleanResult) {
 	QueryClauseResult queryResult;
 
 	std::unordered_set<int> relationshipStmts = (relationship == RelationRef::MODIFIES)
@@ -97,28 +97,28 @@ QueryClauseResult StmtVarRelationshipEvaluator::getRelationshipByVariable(Relati
 		break;
 	case EntityType::ASSIGN: {
 		std::unordered_set<int> assignStmts = PKB::getStatementsWithType(EntityType::ASSIGN);
-		queryResult.addColumn(LHS, PKBUtils::unorderedSetIntersection(relationshipStmts, assignStmts));
+		queryResult.addColumn(LHS, PKBUtils::unorderedSetIntersection(relationshipStmts, assignStmts, isBooleanResult));
 		break;
 	}
 	case EntityType::PRINT:
 		queryResult.addColumn(LHS,
-			PKBUtils::unorderedSetIntersection(relationshipStmts, PKB::getStatementsWithType(EntityType::PRINT)));
+			PKBUtils::unorderedSetIntersection(relationshipStmts, PKB::getStatementsWithType(EntityType::PRINT), isBooleanResult));
 		break;
 	case EntityType::READ:
 		queryResult.addColumn(LHS,
-			PKBUtils::unorderedSetIntersection(relationshipStmts, PKB::getStatementsWithType(EntityType::READ)));
+			PKBUtils::unorderedSetIntersection(relationshipStmts, PKB::getStatementsWithType(EntityType::READ), isBooleanResult));
 		break;
 	case EntityType::IF:
 		queryResult.addColumn(LHS,
-			PKBUtils::unorderedSetIntersection(relationshipStmts, PKB::getStatementsWithType(EntityType::IF)));
+			PKBUtils::unorderedSetIntersection(relationshipStmts, PKB::getStatementsWithType(EntityType::IF), isBooleanResult));
 		break;
 	case EntityType::WHILE:
 		queryResult.addColumn(LHS,
-			PKBUtils::unorderedSetIntersection(relationshipStmts, PKB::getStatementsWithType(EntityType::WHILE)));
+			PKBUtils::unorderedSetIntersection(relationshipStmts, PKB::getStatementsWithType(EntityType::WHILE), isBooleanResult));
 		break;
 	case EntityType::CALL:
 		queryResult.addColumn(LHS,
-			PKBUtils::unorderedSetIntersection(relationshipStmts, PKB::getStatementsWithType(EntityType::CALL)));
+			PKBUtils::unorderedSetIntersection(relationshipStmts, PKB::getStatementsWithType(EntityType::CALL), isBooleanResult));
 		break;
 	case EntityType::PROC:
 		if (relationship == RelationRef::USES) {
@@ -140,7 +140,7 @@ QueryClauseResult StmtVarRelationshipEvaluator::getRelationshipByVariable(Relati
 	return queryResult;
 }
 
-QueryClauseResult StmtVarRelationshipEvaluator::getRelationshipBySynonym(RelationRef relationship, const std::string& LHS, const std::string& RHS, EntityType LHSType) {
+QueryClauseResult StmtVarRelationshipEvaluator::getRelationshipBySynonym(RelationRef relationship, const std::string& LHS, const std::string& RHS, EntityType LHSType, bool isBooleanResult) {
 	QueryClauseResult queryResult;
 	std::vector<std::string> stmts;
 	std::vector<std::string> vars;
@@ -164,9 +164,9 @@ QueryClauseResult StmtVarRelationshipEvaluator::getRelationshipBySynonym(Relatio
 		std::unordered_set<int> assignStmts = PKB::getStatementsWithType(EntityType::ASSIGN);
 		std::tie(stmts, vars) = (relationship == RelationRef::MODIFIES)
 			? PKB::getStmtsToModifiedVariable(
-				PKBUtils::unorderedSetIntersection(PKB::getModifiesStatements(), assignStmts))
+				PKBUtils::unorderedSetIntersection(PKB::getModifiesStatements(), assignStmts, isBooleanResult))
 			: PKB::getStmtsToUsedVariable(
-				PKBUtils::unorderedSetIntersection(PKB::getUsesStatements(), assignStmts));
+				PKBUtils::unorderedSetIntersection(PKB::getUsesStatements(), assignStmts, isBooleanResult));
 		break;
 	}
 	case EntityType::PRINT: {

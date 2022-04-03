@@ -14,18 +14,19 @@ namespace PKBUtils {
     };
 
     template <typename T>
-    static std::unordered_set<T> unorderedSetIntersection(const std::unordered_set<T>& set1, const std::unordered_set<T>& set2) {
+    static std::unordered_set<T> unorderedSetIntersection(const std::unordered_set<T>& set1, const std::unordered_set<T>& set2, bool earlyTermination = false) {
         std::unordered_set<T> resultSet;
-        if (set1.size() < set2.size()) {
-            for (const auto& ele : set1) {
-                if (set2.find(ele) != set2.end())
-                    resultSet.insert(ele);
-            }
+
+        if (set2.size() < set1.size()) {
+            return unorderedSetIntersection(set2, set1, earlyTermination);
         }
-        else {
-            for (const auto& ele : set2) {
-                if (set1.find(ele) != set1.end())
-                    resultSet.insert(ele);
+
+        for (const auto& ele : set1) {
+            if (set2.find(ele) != set2.end()) {
+                resultSet.insert(ele);
+                if (earlyTermination) {
+                    break;
+                }
             }
         }
         return resultSet;
@@ -158,13 +159,15 @@ namespace PKBUtils {
     }
 
     template <typename T>
-    static std::tuple<std::vector<T>, std::vector<T>> computeCartesianProduct(std::vector<T> vec1, std::vector<T> vec2) {
+    static std::tuple<std::vector<T>, std::vector<T>> computeCartesianProduct(std::vector<T> vec1, std::vector<T> vec2, bool earlyTermination = false) {
         std::vector<T> resVec1;
         std::vector<T> resVec2;
         for (const auto& entry1 : vec1) {
             for (const auto& entry2 : vec2) {
                 resVec1.push_back(entry1);
                 resVec2.push_back(entry2);
+                if (earlyTermination)
+                    return { resVec1, resVec2 };
             }
         }
         return { resVec1, resVec2 };

@@ -13,6 +13,6 @@ private:
 	RPN() {};
 
 public:
-	static std::string convertToRpn(std::string);
-	static bool contains(std::string, std::string);
+	static std::string convertToRpn(const std::string& infix);
+	static bool contains(const std::string& rpn1, const std::string& rpn2);
 };

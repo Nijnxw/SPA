@@ -5,10 +5,10 @@ PatternAssignEvaluator::PatternAssignEvaluator()
 
 QueryClauseResult
 PatternAssignEvaluator::getPattern(const std::string& LHS, const std::string& RHS, const std::string& clauseSyn,
-							  EntityType LHSType, EntityType RHSType,
-							  bool isBooleanResult) {
+								   EntityType LHSType, EntityType RHSType,
+								   bool isBooleanResult) {
 
-	std::unordered_map<int, AssignStatement> assignStatements = PKB::getAssignStatementsToStructs();
+	const std::unordered_map<int, AssignStatement>& assignStatements = PKB::getAssignStatementsToStructs();
 
 	switch (LHSType) {
 		case EntityType::VAR:
@@ -18,15 +18,14 @@ PatternAssignEvaluator::getPattern(const std::string& LHS, const std::string& RH
 		case EntityType::WILD:
 			return PatternAssignEvaluator::getPatternByUnderscore(RHS, RHSType, clauseSyn, assignStatements);
 		default:
-			QueryClauseResult emptyQueryResult;
-			return emptyQueryResult;
+			return {};
 	}
 }
 
 QueryClauseResult
 PatternAssignEvaluator::getPatternBySynonym(const std::string& LHS, const std::string& RHS, EntityType RHSType,
-									   const std::string& clauseSyn,
-									   const std::unordered_map<int, AssignStatement> assignStatements) {
+											const std::string& clauseSyn,
+											const std::unordered_map<int, AssignStatement>& assignStatements) {
 	QueryClauseResult queryResult;
 	std::vector<int> statementNumbers;
 	std::vector<std::string> variables;
@@ -34,13 +33,13 @@ PatternAssignEvaluator::getPatternBySynonym(const std::string& LHS, const std::s
 	switch (RHSType) {
 		case EntityType::STRING:
 			if (RHS[0] == '_') { // a(v, _"x"_)
-				std::string trimmedRHS = RHS.substr(1, RHS.length() - 2);
+				const std::string& trimmedRHS = RHS.substr(1, RHS.length() - 2);
 
 				for (auto const& pair: assignStatements) {
 					int statementNum = pair.first;
-					AssignStatement statement = pair.second;
-					std::string statementLHS = statement.getLeftHandSide();
-					std::string statementRHS = statement.getRightHandSide();
+					const AssignStatement& statement = pair.second;
+					const std::string& statementLHS = statement.getLeftHandSide();
+					const std::string& statementRHS = statement.getRightHandSide();
 
 					if (RPN::contains(statementRHS, trimmedRHS)) {
 						statementNumbers.push_back(statementNum);
@@ -53,9 +52,9 @@ PatternAssignEvaluator::getPatternBySynonym(const std::string& LHS, const std::s
 			} else { // a(v, "x + 1")
 				for (auto const& pair: assignStatements) {
 					int statementNum = pair.first;
-					AssignStatement statement = pair.second;
-					std::string statementLHS = statement.getLeftHandSide();
-					std::string statementRHS = statement.getRightHandSide();
+					const AssignStatement& statement = pair.second;
+					const std::string& statementLHS = statement.getLeftHandSide();
+					const std::string& statementRHS = statement.getRightHandSide();
 
 					if (statementRHS == RHS) {
 						statementNumbers.push_back(statementNum);
@@ -70,9 +69,9 @@ PatternAssignEvaluator::getPatternBySynonym(const std::string& LHS, const std::s
 		case EntityType::WILD: // a(v, _)
 			for (auto const& pair: assignStatements) {
 				int statementNum = pair.first;
-				AssignStatement statement = pair.second;
-				std::string statementLHS = statement.getLeftHandSide();
-				std::string statementRHS = statement.getRightHandSide();
+				const AssignStatement& statement = pair.second;
+				const std::string& statementLHS = statement.getLeftHandSide();
+				const std::string& statementRHS = statement.getRightHandSide();
 
 				statementNumbers.push_back(statementNum);
 				variables.push_back(statementLHS);
@@ -91,21 +90,21 @@ PatternAssignEvaluator::getPatternBySynonym(const std::string& LHS, const std::s
 
 QueryClauseResult
 PatternAssignEvaluator::getPatternByVariable(const std::string& LHS, const std::string& RHS, EntityType RHSType,
-										const std::string& clauseSyn,
-										const std::unordered_map<int, AssignStatement> assignStatements) {
+											 const std::string& clauseSyn,
+											 const std::unordered_map<int, AssignStatement>& assignStatements) {
 	QueryClauseResult queryResult;
 	std::vector<int> statementNumbers;
 
 	switch (RHSType) {
 		case EntityType::STRING:
 			if (RHS[0] == '_') { // a("x", _"x"_)
-				std::string trimmedRHS = RHS.substr(1, RHS.length() - 2);
+				const std::string& trimmedRHS = RHS.substr(1, RHS.length() - 2);
 
 				for (auto const& pair: assignStatements) {
 					int statementNum = pair.first;
-					AssignStatement statement = pair.second;
-					std::string statementLHS = statement.getLeftHandSide();
-					std::string statementRHS = statement.getRightHandSide();
+					const AssignStatement& statement = pair.second;
+					const std::string& statementLHS = statement.getLeftHandSide();
+					const std::string& statementRHS = statement.getRightHandSide();
 
 					if ((statementLHS == LHS) && (RPN::contains(statementRHS, trimmedRHS))) {
 						statementNumbers.push_back(statementNum);
@@ -116,9 +115,9 @@ PatternAssignEvaluator::getPatternByVariable(const std::string& LHS, const std::
 			} else { // a("x", "x + 1")
 				for (auto const& pair: assignStatements) {
 					int statementNum = pair.first;
-					AssignStatement statement = pair.second;
-					std::string statementLHS = statement.getLeftHandSide();
-					std::string statementRHS = statement.getRightHandSide();
+					const AssignStatement& statement = pair.second;
+					const std::string& statementLHS = statement.getLeftHandSide();
+					const std::string& statementRHS = statement.getRightHandSide();
 
 					if ((statementLHS == LHS) && (statementRHS == RHS)) {
 						statementNumbers.push_back(statementNum);
@@ -131,9 +130,9 @@ PatternAssignEvaluator::getPatternByVariable(const std::string& LHS, const std::
 		case EntityType::WILD: // a("x", _)
 			for (auto const& pair: assignStatements) {
 				int statementNum = pair.first;
-				AssignStatement statement = pair.second;
-				std::string statementLHS = statement.getLeftHandSide();
-				std::string statementRHS = statement.getRightHandSide();
+				const AssignStatement& statement = pair.second;
+				const std::string& statementLHS = statement.getLeftHandSide();
+				const std::string& statementRHS = statement.getRightHandSide();
 
 				if (statementLHS == LHS) {
 					statementNumbers.push_back(statementNum);
@@ -151,20 +150,20 @@ PatternAssignEvaluator::getPatternByVariable(const std::string& LHS, const std::
 
 QueryClauseResult
 PatternAssignEvaluator::getPatternByUnderscore(const std::string& RHS, EntityType RHSType, const std::string& clauseSyn,
-										  const std::unordered_map<int, AssignStatement> assignStatements) {
+											   const std::unordered_map<int, AssignStatement>& assignStatements) {
 	QueryClauseResult queryResult;
 	std::vector<int> statementNumbers;
 
 	switch (RHSType) {
 		case EntityType::STRING:
 			if (RHS[0] == '_') { // a("x", _"x"_)
-				std::string trimmedRHS = RHS.substr(1, RHS.length() - 2);
+				const std::string& trimmedRHS = RHS.substr(1, RHS.length() - 2);
 
 				for (auto const& pair: assignStatements) {
 					int statementNum = pair.first;
-					AssignStatement statement = pair.second;
-					std::string statementLHS = statement.getLeftHandSide();
-					std::string statementRHS = statement.getRightHandSide();
+					const AssignStatement& statement = pair.second;
+					const std::string& statementLHS = statement.getLeftHandSide();
+					const std::string& statementRHS = statement.getRightHandSide();
 
 					if (RPN::contains(statementRHS, trimmedRHS)) {
 						statementNumbers.push_back(statementNum);
@@ -175,9 +174,9 @@ PatternAssignEvaluator::getPatternByUnderscore(const std::string& RHS, EntityTyp
 			} else { // a("x", "x + 1")
 				for (auto const& pair: assignStatements) {
 					int statementNum = pair.first;
-					AssignStatement statement = pair.second;
-					std::string statementLHS = statement.getLeftHandSide();
-					std::string statementRHS = statement.getRightHandSide();
+					const AssignStatement& statement = pair.second;
+					const std::string& statementLHS = statement.getLeftHandSide();
+					const std::string& statementRHS = statement.getRightHandSide();
 
 					if (statementRHS == RHS) {
 						statementNumbers.push_back(statementNum);
@@ -190,9 +189,9 @@ PatternAssignEvaluator::getPatternByUnderscore(const std::string& RHS, EntityTyp
 		case EntityType::WILD: // a(_,  _)
 			for (auto const& pair: assignStatements) {
 				int statementNum = pair.first;
-				AssignStatement statement = pair.second;
-				std::string statementLHS = statement.getLeftHandSide();
-				std::string statementRHS = statement.getRightHandSide();
+				const AssignStatement& statement = pair.second;
+				const std::string& statementLHS = statement.getLeftHandSide();
+				const std::string& statementRHS = statement.getRightHandSide();
 
 				statementNumbers.push_back(statementNum);
 			}

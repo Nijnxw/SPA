@@ -11,10 +11,10 @@ private:
 	std::string rightHandSide;
 
 public:
-	AssignStatement(int statementNumber, const std::string& leftHandSide, const std::string& rightHandSide); 
+	AssignStatement(int statementNumber, const std::string& leftHandSide, const std::string& rightHandSide);
 
-	std::string getLeftHandSide();
-	std::string getRightHandSide();
+	std::string getLeftHandSide() const;
+	std::string getRightHandSide() const;
 
 	bool operator==(const AssignStatement& otherStmt) const;
 };

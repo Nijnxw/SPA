@@ -159,7 +159,7 @@ namespace PKBUtils {
     }
 
     template <typename T>
-    static std::tuple<std::vector<T>, std::vector<T>> computeCartesianProduct(std::vector<T> vec1, std::vector<T> vec2, bool earlyTermination) {
+    static std::tuple<std::vector<T>, std::vector<T>> computeCartesianProduct(std::vector<T> vec1, std::vector<T> vec2, bool earlyTermination = false) {
         std::vector<T> resVec1;
         std::vector<T> resVec2;
         for (const auto& entry1 : vec1) {

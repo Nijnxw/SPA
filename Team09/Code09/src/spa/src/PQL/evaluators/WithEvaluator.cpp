@@ -134,9 +134,9 @@ std::unordered_set<std::string> WithEvaluator::getAttrRefStrSet(EntityType entTy
 }
 
 EntityType WithEvaluator::getAttrRefType(EntityType entType, AttributeRef attrRef) {
-	if (entType == EntityType::PROC && attrRef == AttributeRef::PROC_NAME || entType == EntityType::VAR && attrRef == AttributeRef::VAR_NAME
-		|| entType == EntityType::CALL && attrRef == AttributeRef::PROC_NAME || entType == EntityType::VAR && attrRef == AttributeRef::VAR_NAME
-		|| entType == EntityType::READ && attrRef == AttributeRef::VAR_NAME || entType == EntityType::PRINT && attrRef == AttributeRef::VAR_NAME
+	if (entType == EntityType::PROC && attrRef == AttributeRef::PROC_NAME || entType == EntityType::CALL && attrRef == AttributeRef::PROC_NAME
+		|| entType == EntityType::VAR && attrRef == AttributeRef::VAR_NAME || entType == EntityType::READ && attrRef == AttributeRef::VAR_NAME
+		|| entType == EntityType::PRINT && attrRef == AttributeRef::VAR_NAME
 		) {
 		return EntityType::STRING;
 	}

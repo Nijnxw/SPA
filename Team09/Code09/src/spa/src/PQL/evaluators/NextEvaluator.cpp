@@ -22,22 +22,22 @@ NextEvaluator::getNextT(const std::string& LHS, const std::string& RHS, EntityTy
 	QueryClauseResult emptyQueryResult;
 
 	if (LHSType == EntityType::INT) {
-		return NextEvaluator::getNextTByStatementNumber(LHS, RHS, RHSType);
+		return NextEvaluator::getNextTByStatementNumber(LHS, RHS, RHSType, isBooleanResult);
 	}
 	else if (LHSType == EntityType::STMT || LHSType == EntityType::ASSIGN || LHSType == EntityType::IF ||
 		LHSType == EntityType::WHILE || LHSType == EntityType::PRINT || LHSType == EntityType::READ ||
 		LHSType == EntityType::CALL) {
-		return NextEvaluator::getNextTByStatementVariable(LHS, RHS, LHSType, RHSType);
+		return NextEvaluator::getNextTByStatementVariable(LHS, RHS, LHSType, RHSType, isBooleanResult);
 	}
 	else if (LHSType == EntityType::WILD) {
-		return NextEvaluator::getNextTByUnderscore(RHS, RHSType);
+		return NextEvaluator::getNextTByUnderscore(RHS, RHSType, isBooleanResult);
 	}
 	else {
 		return emptyQueryResult;
 	}
 }
 
-QueryClauseResult NextEvaluator::getNextTByStatementNumber(const std::string& LHS, const std::string& RHS, EntityType RHSType) {
+QueryClauseResult NextEvaluator::getNextTByStatementNumber(const std::string& LHS, const std::string& RHS, EntityType RHSType, bool isBooleanResult) {
 	QueryClauseResult queryResult;
 	std::vector<std::unordered_set<int>> cfg = PKB::getCFG();
 
@@ -65,16 +65,21 @@ QueryClauseResult NextEvaluator::getNextTByStatementNumber(const std::string& LH
 		RHSType == EntityType::WHILE || RHSType == EntityType::PRINT || RHSType == EntityType::READ ||
 		RHSType == EntityType::CALL) { // Next*(1, s)
 		if (isNextTCacheComplete) {
-			queryResult.addColumn(RHS, StmtStmtRelationshipEvaluator::filterStatementsByType(nextTCache[LHSInt], RHSType));
+			queryResult.addColumn(RHS, StmtStmtRelationshipEvaluator::filterStatementsByType(nextTCache[LHSInt], RHSType, isBooleanResult));
 		}
 		else {
-			std::unordered_set<int> reachableNodes = getReachableNodes(LHSInt, cfg, true);
-
-			if (reachableNodes.size() <= 0) {
-				return queryResult;
+			if (isBooleanResult) {
+				queryResult.setBooleanResult(hasNeighbours(LHSInt, cfg));
 			}
+			else {
+				std::unordered_set<int> reachableNodes = getReachableNodes(LHSInt, cfg, true);
 
-			queryResult.addColumn(RHS, StmtStmtRelationshipEvaluator::filterStatementsByType(reachableNodes, RHSType));
+				if (reachableNodes.size() <= 0) {
+					return queryResult;
+				}
+
+				queryResult.addColumn(RHS, StmtStmtRelationshipEvaluator::filterStatementsByType(reachableNodes, RHSType, isBooleanResult));
+			}
 		}
 	} else if (RHSType == EntityType::WILD) { // Next*(1, _)
 		queryResult.setBooleanResult(hasNeighbours(LHSInt, cfg));
@@ -83,7 +88,7 @@ QueryClauseResult NextEvaluator::getNextTByStatementNumber(const std::string& LH
 	return queryResult;
 }
 
-QueryClauseResult NextEvaluator::getNextTByStatementVariable(const std::string& LHS, const std::string& RHS, EntityType LHSType, EntityType RHSType) {
+QueryClauseResult NextEvaluator::getNextTByStatementVariable(const std::string& LHS, const std::string& RHS, EntityType LHSType, EntityType RHSType, bool isBooleanResult) {
 	QueryClauseResult queryResult;
 
 	if (RHSType == EntityType::INT) { // Next*(s, 2)
@@ -96,13 +101,18 @@ QueryClauseResult NextEvaluator::getNextTByStatementVariable(const std::string& 
 		}
 
 		if (isNextTCacheComplete) {
-			queryResult.addColumn(LHS, StmtStmtRelationshipEvaluator::filterStatementsByType(nextTCache[RHSInt], LHSType));
+			queryResult.addColumn(LHS, StmtStmtRelationshipEvaluator::filterStatementsByType(nextTCache[RHSInt], LHSType, isBooleanResult));
 		}
 		else {
 			std::vector<std::unordered_set<int>> reversedCfg = PKB::getReversedCFG();
 
-			std::unordered_set<int> reachableNodes = getReachableNodes(RHSInt, reversedCfg, false);
-			queryResult.addColumn(LHS, StmtStmtRelationshipEvaluator::filterStatementsByType(reachableNodes, LHSType));
+			if (isBooleanResult) {
+				queryResult.setBooleanResult(hasNeighbours(RHSInt, reversedCfg));
+			}
+			else {
+				std::unordered_set<int> reachableNodes = getReachableNodes(RHSInt, reversedCfg, false);
+				queryResult.addColumn(LHS, StmtStmtRelationshipEvaluator::filterStatementsByType(reachableNodes, LHSType, isBooleanResult));
+			}
 		}
 	} else if (RHSType == EntityType::STMT || RHSType == EntityType::ASSIGN || RHSType == EntityType::IF ||
 		RHSType == EntityType::WHILE || RHSType == EntityType::PRINT || RHSType == EntityType::READ ||
@@ -116,7 +126,7 @@ QueryClauseResult NextEvaluator::getNextTByStatementVariable(const std::string& 
 		}
 
 		auto [firstEntities, secondEntities] = PKBUtils::convertMapWithSetToVectorTuple(nextTPairs);
-		auto [filteredFirst, filteredSecond] = StmtStmtRelationshipEvaluator::filterStatementPairsByType(firstEntities, secondEntities, LHSType, RHSType);
+		auto [filteredFirst, filteredSecond] = StmtStmtRelationshipEvaluator::filterStatementPairsByType(firstEntities, secondEntities, LHSType, RHSType, isBooleanResult);
 
 		if (LHS == RHS) {
 			std::unordered_set<int> set = PKBUtils::getEqualPairs(filteredFirst, filteredSecond);
@@ -128,12 +138,12 @@ QueryClauseResult NextEvaluator::getNextTByStatementVariable(const std::string& 
 		}
 	} else if (RHSType == EntityType::WILD) { // Next*(s, _)
 		std::unordered_set<int> statements = PKB::getAllStmtStmtFirstEntities(RelationRef::NEXT);
-		queryResult.addColumn(LHS, StmtStmtRelationshipEvaluator::filterStatementsByType(statements, LHSType));
+		queryResult.addColumn(LHS, StmtStmtRelationshipEvaluator::filterStatementsByType(statements, LHSType, isBooleanResult));
 	}
 
 	return queryResult;
 }
-QueryClauseResult NextEvaluator::getNextTByUnderscore(const std::string& RHS, EntityType RHSType) {
+QueryClauseResult NextEvaluator::getNextTByUnderscore(const std::string& RHS, EntityType RHSType, bool isBooleanResult) {
 	QueryClauseResult queryResult;
 
 	if (RHSType == EntityType::INT) { // Next*(_, 2)
@@ -152,7 +162,7 @@ QueryClauseResult NextEvaluator::getNextTByUnderscore(const std::string& RHS, En
 		RHSType == EntityType::WHILE || RHSType == EntityType::PRINT || RHSType == EntityType::READ ||
 		RHSType == EntityType::CALL) { // Next*(_, s)
 		std::unordered_set<int> statements = PKB::getAllStmtStmtSecondEntities(RelationRef::NEXT);
-		queryResult.addColumn(RHS, StmtStmtRelationshipEvaluator::filterStatementsByType(statements, RHSType));
+		queryResult.addColumn(RHS, StmtStmtRelationshipEvaluator::filterStatementsByType(statements, RHSType, isBooleanResult));
 	} else if (RHSType == EntityType::WILD) { // Next*(_, _)
 		if (PKB::hasNextRelationship()) {
 			queryResult.setBooleanResult(true);

@@ -14,14 +14,14 @@
 class StmtStmtRelationshipEvaluator : public RelationshipEvaluator, public TransitiveRelationshipEvaluator {
 protected:
 	QueryClauseResult
-		getRelationshipByStatementNumber(RelationRef relationship, const std::string& LHS, const std::string& RHS, EntityType RHSType);
+		getRelationshipByStatementNumber(RelationRef relationship, const std::string& LHS, const std::string& RHS, EntityType RHSType, bool isBooleanResult);
 	QueryClauseResult
-		getRelationshipByStatementVariable(RelationRef relationship, const std::string& LHS, const std::string& RHS, EntityType LHSType, EntityType RHSType);
-	QueryClauseResult getRelationshipByUnderscore(RelationRef relationship, const std::string& RHS, EntityType RHSType);
+		getRelationshipByStatementVariable(RelationRef relationship, const std::string& LHS, const std::string& RHS, EntityType LHSType, EntityType RHSType, bool isBooleanResult);
+	QueryClauseResult getRelationshipByUnderscore(RelationRef relationship, const std::string& RHS, EntityType RHSType, bool isBooleanResult);
 
-	std::unordered_set<int> filterStatementsByType(std::unordered_set<int> statements, EntityType type);
+	std::unordered_set<int> filterStatementsByType(std::unordered_set<int> statements, EntityType type, bool isBooleanResult);
 	std::tuple<std::vector<int>, std::vector<int>> filterStatementPairsByType(std::vector<int> firstEntities,
-		std::vector<int> secondEntities, EntityType LHSType, EntityType RHSType);
+		std::vector<int> secondEntities, EntityType LHSType, EntityType RHSType, bool isBooleanResult);
 
 public:
 	QueryClauseResult getRelationship(RelationRef relationship, const std::string& LHS, const std::string& RHS, EntityType LHSType, EntityType RHSType,

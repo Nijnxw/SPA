@@ -10,10 +10,10 @@ Optimizer::optimize(Query& query) {
 	std::vector<QueryClause> clausesWithoutSyn;        // each of these clauses return a boolean (should evaluate first)
 	std::vector<OptimizerGroup> clauseGroups;
 
-	std::vector<QueryClause> clauses = query.getClauses();
+	const std::vector<QueryClause>& clauses = query.getClauses();
 
 	for (const auto& clause: clauses) {
-		std::unordered_set<std::string> clauseSynonyms = clause.getUsedSynonyms();
+		const std::unordered_set<std::string>& clauseSynonyms = clause.getUsedSynonyms();
 		usedSynonyms.insert(clauseSynonyms.begin(), clauseSynonyms.end());
 		if (clauseSynonyms.empty()) {
 			clausesWithoutSyn.push_back(clause);

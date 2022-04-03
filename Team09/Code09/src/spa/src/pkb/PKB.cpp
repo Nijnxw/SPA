@@ -164,6 +164,10 @@ EntityType PKB::getStatementType(int stmtNum) {
 	return entityStore.getStatementType(stmtNum);
 }
 
+int PKB::getNumSynonymsWithType(EntityType entityType) {
+	return entityStore.getNumSynonymsWithType(entityType);
+}
+
 std::unordered_map<std::string, std::unordered_set<std::string>> PKB::getProceduresToCallStatements() {
 	return entityStore.getProceduresToCallStatements();
 }

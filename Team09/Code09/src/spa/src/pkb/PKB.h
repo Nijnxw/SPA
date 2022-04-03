@@ -84,6 +84,8 @@ public:
 
 	static bool isAssignmentStmt(int stmtNum);
 
+	static int getNumSynonymsWithType(EntityType entityType);
+
 	/* StmtStmt Getters */
 	static bool hasStmtStmtRelationship(RelationRef relationship);
 	static bool isStmtStmtRelationship(RelationRef relationship, int statementOne, int statementTwo);

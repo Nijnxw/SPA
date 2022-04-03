@@ -28,12 +28,14 @@ private:
 	std::unordered_set<std::string> usedSynonyms;
 };
 
+static const int RANDOM_SEED = 0x9e3779b1;
+
 template<>
 struct std::hash<QueryClause> {
 	size_t operator()(const QueryClause& clause) const {
 		size_t hash = std::hash<std::string>()(ToString(clause.getClauseType()));
 		for (const auto& arg: clause.getArguments()) {
-			hash = std::hash<std::string>()(arg.getValue()) + 0x9e3779b9 + (hash << 6) + (hash >> 2);
+			hash = std::hash<std::string>()(arg.getValue()) + RANDOM_SEED + (hash << 6) + (hash >> 2);
 		}
 		return hash;
 	}

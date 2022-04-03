@@ -13,9 +13,9 @@ std::vector<std::string> split(const std::string& s, char delim) {
 }
 
 //check if this rpn contains the other rpn
-bool RPN::contains(std::string rpn1, std::string rpn2) {
-	std::vector<std::string> tokens1 = split(rpn1, ' ');
-	std::vector<std::string> tokens2 = split(rpn2, ' ');
+bool RPN::contains(const std::string& rpn1, const std::string& rpn2) {
+	const std::vector<std::string>& tokens1 = split(rpn1, ' ');
+	const std::vector<std::string>& tokens2 = split(rpn2, ' ');
 	if (tokens1.size() < tokens2.size()) return false;
 
 	bool output = false;
@@ -30,25 +30,25 @@ bool RPN::contains(std::string rpn1, std::string rpn2) {
 }
 
 // HELPER IDENTIFIER FUNCTIONS
-bool isOperator(std::string token) {
+bool isOperator(const std::string& token) {
 	return (token == "+" || token == "-" || token == "*" || token == "/" || token == "%");
 }
 
-bool isNumber(std::string token) {
+bool isNumber(const std::string& token) {
 	for (int i = 0; i < token.length(); i++) {
 		if (!isdigit(token[i])) return false;
 	}
 	return true;
 }
 
-bool isWhitespace(std::string token) {
+bool isWhitespace(const std::string& token) {
 	for (int i = 0; i < token.length(); i++) {
 		if (!isspace(token[i])) return false;
 	}
 	return true;
 }
 
-bool isVariable(std::string token) {
+bool isVariable(const std::string& token) {
 	if (token.length() == 0) return false;
 	if (!isalpha(token[0])) return false;
 	for (int i = 1; i < token.length(); i++) {
@@ -57,15 +57,15 @@ bool isVariable(std::string token) {
 	return true;
 }
 
-bool isLeftParenthesis(std::string token) {
+bool isLeftParenthesis(const std::string& token) {
 	return token == "(";
 }
 
-bool isRightParenthesis(std::string token) {
+bool isRightParenthesis(const std::string& token) {
 	return token == ")";
 }
 
-std::vector<RPNToken> tokenize(std::string exp) {
+std::vector<RPNToken> tokenize(const std::string& exp) {
 	std::vector<RPNToken> tokens;
 	std::string buffer;
 
@@ -78,43 +78,43 @@ std::vector<RPNToken> tokenize(std::string exp) {
 			buffer.append(character);
 			//other characters detected - flush buffer before adding the new character
 		} else {
-			if (buffer.size() > 0) {
+			if (!buffer.empty()) {
 				if (isVariable(buffer)) {
-					tokens.push_back(RPNToken(RPNTokenType::VARIABLE, buffer));
+					tokens.emplace_back(RPNTokenType::VARIABLE, buffer);
 				} else if (isNumber(buffer)) {
-					tokens.push_back(RPNToken(RPNTokenType::INTEGER, buffer));
+					tokens.emplace_back(RPNTokenType::INTEGER, buffer);
 				} else {
 					throw std::runtime_error("Invalid Token Detected in Statement.\n");
 				}
 			}
 			buffer = "";
 			if (isOperator(character)) {
-				tokens.push_back(RPNToken(RPNTokenType::OPERATOR, character));
+				tokens.emplace_back(RPNTokenType::OPERATOR, character);
 			} else if (isLeftParenthesis(character)) {
-				tokens.push_back(RPNToken(RPNTokenType::LEFT_PARENTHESIS, character));
+				tokens.emplace_back(RPNTokenType::LEFT_PARENTHESIS, character);
 			} else if (isRightParenthesis(character)) {
-				tokens.push_back(RPNToken(RPNTokenType::RIGHT_PARENTHESIS, character));
+				tokens.emplace_back(RPNTokenType::RIGHT_PARENTHESIS, character);
 			}
 		}
 	}
 
 	//final flush
-	if (buffer.size() > 0) {
+	if (!buffer.empty()) {
 		if (isVariable(buffer)) {
-			tokens.push_back(RPNToken(RPNTokenType::VARIABLE, buffer));
+			tokens.emplace_back(RPNTokenType::VARIABLE, buffer);
 		} else {
-			tokens.push_back(RPNToken(RPNTokenType::INTEGER, buffer));
+			tokens.emplace_back(RPNTokenType::INTEGER, buffer);
 		}
 	}
-	if (tokens.size() <= 0) throw std::runtime_error("No tokens Detected.\n");
+	if (tokens.empty()) throw std::runtime_error("No tokens Detected.\n");
 	return tokens;
 }
 
 //takes in equation in infix notation and returns RPN notation
-std::string RPN::convertToRpn(std::string infix) {
+std::string RPN::convertToRpn(const std::string& infix) {
 	std::vector<std::string> rpn;
 	std::stack<RPNToken> stack;
-	std::vector<RPNToken> tokens = tokenize(infix);
+	const std::vector<RPNToken>& tokens = tokenize(infix);
 
 	for (int i = 0; i < tokens.size(); i++) {
 		RPNToken token = tokens[i];

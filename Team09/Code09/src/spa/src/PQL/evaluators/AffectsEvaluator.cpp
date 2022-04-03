@@ -50,7 +50,7 @@ AffectsEvaluator::getAffectsByStmtNum(const std::string& LHS, const std::string&
 									  bool isBooleanResult, bool isAffects, Cache& cache, Cache& revCache) {
 	if (RHSType == EntityType::INT) {
 		if (cache.find(LHS) != cache.end()) {
-			auto affected = cache.at(LHS);
+			const auto& affected = cache.at(LHS);
 			if (affected.find(RHS) != affected.end()) {
 				return {true};
 			}
@@ -209,7 +209,7 @@ AffectsEvaluator::buildBoolResult(const std::string& LHS, const std::string& RHS
 								  EntityType RHSType, Cache& cache, Cache& revCache) {
 	if (LHSType == EntityType::INT && RHSType == EntityType::INT) {
 		if (cache.find(LHS) != cache.end()) {
-			auto affected = cache.at(LHS);
+			const auto& affected = cache.at(LHS);
 			return {affected.find(RHS) != affected.end()};
 		}
 		return {false};
@@ -244,8 +244,8 @@ AffectsEvaluator::buildClauseResult(const std::string& LHS, const std::string& R
 QueryClauseResult
 AffectsEvaluator::buildClauseResultIntStmt(const std::string& num, const std::string& syn, Cache& cache) {
 	if (cache.find(num) != cache.end()) {
-		auto affected = cache.at(num);
-		std::vector<std::string> rowValues = {affected.begin(), affected.end()};
+		const auto& affected = cache.at(num);
+		const std::vector<std::string>& rowValues = {affected.begin(), affected.end()};
 		return {{{syn, rowValues}}};
 	}
 	return {};
@@ -257,7 +257,7 @@ AffectsEvaluator::buildClauseResultStmtStmt(const std::string& LHS, const std::s
 	std::vector<std::string> rhsValues;
 	if (LHS == RHS) {
 		for (const auto& keyVal: cache) {
-			auto affected = keyVal.second;
+			const auto& affected = keyVal.second;
 			if (affected.find(keyVal.first) != affected.end()) {
 				lhsValues.push_back(keyVal.first);
 			}
@@ -329,8 +329,8 @@ AffectsEvaluator::computeAffectsIfElse(const LMT& prevLMT, int start, bool isAff
 	int lastIfStmt = getLastStmtOfBlock(firstIfStmt);
 	int lastElseStmt = getLastStmtOfBlock(firstElseStmt);
 
-	LMT newIfLMT = computeAffects(firstIfStmt, lastIfStmt, prevLMT, isAffects);
-	LMT newElseLMT = computeAffects(firstElseStmt, lastElseStmt, prevLMT, isAffects);
+	const LMT& newIfLMT = computeAffects(firstIfStmt, lastIfStmt, prevLMT, isAffects);
+	const LMT& newElseLMT = computeAffects(firstElseStmt, lastElseStmt, prevLMT, isAffects);
 
 	return mergeLMT(newIfLMT, newElseLMT);
 }
@@ -370,7 +370,7 @@ void AffectsEvaluator::computeAffectsStmt(LMT& currLMT, int currStmtNum, EntityT
 
 void AffectsEvaluator::computeAffectsAssign(LMT& currLMT, int currStmtNum) {
 	std::string modVar = *(PKB::getVariablesModifiedByStatement(currStmtNum).begin());
-	std::unordered_set<std::string> usedVars = PKB::getVariablesUsedByStatement(currStmtNum);
+	const std::unordered_set<std::string>& usedVars = PKB::getVariablesUsedByStatement(currStmtNum);
 
 	for (const auto& var: usedVars) {
 		if (currLMT.find(var) == currLMT.end()) {
@@ -388,7 +388,7 @@ void AffectsEvaluator::computeAffectsAssign(LMT& currLMT, int currStmtNum) {
 
 void AffectsEvaluator::computeAffectsTAssign(LMT& currLMT, int currStmtNum) {
 	std::string modVar = *(PKB::getVariablesModifiedByStatement(currStmtNum).begin());
-	std::unordered_set<std::string> usedVars = PKB::getVariablesUsedByStatement(currStmtNum);
+	const std::unordered_set<std::string>& usedVars = PKB::getVariablesUsedByStatement(currStmtNum);
 
 	if (usedVars.find(modVar) == usedVars.end()) {
 		currLMT[modVar].clear();
@@ -409,9 +409,9 @@ void AffectsEvaluator::computeAffectsTAssign(LMT& currLMT, int currStmtNum) {
 }
 
 void AffectsEvaluator::computeAffectsCall(LMT& currLMT, int currStmtNum) {
-	std::string procName = PKB::getCalledProcName(currStmtNum);
+	const std::string& procName = PKB::getCalledProcName(currStmtNum);
 
-	std::unordered_set<std::string> modVars = PKB::getVariablesModifiedByProcedure(procName);
+	const std::unordered_set<std::string>& modVars = PKB::getVariablesModifiedByProcedure(procName);
 
 	for (const auto& var: modVars) {
 		currLMT[var].clear();
@@ -419,7 +419,7 @@ void AffectsEvaluator::computeAffectsCall(LMT& currLMT, int currStmtNum) {
 }
 
 void AffectsEvaluator::computeAffectsRead(LMT& currLMT, int currStmtNum) {
-	std::unordered_set<std::string> modVars = PKB::getVariablesModifiedByStatement(currStmtNum);
+	const std::unordered_set<std::string>& modVars = PKB::getVariablesModifiedByStatement(currStmtNum);
 
 	for (const auto& var: modVars) {
 		currLMT[var].clear();
@@ -448,7 +448,7 @@ AffectsEvaluator::LMT AffectsEvaluator::mergeLMT(const LMT& first, const LMT& se
 }
 
 int AffectsEvaluator::getNextBigger(int currStmtNum) {
-	auto possibleNext = cfg.at(currStmtNum);
+	const auto& possibleNext = cfg.at(currStmtNum);
 	if (possibleNext.empty()) {
 		return 0;
 	}
@@ -472,10 +472,10 @@ bool AffectsEvaluator::isProcLastStmt(int currStmtNum) {
 
 	if (stmtType == EntityType::IF) {
 		int lastStmtOfElse = getLastStmtOfBlock(getNextBigger(currStmtNum));
-		auto nextStmts = cfg.at(lastStmtOfElse);
+		const auto& nextStmts = cfg.at(lastStmtOfElse);
 		return nextStmts.empty();
 	} else {
-		auto nextStmts = cfg.at(currStmtNum);
+		const auto& nextStmts = cfg.at(currStmtNum);
 		if (stmtType == EntityType::WHILE) {
 			return nextStmts.size() == 1;
 		}
@@ -484,7 +484,7 @@ bool AffectsEvaluator::isProcLastStmt(int currStmtNum) {
 }
 
 int AffectsEvaluator::getNextForStmt(int currStmtNum) {
-	auto possibleNext = cfg.at(currStmtNum);
+	const auto& possibleNext = cfg.at(currStmtNum);
 	if (possibleNext.empty()) {
 		return currStmtNum + 1;
 	}
@@ -515,7 +515,7 @@ int AffectsEvaluator::getNextForIf(int currStmtNum) {
 }
 
 int AffectsEvaluator::getNextForWhile(int currStmtNum) {
-	auto possibleNext = cfg.at(currStmtNum);
+	const auto& possibleNext = cfg.at(currStmtNum);
 	if (possibleNext.size() == 2) {
 		return getNextBigger(currStmtNum);
 	}

@@ -12,7 +12,7 @@ std::unordered_set<std::string> QueryResultProjector::formatResult(Table& res, Q
 		return {"TRUE"};
 	}
 
-	std::vector<QueryArgument> selectSyn = query.getResultSynonyms();
+	const std::vector<QueryArgument>& selectSyn = query.getResultSynonyms();
 	std::vector<std::string> colHeaders;
 	for (const auto& syn: selectSyn) {
 		colHeaders.push_back(syn.toString());

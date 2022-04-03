@@ -13,14 +13,18 @@
 class PatternConditionEvaluator {
 private:
 	QueryClauseResult
-		getPatternBySynonym(const std::string& LHS, const std::string& clauseSyn, const std::unordered_map<int, std::unordered_set<std::string>> statementNumbersToConditionalVariables);
+	getPatternBySynonym(const std::string& LHS, const std::string& clauseSyn,
+						const std::unordered_map<int, std::unordered_set<std::string>>& statementNumbersToConditionalVariables);
 	QueryClauseResult
-		getPatternByVariable(const std::string& LHS, const std::string& clauseSyn, const std::unordered_map<int, std::unordered_set<std::string>> statementNumbersToConditionalVariables);
-	QueryClauseResult getPatternByUnderscore(const std::string& clauseSyn, const std::unordered_map<int, std::unordered_set<std::string>> statementNumbersToConditionalVariables);
+	getPatternByVariable(const std::string& LHS, const std::string& clauseSyn,
+						 const std::unordered_map<int, std::unordered_set<std::string>>& statementNumbersToConditionalVariables);
+	QueryClauseResult getPatternByUnderscore(const std::string& clauseSyn,
+											 const std::unordered_map<int, std::unordered_set<std::string>>& statementNumbersToConditionalVariables);
 
 public:
-	PatternConditionEvaluator();
+	PatternConditionEvaluator() = default;
 
-	QueryClauseResult getPattern(EntityType patternType, const std::string& LHS, const std::string& clauseSyn, EntityType LHSType,
-		bool isBooleanResult);
+	QueryClauseResult
+	getPattern(EntityType patternType, const std::string& LHS, const std::string& clauseSyn, EntityType LHSType,
+			   bool isBooleanResult);
 };

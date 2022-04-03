@@ -20,13 +20,17 @@ protected:
 	QueryClauseResult getRelationshipByUnderscore(RelationRef relationship, const std::string& RHS, EntityType RHSType, bool isBooleanResult);
 
 	std::unordered_set<int> filterStatementsByType(std::unordered_set<int> statements, EntityType type, bool isBooleanResult);
-	std::tuple<std::vector<int>, std::vector<int>> filterStatementPairsByType(std::vector<int> firstEntities,
-		std::vector<int> secondEntities, EntityType LHSType, EntityType RHSType, bool isBooleanResult);
+	std::tuple<std::vector<int>, std::vector<int>> filterStatementPairsByType(const std::vector<int>& firstEntities,
+		const std::vector<int>& secondEntities, EntityType LHSType, EntityType RHSType, bool isBooleanResult);
 
 public:
-	QueryClauseResult getRelationship(RelationRef relationship, const std::string& LHS, const std::string& RHS, EntityType LHSType, EntityType RHSType,
-		bool isBooleanResult);
+	QueryClauseResult
+	getRelationship(RelationRef relationship, const std::string& LHS, const std::string& RHS, EntityType LHSType,
+					EntityType RHSType,
+					bool isBooleanResult);
 
-	QueryClauseResult getTransitiveRelationship(RelationRef relationship, const std::string& LHS, const std::string& RHS, EntityType LHSType, EntityType RHSType,
-		bool isBooleanResult);
+	QueryClauseResult
+	getTransitiveRelationship(RelationRef relationship, const std::string& LHS, const std::string& RHS,
+							  EntityType LHSType, EntityType RHSType,
+							  bool isBooleanResult);
 };

@@ -5,6 +5,7 @@
 #include "models/Query.h"
 #include "models/optimizer/OptimizerGroup.h"
 #include "PQL/Optimizer.h"
+#include "PQL/WeightEstimator.h"
 
 TEST_CASE("Test optimizer extraction logic") {
 	// Clauses without select synonyms
@@ -85,16 +86,16 @@ TEST_CASE("Test optimizer extraction logic") {
 		query);
 
 	OptimizerGroup group1 = OptimizerGroup();
-	group1.addEdge(clause6);
-	group1.addEdge(clause7);
+	group1.addEdge(clause6, WeightEstimator::estimateWeight(clause6));
+	group1.addEdge(clause7, WeightEstimator::estimateWeight(clause7));
 	OptimizerGroup group2 = OptimizerGroup();
-	group2.addEdge(clause8);
+	group2.addEdge(clause8, WeightEstimator::estimateWeight(clause8));
 	OptimizerGroup group3 = OptimizerGroup();
-	group3.addEdge(clause1);
-	group3.addEdge(clause2);
-	group3.addEdge(clause3);
-	group3.addEdge(clause4);
-	group3.addEdge(clause5);
+	group3.addEdge(clause1, WeightEstimator::estimateWeight(clause1));
+	group3.addEdge(clause2, WeightEstimator::estimateWeight(clause2));
+	group3.addEdge(clause3, WeightEstimator::estimateWeight(clause3));
+	group3.addEdge(clause4, WeightEstimator::estimateWeight(clause4));
+	group3.addEdge(clause5, WeightEstimator::estimateWeight(clause5));
 
 	std::unordered_set<QueryArgument, std::hash<QueryArgument>, QueryArgumentSetEqual> expectedSynNotInClauses = {
 		{"s", EntityType::STMT}};

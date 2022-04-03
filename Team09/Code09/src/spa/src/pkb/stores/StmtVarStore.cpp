@@ -21,17 +21,17 @@ std::unordered_map<std::string, std::unordered_set<int>> StmtVarStore::getVarToS
 // ============ HELPER METHODS ==============
 
 std::unordered_set<std::string> StmtVarStore::getVarByStmt(int stmtNo) {
-	if (!getStmtToVarRelationship().count(stmtNo)) {
+	if (!stmtToVarRelationship.count(stmtNo)) {
 		return {};
 	}
-	return getStmtToVarRelationship().at(stmtNo);
+	return stmtToVarRelationship.at(stmtNo);
 }
 
 std::unordered_set<int> StmtVarStore::getStmtByVar(const std::string& variable) {
-	if (!getVarToStmtRelationship().count(variable)) {
+	if (!varToStmtRelationship.count(variable)) {
 		return {};
 	}
-	return getVarToStmtRelationship().at(variable);
+	return varToStmtRelationship.at(variable);
 }
 
 // Given a set of stmt numbers, generate a map of all stmt -> var relationships
@@ -52,17 +52,12 @@ StmtVarStore::getStmtToVarByStmts(const std::unordered_set<int>& stmts) {
 
 bool StmtVarStore::addStmtVarRelationship(int statementNumber, const std::unordered_set<std::string>& variables) {
 	stmtInRelationship.insert(statementNumber);
-
-	if (!stmtToVarRelationship.emplace(statementNumber, variables).second) {
-		stmtToVarRelationship.at(statementNumber).insert(variables.begin(), variables.end());
-	}
+	stmtToVarRelationship[statementNumber].insert(variables.begin(), variables.end());
 
 	for (const std::string& v : variables) {
-		if (!varToStmtRelationship.emplace(v, std::unordered_set<int>{statementNumber}).second) {
-			varToStmtRelationship.at(v).insert(statementNumber);
-		}
+		varToStmtRelationship[v].emplace(statementNumber);
 		varInRelationship.insert(v);
 	}
-
+	
 	return true;
 }

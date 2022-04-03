@@ -3,9 +3,7 @@
 WithEvaluator::WithEvaluator() {}
 
 QueryClauseResult
-WithEvaluator::getWith(const std::string& LHSVal, EntityType LHSEntType, AttributeRef LHSAttrType,
-					   const std::string& RHSVal, EntityType RHSEntType, AttributeRef RHSAttrType,
-					   bool isBooleanResult) {
+WithEvaluator::getWith(const std::string& LHSVal, EntityType LHSEntType, AttributeRef LHSAttrType, const std::string& RHSVal, EntityType RHSEntType, AttributeRef RHSAttrType, bool isBooleanResult) {
 	if (LHSEntType == EntityType::STRING || LHSEntType == EntityType::INT) {
 		return getWithByStrOrInt(LHSVal, LHSEntType, RHSVal, RHSEntType, RHSAttrType, isBooleanResult);
 	} else if (RHSEntType == EntityType::STRING || RHSEntType == EntityType::INT) {
@@ -16,15 +14,14 @@ WithEvaluator::getWith(const std::string& LHSVal, EntityType LHSEntType, Attribu
 }
 
 QueryClauseResult WithEvaluator::getWithByStrOrInt( // Both String and Int will be passed as Strings from QP
-	const std::string& strOrIntVal, EntityType strOrIntType, const std::string& attrVal, EntityType attrEntType,
-	AttributeRef attrRefType, bool isBooleanResult) {
+	const std::string& strOrIntVal, EntityType strOrIntType, const std::string& attrVal, EntityType attrEntType, AttributeRef attrRefType, bool isBooleanResult) {
 	QueryClauseResult queryResult;
 	// Basic comparison if match
 	if (strOrIntType == EntityType::STRING && attrEntType == EntityType::STRING
 		|| strOrIntType == EntityType::INT && attrEntType == EntityType::INT) {
 		queryResult.setBooleanResult(strOrIntVal == attrVal);
 	}
-		// Integer = Integer-type AttrRef
+	// Integer = Integer-type AttrRef
 	else if (strOrIntType == EntityType::INT && getAttrRefType(attrEntType, attrRefType) == EntityType::INT) {
 		std::unordered_set<std::string> resultSet;
 		if (getAttrRefIntSet(attrEntType, attrRefType).count(std::stoi(strOrIntVal))) {
@@ -32,7 +29,7 @@ QueryClauseResult WithEvaluator::getWithByStrOrInt( // Both String and Int will 
 			queryResult.addColumn(attrVal, resultSet);
 		}
 	}
-		// String = String-type AttrRef
+	// String = String-type AttrRef
 	else if (strOrIntType == EntityType::STRING && getAttrRefType(attrEntType, attrRefType) == EntityType::STRING) {
 		if (getAttrRefStrSet(attrEntType, attrRefType).count(strOrIntVal)) {
 			queryResult.addColumn(attrVal, getRevMapFromAttr(attrEntType, strOrIntVal));
@@ -41,10 +38,8 @@ QueryClauseResult WithEvaluator::getWithByStrOrInt( // Both String and Int will 
 	return queryResult;
 }
 
-QueryClauseResult
-WithEvaluator::getWithByAttrRef(const std::string& LHSVal, EntityType LHSEntType, AttributeRef LHSAttrType,
-								const std::string& RHSVal, EntityType RHSEntType,
-								AttributeRef RHSAttrType, bool isBooleanResult) {
+QueryClauseResult WithEvaluator::getWithByAttrRef(const std::string& LHSVal, EntityType LHSEntType, AttributeRef LHSAttrType, const std::string& RHSVal, EntityType RHSEntType, 
+	AttributeRef RHSAttrType, bool isBooleanResult) {
 
 	QueryClauseResult queryResult;
 	if (getAttrRefType(LHSEntType, LHSAttrType) != getAttrRefType(RHSEntType, RHSAttrType)) {
@@ -55,7 +50,7 @@ WithEvaluator::getWithByAttrRef(const std::string& LHSVal, EntityType LHSEntType
 			resSet = PKBUtils::convertUnorderedSetToVector(getAttrRefIntSet(LHSEntType, LHSAttrType));
 		} else {
 			resSet = PKBUtils::convertUnorderedSetToVector(PKBUtils::unorderedSetIntersection(
-				getAttrRefIntSet(LHSEntType, LHSAttrType), getAttrRefIntSet(RHSEntType, RHSAttrType)));
+				getAttrRefIntSet(LHSEntType, LHSAttrType), getAttrRefIntSet(RHSEntType, RHSAttrType), isBooleanResult));
 		}
 		if (!resSet.empty()) {
 			queryResult.addColumn(LHSVal, resSet);
@@ -66,12 +61,10 @@ WithEvaluator::getWithByAttrRef(const std::string& LHSVal, EntityType LHSEntType
 		std::vector<std::string> RHSResSet;
 		std::unordered_set<std::string> commonStrs;
 		if (LHSEntType == RHSEntType) {
-			const std::unordered_set<std::string>& commonStrs = getAttrRefStrSet(LHSEntType, LHSAttrType);
-			for (const auto& str: commonStrs) {
-				const std::vector<std::string>& vec = PKBUtils::convertUnorderedSetToVector(
-					getRevMapFromAttr(LHSEntType, str));
-				const std::tuple<std::vector<std::string>, std::vector<std::string>>& crossedVec = PKBUtils::computeCartesianProduct(
-					vec, vec);
+			std::unordered_set<std::string> commonStrs = getAttrRefStrSet(LHSEntType, LHSAttrType);
+			for (const auto& str : commonStrs) {
+				std::vector<std::string> vec = PKBUtils::convertUnorderedSetToVector(getRevMapFromAttr(LHSEntType, str));
+				std::tuple<std::vector<std::string>, std::vector<std::string>> crossedVec = PKBUtils::computeCartesianProduct(vec, vec, isBooleanResult);
 				LHSResSet.insert(LHSResSet.end(), std::get<0>(crossedVec).begin(), std::get<0>(crossedVec).end());
 				RHSResSet.insert(RHSResSet.end(), std::get<1>(crossedVec).begin(), std::get<1>(crossedVec).end());
 			}
@@ -79,13 +72,10 @@ WithEvaluator::getWithByAttrRef(const std::string& LHSVal, EntityType LHSEntType
 			const std::unordered_set<std::string>& commonStrs = PKBUtils::unorderedSetIntersection(
 				getAttrRefStrSet(LHSEntType, LHSAttrType),
 				getAttrRefStrSet(RHSEntType, RHSAttrType));
-			for (const auto& str: commonStrs) {
-				const std::vector<std::string>& LHSvec = PKBUtils::convertUnorderedSetToVector(
-					getRevMapFromAttr(LHSEntType, str));
-				const std::vector<std::string>& RHSvec = PKBUtils::convertUnorderedSetToVector(
-					getRevMapFromAttr(RHSEntType, str));
-				const std::tuple<std::vector<std::string>, std::vector<std::string>>& crossedVec = PKBUtils::computeCartesianProduct(
-					LHSvec, RHSvec);
+			for (const auto& str : commonStrs) {
+				std::vector<std::string> LHSvec = PKBUtils::convertUnorderedSetToVector(getRevMapFromAttr(LHSEntType, str));
+				std::vector<std::string> RHSvec = PKBUtils::convertUnorderedSetToVector(getRevMapFromAttr(RHSEntType, str));
+				std::tuple<std::vector<std::string>, std::vector<std::string>> crossedVec = PKBUtils::computeCartesianProduct(LHSvec, RHSvec, isBooleanResult);
 				LHSResSet.insert(LHSResSet.end(), std::get<0>(crossedVec).begin(), std::get<0>(crossedVec).end());
 				RHSResSet.insert(RHSResSet.end(), std::get<1>(crossedVec).begin(), std::get<1>(crossedVec).end());
 			}
@@ -104,7 +94,7 @@ std::unordered_set<int> WithEvaluator::getAttrRefIntSet(EntityType RHSType, Attr
 	if (RHSType == EntityType::CONST && RHSAttr == AttributeRef::VALUE) {
 		const std::unordered_set<std::string>& constantStrs = PKB::getConstants();
 		std::unordered_set<int> constants;
-		for (const auto& constantStr: constantStrs) {
+		for (const auto& constantStr : constantStrs) {
 			constants.insert(std::stoi(constantStr));
 		}
 		return constants;
@@ -134,12 +124,9 @@ std::unordered_set<std::string> WithEvaluator::getAttrRefStrSet(EntityType entTy
 }
 
 EntityType WithEvaluator::getAttrRefType(EntityType entType, AttributeRef attrRef) {
-	if (entType == EntityType::PROC && attrRef == AttributeRef::PROC_NAME ||
-		entType == EntityType::VAR && attrRef == AttributeRef::VAR_NAME
-		|| entType == EntityType::CALL && attrRef == AttributeRef::PROC_NAME ||
-		entType == EntityType::VAR && attrRef == AttributeRef::VAR_NAME
-		|| entType == EntityType::READ && attrRef == AttributeRef::VAR_NAME ||
-		entType == EntityType::PRINT && attrRef == AttributeRef::VAR_NAME
+	if (entType == EntityType::PROC && attrRef == AttributeRef::PROC_NAME || entType == EntityType::CALL && attrRef == AttributeRef::PROC_NAME
+		|| entType == EntityType::VAR && attrRef == AttributeRef::VAR_NAME || entType == EntityType::READ && attrRef == AttributeRef::VAR_NAME
+		|| entType == EntityType::PRINT && attrRef == AttributeRef::VAR_NAME
 		) {
 		return EntityType::STRING;
 	} else if (entType == EntityType::STMT && attrRef == AttributeRef::STMT_NO ||

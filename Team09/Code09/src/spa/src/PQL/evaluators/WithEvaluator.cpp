@@ -6,11 +6,9 @@ QueryClauseResult
 WithEvaluator::getWith(const std::string& LHSVal, EntityType LHSEntType, AttributeRef LHSAttrType, const std::string& RHSVal, EntityType RHSEntType, AttributeRef RHSAttrType, bool isBooleanResult) {
 	if (LHSEntType == EntityType::STRING || LHSEntType == EntityType::INT) {
 		return getWithByStrOrInt(LHSVal, LHSEntType, RHSVal, RHSEntType, RHSAttrType, isBooleanResult);
-	}
-	else if (RHSEntType == EntityType::STRING || RHSEntType == EntityType::INT) {
+	} else if (RHSEntType == EntityType::STRING || RHSEntType == EntityType::INT) {
 		return getWithByStrOrInt(RHSVal, RHSEntType, LHSVal, LHSEntType, LHSAttrType, isBooleanResult);
-	}
-	else { // Both Attr Ref
+	} else { // Both Attr Ref
 		return getWithByAttrRef(LHSVal, LHSEntType, LHSAttrType, RHSVal, RHSEntType, RHSAttrType, isBooleanResult);
 	}
 }
@@ -46,13 +44,11 @@ QueryClauseResult WithEvaluator::getWithByAttrRef(const std::string& LHSVal, Ent
 	QueryClauseResult queryResult;
 	if (getAttrRefType(LHSEntType, LHSAttrType) != getAttrRefType(RHSEntType, RHSAttrType)) {
 		return queryResult;
-	}
-	else if (getAttrRefType(LHSEntType, LHSAttrType) == EntityType::INT) { // Both Integer Type AttrRef
+	} else if (getAttrRefType(LHSEntType, LHSAttrType) == EntityType::INT) {
 		std::vector<int> resSet;
 		if (LHSEntType == RHSEntType) {
 			resSet = PKBUtils::convertUnorderedSetToVector(getAttrRefIntSet(LHSEntType, LHSAttrType));
-		}
-		else {
+		} else {
 			resSet = PKBUtils::convertUnorderedSetToVector(PKBUtils::unorderedSetIntersection(
 				getAttrRefIntSet(LHSEntType, LHSAttrType), getAttrRefIntSet(RHSEntType, RHSAttrType), isBooleanResult));
 		}
@@ -60,8 +56,7 @@ QueryClauseResult WithEvaluator::getWithByAttrRef(const std::string& LHSVal, Ent
 			queryResult.addColumn(LHSVal, resSet);
 			queryResult.addColumn(RHSVal, resSet);
 		}
-	}
-	else if (getAttrRefType(LHSEntType, LHSAttrType) == EntityType::STRING) { // Both String Type AttrRef
+	} else if (getAttrRefType(LHSEntType, LHSAttrType) == EntityType::STRING) {
 		std::vector<std::string> LHSResSet;
 		std::vector<std::string> RHSResSet;
 		std::unordered_set<std::string> commonStrs;
@@ -73,9 +68,9 @@ QueryClauseResult WithEvaluator::getWithByAttrRef(const std::string& LHSVal, Ent
 				LHSResSet.insert(LHSResSet.end(), std::get<0>(crossedVec).begin(), std::get<0>(crossedVec).end());
 				RHSResSet.insert(RHSResSet.end(), std::get<1>(crossedVec).begin(), std::get<1>(crossedVec).end());
 			}
-		}
-		else {
-			std::unordered_set<std::string> commonStrs = PKBUtils::unorderedSetIntersection(getAttrRefStrSet(LHSEntType, LHSAttrType), 
+		} else {
+			const std::unordered_set<std::string>& commonStrs = PKBUtils::unorderedSetIntersection(
+				getAttrRefStrSet(LHSEntType, LHSAttrType),
 				getAttrRefStrSet(RHSEntType, RHSAttrType));
 			for (const auto& str : commonStrs) {
 				std::vector<std::string> LHSvec = PKBUtils::convertUnorderedSetToVector(getRevMapFromAttr(LHSEntType, str));
@@ -97,14 +92,13 @@ QueryClauseResult WithEvaluator::getWithByAttrRef(const std::string& LHSVal, Ent
 
 std::unordered_set<int> WithEvaluator::getAttrRefIntSet(EntityType RHSType, AttributeRef RHSAttr) {
 	if (RHSType == EntityType::CONST && RHSAttr == AttributeRef::VALUE) {
-		std::unordered_set<std::string> constantStrs = PKB::getConstants();
+		const std::unordered_set<std::string>& constantStrs = PKB::getConstants();
 		std::unordered_set<int> constants;
 		for (const auto& constantStr : constantStrs) {
 			constants.insert(std::stoi(constantStr));
 		}
 		return constants;
-	}
-	else if (RHSAttr == AttributeRef::STMT_NO) {
+	} else if (RHSAttr == AttributeRef::STMT_NO) {
 		return PKB::getStatementsWithType(RHSType);
 	}
 	return {};
@@ -114,19 +108,15 @@ std::unordered_set<std::string> WithEvaluator::getAttrRefStrSet(EntityType entTy
 	if (attrRef == AttributeRef::PROC_NAME) {
 		if (entType == EntityType::PROC) {
 			return PKB::getProcedures();
-		}
-		else if (entType == EntityType::CALL) {
+		} else if (entType == EntityType::CALL) {
 			return PKB::getAllCallees();
 		}
-	}
-	else if (attrRef == AttributeRef::VAR_NAME) {
+	} else if (attrRef == AttributeRef::VAR_NAME) {
 		if (entType == EntityType::VAR) {
 			return PKB::getVariables();
-		}
-		else if (entType == EntityType::READ) {
+		} else if (entType == EntityType::READ) {
 			return PKB::getReadVariables();
-		}	
-		else if (entType == EntityType::PRINT) {
+		} else if (entType == EntityType::PRINT) {
 			return PKB::getPrintVariables();
 		}
 	}
@@ -139,11 +129,14 @@ EntityType WithEvaluator::getAttrRefType(EntityType entType, AttributeRef attrRe
 		|| entType == EntityType::PRINT && attrRef == AttributeRef::VAR_NAME
 		) {
 		return EntityType::STRING;
-	}
-	else if (entType == EntityType::STMT && attrRef == AttributeRef::STMT_NO || entType == EntityType::CONST && attrRef == AttributeRef::VALUE
-		|| entType == EntityType::READ && attrRef == AttributeRef::STMT_NO || entType == EntityType::PRINT && attrRef == AttributeRef::STMT_NO
-		|| entType == EntityType::CALL && attrRef == AttributeRef::STMT_NO || entType == EntityType::WHILE && attrRef == AttributeRef::STMT_NO
-		|| entType == EntityType::IF && attrRef == AttributeRef::STMT_NO || entType == EntityType::ASSIGN && attrRef == AttributeRef::STMT_NO
+	} else if (entType == EntityType::STMT && attrRef == AttributeRef::STMT_NO ||
+			   entType == EntityType::CONST && attrRef == AttributeRef::VALUE
+			   || entType == EntityType::READ && attrRef == AttributeRef::STMT_NO ||
+			   entType == EntityType::PRINT && attrRef == AttributeRef::STMT_NO
+			   || entType == EntityType::CALL && attrRef == AttributeRef::STMT_NO ||
+			   entType == EntityType::WHILE && attrRef == AttributeRef::STMT_NO
+			   || entType == EntityType::IF && attrRef == AttributeRef::STMT_NO ||
+			   entType == EntityType::ASSIGN && attrRef == AttributeRef::STMT_NO
 		) {
 		return EntityType::INT;
 	}
@@ -153,11 +146,9 @@ EntityType WithEvaluator::getAttrRefType(EntityType entType, AttributeRef attrRe
 std::unordered_set<std::string> WithEvaluator::getRevMapFromAttr(EntityType entType, std::string attr) {
 	if (entType == EntityType::CALL && PKB::getProceduresToCallStatements().count(attr)) {
 		return PKB::getProceduresToCallStatements().at(attr);
-	}
-	else if (entType == EntityType::READ && PKB::getVariablesToReadStatements().count(attr)) {
+	} else if (entType == EntityType::READ && PKB::getVariablesToReadStatements().count(attr)) {
 		return PKB::getVariablesToReadStatements().at(attr);
-	}
-	else if (entType == EntityType::PRINT && PKB::getVariablesToPrintStatements().count(attr)) {
+	} else if (entType == EntityType::PRINT && PKB::getVariablesToPrintStatements().count(attr)) {
 		return PKB::getVariablesToPrintStatements().at(attr);
 	}
 	return {attr};

@@ -7,25 +7,19 @@
 ClauseEvaluator QueryEvaluator::clauseEvaluator{};
 
 Table QueryEvaluator::evaluate(Query& query) {
-	std::unordered_set<QueryArgument, std::hash<QueryArgument>, QueryArgumentSetEqual> selectSynNotInClauses;
-	std::unordered_set<QueryArgument, std::hash<QueryArgument>> synWithRef;
-	std::vector<QueryClause> clausesWithoutSyn;
-	std::vector<OptimizerGroup> clauseGroups;
-
 	if (query.isEmpty()) {
 		return {};
 	}
 
-	std::tie(selectSynNotInClauses, synWithRef, clausesWithoutSyn, clauseGroups) = Optimizer::optimize(
-		query);
+	const auto&[selectSynNotInClauses, synWithRef, clausesWithoutSyn, clauseGroups] = Optimizer::optimize(query);
+
+	clauseEvaluator = ClauseEvaluator();
 
 	if (query.isBooleanQuery()) {
 		return evaluateBooleanQuery(clausesWithoutSyn, clauseGroups);
 	}
 
-	clauseEvaluator = ClauseEvaluator();
-
-	std::vector<QueryArgument> resultSyns = query.getResultSynonyms();
+	const std::vector<QueryArgument>& resultSyns = query.getResultSynonyms();
 	std::unordered_set<std::string> resultSynSet;
 	std::transform(resultSyns.begin(), resultSyns.end(), std::inserter(resultSynSet, resultSynSet.begin()),
 				   [](const QueryArgument& arg) -> std::string { return arg.getValue(); });
@@ -61,14 +55,14 @@ Table QueryEvaluator::evaluateNormalQuery(const std::unordered_set<std::string>&
 	if (!clausesWithoutSyn.empty() && !evaluateClausesWithoutSyn(clausesWithoutSyn)) {
 		return {};
 	}
-	std::vector<QueryClauseResult> entityResults = evaluateSynNotInClause(selectSynNotInClauses);
+	const std::vector<QueryClauseResult>& entityResults = evaluateSynNotInClause(selectSynNotInClauses);
 	if (!selectSynNotInClauses.empty() && entityResults.empty()) {
 		return {};
 	}
 
 	std::vector<Table> groupWithSelectResults;
 	for (const auto& group: clauseGroups) {
-		std::unordered_set<std::string> synonyms = group.getUsedSynonyms();
+		const std::unordered_set<std::string>& synonyms = group.getUsedSynonyms();
 		if (CommonUtils::containsCommon(synonyms, resultSynSet)) {
 			Table intermediateRes = evaluateGroupWithSelect(group);
 			if (intermediateRes.empty()) {
@@ -89,8 +83,8 @@ Table QueryEvaluator::evaluateNormalQuery(const std::unordered_set<std::string>&
 	} else if (groupWithSelectResults.empty() && !selectSynNotInClauses.empty()) {
 		finalResults = mergeGroupResults(entityResults);
 	} else {
-		Table synNotInClausesResults = mergeGroupResults(entityResults);
-		Table clausesWithSelectResults = mergeGroupResults(groupWithSelectResults);
+		const Table& synNotInClausesResults = mergeGroupResults(entityResults);
+		const Table& clausesWithSelectResults = mergeGroupResults(groupWithSelectResults);
 		finalResults = QueryUtils::crossProduct(synNotInClausesResults, clausesWithSelectResults);
 	}
 	SelectRefEvaluator::evaluate(finalResults, synWithRef);
@@ -99,7 +93,7 @@ Table QueryEvaluator::evaluateNormalQuery(const std::unordered_set<std::string>&
 
 bool QueryEvaluator::evaluateClausesWithoutSyn(const std::vector<QueryClause>& clauses) {
 	for (const auto& clause: clauses) {
-		QueryClauseResult clauseRes = clauseEvaluator.evaluate(clause, true);
+		const QueryClauseResult& clauseRes = clauseEvaluator.evaluate(clause, true);
 		if (!clauseRes.containsValidResult()) {
 			return false;
 		}
@@ -112,8 +106,7 @@ QueryEvaluator::evaluateSynNotInClause(
 	const std::unordered_set<QueryArgument, std::hash<QueryArgument>, QueryArgumentSetEqual>& syns) {
 	std::vector<QueryClauseResult> results;
 	for (const auto& syn: syns) {
-		QueryClauseResult entityResult;
-		entityResult = EntityEvaluator::evaluate(syn);
+		const QueryClauseResult& entityResult = EntityEvaluator::evaluate(syn);
 		if (!entityResult.containsValidResult()) {
 			return {};
 		}
@@ -123,10 +116,10 @@ QueryEvaluator::evaluateSynNotInClause(
 }
 
 bool QueryEvaluator::evaluateGroupWithoutSelect(const OptimizerGroup& group) {
-	std::vector<QueryClause> groupClauses = group.getClauses();
+	const std::vector<QueryClause>& groupClauses = group.getClauses();
 	std::vector<QueryClauseResult> results;
 	if (groupClauses.size() == 1) {
-		QueryClauseResult clauseRes = clauseEvaluator.evaluate(groupClauses.front(), true);
+		const QueryClauseResult& clauseRes = clauseEvaluator.evaluate(groupClauses.front(), true);
 		if (!clauseRes.containsValidResult()) {
 			return false;
 		}
@@ -134,7 +127,7 @@ bool QueryEvaluator::evaluateGroupWithoutSelect(const OptimizerGroup& group) {
 	}
 
 	for (const auto& clause: groupClauses) {
-		QueryClauseResult clauseRes = clauseEvaluator.evaluate(clause, false);
+		const QueryClauseResult& clauseRes = clauseEvaluator.evaluate(clause, false);
 		if (!clauseRes.containsValidResult()) {
 			return false;
 		}
@@ -148,11 +141,11 @@ bool QueryEvaluator::evaluateGroupWithoutSelect(const OptimizerGroup& group) {
 }
 
 Table QueryEvaluator::evaluateGroupWithSelect(const OptimizerGroup& group) {
-	std::vector<QueryClause> groupClauses = group.getClauses();
+	const std::vector<QueryClause>& groupClauses = group.getClauses();
 	std::vector<QueryClauseResult> results;
 
 	for (const auto& clause: groupClauses) {
-		QueryClauseResult clauseRes = clauseEvaluator.evaluate(clause, false);
+		const QueryClauseResult& clauseRes = clauseEvaluator.evaluate(clause, false);
 		if (!clauseRes.containsValidResult()) {
 			return {};
 		}
@@ -206,7 +199,7 @@ Table QueryEvaluator::mergeRelatedClauseResults(const std::vector<QueryClauseRes
 		return {};
 	}
 
-	std::vector<std::string> firstCol = (*finalResults.begin()).second;
+	const std::vector<std::string>& firstCol = (*finalResults.begin()).second;
 	if (firstCol.empty()) {
 		return {};
 	}

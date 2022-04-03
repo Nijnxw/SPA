@@ -1,8 +1,8 @@
 #include "ClauseEvaluator.h"
 
 QueryClauseResult ClauseEvaluator::evaluate(const QueryClause& clause, bool isBooleanResult) {
-	QueryArgument firstArg = clause.getArguments().at(0);
-	QueryArgument secondArg = clause.getArguments().at(1);
+	const QueryArgument& firstArg = clause.getArguments().at(0);
+	const QueryArgument& secondArg = clause.getArguments().at(1);
 
 	switch (clause.getClauseType()) {
 		case RelationRef::FOLLOWS:

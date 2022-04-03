@@ -40,7 +40,7 @@ QueryClauseResult StmtStmtRelationshipEvaluator::getRelationshipByStatementNumbe
 		RHSType == EntityType::CALL) { // Follows(1, s)
 		if (PKB::isStmtStmtFirstEntity(relationship, std::stoi(LHS))) {
 			std::unordered_set<int> statements = PKB::getStmtStmtSecondEntities(relationship, std::stoi(LHS));
-			queryResult.addColumn(RHS, StmtStmtRelationshipEvaluator::filterStatementsByType(statements, RHSType));
+			queryResult.addColumn(RHS, StmtStmtRelationshipEvaluator::filterStatementsByType(statements, RHSType, isBooleanResult));
 		}
 	}
 	else if (RHSType == EntityType::WILD) { // Follows(1, _)
@@ -68,7 +68,7 @@ QueryClauseResult StmtStmtRelationshipEvaluator::getRelationshipByStatementVaria
 	else if (RHSType == EntityType::INT) { // Follows(s, 2)
 		if (PKB::isStmtStmtSecondEntity(relationship, std::stoi(RHS))) {
 			std::unordered_set<int> statements = PKB::getStmtStmtFirstEntities(relationship, std::stoi(RHS));
-			queryResult.addColumn(LHS, StmtStmtRelationshipEvaluator::filterStatementsByType(statements, LHSType));
+			queryResult.addColumn(LHS, StmtStmtRelationshipEvaluator::filterStatementsByType(statements, LHSType, isBooleanResult));
 		}
 	}
 	else if (RHSType == EntityType::STMT || RHSType == EntityType::ASSIGN || RHSType == EntityType::IF ||
@@ -81,7 +81,7 @@ QueryClauseResult StmtStmtRelationshipEvaluator::getRelationshipByStatementVaria
 	}
 	else if (RHSType == EntityType::WILD) { // Follows(s, _)
 		std::unordered_set<int> statements = PKB::getAllStmtStmtFirstEntities(relationship);
-		queryResult.addColumn(LHS, StmtStmtRelationshipEvaluator::filterStatementsByType(statements, LHSType));
+		queryResult.addColumn(LHS, StmtStmtRelationshipEvaluator::filterStatementsByType(statements, LHSType, isBooleanResult));
 	}
 
 	return queryResult;
@@ -98,7 +98,7 @@ QueryClauseResult StmtStmtRelationshipEvaluator::getRelationshipByUnderscore(Rel
 		RHSType == EntityType::WHILE || RHSType == EntityType::PRINT || RHSType == EntityType::READ ||
 		RHSType == EntityType::CALL) { // Follows(_, s)
 		std::unordered_set<int> statements = PKB::getAllStmtStmtSecondEntities(relationship);
-		queryResult.addColumn(RHS, StmtStmtRelationshipEvaluator::filterStatementsByType(statements, RHSType));
+		queryResult.addColumn(RHS, StmtStmtRelationshipEvaluator::filterStatementsByType(statements, RHSType, isBooleanResult));
 	}
 	else if (RHSType == EntityType::WILD) { // Follows(_, _)
 		if (PKB::hasStmtStmtRelationship(relationship)) {
@@ -137,7 +137,7 @@ std::unordered_set<int> StmtStmtRelationshipEvaluator::filterStatementsByType(st
 		break;
 	}
 
-	return PKBUtils::unorderedSetIntersection(statements, typeStatements);
+	return PKBUtils::unorderedSetIntersection(statements, typeStatements, isBooleanResult);
 }
 
 std::tuple<std::vector<int>, std::vector<int>> StmtStmtRelationshipEvaluator::filterStatementPairsByType(std::vector<int> firstEntities,

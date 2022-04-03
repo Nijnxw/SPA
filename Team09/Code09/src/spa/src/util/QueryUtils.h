@@ -4,6 +4,7 @@
 #include <unordered_map>
 #include <unordered_set>
 #include <vector>
+#include <sstream>
 #include "models/QueryClauseResult.h"
 
 struct PairHash {
@@ -20,26 +21,17 @@ public:
 	static Table hashJoin(const Table& firstResult, const Table& secondResult);
 	static Table crossProduct(const Table& firstResult, const Table& secondResult);
 
-	static std::unordered_set<std::string> stringifyRows(Table table, std::vector<std::string> colOrder);
+	static std::unordered_set<std::string> stringifyRows(const Table& table, const std::vector<std::string>& colOrder);
 	// always order the headers in ascending order before converting each row value to space separated string
-	static std::unordered_set<std::string> stringifyRows(Table table);
+	static std::unordered_set<std::string> stringifyRows(const Table& table);
 
 private:
-	static std::vector<std::string> getCommonHeaders(const Table& firstTable, const Table& secondTable);
+	static std::unordered_set<std::string> getCommonHeaders(const Table& firstTable, const Table& secondTable);
+	static Table initialiseTable(const Table& firstTable, const Table& secondTable);
 
-	static std::vector<std::string> getUniqueHeaders(const Table& table, const Table& secondTable);
-
-	static GroupedTable extractCommonTuples(const std::vector<std::string>& commonHeaders,
-											const Table& firstTable,
-											const Table& secondTable);
-
-	static std::string selectTupleToString(const std::vector<std::string>& headers, size_t rowNum, const Table& table);
-
+	static std::string
+	selectTupleToString(const std::unordered_set<std::string>& headers, size_t rowNum, const Table& table);
 	static void
-	crossProductHelper(const std::unordered_set<int>& firstTupleSet, const std::unordered_set<int>& secondTupleSet,
-					   std::unordered_set<std::pair<int, int>, PairHash>& tuplePairings);
-
-	static Table
-	joinRows(const std::unordered_set<std::pair<int, int>, PairHash>& tuplePairings, const Table& firstTable,
-			 const Table& secondTable, const std::vector<std::string>& commonHeaders);
+	hashJoinHelper(const std::unordered_set<std::string>& commonTableHeaders, const Table& firstTable,
+				   size_t numFirstTableRows, const Table& secondTable, size_t numSecondTableRows, Table& resultTable);
 };

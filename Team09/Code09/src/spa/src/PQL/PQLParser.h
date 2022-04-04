@@ -129,19 +129,26 @@ private:
 	int current;
 	int end;
 	bool isBooleanQuery = false;
+	bool isSemanticErrorDetected = false;
 	std::vector<PQLToken*> tokens;
 	std::unordered_map<std::string, EntityType> Declarations;
 	std::vector<QueryArgument> resultSynonyms;
 	std::vector<QueryClause> QueryClauses;
 
+	//flag setters
+	void setSemanticErrorFlag();
+
+	//Token Checkers
 	bool isValidSynonym(PQLToken* token);
+	bool isAttributeRef(PQLToken* token);
 	bool isDeclaredSynonym(std::string syn);
 	bool nextIsComma();
 	bool isWithArgNameType(QueryArgument arg);
 	bool isWithArgNumberType(QueryArgument arg);
 	bool isWithArgsSameType(QueryArgument arg1, QueryArgument arg2);
-	bool isValidAttributeRef(EntityType synType, TokenType attributeRef);
-
+	bool isValidAttributeRefSynPair(EntityType synType, TokenType attributeRef);
+	
+	//getters + checkers
 	PQLToken* peekNextToken();
 	PQLToken* getNextToken();
 	PQLToken* getNextExpectedToken(TokenType tokenType);
@@ -155,7 +162,6 @@ private:
 	void parseResultSynonym();
 	void parseResultTuple();
 	void parseResultBoolean();
-
 
 	QueryArgument parseArgs(PQLToken* token);
 

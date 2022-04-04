@@ -21,3 +21,11 @@ bool Query::isBooleanQuery() {
 bool Query::isEmpty() {
 	return resultSynonyms.empty() && clauses.empty();
 }
+
+void Query::setSemanticErrorFlag(bool detected) {
+	SemanticErrorDetected = detected;
+}
+
+bool Query::isSemanticErrorDetected() {
+	return SemanticErrorDetected;
+}

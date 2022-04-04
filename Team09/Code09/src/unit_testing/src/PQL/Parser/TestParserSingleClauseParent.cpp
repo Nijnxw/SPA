@@ -513,7 +513,7 @@ TEST_CASE("Parent - illegal first arg") {
 		std::vector<PQLToken*> PQLTokens = tokeniser.tokenise();
 		PQLParser parser = PQLParser(PQLTokens);
 		Query actualQuery = parser.parse();
-		REQUIRE(actualQuery.isEmpty());
+		REQUIRE((actualQuery.isEmpty() && actualQuery.isSemanticErrorDetected()));
 	}
 
 	SECTION("var synonym as first arg") {
@@ -522,16 +522,16 @@ TEST_CASE("Parent - illegal first arg") {
 		std::vector<PQLToken*> PQLTokens = tokeniser.tokenise();
 		PQLParser parser = PQLParser(PQLTokens);
 		Query actualQuery = parser.parse();
-		REQUIRE(actualQuery.isEmpty());
+		REQUIRE((actualQuery.isEmpty() && actualQuery.isSemanticErrorDetected()));
 	}
 
 	SECTION("const synonym as first arg") {
-		std::string queryString = "stmt s; const c; Select s such that Parent(c, s)";
+		std::string queryString = "stmt s; constant c; Select s such that Parent(c, s)";
 		PQLLexer tokeniser = PQLLexer(queryString);
 		std::vector<PQLToken*> PQLTokens = tokeniser.tokenise();
 		PQLParser parser = PQLParser(PQLTokens);
 		Query actualQuery = parser.parse();
-		REQUIRE(actualQuery.isEmpty());
+		REQUIRE((actualQuery.isEmpty() && actualQuery.isSemanticErrorDetected()));
 	}
 
 	SECTION("procedure synonym as first arg") {
@@ -540,7 +540,7 @@ TEST_CASE("Parent - illegal first arg") {
 		std::vector<PQLToken*> PQLTokens = tokeniser.tokenise();
 		PQLParser parser = PQLParser(PQLTokens);
 		Query actualQuery = parser.parse();
-		REQUIRE(actualQuery.isEmpty());
+		REQUIRE((actualQuery.isEmpty() && actualQuery.isSemanticErrorDetected()));
 	}
 }
 
@@ -552,7 +552,8 @@ TEST_CASE("Parent - illegal second arg") {
 		std::vector<PQLToken*> PQLTokens = tokeniser.tokenise();
 		PQLParser parser = PQLParser(PQLTokens);
 		Query actualQuery = parser.parse();
-		REQUIRE(actualQuery.isEmpty());
+		REQUIRE((actualQuery.isEmpty() && actualQuery.isSemanticErrorDetected()));
+
 	}
 
 	SECTION("var synonym as second arg") {
@@ -561,16 +562,18 @@ TEST_CASE("Parent - illegal second arg") {
 		std::vector<PQLToken*> PQLTokens = tokeniser.tokenise();
 		PQLParser parser = PQLParser(PQLTokens);
 		Query actualQuery = parser.parse();
-		REQUIRE(actualQuery.isEmpty());
+		REQUIRE((actualQuery.isEmpty() && actualQuery.isSemanticErrorDetected()));
+
 	}
 
 	SECTION("const synonym as second arg") {
-		std::string queryString = "stmt s; const c; Select s such that Parent(s,c)";
+		std::string queryString = "stmt s; constant c; Select s such that Parent(s,c)";
 		PQLLexer tokeniser = PQLLexer(queryString);
 		std::vector<PQLToken*> PQLTokens = tokeniser.tokenise();
 		PQLParser parser = PQLParser(PQLTokens);
 		Query actualQuery = parser.parse();
-		REQUIRE(actualQuery.isEmpty());
+		REQUIRE((actualQuery.isEmpty() && actualQuery.isSemanticErrorDetected()));
+
 	}
 
 	SECTION("procedure synonym as second arg") {
@@ -579,7 +582,8 @@ TEST_CASE("Parent - illegal second arg") {
 		std::vector<PQLToken*> PQLTokens = tokeniser.tokenise();
 		PQLParser parser = PQLParser(PQLTokens);
 		Query actualQuery = parser.parse();
-		REQUIRE(actualQuery.isEmpty());
+		REQUIRE((actualQuery.isEmpty() && actualQuery.isSemanticErrorDetected()));
+
 	}
 }
 

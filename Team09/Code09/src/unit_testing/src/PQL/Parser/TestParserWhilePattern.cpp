@@ -86,7 +86,8 @@ TEST_CASE("pattern - while pattern unhappy paths") {
 		PQLParser parser = PQLParser(PQLTokens);
 
 		Query actualQuery = parser.parse();
-		REQUIRE(actualQuery.isEmpty());
+		REQUIRE((actualQuery.isEmpty()));
+
 	}
 
 	SECTION("non var arg synonym as first arg") {
@@ -96,7 +97,8 @@ TEST_CASE("pattern - while pattern unhappy paths") {
 		PQLParser parser = PQLParser(PQLTokens);
 
 		Query actualQuery = parser.parse();
-		REQUIRE(actualQuery.isEmpty());
+		REQUIRE((actualQuery.isEmpty() && actualQuery.isSemanticErrorDetected()));
+
 	}
 
 	SECTION("integer as first arg") {
@@ -106,7 +108,8 @@ TEST_CASE("pattern - while pattern unhappy paths") {
 		PQLParser parser = PQLParser(PQLTokens);
 
 		Query actualQuery = parser.parse();
-		REQUIRE(actualQuery.isEmpty());
+		REQUIRE((actualQuery.isEmpty() && actualQuery.isSemanticErrorDetected()));
+
 	}
 
 	SECTION("expr as first arg") {
@@ -116,6 +119,8 @@ TEST_CASE("pattern - while pattern unhappy paths") {
 		PQLParser parser = PQLParser(PQLTokens);
 
 		Query actualQuery = parser.parse();
-		REQUIRE(actualQuery.isEmpty());
+		REQUIRE((actualQuery.isEmpty()));
+
 	}
 }
+

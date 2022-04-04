@@ -417,7 +417,7 @@ TEST_CASE("Modifies - wildcard as first arg") {
 	PQLParser parser = PQLParser(PQLTokens);
 
 	Query actualQuery = parser.parse();
-	REQUIRE((actualQuery.isEmpty()));
+	REQUIRE((actualQuery.isEmpty() && actualQuery.isSemanticErrorDetected()));
 }
 
 TEST_CASE("Modifies - print synonym as first arg") {
@@ -427,7 +427,8 @@ TEST_CASE("Modifies - print synonym as first arg") {
 	PQLParser parser = PQLParser(PQLTokens);
 
 	Query actualQuery = parser.parse();
-	REQUIRE(actualQuery.isEmpty());
+	REQUIRE((actualQuery.isEmpty() && actualQuery.isSemanticErrorDetected()));
+
 }
 
 TEST_CASE("Modifies - var synonym as first arg") {
@@ -437,7 +438,8 @@ TEST_CASE("Modifies - var synonym as first arg") {
 	PQLParser parser = PQLParser(PQLTokens);
 
 	Query actualQuery = parser.parse();
-	REQUIRE(actualQuery.isEmpty());
+	REQUIRE((actualQuery.isEmpty() && actualQuery.isSemanticErrorDetected()));
+
 }
 
 TEST_CASE("Modifies - const synonym as first arg") {
@@ -447,7 +449,8 @@ TEST_CASE("Modifies - const synonym as first arg") {
 	PQLParser parser = PQLParser(PQLTokens);
 
 	Query actualQuery = parser.parse();
-  REQUIRE((actualQuery.isEmpty()));
+	REQUIRE((actualQuery.isEmpty() && actualQuery.isSemanticErrorDetected()));
+
 }
 
 TEST_CASE("Modifies - missing open paran") {

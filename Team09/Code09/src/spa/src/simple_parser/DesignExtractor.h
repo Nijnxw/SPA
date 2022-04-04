@@ -14,6 +14,7 @@
 #include "simple_parser/CFGExtractor.h"
 
 #include <memory>
+#include <stack>
 #include <string>
 #include <unordered_set>
 #include <unordered_map>
@@ -22,13 +23,33 @@
 class DesignExtractor {
 private:
 	static inline std::unordered_map<std::string, NestableRelationships> procCache;
+	AST ast;
+	int totalStmt;
+
+	std::stack<NestableRelationships> nestableRelationshipsStack;
+	std::stack<std::shared_ptr<Node>> nodeStack;
+	std::stack<std::shared_ptr<Node>> containerStack; //will contain ProcedureNode, IfNode, WhileNode, CallNode
+	std::stack<std::string> callStack;
+
+	void bubbleRelationshipInfo(NestableRelationships rs, std::unordered_set<int> unwantedChildren);
+
+	void processStmtList(std::vector<std::shared_ptr<StmtNode>> stmtList);
+	void processProcedure(std::shared_ptr<ProcedureNode> proc);
+	void processPrintNode(std::shared_ptr<PrintNode> print);
+	void processReadNode(std::shared_ptr<ReadNode> read);
+	void processAssignNode(std::shared_ptr<AssignNode> assign);
+	void processWhileNode(std::shared_ptr<WhileNode> whiles);
+	void processIfNode(std::shared_ptr<IfNode> ifs);
+	void processCallNode(std::shared_ptr<CallNode> call);
+	void processStmt(std::shared_ptr<StmtNode> stmt);
+	void processProcedureList(std::unordered_map<std::string, std::shared_ptr<ProcedureNode>> procMap);
 
 public:
-	DesignExtractor();
+	DesignExtractor(AST ast, int stmtCount);
 	static bool isCached(std::string procName);
 	static NestableRelationships retrieve(std::string procName);
 	static void cache(std::string procName, NestableRelationships rs);
 
-	static void extractDesignElements(AST ast, int stmtCount);
-	static void commit();
+	void extractDesignElements();
+	void commit();
 };

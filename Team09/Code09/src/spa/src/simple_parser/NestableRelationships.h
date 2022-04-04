@@ -8,7 +8,7 @@ class NestableRelationships {
 private:
 	std::unordered_set<std::string> uses;
 	std::unordered_set<std::string> modifies;
-	std::vector<std::string> calls;
+	std::unordered_set<std::string> calls;
 	std::unordered_set<int> children;
 
 public:
@@ -18,11 +18,11 @@ public:
 	void addModifies(std::string modified);
 	void addCalls(std::string procedure);
 	void addChildren(int child);
-	void clearChildren();
+	void removeChildren(std::unordered_set<int> unwantedChildren);
 
 	std::unordered_set<std::string> getUses();
 	std::unordered_set<std::string> getModifies();
-	std::vector<std::string> getCalls();
+	std::unordered_set<std::string> getCalls();
 	std::unordered_set<int> getChildren();
 
 	int getUsesSize();

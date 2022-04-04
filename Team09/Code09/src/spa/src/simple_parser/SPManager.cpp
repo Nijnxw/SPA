@@ -23,6 +23,7 @@ AST SPManager::parseFile(const std::string& filename) {
 }
 
 void SPManager::extractDesign(AST ast) {
-	DesignExtractor::extractDesignElements(std::move(ast), stmtCount);
-	DesignExtractor::commit();
+	DesignExtractor de = DesignExtractor(std::move(ast), stmtCount);
+	de.extractDesignElements();
+	de.commit();
 }

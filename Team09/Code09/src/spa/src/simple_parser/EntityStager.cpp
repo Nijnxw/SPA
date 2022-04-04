@@ -57,7 +57,7 @@ std::unordered_set<int> EntityStager::getStagedStatements() {
 	return stagedStatements;
 }
 
-std::vector<int> EntityStager::getStagedProcStatements() {
+std::unordered_set<int> EntityStager::getStagedProcStatements() {
 	return stagedProcStatements;
 }
 
@@ -171,7 +171,7 @@ void EntityStager::stageStatement(int stmtNo) {
 }
 
 void EntityStager::stageProcStatement(int stmtNo) {
-	stagedProcStatements.push_back(stmtNo);
+	stagedProcStatements.insert(stmtNo);
 }
 
 void EntityStager::stageIfStatement(int stmtNo, std::unordered_set<std::string> vars) {
@@ -258,12 +258,15 @@ void EntityStager::commit() {
 	for (auto& con: stagedVariables) { PKB::addVariable(con); }
 
 	for (auto& stmt: stagedStatements) { PKB::addStatementNumber(stmt); }
-	for (auto& stmt: stagedProcStatements) { PKB::addProcStatementNumber(stmt); }
 	for (auto& read: stagedReadStatements) { PKB::addReadStatement(read.first, read.second); }
 	for (auto& print: stagedPrintStatements) { PKB::addPrintStatement(print.first, print.second); }
 	for (auto& ifs: stagedIfStatements) { PKB::addIfStatement(ifs.first, ifs.second); }
 	for (auto& whiles: stagedWhileStatements) { PKB::addWhileStatement(whiles.first, whiles.second); }
 	for (auto& call: stagedCallStatements) { PKB::addCallStatement(call.first, call.second); }
+
+	std::vector<int> procStatementsToStage = {stagedProcStatements.begin(), stagedProcStatements.end()};
+	std::sort(procStatementsToStage.begin(), procStatementsToStage.end());
+	for (auto& stmt: procStatementsToStage) { PKB::addProcStatementNumber(stmt); }
 
 	for (auto& assign: stagedAssignStatements) {
 		PKB::addAssignStatement(std::get<0>(assign), std::get<1>(assign), std::get<2>(assign));

@@ -6,7 +6,7 @@
 std::unordered_set<std::string> QueryResultProjector::formatResult(Table& res, Query& query) {
 
 	if (query.isBooleanQuery()) {
-		if (res.empty()) {
+		if (res.empty() || query.isSemanticErrorDetected()) {
 			return {"FALSE"};
 		}
 		return {"TRUE"};

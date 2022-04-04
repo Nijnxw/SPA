@@ -11,7 +11,7 @@
 PQLParser::PQLParser(std::vector<PQLToken*> PQLTokens) : current(0), end(PQLTokens.size()), tokens(PQLTokens) {}
 
 void PQLParser::setSemanticErrorFlag() {
-	isSemanticErrorDetected = !isSemanticErrorDetected;
+	isSemanticErrorDetected = true;
 }
 
 bool PQLParser::isValidSynonym(PQLToken* token) {
@@ -95,7 +95,7 @@ void PQLParser::parseDeclaration() {
 
 	auto expectedSynonym = getValidSynonymToken();
 
-	if (isDeclaredSynonym(expectedSynonym->getValue()) && !isSemanticErrorDetected) {
+	if (isDeclaredSynonym(expectedSynonym->getValue())) {
 		setSemanticErrorFlag();
 	}
 
@@ -104,7 +104,7 @@ void PQLParser::parseDeclaration() {
 	while (current != end && nextIsComma()) {
 		getNextExpectedToken(TokenType::COMMA);
 		nextToken = getValidSynonymToken();
-		if (isDeclaredSynonym(nextToken->getValue()) && !isSemanticErrorDetected) {
+		if (isDeclaredSynonym(nextToken->getValue())) {
 			setSemanticErrorFlag();
 		}
 		Declarations[nextToken->getValue()] = entityType->second;
@@ -157,7 +157,7 @@ void PQLParser::parseResultSynonym() {
 		if (!isAttributeRef(attrRefToken)) {
 			throw "invalid attribute ref";
 		}
-		if (!isSemanticErrorDetected && !isValidAttributeRefSynPair(Declarations[synonymToken->getValue()], attrRefToken->getType())) { 
+		if (!isValidAttributeRefSynPair(Declarations[synonymToken->getValue()], attrRefToken->getType())) { 
 			setSemanticErrorFlag();
 			return;
 		}
@@ -186,7 +186,7 @@ QueryArgument PQLParser::parseArgs(PQLToken* token) {
 			if (isDeclaredSynonym(token->getValue())) {
 				return QueryArgument(std::string(token->getValue()), Declarations[token->getValue()]);
 				break;
-			} else if (isValidSynonym(token) && !isSemanticErrorDetected) {
+			} else if (isValidSynonym(token)) {
 				setSemanticErrorFlag();
 				return QueryArgument(std::string(token->getValue()), EntityType::NONE);
 				break;
@@ -212,7 +212,7 @@ void PQLParser::parseSingleRelationshipClause() {
 		auto nextToken = getNextToken();
 		auto arg = parseArgs(nextToken);
 
-		if (validArgs.find(arg.getType()) == validArgs.end() && !isSemanticErrorDetected) {
+		if (validArgs.find(arg.getType()) == validArgs.end()) {
 			setSemanticErrorFlag();
 		}
 
@@ -259,7 +259,7 @@ QueryArgument PQLParser::parsePatternArgStmtList() {
 QueryArgument PQLParser::parsePatternVarArgs() {
 	auto nextToken = getNextToken();
 	auto arg = parseArgs(nextToken);
-	if (VarArgTypes.find(arg.getType()) == VarArgTypes.end() && !isSemanticErrorDetected) {
+	if (VarArgTypes.find(arg.getType()) == VarArgTypes.end()) {
 		setSemanticErrorFlag();
 	}
 	return arg;
@@ -358,7 +358,7 @@ void PQLParser::parseSinglePatternClause() {
 			parseWhilePattern(synonymToken);
 			break;
 		default:
-			if (!isSemanticErrorDetected) { setSemanticErrorFlag(); }
+			setSemanticErrorFlag();
 			break;
 	}
 }
@@ -384,7 +384,7 @@ QueryArgument PQLParser::parseWithArgs() {
 		getNextExpectedToken(TokenType::PERIOD);
 		auto nextToken = getNextToken();
 		if (!isAttributeRef(nextToken)) { throw "invalid attribute ref token"; }
-		if (!isSemanticErrorDetected && !isValidAttributeRefSynPair(Declarations[token->getValue()],nextToken->getType())) {
+		if (!isValidAttributeRefSynPair(Declarations[token->getValue()],nextToken->getType())) {
 			setSemanticErrorFlag();
 			return QueryArgument(token->getValue(), EntityType::NONE);
 		}
@@ -408,7 +408,7 @@ void PQLParser::parseSignleWithClause() {
 	if (RHS.getType() != EntityType::STRING && RHS.getType() != EntityType::INT) {
 		usedSynonyms.insert(RHS.getValue());
 	}
-	if (!isSemanticErrorDetected && !isWithArgsSameType(LHS, RHS)) { 
+	if (!isWithArgsSameType(LHS, RHS)) { 
 		setSemanticErrorFlag();
 	}
 	withArgs.emplace_back(LHS);
@@ -454,7 +454,7 @@ Query PQLParser::parse() {
 		parseAfterSelect();
 		if (isSemanticErrorDetected) {
 			Query query = Query();
-			query.setSemanticErrorFlag();
+			query.setSemanticErrorFlag(isSemanticErrorDetected);
 			return query;
 		}
 		return Query(resultSynonyms, QueryClauses, isBooleanQuery);

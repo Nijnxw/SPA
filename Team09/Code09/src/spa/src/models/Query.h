@@ -11,7 +11,7 @@ public:
 	const std::vector<QueryClause>& getClauses() const;
 	bool isBooleanQuery();
 	bool isEmpty();
-	void setSemanticErrorFlag();
+	void setSemanticErrorFlag(bool detected);
 	bool isSemanticErrorDetected();
 
 private:

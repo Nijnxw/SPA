@@ -22,8 +22,8 @@ bool Query::isEmpty() {
 	return resultSynonyms.empty() && clauses.empty();
 }
 
-void Query::setSemanticErrorFlag() {
-	SemanticErrorDetected = !SemanticErrorDetected;
+void Query::setSemanticErrorFlag(bool detected) {
+	SemanticErrorDetected = detected;
 }
 
 bool Query::isSemanticErrorDetected() {

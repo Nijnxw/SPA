@@ -4,6 +4,9 @@
 Query::Query(const std::vector<QueryArgument>& resultSynonyms, const std::vector<QueryClause>& clauses, bool isBoolean)
 	: resultSynonyms(resultSynonyms), clauses(clauses), isBoolean(isBoolean) {}
 
+Query::Query(bool isBoolean, bool isSemanticErrorDetected)
+	: isBoolean(isBoolean), SemanticErrorDetected(isSemanticErrorDetected) {}
+
 Query::Query() {}
 
 const std::vector<QueryArgument>& Query::getResultSynonyms() const {
@@ -20,10 +23,6 @@ bool Query::isBooleanQuery() {
 
 bool Query::isEmpty() {
 	return resultSynonyms.empty() && clauses.empty();
-}
-
-void Query::setSemanticErrorFlag(bool detected) {
-	SemanticErrorDetected = detected;
 }
 
 bool Query::isSemanticErrorDetected() {

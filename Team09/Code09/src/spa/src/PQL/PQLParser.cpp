@@ -453,9 +453,7 @@ Query PQLParser::parse() {
 		parseSelect();
 		parseAfterSelect();
 		if (isSemanticErrorDetected) {
-			Query query = Query();
-			query.setSemanticErrorFlag(isSemanticErrorDetected);
-			return query;
+			return Query(isBooleanQuery, isSemanticErrorDetected);
 		}
 		return Query(resultSynonyms, QueryClauses, isBooleanQuery);
 	} catch (...) {

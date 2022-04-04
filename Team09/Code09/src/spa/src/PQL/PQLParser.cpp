@@ -10,8 +10,16 @@
 
 PQLParser::PQLParser(std::vector<PQLToken*> PQLTokens) : current(0), end(PQLTokens.size()), tokens(PQLTokens) {}
 
+void PQLParser::setSemanticErrorFlag() {
+	isSemanticErrorDetected = !isSemanticErrorDetected;
+}
+
 bool PQLParser::isValidSynonym(PQLToken* token) {
 	return token->getType() == TokenType::SYNONYM || keywords.find(token->getType()) != keywords.end();
+}
+
+bool PQLParser::isAttributeRef(PQLToken* token) {
+	return attrRefMapping.find(token->getType()) != attrRefMapping.end();
 }
 
 bool PQLParser::isDeclaredSynonym(std::string syn) {
@@ -41,7 +49,7 @@ bool PQLParser::isWithArgsSameType(QueryArgument arg1, QueryArgument arg2) {
 	return (isWithArgNameType(arg1) && isWithArgNameType(arg2)) || (isWithArgNumberType(arg1) && isWithArgNumberType(arg2));
 }
 
-bool PQLParser::isValidAttributeRef(EntityType synonym, TokenType attributeRef) {
+bool PQLParser::isValidAttributeRefSynPair(EntityType synonym, TokenType attributeRef) {
 	bool isValidAttr = attrRefMapping.find(attributeRef) != attrRefMapping.end();
 	auto attrRefSynTypeMap = attrRefEntityTypeMap.find(attributeRef);
 	bool isValidattrRefSynTypeMap = attrRefSynTypeMap != attrRefEntityTypeMap.end() && attrRefEntityTypeMap[attributeRef].find(synonym) != attrRefEntityTypeMap[attributeRef].end();
@@ -87,8 +95,8 @@ void PQLParser::parseDeclaration() {
 
 	auto expectedSynonym = getValidSynonymToken();
 
-	if (isDeclaredSynonym(expectedSynonym->getValue())) {
-		throw "Duplicated declarations detected";
+	if (isDeclaredSynonym(expectedSynonym->getValue()) && !isSemanticErrorDetected) {
+		setSemanticErrorFlag();
 	}
 
 	Declarations[expectedSynonym->getValue()] = entityType->second;
@@ -96,8 +104,8 @@ void PQLParser::parseDeclaration() {
 	while (current != end && nextIsComma()) {
 		getNextExpectedToken(TokenType::COMMA);
 		nextToken = getValidSynonymToken();
-		if (isDeclaredSynonym(nextToken->getValue()) ) {
-			throw "Duplicated declarations detected";
+		if (isDeclaredSynonym(nextToken->getValue()) && !isSemanticErrorDetected) {
+			setSemanticErrorFlag();
 		}
 		Declarations[nextToken->getValue()] = entityType->second;
 	}
@@ -146,7 +154,7 @@ void PQLParser::parseResultSynonym() {
 	if (current != end && peekNextToken()->getType() == TokenType::PERIOD) {
 		getNextExpectedToken(TokenType::PERIOD);
 		auto attrRefToken = getNextToken();
-		if (!isValidAttributeRef(Declarations[synonymToken->getValue()], attrRefToken->getType())) { throw "invalid attribute ref"; }
+		if (!isValidAttributeRefSynPair(Declarations[synonymToken->getValue()], attrRefToken->getType())) { throw "invalid attribute ref"; }
 		resultSynonyms.emplace_back(
 			QueryArgument(std::string(synonymToken->getValue()), Declarations[synonymToken->getValue()], attrRefMapping[attrRefToken->getType()])
 		);
@@ -364,7 +372,7 @@ QueryArgument PQLParser::parseWithArgs() {
 	case TokenType::SYNONYM : {
 		getNextExpectedToken(TokenType::PERIOD);
 		auto nextToken = getNextToken();
-		if (!isValidAttributeRef(Declarations[token->getValue()],nextToken->getType())) {
+		if (!isValidAttributeRefSynPair(Declarations[token->getValue()],nextToken->getType())) {
 			throw "invalid attribute ref";
 		}
 		return QueryArgument(token->getValue(), Declarations[token->getValue()], attrRefMapping[nextToken->getType()]);
@@ -429,6 +437,11 @@ Query PQLParser::parse() {
 		}
 		parseSelect();
 		parseAfterSelect();
+		if (isSemanticErrorDetected) {
+			Query query = Query();
+			query.setSemanticErrorFlag();
+			return query;
+		}
 		return Query(resultSynonyms, QueryClauses, isBooleanQuery);
 	} catch (...) {
 		return Query();

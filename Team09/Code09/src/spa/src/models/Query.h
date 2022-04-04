@@ -11,9 +11,12 @@ public:
 	const std::vector<QueryClause>& getClauses() const;
 	bool isBooleanQuery();
 	bool isEmpty();
+	void setSemanticErrorFlag();
+	bool isSemanticErrorDetected();
 
 private:
 	std::vector<QueryArgument> resultSynonyms;
 	std::vector<QueryClause> clauses;
 	bool isBoolean = false;
+	bool SemanticErrorDetected = false;
 };

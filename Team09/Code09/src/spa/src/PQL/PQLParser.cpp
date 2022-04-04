@@ -452,12 +452,11 @@ Query PQLParser::parse() {
 		}
 		parseSelect();
 		parseAfterSelect();
+		Query query = Query(resultSynonyms, QueryClauses, isBooleanQuery);
 		if (isSemanticErrorDetected) {
-			Query query = Query();
 			query.setSemanticErrorFlag(isSemanticErrorDetected);
-			return query;
 		}
-		return Query(resultSynonyms, QueryClauses, isBooleanQuery);
+		return query;
 	} catch (...) {
 		return Query();
 	}

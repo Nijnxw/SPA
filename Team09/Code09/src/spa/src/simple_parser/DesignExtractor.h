@@ -14,6 +14,7 @@
 #include "simple_parser/CFGExtractor.h"
 
 #include <memory>
+#include <stack>
 #include <string>
 #include <unordered_set>
 #include <unordered_map>
@@ -24,15 +25,21 @@ private:
 	static inline std::unordered_map<std::string, NestableRelationships> procCache;
 	AST ast;
 	int totalStmt;
-	NestableRelationships processStmtList(std::vector<std::string> callStack, std::vector<std::shared_ptr<StmtNode>> stmtList);
-	NestableRelationships processProcedure(std::vector<std::string> callStack, std::shared_ptr<ProcedureNode> proc);
-	NestableRelationships processPrintNode(std::shared_ptr<PrintNode> print);
-	NestableRelationships processReadNode(std::shared_ptr<ReadNode> read);
-	NestableRelationships processAssignNode(std::shared_ptr<AssignNode> assign);
-	NestableRelationships processWhileNode(std::vector<std::string> callStack, std::shared_ptr<WhileNode> whiles);
-	NestableRelationships processIfNode(std::vector<std::string> callStack, std::shared_ptr<IfNode> ifs);
-	NestableRelationships processCallNode(std::vector<std::string> callStack, std::shared_ptr<CallNode> call);
-	NestableRelationships processStmt(std::vector<std::string> callStack, std::shared_ptr<StmtNode> stmt);
+
+	std::stack<NestableRelationships> nestableRelationshipsStack;
+	std::stack<std::shared_ptr<Node>> nodeStack;
+	std::stack<std::shared_ptr<Node>> containerStack; //will contain ProcedureNode, IfNode, WhileNode, CallNode
+	std::stack<std::string> callStack;
+
+	void processStmtList(std::vector<std::shared_ptr<StmtNode>> stmtList);
+	void processProcedure(std::shared_ptr<ProcedureNode> proc);
+	void processPrintNode(std::shared_ptr<PrintNode> print);
+	void processReadNode(std::shared_ptr<ReadNode> read);
+	void processAssignNode(std::shared_ptr<AssignNode> assign);
+	void processWhileNode(std::shared_ptr<WhileNode> whiles);
+	void processIfNode(std::shared_ptr<IfNode> ifs);
+	void processCallNode(std::shared_ptr<CallNode> call);
+	void processStmt(std::shared_ptr<StmtNode> stmt);
 	void processProcedureList(std::unordered_map<std::string, std::shared_ptr<ProcedureNode>> procMap);
 
 public:

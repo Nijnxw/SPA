@@ -157,10 +157,10 @@ TEST_CASE ("Test affects/*") {
 	PKB::addParent(6, 10);
 	PKB::addParentT(6, 10);
 	PKB::addParent(10, 11);
-	PKB::addParentT(7, 11);
+	PKB::addParentT(6, 11);
 	PKB::addParentT(10, 11);
 	PKB::addParent(10, 12);
-	PKB::addParentT(7, 12);
+	PKB::addParentT(6, 12);
 	PKB::addParentT(10, 12);
 
 	PKB::addParent(13, 14);

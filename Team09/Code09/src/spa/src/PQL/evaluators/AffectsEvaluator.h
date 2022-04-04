@@ -72,9 +72,11 @@ private:
 	int getNextBigger(int currStmtNum);
 	int getLastStmtOfBlock(int currStmtNum);
 	int getNextForStmt(int currStmtNum);
-	void updateLastStmtOfProc(int currStmtNum);
 	int getNextForBlock(int currStmtNum);
 	bool isPastProcLastStmt(int currStmtNum);
+
+	void initialiseLastStmtOfProc(int currStmtNum);
+	void updateLastStmtOfProc(int currStmtNum);
 
 	static bool isValidArg(const std::string& argValue, EntityType argType);
 	static LMT mergeLMT(const LMT& first, const LMT& second);

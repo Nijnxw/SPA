@@ -69,7 +69,11 @@ AffectsEvaluator::getAffectsByStmtNum(const std::string& LHS, const std::string&
 		return {};    // graceful handling of semantic error
 	}
 	if ((isAffects && !isAffectsCacheComplete) || (!isAffects && !isAffectsTCacheComplete)) {
-		computeAffects(std::stoi(LHS), cfg.size() - 1, isAffects);
+		int lhsInt = std::stoi(LHS);
+		if (lhsInt > 0 && lhsInt >= cfg.size()) {
+			return {};
+		}
+		computeAffects(lhsInt, cfg.size() - 1, isAffects);
 	}
 	if (isBooleanResult) {
 		return buildBoolResult(LHS, RHS, EntityType::INT, RHSType, cache, revCache);
@@ -81,6 +85,10 @@ QueryClauseResult
 AffectsEvaluator::getAffectsByStmt(const std::string& LHS, const std::string& RHS, EntityType RHSType,
 								   bool isBooleanResult, bool isAffects, Cache& cache, Cache& revCache) {
 	if (RHSType == EntityType::INT) {
+		int rhsInt = std::stoi(RHS);
+		if (rhsInt > 0 && rhsInt >= cfg.size()) {
+			return {};
+		}
 		setTermFuncAffectsByStmtInt(RHS, isBooleanResult, revCache);
 	} else if (RHSType == EntityType::STMT || RHSType == EntityType::ASSIGN || RHSType == EntityType::WILD) {
 		setTermFuncAffectsByStmt(LHS, RHS, isBooleanResult, cache);
@@ -116,6 +124,10 @@ AffectsEvaluator::getAffectsByUnderscore(const std::string& RHS, EntityType RHST
 		if (RHSType == EntityType::INT && revCache.find(RHS) != revCache.end()) {
 			return {true};
 		} else if (RHSType == EntityType::INT) {
+			int rhsInt = std::stoi(RHS);
+			if (rhsInt > 0 && rhsInt >= cfg.size()) {
+				return {};
+			}
 			setTermFuncAffectsByWildInt(RHS, revCache);
 		} else if (RHSType == EntityType::WILD && !cache.empty()) {
 			return {true};
@@ -285,6 +297,7 @@ QueryClauseResult AffectsEvaluator::buildClauseResultStmtWild(const std::string&
 }
 
 void AffectsEvaluator::computeAffects(int start, int end, bool isAffects) {    // start point
+	initialiseLastStmtOfProc(start);
 	computeAffects(start, end, {}, isAffects);
 }
 
@@ -315,6 +328,7 @@ AffectsEvaluator::computeAffects(int start, int end, LMT currLMT, bool isAffects
 			return {};
 		}
 		if (isPastProcLastStmt(currStmtNum)) {
+			updateLastStmtOfProc(currStmtNum);
 			currLMT.clear();
 		}
 	}
@@ -467,6 +481,16 @@ int AffectsEvaluator::getLastStmtOfBlock(int currStmtNum) {
 	return stmtNum;
 }
 
+bool AffectsEvaluator::isPastProcLastStmt(int currStmtNum) {
+	return currStmtNum > procedureLastStmt;
+}
+
+void AffectsEvaluator::initialiseLastStmtOfProc(int currStmtNum) {
+	if (procedureLastStmt == 0) {
+		updateLastStmtOfProc(currStmtNum);
+	}
+}
+
 void AffectsEvaluator::updateLastStmtOfProc(int currStmtNum) {
 	const auto& parents = PKB::getParentsT(currStmtNum);
 	int stmtNum = currStmtNum;
@@ -481,18 +505,6 @@ void AffectsEvaluator::updateLastStmtOfProc(int currStmtNum) {
 		procedureLastStmt = getNextForBlock(lastStmt) - 1;
 	} else {
 		procedureLastStmt = lastStmt;
-	}
-}
-
-bool AffectsEvaluator::isPastProcLastStmt(int currStmtNum) {
-	if (procedureLastStmt == 0) {
-		updateLastStmtOfProc(currStmtNum);
-		return false;
-	} else if (currStmtNum > procedureLastStmt) {
-		updateLastStmtOfProc(currStmtNum);
-		return true;
-	} else {
-		return false;
 	}
 }
 

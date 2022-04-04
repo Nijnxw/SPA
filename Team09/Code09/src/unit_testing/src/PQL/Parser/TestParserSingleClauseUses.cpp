@@ -410,6 +410,17 @@ TEST_CASE("Uses - 2nd arg is wildcard") {
 //			               unhappy Paths			             //
 //---------------------------------------------------------------//
 
+
+TEST_CASE("Uses - Non var entity as second argument") {
+	std::string queryString = "print pn; assign a; Select pn such that Uses(pn,a)";
+	PQLLexer tokeniser = PQLLexer(queryString);
+	std::vector<PQLToken*> PQLTokens = tokeniser.tokenise();
+	PQLParser parser = PQLParser(PQLTokens);
+
+	Query actualQuery = parser.parse();
+	REQUIRE((actualQuery.isEmpty() && actualQuery.isSemanticErrorDetected()));
+}
+
 TEST_CASE("Uses - wildcard as first arg") {
 	std::string queryString = "variable v; Select v such that Uses(_,v)";
 	PQLLexer tokeniser = PQLLexer(queryString);
@@ -417,7 +428,7 @@ TEST_CASE("Uses - wildcard as first arg") {
 	PQLParser parser = PQLParser(PQLTokens);
 
 	Query actualQuery = parser.parse();
-	REQUIRE((actualQuery.isEmpty()));
+	REQUIRE((actualQuery.isEmpty() && actualQuery.isSemanticErrorDetected()));
 }
 
 TEST_CASE("Uses - read synonym as first arg") {
@@ -427,7 +438,7 @@ TEST_CASE("Uses - read synonym as first arg") {
 	PQLParser parser = PQLParser(PQLTokens);
 
 	Query actualQuery = parser.parse();
-	REQUIRE(actualQuery.isEmpty());
+	REQUIRE((actualQuery.isEmpty() && actualQuery.isSemanticErrorDetected()));
 }
 
 TEST_CASE("Uses - var synonym as first arg") {
@@ -437,7 +448,7 @@ TEST_CASE("Uses - var synonym as first arg") {
 	PQLParser parser = PQLParser(PQLTokens);
 
 	Query actualQuery = parser.parse();
-	REQUIRE(actualQuery.isEmpty());
+	REQUIRE((actualQuery.isEmpty() && actualQuery.isSemanticErrorDetected()));
 }
 
 TEST_CASE("uses - const synonym as first arg") {
@@ -447,7 +458,7 @@ TEST_CASE("uses - const synonym as first arg") {
 	PQLParser parser = PQLParser(PQLTokens);
 
 	Query actualQuery = parser.parse();
-	REQUIRE((actualQuery.isEmpty()));
+	REQUIRE((actualQuery.isEmpty() && actualQuery.isSemanticErrorDetected()));
 }
 
 

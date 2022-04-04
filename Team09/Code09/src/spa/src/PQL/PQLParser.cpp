@@ -148,17 +148,24 @@ void PQLParser::parseResultClause() {
 
 void PQLParser::parseResultSynonym() {
 	auto synonymToken = getValidSynonymToken();;
-	if (!isDeclaredSynonym(synonymToken->getValue())) {
-		throw "Result synonym is not declared";
+	if (!isDeclaredSynonym(synonymToken->getValue()) && !isSemanticErrorDetected) {
+		setSemanticErrorFlag();
 	}	
 	if (current != end && peekNextToken()->getType() == TokenType::PERIOD) {
 		getNextExpectedToken(TokenType::PERIOD);
 		auto attrRefToken = getNextToken();
-		if (!isValidAttributeRefSynPair(Declarations[synonymToken->getValue()], attrRefToken->getType())) { throw "invalid attribute ref"; }
+		if (!isAttributeRef(attrRefToken)) {
+			throw "invalid attribute ref";
+		}
+		if (!isSemanticErrorDetected && !isValidAttributeRefSynPair(Declarations[synonymToken->getValue()], attrRefToken->getType())) { 
+			setSemanticErrorFlag();
+			return;
+		}
 		resultSynonyms.emplace_back(
 			QueryArgument(std::string(synonymToken->getValue()), Declarations[synonymToken->getValue()], attrRefMapping[attrRefToken->getType()])
 		);
 	} else {
+		if (isSemanticErrorDetected) { return; }
 		resultSynonyms.emplace_back(QueryArgument(std::string(synonymToken->getValue()), Declarations[synonymToken->getValue()]));
 	}
 }
@@ -178,6 +185,10 @@ QueryArgument PQLParser::parseArgs(PQLToken* token) {
 		default:
 			if (isDeclaredSynonym(token->getValue())) {
 				return QueryArgument(std::string(token->getValue()), Declarations[token->getValue()]);
+				break;
+			} else if (isValidSynonym(token) && !isSemanticErrorDetected) {
+				setSemanticErrorFlag();
+				return QueryArgument(std::string(token->getValue()), EntityType::NONE);
 				break;
 			}
 			throw "Invalid argument";
@@ -201,8 +212,8 @@ void PQLParser::parseSingleRelationshipClause() {
 		auto nextToken = getNextToken();
 		auto arg = parseArgs(nextToken);
 
-		if (validArgs.find(arg.getType()) == validArgs.end()) {
-			throw "Invalid arguments for relationship clause.";
+		if (validArgs.find(arg.getType()) == validArgs.end() && !isSemanticErrorDetected) {
+			setSemanticErrorFlag();
 		}
 
 		if (isValidSynonym(nextToken)) {
@@ -248,8 +259,8 @@ QueryArgument PQLParser::parsePatternArgStmtList() {
 QueryArgument PQLParser::parsePatternVarArgs() {
 	auto nextToken = getNextToken();
 	auto arg = parseArgs(nextToken);
-	if (VarArgTypes.find(arg.getType()) == VarArgTypes.end()) {
-		throw "Invalid arguments for pattern clause.";
+	if (VarArgTypes.find(arg.getType()) == VarArgTypes.end() && !isSemanticErrorDetected) {
+		setSemanticErrorFlag();
 	}
 	return arg;
 }
@@ -332,8 +343,8 @@ void PQLParser::parseAssignPattern(PQLToken* synonymToken) {
 void PQLParser::parseSinglePatternClause() {
 	auto synonymToken = getValidSynonymToken();
 	auto synonymType = Declarations.find(synonymToken->getValue());
-	if (synonymType == Declarations.end()) {
-		throw "invalid syn-assign";
+	if (synonymType == Declarations.end() && !isSemanticErrorDetected) {
+		setSemanticErrorFlag();
 	}
 	getNextExpectedToken(TokenType::OPEN_PARAN);
 	switch (synonymType->second) {
@@ -347,7 +358,7 @@ void PQLParser::parseSinglePatternClause() {
 			parseWhilePattern(synonymToken);
 			break;
 		default:
-			throw "invalid pattern syn";
+			if (!isSemanticErrorDetected) { setSemanticErrorFlag(); }
 			break;
 	}
 }
@@ -372,8 +383,10 @@ QueryArgument PQLParser::parseWithArgs() {
 	case TokenType::SYNONYM : {
 		getNextExpectedToken(TokenType::PERIOD);
 		auto nextToken = getNextToken();
-		if (!isValidAttributeRefSynPair(Declarations[token->getValue()],nextToken->getType())) {
-			throw "invalid attribute ref";
+		if (!isAttributeRef(nextToken)) { throw "invalid attribute ref token"; }
+		if (!isSemanticErrorDetected && !isValidAttributeRefSynPair(Declarations[token->getValue()],nextToken->getType())) {
+			setSemanticErrorFlag();
+			return QueryArgument(token->getValue(), EntityType::NONE);
 		}
 		return QueryArgument(token->getValue(), Declarations[token->getValue()], attrRefMapping[nextToken->getType()]);
 	}
@@ -395,7 +408,9 @@ void PQLParser::parseSignleWithClause() {
 	if (RHS.getType() != EntityType::STRING && RHS.getType() != EntityType::INT) {
 		usedSynonyms.insert(RHS.getValue());
 	}
-	if (!isWithArgsSameType(LHS, RHS)) { throw "mismatch of arg types : both must be NAME or both must be INTEGER"; }
+	if (!isSemanticErrorDetected && !isWithArgsSameType(LHS, RHS)) { 
+		setSemanticErrorFlag();
+	}
 	withArgs.emplace_back(LHS);
 	withArgs.emplace_back(RHS);
 	QueryClauses.emplace_back(QueryClause(RelationRef::WITH, withArgs, usedSynonyms));
@@ -425,7 +440,7 @@ void PQLParser::parseAfterSelect() {
 				parseWithClause();
 				break;
 			default:
-				throw "Expected such that or pattern";
+				throw "Expected such that or pattern or with";
 		}
 	}
 }

@@ -7,7 +7,7 @@
 ClauseEvaluator QueryEvaluator::clauseEvaluator{};
 
 Table QueryEvaluator::evaluate(Query& query) {
-	if (query.isEmpty()) {
+	if (query.isEmpty() || query.isSemanticErrorDetected()) {
 		return {};
 	}
 
@@ -19,8 +19,8 @@ Table QueryEvaluator::evaluate(Query& query) {
 		return evaluateBooleanQuery(clausesWithoutSyn, clauseGroups);
 	}
 
-	const std::vector<QueryArgument>& resultSyns = query.getResultSynonyms();
-	std::unordered_set<std::string> resultSynSet;
+	const std::vector <QueryArgument>& resultSyns = query.getResultSynonyms();
+	std::unordered_set <std::string> resultSynSet;
 	std::transform(resultSyns.begin(), resultSyns.end(), std::inserter(resultSynSet, resultSynSet.begin()),
 				   [](const QueryArgument& arg) -> std::string { return arg.getValue(); });
 

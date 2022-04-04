@@ -22,13 +22,25 @@
 class DesignExtractor {
 private:
 	static inline std::unordered_map<std::string, NestableRelationships> procCache;
+	AST ast;
+	int totalStmt;
+	NestableRelationships processStmtList(std::vector<std::string> callStack, std::vector<std::shared_ptr<StmtNode>> stmtList);
+	NestableRelationships processProcedure(std::vector<std::string> callStack, std::shared_ptr<ProcedureNode> proc);
+	NestableRelationships processPrintNode(std::shared_ptr<PrintNode> print);
+	NestableRelationships processReadNode(std::shared_ptr<ReadNode> read);
+	NestableRelationships processAssignNode(std::shared_ptr<AssignNode> assign);
+	NestableRelationships processWhileNode(std::vector<std::string> callStack, std::shared_ptr<WhileNode> whiles);
+	NestableRelationships processIfNode(std::vector<std::string> callStack, std::shared_ptr<IfNode> ifs);
+	NestableRelationships processCallNode(std::vector<std::string> callStack, std::shared_ptr<CallNode> call);
+	NestableRelationships processStmt(std::vector<std::string> callStack, std::shared_ptr<StmtNode> stmt);
+	void processProcedureList(std::unordered_map<std::string, std::shared_ptr<ProcedureNode>> procMap);
 
 public:
-	DesignExtractor();
+	DesignExtractor(AST ast, int stmtCount);
 	static bool isCached(std::string procName);
 	static NestableRelationships retrieve(std::string procName);
 	static void cache(std::string procName, NestableRelationships rs);
 
-	static void extractDesignElements(AST ast, int stmtCount);
-	static void commit();
+	void extractDesignElements();
+	void commit();
 };

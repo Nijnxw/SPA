@@ -340,8 +340,8 @@ AffectsEvaluator::LMT
 AffectsEvaluator::computeAffectsIfElse(const LMT& prevLMT, int start, bool isAffects) {
 	int firstIfStmt = start + 1;
 	int firstElseStmt = getNextBigger(start);
-	int lastIfStmt = getLastStmtOfBlock(firstIfStmt);
-	int lastElseStmt = getLastStmtOfBlock(firstElseStmt);
+	int lastIfStmt = firstElseStmt - 1;
+	int lastElseStmt = getNextForBlock(start) - 1;
 
 	const LMT& newIfLMT = computeAffects(firstIfStmt, lastIfStmt, prevLMT, isAffects);
 	const LMT& newElseLMT = computeAffects(firstElseStmt, lastElseStmt, prevLMT, isAffects);

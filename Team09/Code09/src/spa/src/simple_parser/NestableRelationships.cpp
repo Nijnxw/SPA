@@ -21,6 +21,12 @@ void NestableRelationships::addChildren(int child) {
 	children.insert(child);
 }
 
+void NestableRelationships::removeChildren(std::unordered_set<int> unwantedChildren) {
+	for (int unwantedChild : unwantedChildren) {
+		children.erase(unwantedChild);
+	}
+}
+
 void NestableRelationships::clearChildren() {
 	children.clear();
 }

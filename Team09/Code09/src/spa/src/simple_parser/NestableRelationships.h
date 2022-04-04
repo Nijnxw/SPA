@@ -18,6 +18,7 @@ public:
 	void addModifies(std::string modified);
 	void addCalls(std::string procedure);
 	void addChildren(int child);
+	void removeChildren(std::unordered_set<int> unwantedChildren);
 	void clearChildren();
 
 	std::unordered_set<std::string> getUses();

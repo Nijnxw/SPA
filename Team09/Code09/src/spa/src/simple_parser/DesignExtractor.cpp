@@ -119,9 +119,10 @@ void DesignExtractor::processReadNode(std::shared_ptr<ReadNode> read) {
 }
 
 void DesignExtractor::processAssignNode(std::shared_ptr<AssignNode> assign) {
+	std::string varName = assign->getAssignedVarName();
 	EntityStager::stageAssignStatement(
 		assign->getStmtNumber(),
-		assign->getAssignedVar()->getName(),
+		varName,
 		assign->getPostfix());
 
 	//process lhs
@@ -129,7 +130,7 @@ void DesignExtractor::processAssignNode(std::shared_ptr<AssignNode> assign) {
 
 	//process rhs
 	NestableRelationships rs = processExprNode(assign->getExpression());
-
+	rs.addModifies(varName);
 	//stage relationships
 	if (rs.getModifiesSize() > 0) EntityStager::stageModifiesStatements(assign->getStmtNumber(), { assign->getAssignedVarName() });
 	if (rs.getUsesSize() > 0) EntityStager::stageUsesStatements(assign->getStmtNumber(), rs.getUses());
@@ -181,6 +182,19 @@ void DesignExtractor::processWhileNode(std::shared_ptr<WhileNode> whiles) {
 		if (rs.getUsesSize() > 0) EntityStager::stageUsesStatements(whiles->getStmtNumber(), rs.getUses());
 		if (rs.getChildrenSize() > 0) EntityStager::stageParentT(whiles->getStmtNumber(), rs.getChildren());
 		if (childrenList.size() > 0) EntityStager::stageParent(whiles->getStmtNumber(), childrenList);
+
+		//add recursive abstraction information
+		std::stack<NestableRelationships> temp;
+		while (!nestableRelationshipsStack.empty()) {
+			NestableRelationships curr = nestableRelationshipsStack.top();
+			nestableRelationshipsStack.pop();
+			curr.combine(rs);
+			temp.push(curr);
+		}
+		while (!temp.empty()) {
+			nestableRelationshipsStack.push(temp.top());
+			temp.pop();
+		}
 	}
 }
 
@@ -219,6 +233,19 @@ void DesignExtractor::processIfNode(std::shared_ptr<IfNode> ifs) {
 		if (rs.getUsesSize() > 0) EntityStager::stageUsesStatements(ifs->getStmtNumber(), rs.getUses());
 		if (rs.getChildrenSize() > 0) EntityStager::stageParentT(ifs->getStmtNumber(), rs.getChildren());
 		if (childrenList.size() > 0) EntityStager::stageParent(ifs->getStmtNumber(), childrenList);
+
+		//add recursive abstraction information
+		std::stack<NestableRelationships> temp;
+		while (!nestableRelationshipsStack.empty()) {
+			NestableRelationships curr = nestableRelationshipsStack.top();
+			nestableRelationshipsStack.pop();
+			curr.combine(rs);
+			temp.push(curr);
+		}
+		while (!temp.empty()) {
+			nestableRelationshipsStack.push(temp.top());
+			temp.pop();
+		}
 	}
 }
 
@@ -226,7 +253,7 @@ void DesignExtractor::processCallNode(std::shared_ptr<CallNode> call) {
 	if (containerStack.empty() || call != containerStack.top()) {
 		// first visit with this node
 		nodeStack.push(call); //push it back in for second visit
-		nestableRelationshipsStack.push(NestableRelationships::createEmpty());
+		//nestableRelationshipsStack.push(NestableRelationships::createEmpty());
 		containerStack.push(call);
 		//callStack.push(call->getProcedureName());
 		if (ast->contains(call->getProcedureName())) processProcedure(ast->retrieve(call->getProcedureName()));
@@ -236,6 +263,7 @@ void DesignExtractor::processCallNode(std::shared_ptr<CallNode> call) {
 
 		NestableRelationships rs = nestableRelationshipsStack.top();
 		nestableRelationshipsStack.pop();
+		std::unordered_set<int> unwantedChildren = rs.getChildren();
 		rs.clearChildren(); //remove parent-child information
 
 		if (rs.getModifiesSize() > 0) EntityStager::stageModifiesStatements(call->getStmtNumber(), rs.getModifies());
@@ -247,6 +275,20 @@ void DesignExtractor::processCallNode(std::shared_ptr<CallNode> call) {
 			for (std::string callee : rs.getCalls()) {
 				EntityStager::stageCallsT(callStack.top(), callee);
 			}
+		}
+
+		//add recursive abstraction information
+		std::stack<NestableRelationships> temp;
+		while (!nestableRelationshipsStack.empty()) {
+			NestableRelationships curr = nestableRelationshipsStack.top();
+			nestableRelationshipsStack.pop();
+			curr.combine(rs);
+			curr.removeChildren(unwantedChildren);
+			temp.push(curr);
+		}
+		while (!temp.empty()) {
+			nestableRelationshipsStack.push(temp.top());
+			temp.pop();
 		}
 	}
 }
@@ -321,9 +363,18 @@ void DesignExtractor::processProcedure(std::shared_ptr<ProcedureNode> proc) {
 		callStack.pop();
 		NestableRelationships rs = nestableRelationshipsStack.top();
 		nestableRelationshipsStack.pop();
-		DesignExtractor::cache(proc->getProcName(), rs);
-		if (rs.getModifiesSize() > 0) EntityStager::stageModifiesProcedure(proc->getProcName(), rs.getModifies());
-		if (rs.getUsesSize() > 0) EntityStager::stageUsesProcedure(proc->getProcName(), rs.getUses());
+
+		if (!containerStack.empty()) {
+			std::shared_ptr<Node> top = containerStack.top();
+			if (top->isCallNode()) nestableRelationshipsStack.push(rs);
+		}
+
+		if (!DesignExtractor::isCached(proc->getProcName())) {
+			DesignExtractor::cache(proc->getProcName(), rs);
+
+			if (rs.getModifiesSize() > 0) EntityStager::stageModifiesProcedure(proc->getProcName(), rs.getModifies());
+			if (rs.getUsesSize() > 0) EntityStager::stageUsesProcedure(proc->getProcName(), rs.getUses());
+		}
 	}
 
 	//NestableRelationships rs;

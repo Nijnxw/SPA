@@ -31,10 +31,10 @@ void EntityStager::clear() {
 }
 
 //helper function
-template <typename T>
+template<typename T>
 std::unordered_set<int> getStmtNoFromSet(std::unordered_map<int, T> store) {
 	std::unordered_set<int> output;
-	for (auto& s : store) {
+	for (auto& s: store) {
 		output.insert(s.first);
 	}
 	return output;
@@ -55,6 +55,10 @@ std::unordered_set<std::string> EntityStager::getStagedConstants() {
 
 std::unordered_set<int> EntityStager::getStagedStatements() {
 	return stagedStatements;
+}
+
+std::vector<int> EntityStager::getStagedProcStatements() {
+	return stagedProcStatements;
 }
 
 std::unordered_set<int> EntityStager::getStagedReadStatements() {
@@ -166,12 +170,16 @@ void EntityStager::stageStatement(int stmtNo) {
 	stagedStatements.insert(stmtNo);
 }
 
+void EntityStager::stageProcStatement(int stmtNo) {
+	stagedProcStatements.push_back(stmtNo);
+}
+
 void EntityStager::stageIfStatement(int stmtNo, std::unordered_set<std::string> vars) {
-	stagedIfStatements.insert({ stmtNo, vars });
+	stagedIfStatements.insert({stmtNo, vars});
 }
 
 void EntityStager::stageWhileStatement(int stmtNo, std::unordered_set<std::string> vars) {
-	stagedWhileStatements.insert({ stmtNo, vars });
+	stagedWhileStatements.insert({stmtNo, vars});
 }
 
 void EntityStager::stageReadStatement(int stmtNo, std::string varName) {
@@ -179,11 +187,11 @@ void EntityStager::stageReadStatement(int stmtNo, std::string varName) {
 }
 
 void EntityStager::stagePrintStatement(int stmtNo, std::string varName) {
-	stagedPrintStatements.insert({ stmtNo, varName });
+	stagedPrintStatements.insert({stmtNo, varName});
 }
 
 void EntityStager::stageCallStatement(int stmtNo, std::string procName) {
-	stagedCallStatements.insert({ stmtNo, procName });
+	stagedCallStatements.insert({stmtNo, procName});
 }
 
 void EntityStager::stageAssignStatement(int stmtNo, std::string lhs, std::string rhs) {
@@ -250,7 +258,8 @@ void EntityStager::commit() {
 	for (auto& con: stagedVariables) { PKB::addVariable(con); }
 
 	for (auto& stmt: stagedStatements) { PKB::addStatementNumber(stmt); }
-	for (auto& read: stagedReadStatements) {PKB::addReadStatement(read.first, read.second); }
+	for (auto& stmt: stagedProcStatements) { PKB::addProcStatementNumber(stmt); }
+	for (auto& read: stagedReadStatements) { PKB::addReadStatement(read.first, read.second); }
 	for (auto& print: stagedPrintStatements) { PKB::addPrintStatement(print.first, print.second); }
 	for (auto& ifs: stagedIfStatements) { PKB::addIfStatement(ifs.first, ifs.second); }
 	for (auto& whiles: stagedWhileStatements) { PKB::addWhileStatement(whiles.first, whiles.second); }
@@ -272,10 +281,10 @@ void EntityStager::commit() {
 	for (auto& parentT: stagedParentT) {
 		PKB::addParentT(parentT.first, parentT.second);
 	}
-	for (auto& call : stagedCalls) {
+	for (auto& call: stagedCalls) {
 		PKB::addCalls(call.first, call.second);
 	}
-	for (auto& callT : stagedCallsT) {
+	for (auto& callT: stagedCallsT) {
 		PKB::addCallsT(callT.first, callT.second);
 	}
 	for (auto& modifiesS: stagedModifiesStatement) {
@@ -290,7 +299,7 @@ void EntityStager::commit() {
 	for (auto& usesP: stagedUsesProcedure) {
 		PKB::addUsesProcedure(usesP.first, usesP.second);
 	}
-	for (auto& lasts : stagedProcToLastStmts) {
+	for (auto& lasts: stagedProcToLastStmts) {
 		PKB::addProcedureNameToLastCFGNode(lasts.first, lasts.second);
 	}
 	EntityStager::clear();

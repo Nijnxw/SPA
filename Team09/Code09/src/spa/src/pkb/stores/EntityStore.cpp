@@ -43,6 +43,11 @@ bool EntityStore::addStatementNumber(int statementNumber) {
 	return statements.insert(statementNumber).second;
 }
 
+bool EntityStore::addProcStatementNumber(int statementNumber) {
+	procStatements.push_back(statementNumber);
+	return true;
+}
+
 bool EntityStore::addAssignStatement(int statementNumber, const std::string& leftHandSide,
 									 const std::string& rightHandSide) {
 	AssignStatement assignStatement(statementNumber, leftHandSide, rightHandSide);
@@ -62,22 +67,22 @@ bool EntityStore::addWhileStatement(int statementNumber, const std::unordered_se
 
 bool EntityStore::addCallStatement(int statementNumber, const std::string& procedure) {
 	return callStatements.insert(statementNumber).second
-		&& callStatementsToProcedures.insert({ statementNumber, procedure }).second
-		&& proceduresToCallStatements[procedure].emplace(std::to_string(statementNumber)).second;
+		   && callStatementsToProcedures.insert({statementNumber, procedure}).second
+		   && proceduresToCallStatements[procedure].emplace(std::to_string(statementNumber)).second;
 }
 
 bool EntityStore::addReadStatement(int statementNumber, const std::string& variable) {
 	return readStatements.insert(statementNumber).second
-		&& readStatementsToVariables.insert({ statementNumber, variable }).second
-		&& readVariables.insert(variable).second
-		&& variablesToReadStatements[variable].emplace(std::to_string(statementNumber)).second;
+		   && readStatementsToVariables.insert({statementNumber, variable}).second
+		   && readVariables.insert(variable).second
+		   && variablesToReadStatements[variable].emplace(std::to_string(statementNumber)).second;
 }
 
 bool EntityStore::addPrintStatement(int statementNumber, const std::string& variable) {
 	return printStatements.insert(statementNumber).second
-		&& printStatementsToVariables.insert({ statementNumber, variable }).second
-		&& printVariables.insert(variable).second
-		&& variablesToPrintStatements[variable].emplace(std::to_string(statementNumber)).second;
+		   && printStatementsToVariables.insert({statementNumber, variable}).second
+		   && printVariables.insert(variable).second
+		   && variablesToPrintStatements[variable].emplace(std::to_string(statementNumber)).second;
 }
 
 std::unordered_set<std::string> EntityStore::getProcedures() {
@@ -94,6 +99,10 @@ std::unordered_set<std::string> EntityStore::getConstants() {
 
 std::unordered_set<int> EntityStore::getStatementNumbers() {
 	return statements;
+}
+
+std::vector<int> EntityStore::getProcStatementNumbers() {
+	return procStatements;
 }
 
 EntityType EntityStore::getStatementType(int stmtNum) {
@@ -119,29 +128,29 @@ std::unordered_set<int> EntityStore::getStatementsWithType(EntityType statementT
 	std::unordered_set<int> statementsWithType;
 
 	switch (statementType) {
-	case EntityType::STMT:
-		statementsWithType = statements;
-		break;
-	case EntityType::ASSIGN:
-		statementsWithType = assignStatements;
-		break;
-	case EntityType::IF:
-		statementsWithType = ifStatements;
-		break;
-	case EntityType::WHILE:
-		statementsWithType = whileStatements;
-		break;
-	case EntityType::CALL:
-		statementsWithType = callStatements;
-		break;
-	case EntityType::PRINT:
-		statementsWithType = printStatements;
-		break;
-	case EntityType::READ:
-		statementsWithType = readStatements;
-		break;
-	default:
-		break;
+		case EntityType::STMT:
+			statementsWithType = statements;
+			break;
+		case EntityType::ASSIGN:
+			statementsWithType = assignStatements;
+			break;
+		case EntityType::IF:
+			statementsWithType = ifStatements;
+			break;
+		case EntityType::WHILE:
+			statementsWithType = whileStatements;
+			break;
+		case EntityType::CALL:
+			statementsWithType = callStatements;
+			break;
+		case EntityType::PRINT:
+			statementsWithType = printStatements;
+			break;
+		case EntityType::READ:
+			statementsWithType = readStatements;
+			break;
+		default:
+			break;
 	}
 
 	return statementsWithType;

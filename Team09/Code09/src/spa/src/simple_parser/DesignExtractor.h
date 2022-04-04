@@ -31,6 +31,8 @@ private:
 	std::stack<std::shared_ptr<Node>> containerStack; //will contain ProcedureNode, IfNode, WhileNode, CallNode
 	std::stack<std::string> callStack;
 
+	void bubbleRelationshipInfo(NestableRelationships rs, std::unordered_set<int> unwantedChildren);
+
 	void processStmtList(std::vector<std::shared_ptr<StmtNode>> stmtList);
 	void processProcedure(std::shared_ptr<ProcedureNode> proc);
 	void processPrintNode(std::shared_ptr<PrintNode> print);

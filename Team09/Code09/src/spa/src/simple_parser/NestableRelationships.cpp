@@ -27,10 +27,6 @@ void NestableRelationships::removeChildren(std::unordered_set<int> unwantedChild
 	}
 }
 
-void NestableRelationships::clearChildren() {
-	children.clear();
-}
-
 std::unordered_set<std::string> NestableRelationships::getUses() {
 	return uses;
 }

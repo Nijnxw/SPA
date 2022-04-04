@@ -72,13 +72,14 @@ private:
 	int getNextBigger(int currStmtNum);
 	int getLastStmtOfBlock(int currStmtNum);
 	int getNextForStmt(int currStmtNum);
-	int getNextForIf(int currStmtNum);
-	int getNextForWhile(int currStmtNum);
-	bool isProcLastStmt(int currStmtNum);
+	void updateLastStmtOfProc(int currStmtNum);
+	int getNextForBlock(int currStmtNum);
+	bool isPastProcLastStmt(int currStmtNum);
 
 	static bool isValidArg(const std::string& argValue, EntityType argType);
 	static LMT mergeLMT(const LMT& first, const LMT& second);
 
+	int procedureLastStmt;
 	CFG cfg;
 	bool isAffectsCacheComplete;
 	bool isAffectsTCacheComplete;

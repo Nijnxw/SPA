@@ -12,6 +12,7 @@ AffectsEvaluator::getAffects(const std::string& LHS, const std::string& RHS, Ent
 		return {};
 	}
 	visitedLoops.clear();
+	procedureLastStmt = 0;
 	switch (LHSType) {
 		case EntityType::INT:
 			return getAffectsByStmtNum(LHS, RHS, RHSType, isBooleanResult, true, affectsCache, revAffectsCache);
@@ -32,6 +33,7 @@ AffectsEvaluator::getAffectsT(const std::string& LHS, const std::string& RHS, En
 		return {};
 	}
 	visitedLoops.clear();
+	procedureLastStmt = 0;
 	switch (LHSType) {
 		case EntityType::INT:
 			return getAffectsByStmtNum(LHS, RHS, RHSType, isBooleanResult, false, affectsTCache, revAffectsTCache);
@@ -141,7 +143,7 @@ AffectsEvaluator::setTermFuncAffectsByIntInt(const std::string& LHS, const std::
 			auto affected = cache.at(LHS);
 			return affected.find(RHS) != affected.end();
 		}
-		return isProcLastStmt(curr);
+		return isPastProcLastStmt(curr);
 	};
 }
 
@@ -150,13 +152,13 @@ void AffectsEvaluator::setTermFuncAffectsByIntWild(const std::string& LHS, Cache
 		if (cache.find(LHS) != cache.end()) {
 			return true;
 		}
-		return isProcLastStmt(curr);
+		return isPastProcLastStmt(curr);
 	};
 }
 
 void AffectsEvaluator::setTermFuncAffectsByIntStmt() {
 	terminateFunc = [this](int curr) -> bool {
-		return isProcLastStmt(curr);
+		return isPastProcLastStmt(curr);
 	};
 }
 
@@ -289,32 +291,30 @@ void AffectsEvaluator::computeAffects(int start, int end, bool isAffects) {    /
 AffectsEvaluator::LMT
 AffectsEvaluator::computeAffects(int start, int end, LMT currLMT, bool isAffects) {
 	int currStmtNum = start;
-	int prevStmtNum = start;
 
 	while (currStmtNum <= end) {
-		prevStmtNum = currStmtNum;
 		EntityType currStmtType = PKB::getStatementType(currStmtNum);
 		switch (currStmtType) {
 			case EntityType::IF:
 				currLMT = computeAffectsIfElse(currLMT, currStmtNum, isAffects);
-				currStmtNum = getNextForIf(currStmtNum);
+				currStmtNum = getNextForBlock(currStmtNum);
 				break;
 			case EntityType::WHILE:
 				if (visitedLoops.find(currStmtNum) == visitedLoops.end()) {
 					visitedLoops.insert(currStmtNum);
-					currLMT = computeAffectsWhile(currLMT, currStmtNum, getNextForWhile(currStmtNum), isAffects);
+					currLMT = computeAffectsWhile(currLMT, currStmtNum, getNextForBlock(currStmtNum), isAffects);
 				}
-				currStmtNum = getNextForWhile(currStmtNum);
+				currStmtNum = getNextForBlock(currStmtNum);
 				break;
 			default:
 				computeAffectsStmt(currLMT, currStmtNum, currStmtType, isAffects);
 				currStmtNum = getNextForStmt(currStmtNum);
 				break;
 		}
-		if (terminateFunc(prevStmtNum)) {
+		if (terminateFunc(currStmtNum)) {
 			return {};
 		}
-		if (isProcLastStmt(prevStmtNum)) {
+		if (isPastProcLastStmt(currStmtNum)) {
 			currLMT.clear();
 		}
 	}
@@ -467,19 +467,32 @@ int AffectsEvaluator::getLastStmtOfBlock(int currStmtNum) {
 	return stmtNum;
 }
 
-bool AffectsEvaluator::isProcLastStmt(int currStmtNum) {
-	EntityType stmtType = PKB::getStatementType(currStmtNum);
-
-	if (stmtType == EntityType::IF) {
-		int lastStmtOfElse = getLastStmtOfBlock(getNextBigger(currStmtNum));
-		const auto& nextStmts = cfg.at(lastStmtOfElse);
-		return nextStmts.empty();
-	} else {
-		const auto& nextStmts = cfg.at(currStmtNum);
-		if (stmtType == EntityType::WHILE) {
-			return nextStmts.size() == 1;
+void AffectsEvaluator::updateLastStmtOfProc(int currStmtNum) {
+	const auto& parents = PKB::getParentsT(currStmtNum);
+	int stmtNum = currStmtNum;
+	if (!parents.empty()) {
+		for (const auto& parent: parents) {
+			stmtNum = std::min(stmtNum, parent);
 		}
-		return nextStmts.empty();
+	}
+	int lastStmt = getLastStmtOfBlock(stmtNum);
+	EntityType lastStmtType = PKB::getStatementType(lastStmt);
+	if (lastStmtType == EntityType::WHILE || lastStmtType == EntityType::IF) {
+		procedureLastStmt = getNextForBlock(lastStmt) - 1;
+	} else {
+		procedureLastStmt = lastStmt;
+	}
+}
+
+bool AffectsEvaluator::isPastProcLastStmt(int currStmtNum) {
+	if (procedureLastStmt == 0) {
+		updateLastStmtOfProc(currStmtNum);
+		return false;
+	} else if (currStmtNum > procedureLastStmt) {
+		updateLastStmtOfProc(currStmtNum);
+		return true;
+	} else {
+		return false;
 	}
 }
 
@@ -491,41 +504,35 @@ int AffectsEvaluator::getNextForStmt(int currStmtNum) {
 
 	int next = *possibleNext.begin();
 	if (PKB::getStatementType(next) == EntityType::WHILE) {
-		if (visitedLoops.find(next) == visitedLoops.end()) {
+		if (visitedLoops.count(next) == 0) {
 			return next;
 		} else {
-			return getNextForWhile(next);
+			return getNextForBlock(next);
 		}
 	} else {
 		return next;
 	}
 }
 
-int AffectsEvaluator::getNextForIf(int currStmtNum) {
-	int lastStmtOfElse = getLastStmtOfBlock(getNextBigger(currStmtNum));
-	EntityType stmtType = PKB::getStatementType(lastStmtOfElse);
-
-	if (stmtType == EntityType::WHILE) {
-		return getNextForWhile(lastStmtOfElse);
-	} else if (stmtType == EntityType::IF) {
-		return getNextForIf(lastStmtOfElse);
-	} else {
-		return lastStmtOfElse + 1;
+int AffectsEvaluator::getNextForBlock(int currStmtNum) {
+	int followee = PKB::getFollowee(currStmtNum);
+	if (followee != 0) {    // if block is not last stmt of list
+		return followee;
 	}
-}
 
-int AffectsEvaluator::getNextForWhile(int currStmtNum) {
-	const auto& possibleNext = cfg.at(currStmtNum);
-	if (possibleNext.size() == 2) {
-		return getNextBigger(currStmtNum);
-	}
-	int lastStmtOfWhile = getLastStmtOfBlock(currStmtNum + 1);
-	EntityType stmtType = PKB::getStatementType(lastStmtOfWhile);
-	if (stmtType == EntityType::WHILE) {
-		return getNextForWhile(lastStmtOfWhile);
-	} else if (stmtType == EntityType::IF) {
-		return getNextForIf(lastStmtOfWhile);
+	const auto& parents = PKB::getParent(currStmtNum);
+	if (!parents.empty()) {
+		int parent = *parents.begin();
+		if (PKB::getStatementType(parent) == EntityType::WHILE && visitedLoops.count(parent) == 0) {
+			return parent;
+		}
+		return getNextForBlock(parent);
 	} else {
-		return lastStmtOfWhile + 1;
+		const auto& children = PKB::getChildrenT(currStmtNum);
+		int maxChild = 0;
+		for (const auto& child: children) {
+			maxChild = std::max(child, maxChild);
+		}
+		return maxChild + 1;
 	}
 }

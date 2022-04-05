@@ -293,7 +293,7 @@ void AffectsEvaluator::computeAffects(int start, int end, bool isAffects, bool c
 		it++;
 		int intervalEnd = (*it) - 1;
 
-		if (start < intervalEnd && intervalStart < end) { // overlap
+		if (start <= intervalEnd && intervalStart <= end) { // overlap
 			LMT lmt;
 			computeAffectsStmtList(intervalStart, intervalEnd, lmt, isAffects);
 			if (cannotGoPastProc || canTerminate) {

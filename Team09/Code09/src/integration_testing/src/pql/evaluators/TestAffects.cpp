@@ -170,6 +170,10 @@ TEST_CASE ("Test affects/*") {
 	PKB::addParent(13, 16);
 	PKB::addParentT(13, 16);
 
+	PKB::addProcStatementNumber(1);
+	PKB::addProcStatementNumber(4);
+	PKB::addProcStatementNumber(20);
+
 	SECTION ("Test affects - positive cases") {
 		AffectsEvaluator evaluator;
 		SECTION ("LHS INT - RHS INT") {

@@ -11,8 +11,6 @@ AffectsEvaluator::getAffects(const std::string& LHS, const std::string& RHS, Ent
 	if (!isValidArg(LHS, LHSType) || !isValidArg(RHS, RHSType)) {
 		return {};
 	}
-	visitedLoops.clear();
-	procedureLastStmt = 0;
 	switch (LHSType) {
 		case EntityType::INT:
 			return getAffectsByStmtNum(LHS, RHS, RHSType, isBooleanResult, true, affectsCache, revAffectsCache);
@@ -32,8 +30,6 @@ AffectsEvaluator::getAffectsT(const std::string& LHS, const std::string& RHS, En
 	if (!isValidArg(LHS, LHSType) || !isValidArg(RHS, RHSType)) {
 		return {};
 	}
-	visitedLoops.clear();
-	procedureLastStmt = 0;
 	switch (LHSType) {
 		case EntityType::INT:
 			return getAffectsByStmtNum(LHS, RHS, RHSType, isBooleanResult, false, affectsTCache, revAffectsTCache);
@@ -51,20 +47,18 @@ QueryClauseResult
 AffectsEvaluator::getAffectsByStmtNum(const std::string& LHS, const std::string& RHS, EntityType RHSType,
 									  bool isBooleanResult, bool isAffects, Cache& cache, Cache& revCache) {
 	if (RHSType == EntityType::INT) {
-		if (cache.find(LHS) != cache.end()) {
+		if (cache.count(LHS) > 0) {
 			const auto& affected = cache.at(LHS);
-			if (affected.find(RHS) != affected.end()) {
+			if (affected.count(RHS) > 0) {
 				return {true};
 			}
 		}
 		setTermFuncAffectsByIntInt(LHS, RHS, cache);
-	} else if (RHSType == EntityType::WILD) {
-		if (cache.find(LHS) != cache.end()) {
+	} else if (RHSType == EntityType::WILD || RHSType == EntityType::ASSIGN || RHSType == EntityType::STMT) {
+		if (isBooleanResult && cache.count(LHS) > 0) {
 			return {true};
 		}
-		setTermFuncAffectsByIntWild(LHS, cache);
-	} else if (RHSType == EntityType::ASSIGN || RHSType == EntityType::STMT) {
-		setTermFuncAffectsByIntStmt();
+		setTermFuncAffectsByIntAny(LHS, isBooleanResult, cache);
 	} else {
 		return {};    // graceful handling of semantic error
 	}
@@ -73,7 +67,7 @@ AffectsEvaluator::getAffectsByStmtNum(const std::string& LHS, const std::string&
 		if (lhsInt > 0 && lhsInt >= cfg.size()) {
 			return {};
 		}
-		computeAffects(lhsInt, cfg.size() - 1, isAffects);
+		computeAffects(lhsInt, cfg.size() - 1, isAffects, true);
 	}
 	if (isBooleanResult) {
 		return buildBoolResult(LHS, RHS, EntityType::INT, RHSType, cache, revCache);
@@ -121,7 +115,7 @@ AffectsEvaluator::getAffectsByUnderscore(const std::string& RHS, EntityType RHST
 			isAffectsTCacheComplete = !isBooleanResult;
 		}
 	} else {
-		if (RHSType == EntityType::INT && revCache.find(RHS) != revCache.end()) {
+		if (RHSType == EntityType::INT && revCache.count(RHS) > 0) {
 			return {true};
 		} else if (RHSType == EntityType::INT) {
 			int rhsInt = std::stoi(RHS);
@@ -150,34 +144,28 @@ AffectsEvaluator::getAffectsByUnderscore(const std::string& RHS, EntityType RHST
 
 void
 AffectsEvaluator::setTermFuncAffectsByIntInt(const std::string& LHS, const std::string& RHS, Cache& cache) {
-	terminateFunc = [&LHS, &RHS, &cache, this](int curr) -> bool {
-		if (cache.find(LHS) != cache.end()) {
-			auto affected = cache.at(LHS);
-			return affected.find(RHS) != affected.end();
+	terminateFunc = [&LHS, &RHS, &cache](int curr) -> bool {
+		if (cache.count(LHS) > 0) {
+			const auto& affected = cache.at(LHS);
+			return affected.count(RHS) > 0;
 		}
-		return isPastProcLastStmt(curr);
+		return false;
 	};
 }
 
-void AffectsEvaluator::setTermFuncAffectsByIntWild(const std::string& LHS, Cache& cache) {
-	terminateFunc = [&LHS, &cache, this](int curr) -> bool {
-		if (cache.find(LHS) != cache.end()) {
+void AffectsEvaluator::setTermFuncAffectsByIntAny(const std::string& LHS, bool isBooleanResult, Cache& cache) {
+	terminateFunc = [&LHS, isBooleanResult, &cache](int curr) -> bool {
+		if (isBooleanResult && cache.count(LHS) > 0) {
 			return true;
 		}
-		return isPastProcLastStmt(curr);
-	};
-}
-
-void AffectsEvaluator::setTermFuncAffectsByIntStmt() {
-	terminateFunc = [this](int curr) -> bool {
-		return isPastProcLastStmt(curr);
+		return false;
 	};
 }
 
 void AffectsEvaluator::setTermFuncAffectsByStmtInt(const std::string& RHS, bool isBooleanResult, Cache& revCache) {
 	terminateFunc = [&RHS, isBooleanResult, &revCache](int curr) -> bool {
 		if (isBooleanResult) {
-			return revCache.find(RHS) != revCache.end();
+			return revCache.count(RHS) > 0;
 		}
 		return false;
 	};
@@ -189,9 +177,9 @@ void AffectsEvaluator::setTermFuncAffectsByStmt(const std::string& LHS, const st
 		std::string currString = std::to_string(curr);
 		if (isBooleanResult && LHS != RHS) {
 			return !cache.empty();
-		} else if (isBooleanResult && cache.find(currString) != cache.end()) {
+		} else if (isBooleanResult && cache.count(currString) > 0) {
 			auto affected = cache.at(currString);
-			return affected.find(currString) != affected.end();
+			return affected.count(currString) > 0;
 		}
 		return false;
 	};
@@ -208,7 +196,7 @@ void AffectsEvaluator::setTermFuncAffectsByWildStmt(bool isBooleanResult, Cache&
 
 void AffectsEvaluator::setTermFuncAffectsByWildInt(const std::string& RHS, Cache& revCache) {
 	terminateFunc = [&RHS, &revCache](int curr) -> bool {
-		return revCache.find(RHS) != revCache.end();
+		return revCache.count(RHS) > 0;
 	};
 }
 
@@ -222,16 +210,15 @@ QueryClauseResult
 AffectsEvaluator::buildBoolResult(const std::string& LHS, const std::string& RHS, EntityType LHSType,
 								  EntityType RHSType, Cache& cache, Cache& revCache) {
 	if (LHSType == EntityType::INT && RHSType == EntityType::INT) {
-		if (cache.find(LHS) != cache.end()) {
+		if (cache.count(LHS) > 0) {
 			const auto& affected = cache.at(LHS);
-			return {affected.find(RHS) != affected.end()};
+			return {affected.count(RHS) > 0};
 		}
 		return {false};
 	} else if (LHSType == EntityType::INT) {
-		return {cache.find(LHS) != cache.end()};
+		return {cache.count(LHS) > 0};
 	} else if (RHSType == EntityType::INT) {
-		bool test = revCache.find(RHS) != revCache.end();
-		return {revCache.find(RHS) != revCache.end()};
+		return {revCache.count(RHS) > 0};
 	} else {
 		return {!cache.empty()};
 	}
@@ -257,7 +244,7 @@ AffectsEvaluator::buildClauseResult(const std::string& LHS, const std::string& R
 
 QueryClauseResult
 AffectsEvaluator::buildClauseResultIntStmt(const std::string& num, const std::string& syn, Cache& cache) {
-	if (cache.find(num) != cache.end()) {
+	if (cache.count(num) > 0) {
 		const auto& affected = cache.at(num);
 		const std::vector<std::string>& rowValues = {affected.begin(), affected.end()};
 		return {{{syn, rowValues}}};
@@ -272,7 +259,7 @@ AffectsEvaluator::buildClauseResultStmtStmt(const std::string& LHS, const std::s
 	if (LHS == RHS) {
 		for (const auto& keyVal: cache) {
 			const auto& affected = keyVal.second;
-			if (affected.find(keyVal.first) != affected.end()) {
+			if (affected.count(keyVal.first) > 0) {
 				lhsValues.push_back(keyVal.first);
 			}
 		}
@@ -296,70 +283,85 @@ QueryClauseResult AffectsEvaluator::buildClauseResultStmtWild(const std::string&
 	return {{{syn, rowValues}}};
 }
 
-void AffectsEvaluator::computeAffects(int start, int end, bool isAffects) {    // start point
-	initialiseLastStmtOfProc(start);
-	computeAffects(start, end, {}, isAffects);
+void AffectsEvaluator::computeAffects(int start, int end, bool isAffects, bool cannotGoPastProc) {    // start point
+	canTerminate = false;
+	const std::vector<int>& allProcFirstStmt = PKB::getProcStatementNumbers();
+	auto it = allProcFirstStmt.begin();
+
+	while ((it + 1) != allProcFirstStmt.end()) {
+		int intervalStart = *it;
+		it++;
+		int intervalEnd = (*it) - 1;
+
+		if (start < intervalEnd && intervalStart < end) { // overlap
+			LMT lmt;
+			computeAffectsStmtList(intervalStart, intervalEnd, lmt, isAffects);
+			if (cannotGoPastProc || canTerminate) {
+				return;
+			}
+		}
+	}
+	LMT lmt;
+	computeAffectsStmtList(*it, end, lmt, isAffects);
 }
 
-AffectsEvaluator::LMT
-AffectsEvaluator::computeAffects(int start, int end, LMT currLMT, bool isAffects) {
+void AffectsEvaluator::computeAffectsStmtList(int start, int end, LMT& currLMT, bool isAffects) {
 	int currStmtNum = start;
-
 	while (currStmtNum <= end) {
 		EntityType currStmtType = PKB::getStatementType(currStmtNum);
 		switch (currStmtType) {
 			case EntityType::IF:
-				currLMT = computeAffectsIfElse(currLMT, currStmtNum, isAffects);
+				computeAffectsIfElse(currLMT, currStmtNum, isAffects);
 				currStmtNum = getNextForBlock(currStmtNum);
 				break;
 			case EntityType::WHILE:
-				if (visitedLoops.find(currStmtNum) == visitedLoops.end()) {
-					visitedLoops.insert(currStmtNum);
-					currLMT = computeAffectsWhile(currLMT, currStmtNum, getNextForBlock(currStmtNum), isAffects);
-				}
+				computeAffectsWhile(currLMT, currStmtNum, isAffects);
 				currStmtNum = getNextForBlock(currStmtNum);
 				break;
 			default:
 				computeAffectsStmt(currLMT, currStmtNum, currStmtType, isAffects);
-				currStmtNum = getNextForStmt(currStmtNum);
+				currStmtNum++;
 				break;
 		}
-		if (terminateFunc(currStmtNum)) {
-			return {};
-		}
-		if (isPastProcLastStmt(currStmtNum)) {
-			updateLastStmtOfProc(currStmtNum);
-			currLMT.clear();
+		if (terminateFunc(currStmtNum) || canTerminate) {
+			canTerminate = true;
+			return;
 		}
 	}
-
-	return currLMT;
 }
 
-AffectsEvaluator::LMT
-AffectsEvaluator::computeAffectsIfElse(const LMT& prevLMT, int start, bool isAffects) {
+void AffectsEvaluator::computeAffectsIfElse(LMT& lmt, int start, bool isAffects) {
 	int firstIfStmt = start + 1;
 	int firstElseStmt = getNextBigger(start);
 	int lastIfStmt = firstElseStmt - 1;
-	int lastElseStmt = getNextForBlock(start) - 1;
+	int lastElseStmt = getBiggestChild(start);
 
-	const LMT& newIfLMT = computeAffects(firstIfStmt, lastIfStmt, prevLMT, isAffects);
-	const LMT& newElseLMT = computeAffects(firstElseStmt, lastElseStmt, prevLMT, isAffects);
-
-	return mergeLMT(newIfLMT, newElseLMT);
-}
-
-AffectsEvaluator::LMT
-AffectsEvaluator::computeAffectsWhile(const LMT& prevLMT, int start, int end, bool isAffects) {
-	LMT lmt = prevLMT;
-	LMT currLMT = computeAffects(start + 1, end - 1, prevLMT, isAffects);
-
-	while (lmt != currLMT) {
-		lmt = currLMT;
-		currLMT = computeAffects(start + 1, end - 1, currLMT, isAffects);
+	LMT lmtElse(lmt);
+	computeAffectsStmtList(firstIfStmt, lastIfStmt, lmt, isAffects);
+	if (canTerminate) {
+		return;
+	}
+	computeAffectsStmtList(firstElseStmt, lastElseStmt, lmtElse, isAffects);
+	if (canTerminate) {
+		return;
 	}
 
-	return mergeLMT(currLMT, prevLMT);
+	mergeLMT(lmt, lmtElse);
+}
+
+void AffectsEvaluator::computeAffectsWhile(LMT& prevLMT, int start, bool isAffects) {
+	int end = getBiggestChild(start);
+
+	LMT lmtLoop(prevLMT);
+	bool changed;
+	do {
+		changed = false;
+		computeAffectsStmtList(start + 1, end, lmtLoop, isAffects);
+		if (canTerminate) {
+			return;
+		}
+		changed = mergeLMT(prevLMT, lmtLoop);
+	} while (changed);
 }
 
 void AffectsEvaluator::computeAffectsStmt(LMT& currLMT, int currStmtNum, EntityType currStmtType, bool isAffects) {
@@ -387,7 +389,7 @@ void AffectsEvaluator::computeAffectsAssign(LMT& currLMT, int currStmtNum) {
 	const std::unordered_set<std::string>& usedVars = PKB::getVariablesUsedByStatement(currStmtNum);
 
 	for (const auto& var: usedVars) {
-		if (currLMT.find(var) == currLMT.end()) {
+		if (currLMT.count(var) == 0) {
 			continue;
 		}
 		for (auto stmt: currLMT.at(var)) {
@@ -404,11 +406,11 @@ void AffectsEvaluator::computeAffectsTAssign(LMT& currLMT, int currStmtNum) {
 	std::string modVar = *(PKB::getVariablesModifiedByStatement(currStmtNum).begin());
 	const std::unordered_set<std::string>& usedVars = PKB::getVariablesUsedByStatement(currStmtNum);
 
-	if (usedVars.find(modVar) == usedVars.end()) {
+	if (usedVars.count(modVar) == 0) {
 		currLMT[modVar].clear();
 	}
 	for (const auto& var: usedVars) {
-		if (currLMT.find(var) == currLMT.end()) {
+		if (currLMT.count(var) == 0) {
 			continue;
 		}
 		for (auto stmt: currLMT.at(var)) {
@@ -448,17 +450,27 @@ bool AffectsEvaluator::isValidArg(const std::string& argValue, EntityType argTyp
 	}
 }
 
-AffectsEvaluator::LMT AffectsEvaluator::mergeLMT(const LMT& first, const LMT& second) {
+bool AffectsEvaluator::mergeLMT(LMT& first, const LMT& second) {
 	LMT merged;
 
-	for (const auto& keyVal: first) {
-		merged[keyVal.first].insert(keyVal.second.begin(), keyVal.second.end());
-	}
+	bool changed = false;
 	for (const auto& keyVal: second) {
-		merged[keyVal.first].insert(keyVal.second.begin(), keyVal.second.end());
+		if (first.count(keyVal.first) > 0) {
+			for (const auto& element: keyVal.second) {
+				auto& modified = first.at(keyVal.first);
+				if (modified.count(element) > 0) {
+					continue;
+				}
+				modified.insert(element);
+				changed = true;
+			}
+			continue;
+		}
+		first[keyVal.first] = keyVal.second;
+		changed = true;
 	}
 
-	return merged;
+	return changed;
 }
 
 int AffectsEvaluator::getNextBigger(int currStmtNum) {
@@ -473,57 +485,13 @@ int AffectsEvaluator::getNextBigger(int currStmtNum) {
 	return biggestNext;
 }
 
-int AffectsEvaluator::getLastStmtOfBlock(int currStmtNum) {
-	int stmtNum = currStmtNum;
-	while (PKB::getFollowee(stmtNum) != 0) {
-		stmtNum = PKB::getFollowee(stmtNum);
+int AffectsEvaluator::getBiggestChild(int currStmtNum) {
+	const auto& children = PKB::getChildrenT(currStmtNum);
+	int maxChild = 0;
+	for (const auto& child: children) {
+		maxChild = std::max(child, maxChild);
 	}
-	return stmtNum;
-}
-
-bool AffectsEvaluator::isPastProcLastStmt(int currStmtNum) {
-	return currStmtNum > procedureLastStmt;
-}
-
-void AffectsEvaluator::initialiseLastStmtOfProc(int currStmtNum) {
-	if (procedureLastStmt == 0) {
-		updateLastStmtOfProc(currStmtNum);
-	}
-}
-
-void AffectsEvaluator::updateLastStmtOfProc(int currStmtNum) {
-	const auto& parents = PKB::getParentsT(currStmtNum);
-	int stmtNum = currStmtNum;
-	if (!parents.empty()) {
-		for (const auto& parent: parents) {
-			stmtNum = std::min(stmtNum, parent);
-		}
-	}
-	int lastStmt = getLastStmtOfBlock(stmtNum);
-	EntityType lastStmtType = PKB::getStatementType(lastStmt);
-	if (lastStmtType == EntityType::WHILE || lastStmtType == EntityType::IF) {
-		procedureLastStmt = getNextForBlock(lastStmt) - 1;
-	} else {
-		procedureLastStmt = lastStmt;
-	}
-}
-
-int AffectsEvaluator::getNextForStmt(int currStmtNum) {
-	const auto& possibleNext = cfg.at(currStmtNum);
-	if (possibleNext.empty()) {
-		return currStmtNum + 1;
-	}
-
-	int next = *possibleNext.begin();
-	if (PKB::getStatementType(next) == EntityType::WHILE) {
-		if (visitedLoops.count(next) == 0) {
-			return next;
-		} else {
-			return getNextForBlock(next);
-		}
-	} else {
-		return next;
-	}
+	return maxChild;
 }
 
 int AffectsEvaluator::getNextForBlock(int currStmtNum) {
@@ -535,16 +503,8 @@ int AffectsEvaluator::getNextForBlock(int currStmtNum) {
 	const auto& parents = PKB::getParent(currStmtNum);
 	if (!parents.empty()) {
 		int parent = *parents.begin();
-		if (PKB::getStatementType(parent) == EntityType::WHILE && visitedLoops.count(parent) == 0) {
-			return parent;
-		}
 		return getNextForBlock(parent);
 	} else {
-		const auto& children = PKB::getChildrenT(currStmtNum);
-		int maxChild = 0;
-		for (const auto& child: children) {
-			maxChild = std::max(child, maxChild);
-		}
-		return maxChild + 1;
+		return getBiggestChild(currStmtNum) + 1;
 	}
 }

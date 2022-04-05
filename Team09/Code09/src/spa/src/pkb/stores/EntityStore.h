@@ -78,4 +78,6 @@ public:
 	std::unordered_map<std::string, std::unordered_set<std::string>> getVariablesToReadStatements();
 
 	bool isAssignStmt(int stmtNum);
+
+	int getNumSynonymsWithType(EntityType entityType);
 };

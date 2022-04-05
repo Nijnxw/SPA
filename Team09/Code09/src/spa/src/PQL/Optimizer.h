@@ -8,6 +8,7 @@
 #include "models/optimizer/OptimizerGroup.h"
 #include "models/optimizer/OptimizerQuery.h"
 #include "util/CommonUtils.cpp"
+#include "WeightEstimator.h"
 
 class Optimizer {
 public:

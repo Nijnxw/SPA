@@ -194,3 +194,41 @@ std::unordered_map<std::string, std::unordered_set<std::string>> EntityStore::ge
 bool EntityStore::isAssignStmt(const int stmtNum) {
 	return assignStatements.find(stmtNum) != assignStatements.end();
 }
+
+int EntityStore::getNumSynonymsWithType(EntityType entityType) {
+	int numSynonyms = 0;
+
+	switch (entityType) {
+	case EntityType::ASSIGN:
+		numSynonyms = assignStatements.size();
+		break;
+	case EntityType::WHILE:
+		numSynonyms = whileStatements.size();
+		break;
+	case EntityType::IF:
+		numSynonyms = ifStatements.size();
+		break;
+	case EntityType::STMT:
+		numSynonyms = statements.size();
+		break;
+	case EntityType::VAR:
+		numSynonyms = variables.size();
+		break;
+	case EntityType::PROC:
+		numSynonyms = procedures.size();
+		break;
+	case EntityType::CALL:
+		numSynonyms = callStatements.size();
+		break;
+	case EntityType::READ:
+		numSynonyms = readStatements.size();
+		break;
+	case EntityType::PRINT:
+		numSynonyms = printStatements.size();
+		break;
+	default:
+		break;
+	}
+
+	return numSynonyms;
+}

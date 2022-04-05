@@ -24,8 +24,7 @@ private:
 		const std::string& strOrIntVal, EntityType strOrIntType, const std::string& attrVal, EntityType attrEntType, AttributeRef attrRefType, bool isBooleanResult);
 	QueryClauseResult getWithByAttrRef(const std::string& LHSVal, EntityType LHSEntType, AttributeRef LHSAttrType, const std::string& RHSVal, EntityType RHSEntType,
 		AttributeRef RHSAttrType, bool isBooleanResult);
-	std::unordered_set<int> getAttrRefIntSet(EntityType RHSType, AttributeRef RHSAttr);
-	std::unordered_set<std::string> getAttrRefStrSet(EntityType RHSType, AttributeRef RHSAttr);
+	std::unordered_set<std::string> getAttrRefStrSet(EntityType entType, AttributeRef attrType);
 	EntityType getAttrRefType(EntityType entType, AttributeRef attrRef);
 	std::unordered_set<std::string> getRevMapFromAttr(EntityType entType, std::string attr);
 

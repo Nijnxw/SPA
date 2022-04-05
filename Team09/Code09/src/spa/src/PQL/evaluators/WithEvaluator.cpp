@@ -24,7 +24,7 @@ QueryClauseResult WithEvaluator::getWithByStrOrInt( // Both String and Int will 
 	// Integer = Integer-type AttrRef
 	else if (strOrIntType == EntityType::INT && getAttrRefType(attrEntType, attrRefType) == EntityType::INT) {
 		std::unordered_set<std::string> resultSet;
-		if (getAttrRefIntSet(attrEntType, attrRefType).count(std::stoi(strOrIntVal))) {
+		if (getAttrRefStrSet(attrEntType, attrRefType).count(strOrIntVal)) {
 			resultSet.insert(strOrIntVal);
 			queryResult.addColumn(attrVal, resultSet);
 		}
@@ -45,12 +45,12 @@ QueryClauseResult WithEvaluator::getWithByAttrRef(const std::string& LHSVal, Ent
 	if (getAttrRefType(LHSEntType, LHSAttrType) != getAttrRefType(RHSEntType, RHSAttrType)) {
 		return queryResult;
 	} else if (getAttrRefType(LHSEntType, LHSAttrType) == EntityType::INT) {
-		std::vector<int> resSet;
+		std::vector<std::string> resSet;
 		if (LHSEntType == RHSEntType) {
-			resSet = PKBUtils::convertUnorderedSetToVector(getAttrRefIntSet(LHSEntType, LHSAttrType));
+			resSet = PKBUtils::convertUnorderedSetToVector(getAttrRefStrSet(LHSEntType, LHSAttrType));
 		} else {
 			resSet = PKBUtils::convertUnorderedSetToVector(PKBUtils::unorderedSetIntersection(
-				getAttrRefIntSet(LHSEntType, LHSAttrType), getAttrRefIntSet(RHSEntType, RHSAttrType), isBooleanResult));
+				getAttrRefStrSet(LHSEntType, LHSAttrType), getAttrRefStrSet(RHSEntType, RHSAttrType), isBooleanResult));
 		}
 		if (!resSet.empty()) {
 			queryResult.addColumn(LHSVal, resSet);
@@ -90,22 +90,16 @@ QueryClauseResult WithEvaluator::getWithByAttrRef(const std::string& LHSVal, Ent
 	return queryResult;
 }
 
-std::unordered_set<int> WithEvaluator::getAttrRefIntSet(EntityType RHSType, AttributeRef RHSAttr) {
-	if (RHSType == EntityType::CONST && RHSAttr == AttributeRef::VALUE) {
-		const std::unordered_set<std::string>& constantStrs = PKB::getConstants();
-		std::unordered_set<int> constants;
-		for (const auto& constantStr : constantStrs) {
-			constants.insert(std::stoi(constantStr));
-		}
-		return constants;
-	} else if (RHSAttr == AttributeRef::STMT_NO) {
-		return PKB::getStatementsWithType(RHSType);
-	}
-	return {};
-}
-
 std::unordered_set<std::string> WithEvaluator::getAttrRefStrSet(EntityType entType, AttributeRef attrRef) {
-	if (attrRef == AttributeRef::PROC_NAME) {
+	if (entType == EntityType::CONST && attrRef == AttributeRef::VALUE) {
+		return PKB::getConstants();
+	} else if (attrRef == AttributeRef::STMT_NO) {
+		std::unordered_set<std::string> resultSet;
+		const std::unordered_set<int> stmtNos = PKB::getStatementsWithType(entType);
+		std::transform(stmtNos.begin(), stmtNos.end(), std::inserter(resultSet, resultSet.begin()),
+			[](const int stmtno) -> std::string { return std::to_string(stmtno); });
+		return resultSet;
+	} else if (attrRef == AttributeRef::PROC_NAME) {
 		if (entType == EntityType::PROC) {
 			return PKB::getProcedures();
 		} else if (entType == EntityType::CALL) {

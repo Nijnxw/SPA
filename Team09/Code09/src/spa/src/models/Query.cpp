@@ -22,7 +22,7 @@ bool Query::isBooleanQuery() {
 }
 
 bool Query::isEmpty() {
-	return resultSynonyms.empty() && clauses.empty();
+	return resultSynonyms.empty() && clauses.empty() && !isBoolean;
 }
 
 bool Query::isSemanticErrorDetected() {

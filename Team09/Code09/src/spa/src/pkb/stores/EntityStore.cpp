@@ -66,23 +66,29 @@ bool EntityStore::addWhileStatement(int statementNumber, const std::unordered_se
 }
 
 bool EntityStore::addCallStatement(int statementNumber, const std::string& procedure) {
+	bool updatedRevMap = proceduresToCallStatements[procedure].emplace(std::to_string(statementNumber)).second;
+	
 	return callStatements.insert(statementNumber).second
-		   && callStatementsToProcedures.insert({statementNumber, procedure}).second
-		   && proceduresToCallStatements[procedure].emplace(std::to_string(statementNumber)).second;
+		&& callStatementsToProcedures.insert({ statementNumber, procedure }).second
+		&& updatedRevMap;
 }
 
 bool EntityStore::addReadStatement(int statementNumber, const std::string& variable) {
+	bool updatedRevMap = variablesToReadStatements[variable].emplace(std::to_string(statementNumber)).second;
+
 	return readStatements.insert(statementNumber).second
-		   && readStatementsToVariables.insert({statementNumber, variable}).second
-		   && readVariables.insert(variable).second
-		   && variablesToReadStatements[variable].emplace(std::to_string(statementNumber)).second;
+		&& readStatementsToVariables.insert({ statementNumber, variable }).second
+		&& readVariables.insert(variable).second
+		&& updatedRevMap;
 }
 
 bool EntityStore::addPrintStatement(int statementNumber, const std::string& variable) {
+	bool updatedRevMap = variablesToPrintStatements[variable].emplace(std::to_string(statementNumber)).second;
+
 	return printStatements.insert(statementNumber).second
-		   && printStatementsToVariables.insert({statementNumber, variable}).second
-		   && printVariables.insert(variable).second
-		   && variablesToPrintStatements[variable].emplace(std::to_string(statementNumber)).second;
+		&& printStatementsToVariables.insert({ statementNumber, variable }).second
+		&& printVariables.insert(variable).second
+		&& updatedRevMap;
 }
 
 std::unordered_set<std::string> EntityStore::getProcedures() {

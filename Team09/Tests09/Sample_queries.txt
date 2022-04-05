@@ -1,5 +1,0 @@
-56. Assign pattern invalid pattern - numbers beside parenthesis- comment
-assign a;
-Select a pattern a(_, _   "if( 4 /189 + else)" _ )
-none
-5000

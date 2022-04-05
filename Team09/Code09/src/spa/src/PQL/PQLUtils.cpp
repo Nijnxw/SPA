@@ -33,40 +33,65 @@ static bool isInt(std::string str) {
 	return true;
 }
 
-static std::vector<std::string> splitExpr(const std::string& s, char delim) {
-	std::vector<std::string> output;
-	std::istringstream iss(s);
-	std::string item;
-	while (std::getline(iss, item, delim)) {
-		output.push_back(item);
-	}
-	return output;
-}
 
 static bool isIdent(std::string str) {
 	return startsWithAlpha(str) && isAlphaNum(str);
 }
 
+static std::vector<std::string> splitExpr(const std::string& s) {
+	std::vector<std::string> tokens;
+	std::string buffer = "";
+	for (char c : s) {
+		if (!isMathSym(std::string(1,c)) && !isspace(c) && c != '(' && c != ')') {
+			buffer += c;
+		} else {
+			if (isIdent(buffer) || isInt(buffer)) {
+				tokens.emplace_back(buffer);
+			} else {
+				throw "Invalid variable or integer Detected in Statement.\n";
+			}
+			buffer = "";
+			if (isMathSym(std::string(1, c))) {
+				tokens.emplace_back(std::string(1,c));
+			}
+			else if (c != '(') {
+				tokens.emplace_back(std::string(1,c));
+			}
+			else if (c != ')') {
+				tokens.emplace_back(std::string(1,c));
+			}
+		}
+	}
+
+	if (!buffer.empty()) {
+		if (isIdent(buffer) || isInt(buffer)) {
+			tokens.emplace_back(buffer);
+		} else {
+			throw "Invalid variable or integer Detected in Statement.\n";
+		}
+	}
+
+	return tokens;
+}
+
 static bool isValidExpr(std::string expr) {
-	std::vector<std::string> exprTokens = splitExpr(expr, ' ');
+	std::vector<std::string> exprTokens = splitExpr(expr);
 	bool isExpectingOperator = false;
 	int numOpenParan = 0;
-	for (std::string str : exprTokens) {
-		if (isInt(str) || isIdent(str)) {
-			if (isExpectingOperator) { return false;}
+	for (std::string s : exprTokens) {
+		if (isInt(s) || isIdent(s)) {
+			if (isExpectingOperator) { return false; }
 			isExpectingOperator = true;
-		} else if (isMathSym(str)) {
+		} else if (isMathSym(s)) {
 			if (!isExpectingOperator) { return false; }
 			isExpectingOperator = false;
-		} else {
-			if (str == "(") {
-				numOpenParan++;
-				isExpectingOperator = false;
-			} else {
-				if (!isExpectingOperator) { return false; }
-				numOpenParan--;
-				isExpectingOperator = true;
-			}
+		} else if (s != ")") {
+			if (isExpectingOperator) { return false; }
+			numOpenParan++;
+		}
+		else if (s != ")") {
+			if (!isExpectingOperator) { return false; }
+			numOpenParan--;
 		}
 	}
 	return numOpenParan == 0 && isExpectingOperator;

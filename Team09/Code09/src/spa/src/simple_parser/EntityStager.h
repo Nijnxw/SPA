@@ -17,6 +17,7 @@ private:
 	static inline std::unordered_set<std::string> stagedConstants;
 
 	static inline std::unordered_set<int> stagedStatements;
+	static inline std::unordered_set<int> stagedProcStatements;
 	static inline std::unordered_map<int, std::string> stagedReadStatements;
 	static inline std::unordered_map<int, std::string> stagedPrintStatements;
 	static inline std::unordered_map<int, std::unordered_set<std::string>> stagedIfStatements;
@@ -51,6 +52,7 @@ public:
 	static std::unordered_set<std::string> getStagedConstants();
 
 	static std::unordered_set<int> getStagedStatements();
+	static std::unordered_set<int> getStagedProcStatements();
 	static std::unordered_set<int> getStagedReadStatements();
 	static std::unordered_map<int, std::string> getStagedReadContents();
 	static std::unordered_set<int> getStagedPrintStatements();
@@ -85,6 +87,7 @@ public:
 	static void stageConstant(const std::string& constant);
 
 	static void stageStatement(int stmtNo);
+	static void stageProcStatement(int stmtNo);
 	static void stageIfStatement(int stmtNo, std::unordered_set<std::string> vars);
 	static void stageWhileStatement(int stmtNo, std::unordered_set<std::string> vars);
 	static void stageReadStatement(int stmtNo, std::string varName);

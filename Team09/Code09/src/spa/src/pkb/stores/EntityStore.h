@@ -19,6 +19,7 @@ private:
 	std::unordered_set<std::string> constants;
 	std::unordered_set<int> statements;
 
+	std::vector<int> procStatements;
 	std::unordered_set<int> assignStatements;
 	std::unordered_set<int> ifStatements;
 	std::unordered_set<int> whileStatements;
@@ -49,6 +50,7 @@ public:
 	bool addVariable(const std::string& variable);
 	bool addConstant(const std::string& constant);
 	bool addStatementNumber(int statementNumber);
+	bool addProcStatementNumber(int statementNumber);
 	bool addAssignStatement(int statementNumber, const std::string& leftHandSide, const std::string& rightHandSide);
 	bool addIfStatement(int statementNumber, const std::unordered_set<std::string>& conditionalVariables);
 	bool addWhileStatement(int statementNumber, const std::unordered_set<std::string>& conditionalVariables);
@@ -61,6 +63,7 @@ public:
 	std::unordered_set<std::string> getVariables();
 	std::unordered_set<std::string> getConstants();
 	std::unordered_set<int> getStatementNumbers();
+	std::vector<int> getProcStatementNumbers();
 	EntityType getStatementType(int stmtNum);
 	std::unordered_set<int>
 	getStatementsWithType(EntityType statementType); // For getting statement numbers of a specific statement type.
@@ -78,4 +81,6 @@ public:
 	std::unordered_map<std::string, std::unordered_set<std::string>> getVariablesToReadStatements();
 
 	bool isAssignStmt(int stmtNum);
+
+	int getNumSynonymsWithType(EntityType entityType);
 };

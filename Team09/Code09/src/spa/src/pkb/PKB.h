@@ -40,7 +40,7 @@ public:
 	static bool addVariable(std::string variable);
 	static bool addConstant(std::string constant);
 	static bool addStatementNumber(int statementNumber);
-
+	static bool addProcStatementNumber(int statementNumber);
 	static bool addAssignStatement(int statementNumber, std::string leftHandSide, std::string rightHandSide);
 	static bool addIfStatement(int statementNumber, std::unordered_set<std::string> conditionalVariables);
 	static bool addWhileStatement(int statementNumber, std::unordered_set<std::string> conditionalVariables);
@@ -66,6 +66,7 @@ public:
 	static std::unordered_set<std::string> getVariables();
 	static std::unordered_set<std::string> getConstants();
 	static std::unordered_set<int> getStatementNumbers();
+	static std::vector<int> getProcStatementNumbers();
 	static std::unordered_set<std::string> getPrintVariables();
 	static std::unordered_set<std::string> getReadVariables();
 
@@ -83,6 +84,8 @@ public:
 	static EntityType getStatementType(int stmtNum);
 
 	static bool isAssignmentStmt(int stmtNum);
+
+	static int getNumSynonymsWithType(EntityType entityType);
 
 	/* StmtStmt Getters */
 	static bool hasStmtStmtRelationship(RelationRef relationship);

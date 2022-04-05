@@ -18,7 +18,8 @@ Optimizer::optimize(Query& query) {
 		if (clauseSynonyms.empty()) {
 			clausesWithoutSyn.push_back(clause);
 		} else {
-			queryGraph.addEdge(clause, 0);    // left as 0 until weight estimation algo is done
+			int clauseWeight = WeightEstimator::estimateWeight(clause); // Weight estimation algo, revert if wrong
+			queryGraph.addEdge(clause, clauseWeight);    // Change clauseWeight back to 0 if weight estimation fails
 		}
 	}
 

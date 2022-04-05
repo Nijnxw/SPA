@@ -35,6 +35,10 @@ bool PKB::addStatementNumber(int statementNumber) {
 	return entityStore.addStatementNumber(statementNumber);
 }
 
+bool PKB::addProcStatementNumber(int statementNumber) {
+	return entityStore.addProcStatementNumber(statementNumber);
+}
+
 bool PKB::addAssignStatement(int statementNumber, std::string leftHandSide, std::string rightHandSide) {
 	return entityStore.addAssignStatement(statementNumber, leftHandSide, rightHandSide);
 }
@@ -124,6 +128,10 @@ std::unordered_set<int> PKB::getStatementNumbers() {
 	return entityStore.getStatementNumbers();
 }
 
+std::vector<int> PKB::getProcStatementNumbers() {
+	return entityStore.getProcStatementNumbers();
+}
+
 std::unordered_set<std::string> PKB::getPrintVariables() {
 	return entityStore.getPrintVariables();
 }
@@ -162,6 +170,10 @@ std::unordered_set<int> PKB::getStatementsWithType(EntityType statementType) {
 
 EntityType PKB::getStatementType(int stmtNum) {
 	return entityStore.getStatementType(stmtNum);
+}
+
+int PKB::getNumSynonymsWithType(EntityType entityType) {
+	return entityStore.getNumSynonymsWithType(entityType);
 }
 
 std::unordered_map<std::string, std::unordered_set<std::string>> PKB::getProceduresToCallStatements() {

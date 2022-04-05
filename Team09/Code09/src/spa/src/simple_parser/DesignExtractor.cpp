@@ -1,7 +1,7 @@
 #include "DesignExtractor.h"
 
-DesignExtractor::DesignExtractor(AST ast, int stmtCount) 
-	:  ast(std::move(ast)), totalStmt(stmtCount) {}
+DesignExtractor::DesignExtractor(AST ast, int stmtCount)
+	: ast(std::move(ast)), totalStmt(stmtCount) {}
 
 bool DesignExtractor::isCached(std::string procName) {
 	return DesignExtractor::procCache.find(procName) != DesignExtractor::procCache.end();
@@ -13,7 +13,7 @@ NestableRelationships DesignExtractor::retrieve(std::string procName) {
 }
 
 void DesignExtractor::cache(std::string procName, NestableRelationships rs) {
-	DesignExtractor::procCache.insert({ procName, rs });
+	DesignExtractor::procCache.insert({procName, rs});
 }
 
 void DesignExtractor::bubbleRelationshipInfo(NestableRelationships rs, std::unordered_set<int> unwantedChildren = {}) {
@@ -131,7 +131,8 @@ void DesignExtractor::processAssignNode(std::shared_ptr<AssignNode> assign) {
 	NestableRelationships rs = processExprNode(assign->getExpression());
 	rs.addModifies(varName);
 	//stage relationships
-	if (rs.getModifiesSize() > 0) EntityStager::stageModifiesStatements(assign->getStmtNumber(), { assign->getAssignedVarName() });
+	if (rs.getModifiesSize() > 0)
+		EntityStager::stageModifiesStatements(assign->getStmtNumber(), {assign->getAssignedVarName()});
 	if (rs.getUsesSize() > 0) EntityStager::stageUsesStatements(assign->getStmtNumber(), rs.getUses());
 
 	//add recursive abstraction information
@@ -154,7 +155,7 @@ void DesignExtractor::processWhileNode(std::shared_ptr<WhileNode> whiles) {
 
 		//process predicate
 		NestableRelationships rs = processPredicateNode(whiles->getPredicate());
-		
+
 		//merge with thenStmtList and elseStmtList relationships
 		rs.combine(nestableRelationshipsStack.top());
 		nestableRelationshipsStack.pop();
@@ -163,7 +164,7 @@ void DesignExtractor::processWhileNode(std::shared_ptr<WhileNode> whiles) {
 		std::unordered_set<int> childrenList;
 		std::vector<std::shared_ptr<StmtNode>> stmtList = whiles->getStmtList();
 		std::transform(stmtList.begin(), stmtList.end(), std::inserter(childrenList, childrenList.begin()),
-			[](std::shared_ptr<StmtNode> node) { return node->getStmtNumber(); });
+					   [](std::shared_ptr<StmtNode> node) { return node->getStmtNumber(); });
 
 		//stage relationships
 		if (rs.getModifiesSize() > 0) EntityStager::stageModifiesStatements(whiles->getStmtNumber(), rs.getModifies());
@@ -202,9 +203,9 @@ void DesignExtractor::processIfNode(std::shared_ptr<IfNode> ifs) {
 		std::vector<std::shared_ptr<StmtNode>> thenStmtList = ifs->getThenStmtList();
 		std::vector<std::shared_ptr<StmtNode>> elseStmtList = ifs->getElseStmtList();
 		std::transform(thenStmtList.begin(), thenStmtList.end(), std::inserter(childrenList, childrenList.begin()),
-			[](std::shared_ptr<StmtNode> node) { return node->getStmtNumber(); });
+					   [](std::shared_ptr<StmtNode> node) { return node->getStmtNumber(); });
 		std::transform(elseStmtList.begin(), elseStmtList.end(), std::inserter(childrenList, childrenList.begin()),
-			[](std::shared_ptr<StmtNode> node) { return node->getStmtNumber(); });
+					   [](std::shared_ptr<StmtNode> node) { return node->getStmtNumber(); });
 
 		//stage relationships
 		if (rs.getModifiesSize() > 0) EntityStager::stageModifiesStatements(ifs->getStmtNumber(), rs.getModifies());
@@ -238,7 +239,7 @@ void DesignExtractor::processCallNode(std::shared_ptr<CallNode> call) {
 		rs.addCalls(call->getProcedureName());
 		if (callStack.size() > 0) {
 			EntityStager::stageCalls(callStack.top(), call->getProcedureName());
-			for (std::string callee : rs.getCalls()) {
+			for (std::string callee: rs.getCalls()) {
 				EntityStager::stageCallsT(callStack.top(), callee);
 			}
 		}
@@ -289,6 +290,9 @@ void DesignExtractor::processProcedure(std::shared_ptr<ProcedureNode> proc) {
 	if (containerStack.empty() || proc != containerStack.top()) {
 		// first encounter with this node
 		EntityStager::stageProcedure(proc->getProcName());
+		const auto& procStmtList = proc->getStmtList();
+		auto procFirstStmt = procStmtList.front();
+		EntityStager::stageProcStatement(procFirstStmt->getStmtNumber());
 
 		nodeStack.push(proc); //push it back in for second visit
 		containerStack.push(proc);
@@ -320,7 +324,7 @@ void DesignExtractor::processProcedure(std::shared_ptr<ProcedureNode> proc) {
 }
 
 void DesignExtractor::processProcedureList(std::unordered_map<std::string, std::shared_ptr<ProcedureNode>> procMap) {
-	for (auto& procPair : procMap) {
+	for (auto& procPair: procMap) {
 		nodeStack.push(procPair.second);
 	}
 	// main driver loop
@@ -339,7 +343,8 @@ void DesignExtractor::extractDesignElements() {
 	EntityStager::clear();
 	DesignExtractor::procCache.clear();
 	processProcedureList(ast->getProcedureMap());
-	std::pair<CFG, std::unordered_map<std::string, std::unordered_set<int>>> pair = CFGExtractor::extractCFG(ast, totalStmt);
+	std::pair<CFG, std::unordered_map<std::string, std::unordered_set<int>>> pair = CFGExtractor::extractCFG(ast,
+																											 totalStmt);
 	EntityStager::stageCFG(pair.first);
 	EntityStager::stageLastStmtMapping(pair.second);
 }

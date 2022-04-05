@@ -29,10 +29,10 @@ private:
 					bool isBooleanResult);
 
 	QueryClauseResult
-	getNextTByStatementNumber(const std::string& LHS, const std::string& RHS, EntityType RHSType);
+		getNextTByStatementNumber(const std::string& LHS, const std::string& RHS, EntityType RHSType, bool isBooleanResult);
 	QueryClauseResult
-	getNextTByStatementVariable(const std::string& LHS, const std::string& RHS, EntityType LHSType, EntityType RHSType);
-	QueryClauseResult getNextTByUnderscore(const std::string& RHS, EntityType RHSType);
+		getNextTByStatementVariable(const std::string& LHS, const std::string& RHS, EntityType LHSType, EntityType RHSType, bool isBooleanResult);
+	QueryClauseResult getNextTByUnderscore(const std::string& RHS, EntityType RHSType, bool isBooleanResult);
 
 	bool isNodeNotInCFG(int node, const std::vector<std::unordered_set<int>>& cfg);
 

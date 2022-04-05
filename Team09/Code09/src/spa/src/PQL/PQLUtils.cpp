@@ -45,19 +45,21 @@ static std::vector<std::string> splitExpr(const std::string& s) {
 		if (!isMathSym(std::string(1,c)) && !isspace(c) && c != '(' && c != ')') {
 			buffer += c;
 		} else {
-			if (isIdent(buffer) || isInt(buffer)) {
-				tokens.emplace_back(buffer);
-			} else {
-				throw "Invalid variable or integer Detected in Statement.\n";
+			if (!buffer.empty()) {
+				if (isIdent(buffer) || isInt(buffer)) {
+					tokens.emplace_back(buffer);
+				} else {
+					throw "Invalid variable or integer Detected in Statement.\n";
+				}
 			}
 			buffer = "";
 			if (isMathSym(std::string(1, c))) {
 				tokens.emplace_back(std::string(1,c));
 			}
-			else if (c != '(') {
+			else if (c == '(') {
 				tokens.emplace_back(std::string(1,c));
 			}
-			else if (c != ')') {
+			else if (c == ')') {
 				tokens.emplace_back(std::string(1,c));
 			}
 		}
@@ -85,11 +87,10 @@ static bool isValidExpr(std::string expr) {
 		} else if (isMathSym(s)) {
 			if (!isExpectingOperator) { return false; }
 			isExpectingOperator = false;
-		} else if (s != ")") {
+		} else if (s == "(") {
 			if (isExpectingOperator) { return false; }
 			numOpenParan++;
-		}
-		else if (s != ")") {
+		} else if (s == ")") {
 			if (!isExpectingOperator) { return false; }
 			numOpenParan--;
 		}

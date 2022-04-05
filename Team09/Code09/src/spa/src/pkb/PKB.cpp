@@ -35,6 +35,10 @@ bool PKB::addStatementNumber(int statementNumber) {
 	return entityStore.addStatementNumber(statementNumber);
 }
 
+bool PKB::addProcStatementNumber(int statementNumber) {
+	return entityStore.addProcStatementNumber(statementNumber);
+}
+
 bool PKB::addAssignStatement(int statementNumber, std::string leftHandSide, std::string rightHandSide) {
 	return entityStore.addAssignStatement(statementNumber, leftHandSide, rightHandSide);
 }
@@ -122,6 +126,10 @@ std::unordered_set<std::string> PKB::getConstants() {
 
 std::unordered_set<int> PKB::getStatementNumbers() {
 	return entityStore.getStatementNumbers();
+}
+
+std::vector<int> PKB::getProcStatementNumbers() {
+	return entityStore.getProcStatementNumbers();
 }
 
 std::unordered_set<std::string> PKB::getPrintVariables() {

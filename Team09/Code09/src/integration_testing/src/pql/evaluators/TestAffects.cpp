@@ -148,6 +148,32 @@ TEST_CASE ("Test affects/*") {
 	PKB::addUsesStatement(21, {"z"});
 	PKB::addUsesStatement(22, {"v"});
 
+	PKB::addParent(6, 7);
+	PKB::addParentT(6, 7);
+	PKB::addParent(6, 8);
+	PKB::addParentT(6, 8);
+	PKB::addParent(6, 9);
+	PKB::addParentT(6, 9);
+	PKB::addParent(6, 10);
+	PKB::addParentT(6, 10);
+	PKB::addParent(10, 11);
+	PKB::addParentT(6, 11);
+	PKB::addParentT(10, 11);
+	PKB::addParent(10, 12);
+	PKB::addParentT(6, 12);
+	PKB::addParentT(10, 12);
+
+	PKB::addParent(13, 14);
+	PKB::addParentT(13, 14);
+	PKB::addParent(13, 15);
+	PKB::addParentT(13, 15);
+	PKB::addParent(13, 16);
+	PKB::addParentT(13, 16);
+
+	PKB::addProcStatementNumber(1);
+	PKB::addProcStatementNumber(4);
+	PKB::addProcStatementNumber(20);
+
 	SECTION ("Test affects - positive cases") {
 		AffectsEvaluator evaluator;
 		SECTION ("LHS INT - RHS INT") {
